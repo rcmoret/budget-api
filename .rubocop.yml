@@ -1,5 +1,5 @@
 AllCops:
-  TargetRubyVersion: 3.0.1
+  TargetRubyVersion: 3.2.0
   Exclude:
     - 'db/schema.rb'
     - 'db/migrate/*.rb'
@@ -32,12 +32,17 @@ Metrics/BlockLength:
     - config/environments/*
     - config/initializers/*
     - config/routes.rb
+    - spec/*_helper.rb
+
+Metrics/ClassLength:
+  Exclude:
+    - app/lib/graph_queries/*
 
 Style/Documentation:
   Enabled: false
 
 Style/FrozenStringLiteralComment:
-  EnforcedStyle: never
+  Enabled: false
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes
@@ -51,12 +56,21 @@ Style/TrailingCommaInArrayLiteral:
 Style/TrailingCommaInHashLiteral:
   EnforcedStyleForMultiline: consistent_comma
 
+Style/HashSyntax:
+  EnforcedShorthandSyntax: never
+
 Style/GlobalVars:
   AllowedVariables:
     - $logger
 
 Style/MultilineBlockChain:
   Enabled: false
+
+Style/RedundantFreeze:
+  Enabled: true
+
+Style/MutableConstant:
+  EnforcedStyle: literals
 
 Lint/UselessMethodDefinition:
   Exclude:
