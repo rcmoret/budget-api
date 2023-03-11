@@ -5,6 +5,10 @@ AllCops:
     - 'db/migrate/*.rb'
     - 'node_modules/**/*'
 
+require:
+  - rubocop-rails
+  - rubocop-rspec
+
 Layout/LineLength:
   Max: 120
   Exclude:
@@ -13,36 +17,18 @@ Layout/LineLength:
 
 Metrics/BlockLength:
   Max: 10
-  ExcludedMethods:
-    - before
-    - context
-    - create_table
-    - define
-    - describe
-    - factory
-    - group
-    - included
-    - it
-    - let
-    - namespace
-    - shared_context
-    - shared_examples_for
-    - task
   Exclude:
     - config/environments/*
     - config/initializers/*
     - config/routes.rb
     - spec/*_helper.rb
 
-Metrics/ClassLength:
-  Exclude:
-    - app/lib/graph_queries/*
-
 Style/Documentation:
   Enabled: false
 
 Style/FrozenStringLiteralComment:
   Enabled: false
+  EnforcedStyle: never
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes
@@ -71,7 +57,3 @@ Style/RedundantFreeze:
 
 Style/MutableConstant:
   EnforcedStyle: literals
-
-Lint/UselessMethodDefinition:
-  Exclude:
-    - app/lib/presenters/**/*
