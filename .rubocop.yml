@@ -1,0 +1,63 @@
+AllCops:
+  TargetRubyVersion: 3.0.1
+  Exclude:
+    - 'db/schema.rb'
+    - 'db/migrate/*.rb'
+    - 'node_modules/**/*'
+
+Layout/LineLength:
+  Max: 120
+  Exclude:
+    - db/schema.rb
+    - config/initializers/devise.rb
+
+Metrics/BlockLength:
+  Max: 10
+  ExcludedMethods:
+    - before
+    - context
+    - create_table
+    - define
+    - describe
+    - factory
+    - group
+    - included
+    - it
+    - let
+    - namespace
+    - shared_context
+    - shared_examples_for
+    - task
+  Exclude:
+    - config/environments/*
+    - config/initializers/*
+    - config/routes.rb
+
+Style/Documentation:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  EnforcedStyle: never
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+Style/TrailingCommaInArguments:
+  EnforcedStyleForMultiline: consistent_comma
+
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: consistent_comma
+
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: consistent_comma
+
+Style/GlobalVars:
+  AllowedVariables:
+    - $logger
+
+Style/MultilineBlockChain:
+  Enabled: false
+
+Lint/UselessMethodDefinition:
+  Exclude:
+    - app/lib/presenters/**/*
