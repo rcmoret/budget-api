@@ -3,7 +3,7 @@ module User
     class BaseHandler
       include CubanLinx::CallChain
 
-      def initialize(event, transient_data)
+      def initialize(event, transient_data = {})
         @data = event
                 .data
                 .merge(transient_data.transform_values { "FILTERED" })

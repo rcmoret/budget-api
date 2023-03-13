@@ -5,6 +5,12 @@ module User
         extend ActiveSupport::Concern
 
         included do
+          define_link :find_all_active_tokens_by_user do |payload|
+            payload.fetch(:target_user).then do |user|
+              [:ok, { auth_token_contexts: Auth::Token::Context.active.belonging_to(user) }]
+            end
+          end
+
           define_link :find_existing_token_contexts_by_ip_address do |payload|
             [
               :ok,

@@ -8,7 +8,7 @@ module User
                       functions: %i[
                         verify_actor_is_target_user
                         find_all_active_tokens_by_user
-                        expire_token_contexts
+                        expire_existing_token_contexts
                         record_expiration_success
                       ]
 
