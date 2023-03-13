@@ -5,6 +5,7 @@ ruby "3.2.0"
 
 gem "bcrypt", "~> 3.1.7"
 gem "bootsnap", require: false
+gem "cuban_linx"
 gem "dotenv-rails"
 gem "jwt"
 gem "pg", "~> 1.1"
