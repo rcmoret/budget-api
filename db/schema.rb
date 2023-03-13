@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_09_143306) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_13_234121) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -54,6 +54,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_09_143306) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "auth_token_contexts", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "key", limit: 12, null: false
+    t.string "ip_address", limit: 200, null: false
+    t.datetime "expires_at", null: false
+    t.datetime "manually_expired_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["key"], name: "index_auth_token_contexts_on_key", unique: true
+    t.index ["user_id"], name: "index_auth_token_contexts_on_user_id"
   end
 
   create_table "budget_categories", force: :cascade do |t|
@@ -105,8 +117,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_09_143306) do
   end
 
   create_table "budget_item_events", force: :cascade do |t|
-    t.bigint "budget_item_id", null: false
-    t.bigint "budget_item_event_type_id", null: false
+    t.integer "budget_item_id", null: false
+    t.integer "budget_item_event_type_id", null: false
     t.integer "amount", null: false
     t.json "data"
     t.datetime "created_at", null: false
@@ -174,6 +186,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_09_143306) do
     t.index ["key"], name: "index_transfers_on_key", unique: true
   end
 
+  create_table "user_event_types", force: :cascade do |t|
+    t.string "name", limit: 100, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_user_event_types_on_name", unique: true
+  end
+
   create_table "user_groups", force: :cascade do |t|
     t.string "name", limit: 200, null: false
     t.string "primary_email", limit: 200, null: false
@@ -203,6 +222,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_09_143306) do
   add_foreign_key "accounts", "user_groups"
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "auth_token_contexts", "users"
   add_foreign_key "budget_categories", "icons"
   add_foreign_key "budget_categories", "user_groups"
   add_foreign_key "budget_category_maturity_intervals", "budget_categories"

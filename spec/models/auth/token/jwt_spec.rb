@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Auth::Token do
+RSpec.describe Auth::Token::JWT do
   describe ".encode" do
     context "when providing a basic payload" do
       it "returns a token string" do
@@ -11,7 +11,7 @@ RSpec.describe Auth::Token do
 
       it "uses 24 hours from now as the default expiration" do
         freeze_time do
-          expect(JWT)
+          expect(::JWT)
             .to receive(:encode)
             .with(hash_including(exp: 24.hours.from_now.to_i), anything, anything)
 
@@ -21,7 +21,7 @@ RSpec.describe Auth::Token do
 
       it "allows for a different time interval to be provided for expiration" do
         freeze_time do
-          expect(JWT)
+          expect(::JWT)
             .to receive(:encode)
             .with(hash_including(exp: 5.minutes.from_now.to_i), anything, anything)
 
@@ -30,7 +30,7 @@ RSpec.describe Auth::Token do
       end
 
       it "uses #{described_class::SIGNATURE_ALGORITHM} as the alg" do
-        expect(JWT)
+        expect(::JWT)
           .to receive(:encode)
           .with(anything, anything, described_class::SIGNATURE_ALGORITHM)
 
