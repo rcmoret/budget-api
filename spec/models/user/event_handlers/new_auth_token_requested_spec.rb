@@ -54,7 +54,7 @@ RSpec.describe User::EventHandlers::NewAuthTokenRequested do
       let(:data) { { ip_address: ip_address } }
       let(:event) { FactoryBot.create(:user_event, actor: user, data: data) }
 
-      fit "expires the existing auth token context" do
+      it "expires the existing auth token context" do
         freeze_time do
           subject = described_class.new(event, password: password)
           expect { subject.call }.to change { existing_context.reload.manually_expired_at }.from(nil).to(Time.current)

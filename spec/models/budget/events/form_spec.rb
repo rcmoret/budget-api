@@ -16,7 +16,7 @@ RSpec.describe Budget::Events::Form do
       it "returns not valid" do
         params = { events: [{ event_type: unregistered_event }] }
         form = described_class.new(user, params)
-        expect(form).to_not be_valid
+        expect(form).not_to be_valid
       end
     end
   end

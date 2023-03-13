@@ -16,7 +16,7 @@ RSpec.describe User::EventType do
         let(:name) { :user_auth_token_requested }
 
         it "does not create a new record" do
-          expect { described_class.for(name) }.to_not(change { described_class.count })
+          expect { described_class.for(name) }.not_to(change { described_class.count })
         end
       end
     end
@@ -27,7 +27,7 @@ RSpec.describe User::EventType do
       subject { described_class.create(name: :user_auth_token_requested) }
 
       it "returns a handler" do
-        expect(subject.subscriber).to eq "NewAuthTokenRequested"
+        expect(subject.subscriber).to eq User::EventHandlers::NewAuthTokenRequested
       end
     end
 

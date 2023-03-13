@@ -18,6 +18,7 @@ Layout/LineLength:
 Metrics/BlockLength:
   Max: 10
   Exclude:
+    - app/models/user/event_handlers/**/*
     - config/environments/*
     - config/initializers/*
     - config/routes.rb
@@ -73,7 +74,7 @@ RSpec/NestedGroups:
     - spec/models/budget/events/*_spec.rb
 
 RSpec/NotToNot:
-  EnforcedStyle: to_not
+  EnforcedStyle: not_to
 
 RSpec/MultipleExpectations:
   Enabled: false

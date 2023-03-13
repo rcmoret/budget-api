@@ -44,7 +44,7 @@ module User
           auth_token_context.key
         end
       end
+      private_constant :SuccessData
     end
-    private_constant :SuccessData
   end
 end

@@ -47,7 +47,7 @@ RSpec.describe Account, type: :model do
       end
 
       it "does not change the number of accounts" do
-        expect { subject }.to_not(change { described_class.count })
+        expect { subject }.not_to(change { described_class.count })
       end
     end
 

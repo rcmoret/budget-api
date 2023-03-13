@@ -40,7 +40,7 @@ RSpec.describe Budget::Events::DeleteItemForm do
             budget_item_key: budget_item.key,
           }
           form = described_class.new(user, params)
-          expect(form).to_not be_valid
+          expect(form).not_to be_valid
           expect(form.errors["event_type"])
             .to include "is not included in the list"
         end
@@ -67,7 +67,7 @@ RSpec.describe Budget::Events::DeleteItemForm do
             event_type: Budget::EventTypes::DELETE_EVENTS.sample,
           }
           form = described_class.new(user, params)
-          expect(form).to_not be_valid
+          expect(form).not_to be_valid
           expect(form.errors["budget_item"]).to include "can't be blank"
         end
       end
@@ -85,7 +85,7 @@ RSpec.describe Budget::Events::DeleteItemForm do
             event_type: Budget::EventTypes::DELETE_EVENTS.sample,
           }
           form = described_class.new(user, params)
-          expect(form).to_not be_valid
+          expect(form).not_to be_valid
           expect(form.errors["budget_item"]).to include "cannot delete an item with transaction details"
         end
       end
@@ -98,7 +98,7 @@ RSpec.describe Budget::Events::DeleteItemForm do
           budget_item_key: budget_item.key,
           event_type: Budget::EventTypes::DELETE_EVENTS.sample,
         }
-        expect(described_class.new(user, params)).to_not be_valid
+        expect(described_class.new(user, params)).not_to be_valid
       end
     end
   end
