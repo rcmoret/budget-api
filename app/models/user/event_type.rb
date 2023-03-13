@@ -4,7 +4,7 @@ module User
     validates :name, format: { with: /\A[a-z][a-z0-9_]*[a-z0-9]\z/ }
 
     SUBSCRIPTIONS = {
-      "user_auth_token_requested" => "NewAuthTokenRequested",
+      "user_auth_token_requested" => EventHandlers::NewAuthTokenRequested,
     }.freeze
 
     NullEventHandler = Class.new do

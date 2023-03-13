@@ -27,7 +27,7 @@ RSpec.describe User::EventType do
       subject { described_class.create(name: :user_auth_token_requested) }
 
       it "returns a handler" do
-        expect(subject.subscriber).to eq "NewAuthTokenRequested"
+        expect(subject.subscriber).to eq User::EventHandlers::NewAuthTokenRequested
       end
     end
 
