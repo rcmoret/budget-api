@@ -20,6 +20,7 @@ module User
       Event.new(
         actor: actor,
         target_user: target_user,
+        event_type: event_type,
         key: SecureRandom.hex(6),
         data: event_data,
       )

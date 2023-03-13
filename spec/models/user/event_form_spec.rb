@@ -34,20 +34,62 @@ RSpec.describe User::EventForm do
         let(:event_type_name) { :user_update_requested }
 
         it "records an event with the target user, the actor, emtpy data" do
-          expect(User::Event).to receive(:new).with(hash_including(target_user: target_user, actor: actor, data: {}))
+          expect(User::Event)
+            .to receive(:new)
+            .with(hash_including(target_user: target_user, actor: actor, data: {}, event_type: event_type))
 
           subject.call
         end
       end
 
       context "when there is a registered subscriber" do
+        before do
+          allow(User::EventHandlers::NewAuthTokenRequested).to receive(:new).and_return(event_handler_double)
+        end
+
+        let(:event_type_name) { :user_auth_token_requested }
+        let(:event_handler_double) { instance_double(User::EventHandlers::NewAuthTokenRequested, call: [:ok]) }
+        let(:actor) { FactoryBot.create(:user) }
+
         context "when no data or transient data is passed" do
-          xit "calls the registered subscriber"
+          subject do
+            described_class.new(actor: actor, event_type: event_type_name)
+          end
+
+          it "calls the registered subscriber" do
+            expect(User::EventHandlers::NewAuthTokenRequested).to receive(:new).with(anything, {})
+            expect(event_handler_double).to receive(:call)
+
+            subject.call
+          end
         end
 
         context "when data and transient data is passed" do
-          xit "creates an event with the data and transient data but where the values are filtered"
-          xit "calls the registered subscriber with transient data"
+          subject do
+            described_class.new(
+              actor: actor,
+              event_type: event_type_name,
+              event_data: data,
+              transient_data: transient_data,
+            )
+          end
+
+          let(:data) { { key: SecureRandom.hex(6), time: Time.current } }
+          let(:transient_data) { { password: SecureRandom.hex(10) } }
+
+          it "creates an event with the data and transient data but where the values are filtered" do
+            expected_data = data.merge(password: "[FILTERED]")
+            expect(User::Event).to receive(:new).with(hash_including(data: expected_data))
+
+            subject.call
+          end
+
+          it "calls the registered subscriber with transient data" do
+            expect(User::EventHandlers::NewAuthTokenRequested).to receive(:new).with(anything, transient_data)
+            expect(event_handler_double).to receive(:call)
+
+            subject.call
+          end
         end
       end
 
