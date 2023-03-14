@@ -48,7 +48,7 @@ Style/StringLiterals:
   EnforcedStyle: double_quotes
 
 Style/TrailingCommaInArguments:
-  EnforcedStyleForMultiline: consistent_comma
+  Enabled: false
 
 Style/TrailingCommaInArrayLiteral:
   EnforcedStyleForMultiline: consistent_comma
