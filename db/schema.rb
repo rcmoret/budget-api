@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_13_234121) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_13_234713) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -193,6 +193,20 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_13_234121) do
     t.index ["name"], name: "index_user_event_types_on_name", unique: true
   end
 
+  create_table "user_events", force: :cascade do |t|
+    t.bigint "actor_id", null: false
+    t.bigint "target_user_id", null: false
+    t.bigint "user_event_type_id", null: false
+    t.string "key", limit: 12, null: false
+    t.json "data", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["actor_id"], name: "index_user_events_on_actor_id"
+    t.index ["key"], name: "index_user_events_on_key", unique: true
+    t.index ["target_user_id"], name: "index_user_events_on_target_user_id"
+    t.index ["user_event_type_id"], name: "index_user_events_on_user_event_type_id"
+  end
+
   create_table "user_groups", force: :cascade do |t|
     t.string "name", limit: 200, null: false
     t.string "primary_email", limit: 200, null: false
@@ -235,5 +249,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_13_234121) do
   add_foreign_key "transaction_details", "budget_items"
   add_foreign_key "transaction_details", "transaction_entries"
   add_foreign_key "transaction_entries", "accounts"
+  add_foreign_key "user_events", "user_event_types"
+  add_foreign_key "user_events", "users", column: "actor_id"
+  add_foreign_key "user_events", "users", column: "target_user_id"
   add_foreign_key "users", "user_groups"
 end
