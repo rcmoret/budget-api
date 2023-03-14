@@ -23,6 +23,7 @@ end
 
 group :test do
   gem "factory_bot"
+  gem "faker"
   gem "rspec-its"
   gem "rspec-rails"
   gem "shoulda-matchers"
