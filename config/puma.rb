@@ -39,5 +39,14 @@ pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }
 #
 # preload_app!
 
+localhost_key = File.join("config", "local-certs", "localhost-key.pem").to_s
+localhost_crt = File.join("config", "local-certs", "localhost.pem").to_s
+
+ssl_bind "0.0.0.0", 3002, {
+  key: localhost_key,
+  cert: localhost_crt,
+  verify_mode: "none",
+}
+
 # Allow puma to be restarted by `bin/rails restart` command.
 plugin :tmp_restart

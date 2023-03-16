@@ -1,5 +1,7 @@
 module User
   class Account < ApplicationRecord
+    include HasKeyIdentifier
+
     self.table_name = :users
 
     has_secure_password

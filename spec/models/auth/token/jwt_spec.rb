@@ -106,38 +106,46 @@ RSpec.describe Auth::Token::JWT do
     end
 
     context "when decoding an expired token" do
-      it "raises an error" do
-        payload = { user_id: rand(100) }
-        token = described_class.encode(payload: payload, exp: 1.second.ago)
+      it "returns an error tuple" do
+        allow(JWT).to receive(:decode).and_raise(JWT::ExpiredSignature, "Signature has expired")
+        token = described_class.encode(payload: { user_key: rand(1000) }, exp: 1.hour.ago)
 
-        expect { described_class.decode(token) }
-          .to raise_error(JWT::ExpiredSignature)
+        expect(described_class.decode(token).first).to eq(:error)
+        expect(described_class.decode(token).last).to eq(token: "Signature has expired")
       end
     end
 
     context "when the issuer does not match" do
-      it "raises an error" do
-        token = manual_token(payload: { uid: rand(100), iss: "example.com" })
-        expect { described_class.decode(token) }
-          .to raise_error(JWT::InvalidIssuerError)
+      let(:error_message) do
+        %(Invalid issuer. Expected ["#{ENV['APP_URL']}"], received example.com)
       end
-    end
 
-    context "when the token was encoded with a different alg" do
-      it "raises an error" do
-        token = manual_token(payload: { uid: rand(100), alg: "HS384" })
-        expect { described_class.decode(token) }
-          .to raise_error(JWT::InvalidIssuerError)
+      it "returns an error tuple" do
+        allow(JWT).to receive(:decode).and_raise(JWT::InvalidIssuerError, error_message)
+        token = manual_token(payload: { uid: rand(100), iss: "example.com" })
+        expect(described_class.decode(token).first).to eq(:error)
+        expect(described_class.decode(token).last).to eq(token: error_message)
       end
     end
 
     context "when the token was signed with a different private key" do
-      it "raises an error" do
+      it "returns an error tuple" do
+        allow(JWT).to receive(:decode).and_raise(JWT::VerificationError, "Signature verfication failed")
         private_key = OpenSSL::PKey::RSA.new(OpenSSL::PKey::RSA.generate(2048).to_s)
         token = manual_token(payload: { uid: rand(100) }, priv_key: private_key)
 
-        expect { described_class.decode(token) }
-          .to raise_error(JWT::VerificationError)
+        expect(described_class.decode(token).first).to eq(:error)
+        expect(described_class.decode(token).last).to eq(token: "Signature verfication failed")
+      end
+    end
+
+    context "when a decode error is raised" do
+      it "returns an error tuple" do
+        allow(JWT).to receive(:decode).and_raise(JWT::DecodeError, "Invalid type for kid header parameter")
+        token = manual_token(payload: { uid: rand(100) })
+
+        expect(described_class.decode(token).first).to eq(:error)
+        expect(described_class.decode(token).last).to eq(token: "Invalid type for kid header parameter")
       end
     end
   end

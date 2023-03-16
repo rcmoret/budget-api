@@ -18,7 +18,7 @@ RSpec.describe User::EventHandlers::NewAuthTokenRequested do
 
         expect(Auth::Token::JWT)
           .to receive(:encode)
-          .with(payload: hash_including(user_id: user.id), exp: 24.hours.from_now.to_i)
+          .with(payload: hash_including(user_key: user.key), exp: 24.hours.from_now.to_i)
 
         expect { subject.call }.to change { Auth::Token::Context.count }.by(+1)
       end
@@ -67,7 +67,7 @@ RSpec.describe User::EventHandlers::NewAuthTokenRequested do
 
           expect(Auth::Token::JWT)
             .to receive(:encode)
-            .with(payload: hash_including(user_id: user.id), exp: 24.hours.from_now.to_i)
+            .with(payload: hash_including(user_key: user.key), exp: 24.hours.from_now.to_i)
 
           expect { subject.call }.to change { Auth::Token::Context.count }.by(+1)
         end

@@ -30,7 +30,7 @@ module User
           define_link :generate_jwt do |payload|
             payload.fetch(:auth_token_context).then do |auth_token_context|
               token = Auth::Token::JWT.encode(
-                payload: { user_id: auth_token_context.user_id, token_identifier: auth_token_context.key },
+                payload: { user_key: auth_token_context.user.key, token_identifier: auth_token_context.key },
                 exp: auth_token_context.expires_at.to_i,
               )
               [:ok, { token: token }]

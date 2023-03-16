@@ -32,6 +32,8 @@ module Auth
           **options.merge(default_options),
         )
         [:ok, payload.deep_symbolize_keys]
+      rescue ::JWT::DecodeError => e
+        [:error, { token: e.message}]
       end
 
       private
