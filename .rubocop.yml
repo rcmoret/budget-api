@@ -23,6 +23,7 @@ Metrics/BlockLength:
     - config/initializers/*
     - config/routes.rb
     - spec/*_helper.rb
+    - spec/requests/**/*
 
 Style/Documentation:
   Enabled: false

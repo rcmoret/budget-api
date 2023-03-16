@@ -2,6 +2,7 @@ module Auth
   module Token
     class Context < ApplicationRecord
       include HasKeyIdentifier
+      include Fetchable
 
       self.table_name = :auth_token_contexts
 
@@ -13,8 +14,8 @@ module Auth
       validates :ip_address, length: { maximum: 200 }
       validate :manually_expired_at_current_past!
 
-      def self.fetch(user:, identifier:)
-        belonging_to(user).for(identifier)
+      def expired?
+        manually_expired_at.present? || expires_at < Time.current
       end
 
       private
