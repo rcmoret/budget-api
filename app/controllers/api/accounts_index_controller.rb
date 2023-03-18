@@ -1,7 +1,7 @@
 module API
   class AccountsIndexController < API::BaseController
     def call
-      render json: { accounts: [] }
+      render json: User::AccountsSerializer.new(api_user).render
     end
   end
 end

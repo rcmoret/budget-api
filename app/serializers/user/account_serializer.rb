@@ -5,7 +5,7 @@ module User
       @balance = args[:balance]
     end
 
-    attributes :key, :name, :slug, :priority, :archived_at
+    attributes :key, :name, :slug, :priority
     attribute :is_cash_flow, alias_of: :cash_flow?
     attribute :is_archived, alias_of: :archived?
     attribute :archived_at, on_render: proc { |datetime| datetime&.strftime("%F") }

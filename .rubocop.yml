@@ -81,7 +81,7 @@ RSpec/MultipleExpectations:
   Enabled: false
 
 RSpec/MultipleMemoizedHelpers:
-  Max: 7
+  Max: 9
 
 RSpec/MessageSpies:
   EnforcedStyle: receive
