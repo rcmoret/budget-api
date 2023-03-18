@@ -1,4 +1,4 @@
-module Users
+module User
   class AccountSerializer < ApplicationSerializer
     def initialize(args)
       super(args[:account])
