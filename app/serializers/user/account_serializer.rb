@@ -1,4 +1,4 @@
-module Users
+module User
   class AccountSerializer < ApplicationSerializer
     def initialize(args)
       super(args[:account])
@@ -8,6 +8,7 @@ module Users
     attributes :key, :name, :slug, :priority, :archived_at
     attribute :is_cash_flow, alias_of: :cash_flow?
     attribute :is_archived, alias_of: :archived?
+    attribute :archived_at, on_render: proc { |datetime| datetime&.strftime("%F") }
     attribute :balance
 
     def transactions

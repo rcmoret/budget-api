@@ -93,6 +93,10 @@ module Budget
     end
     alias next next_month
 
+    def date_range
+      first_date..last_date
+    end
+
     private
 
     def close_out_completed_at_end_of_month

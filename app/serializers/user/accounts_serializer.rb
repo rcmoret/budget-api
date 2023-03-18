@@ -1,4 +1,4 @@
-module Users
+module User
   class AccountsSerializer < ApplicationSerializer
     attribute :accounts, on_render: :render
 
