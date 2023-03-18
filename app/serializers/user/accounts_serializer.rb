@@ -30,7 +30,11 @@ module User
     end
 
     def account_scope
-      Account.belonging_to(__getobj__)
+      ::Account.belonging_to(user)
+    end
+
+    def user
+      __getobj__
     end
 
     AccountIdWithBalance = Struct.new(:account_id, :balance)
