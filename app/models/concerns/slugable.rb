@@ -12,10 +12,4 @@ module Slugable
     validates :slug, format: { with: /[a-z0-9]\z/, message: "must end with a lower case letter or number" }
     validates :slug, uniqueness: { scope: :user_group_id }
   end
-
-  class_methods do
-    def for(slug)
-      find_by(arel_table[:slug].lower.eq(slug.to_s.strip.downcase))
-    end
-  end
 end

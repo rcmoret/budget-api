@@ -1,6 +1,7 @@
 class Account < ApplicationRecord
   include BelongsToUserGroup
   include Fetchable
+  include HasKeyIdentifier
   include Slugable
 
   has_many :transactions, class_name: "Transaction::Entry", dependent: :restrict_with_exception
