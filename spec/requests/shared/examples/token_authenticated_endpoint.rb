@@ -6,6 +6,7 @@ RSpec.shared_examples "a token authenticated endpoint" do
   let(:headers) do
     { "Authorization" => "Bearer #{token}" }
   end
+  let(:params) { {} }
 
   context "a token that does not map to a user or token context" do
     let(:token) do
