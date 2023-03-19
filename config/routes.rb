@@ -6,6 +6,8 @@ Rails.application.routes.draw do
       put "/:key", to: "update#call"
     end
 
-    post "/tokens", to: "token_create#call"
+    namespace :tokens do
+      post "/", to: "create#call"
+    end
   end
 end
