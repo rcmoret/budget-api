@@ -15,6 +15,7 @@ Rails.application.routes.draw do
 
     namespace :tokens do
       post "/", to: "create#call"
+      delete "/", to: "delete#call"
     end
   end
 end

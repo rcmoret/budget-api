@@ -11,6 +11,19 @@ module User
             end
           end
 
+          define_link :find_existing_token_contexts_by_key do |payload|
+            [
+              :ok,
+              {
+                auth_token_contexts:
+                  Auth::Token::Context.where(
+                    key: payload.fetch(:token_key),
+                    user: payload.fetch(:target_user)
+                  ),
+              },
+            ]
+          end
+
           define_link :find_existing_token_contexts_by_ip_address do |payload|
             [
               :ok,

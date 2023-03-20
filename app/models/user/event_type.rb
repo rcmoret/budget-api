@@ -4,6 +4,7 @@ module User
     validates :name, format: { with: /\A[a-z][a-z0-9_]*[a-z0-9]\z/ }
 
     SUBSCRIPTIONS = {
+      "expire_current_token" => EventHandlers::ExpireTokenByKey,
       "user_auth_token_requested" => EventHandlers::NewAuthTokenRequested,
     }.freeze
 
