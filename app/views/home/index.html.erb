@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Budget App</title>
+    <link rel="icon" href="/favicon.png" />
+
+    <link
+      rel="stylesheet"
+      media="screen"
+      href="https://fonts.googleapis.com/css?family=Questrial"
+    />
+    <link
+      rel="stylesheet"
+      href="<%= ENV["STYLESHEET_URL"] %>"
+    />
+    <style>
+      html {
+        font-family: Questrial, Arial;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root">
+    </div>
+
+    <noscript> You need to enable JavaScript to run this app. </noscript>
+
+    <script src="<%= ENV["JAVASCRIPT_URL"] %>"></script>
+  </body>
+</html>

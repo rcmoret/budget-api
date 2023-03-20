@@ -60,6 +60,10 @@ Style/RedundantFreeze:
 Style/MutableConstant:
   EnforcedStyle: literals
 
+Rails/ApplicationController:
+  Exclude:
+    - app/controllers/home_controller.rb
+
 RSpec/ExampleLength:
   Max: 10
 

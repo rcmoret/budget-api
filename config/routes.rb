@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  root "home#index"
   namespace :api do
     namespace :accounts do
       get "/", to: "index#call"
