@@ -45,7 +45,7 @@ module Forms
 
       case key
       when :account_slug
-        { account: Account.fetch(user: user, identifier: value) }
+        { account: Account.fetch(user: user, slug: value) }
       when :details_attributes
         { details_attributes: value.values.map { |detail_attrs| handle_detail(detail_attrs) } }
       else
@@ -54,8 +54,8 @@ module Forms
     end
 
     def handle_detail(detail_attrs)
-      detail_id = transaction_entry.details.for(detail_attrs.fetch(:key))&.id
-      budget_item_id = Budget::Item.fetch(user: user, identifier: detail_attrs.delete(:budget_item_key))&.id
+      detail_id = transaction_entry.details.by_key(detail_attrs.fetch(:key))&.id
+      budget_item_id = Budget::Item.fetch(user: user, key: detail_attrs.delete(:budget_item_key))&.id
       detail_attrs.merge(budget_item_id: budget_item_id, id: detail_id)
     end
 

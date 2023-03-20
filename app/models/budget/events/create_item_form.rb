@@ -29,7 +29,7 @@ module Budget
         @amount = params[:amount]
         @month = params[:month].to_i
         @year = params[:year].to_i
-        @budget_category_slug = params[:budget_category_slug]
+        @budget_category_slug = params[:budget_category_slug] || ""
       end
 
       def save
@@ -79,11 +79,11 @@ module Budget
       end
 
       def category
-        @category ||= Budget::Category.fetch(user: current_user, identifier: budget_category_slug)
+        @category ||= Budget::Category.fetch(user: current_user, slug: budget_category_slug)
       end
 
       def interval
-        @interval ||= Budget::Interval.fetch(user: current_user, identifier: { month: month, year: year })
+        @interval ||= Budget::Interval.fetch(user: current_user, key: { month: month, year: year })
       end
 
       def expense?

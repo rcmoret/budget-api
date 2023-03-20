@@ -1,5 +1,7 @@
 module User
   class Group < ApplicationRecord
+    include HasKeyIdentifier
+
     has_many :users,
              foreign_key: :user_group_id,
              class_name: "Account",

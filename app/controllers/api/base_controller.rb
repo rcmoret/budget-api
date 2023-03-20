@@ -34,7 +34,7 @@ module API
     end
 
     define_link :lookup_user do |payload|
-      User::Account.for(payload.fetch(:decoded)[:user_key]).then do |potential_user|
+      User::Account.by_key(payload.fetch(:decoded)[:user_key]).then do |potential_user|
         if potential_user.present?
           [:ok, { user: potential_user }]
         else
@@ -45,7 +45,7 @@ module API
 
     define_link :validate_auth_token_context do |payload|
       auth_token_key = payload.fetch(:decoded)[:token_identifier]
-      Auth::Token::Context.fetch(user: payload.fetch(:user), identifier: auth_token_key).then do |auth_token_context|
+      Auth::Token::Context.fetch(user: payload.fetch(:user), key: auth_token_key).then do |auth_token_context|
         if auth_token_context.nil? || auth_token_context.expired?
           [:error, { token: :invalid }]
         else

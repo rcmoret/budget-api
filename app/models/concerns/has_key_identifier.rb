@@ -9,7 +9,7 @@ module HasKeyIdentifier
   end
 
   class_methods do
-    def for(key)
+    def by_key(key)
       find_by(arel_table[:key].lower.eq(key.to_s.strip.downcase))
     end
   end

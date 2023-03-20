@@ -47,14 +47,17 @@ module Budget
       end
     }
 
-    def self.for(date_hash)
-      find_or_create_by(date_hash)
-    end
+    class << self
+      def for(date_hash)
+        find_or_create_by(date_hash)
+      end
+      alias by_key for
 
-    def self.current(user:)
-      today = Date.current
-      belonging_to(user).where(end_date: today..).desc_ordered.take.presence ||
-        belonging_to(user).for(month: today.month, year: today.year)
+      def current(user:)
+        today = Date.current
+        belonging_to(user).where(end_date: today..).desc_ordered.take.presence ||
+          belonging_to(user).for(month: today.month, year: today.year)
+      end
     end
 
     def set_up?

@@ -6,7 +6,7 @@ RSpec.describe Budget::Events::SetupForm do
   describe "interval presence validation" do
     before do
       allow(Budget::Interval)
-        .to receive(:for)
+        .to receive(:by_key)
         .and_return(instance_double(Budget::Interval, persisted?: false, set_up?: false))
       allow(Budget::Events::Form)
         .to receive(:new)
@@ -37,7 +37,7 @@ RSpec.describe Budget::Events::SetupForm do
         set_up?: true,
       )
       allow(Budget::Interval)
-        .to receive(:for)
+        .to receive(:by_key)
         .and_return(interval_double)
       allow(Budget::Events::Form)
         .to receive(:new)

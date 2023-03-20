@@ -52,14 +52,14 @@ RSpec.describe Budget::Item, type: :model do
     end
   end
 
-  describe ".for" do
+  describe ".by_key" do
     let(:budget_item) { FactoryBot.create(:budget_item) }
 
     context "when passing an upcased version of the key" do
       let(:key) { budget_item.key.upcase }
 
       it "returns the item" do
-        subject = described_class.for(key)
+        subject = described_class.by_key(key)
 
         expect(subject).to eq budget_item
       end
@@ -69,7 +69,7 @@ RSpec.describe Budget::Item, type: :model do
       let(:key) { budget_item.key.downcase }
 
       it "returns the item" do
-        subject = described_class.for(key)
+        subject = described_class.by_key(key)
 
         expect(subject).to eq budget_item
       end
@@ -79,7 +79,7 @@ RSpec.describe Budget::Item, type: :model do
       let(:key) { SecureRandom.hex(6) }
 
       it "returns the item" do
-        subject = described_class.for(key)
+        subject = described_class.by_key(key)
 
         expect(subject).to be nil
       end

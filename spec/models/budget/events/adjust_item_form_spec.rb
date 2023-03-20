@@ -280,7 +280,7 @@ RSpec.describe Budget::Events::AdjustItemForm do
 
   def stub_budget_item(amount:, expense:)
     allow(Budget::Item)
-      .to receive(:for)
+      .to receive(:by_key)
       .and_return(item_double(amount, expense))
   end
 
