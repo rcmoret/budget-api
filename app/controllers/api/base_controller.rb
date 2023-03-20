@@ -1,6 +1,5 @@
 module API
   class BaseController < ApplicationController
-    include ::ActionController::Cookies
     include CubanLinx::CallChain
 
     before_action :authenticate_token!
