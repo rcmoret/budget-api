@@ -5,7 +5,6 @@ Rails.application.routes.draw do
       post "/", to: "create#call"
       put "/:key", to: "update#call"
       delete "/:key", to: "delete#call"
-
       scope "/:account_key/transactions/:month/:year", module: :transactions do
         get "/", to: "index#call"
         post "/", to: "create#call"
