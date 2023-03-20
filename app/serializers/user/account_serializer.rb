@@ -2,7 +2,7 @@ module User
   class AccountSerializer < ApplicationSerializer
     def initialize(args)
       super(args[:account])
-      @balance = args[:balance]
+      @balance = args.fetch(:balance) { account.balance }
     end
 
     attributes :key, :name, :slug, :priority

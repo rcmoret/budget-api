@@ -28,7 +28,7 @@ module API
       end
 
       def serializer
-        @serializer ||= User::AccountSerializer.new(account: account, balance: account.balance)
+        @serializer ||= User::AccountSerializer.new(account: account)
       end
     end
   end
