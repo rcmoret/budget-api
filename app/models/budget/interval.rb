@@ -1,10 +1,7 @@
-# frozen_string_literal: true
-
 module Budget
   class Interval < ApplicationRecord
     include BelongsToUserGroup
     include Fetchable
-    include Presentable
 
     has_many :items, foreign_key: :budget_interval_id, inverse_of: :interval, dependent: :restrict_with_exception
     has_many :maturity_intervals,
@@ -34,9 +31,8 @@ module Budget
     scope :unclosed, -> { where(close_out_completed_at: nil) }
 
     scope :in_range, lambda { |beginning_month:, beginning_year:, ending_month:, ending_year:|
-      if beginning_year > ending_year || (beginning_year == ending_year && beginning_month > ending_month)
-        raise QueryError
-      end
+      raise QueryError if beginning_year > ending_year
+      raise QueryError if beginning_year == ending_year && beginning_month > ending_month
 
       if ending_year == beginning_year
         where(year: beginning_year, month: beginning_month..ending_month)
@@ -100,6 +96,18 @@ module Budget
       first_date..last_date
     end
 
+    def future?
+      !closed_out? && !current?
+    end
+
+    def closed_out?
+      close_out_completed_at.present?
+    end
+
+    def current?
+      !closed_out? && prev.closed_out?
+    end
+
     private
 
     def close_out_completed_at_end_of_month
@@ -107,10 +115,6 @@ module Budget
       return if close_out_completed_at >= last_date
 
       errors.add(:close_out_completed_at, "Must be on or after the last day of the month")
-    end
-
-    def presenter_class
-      Presenters::Budget::IntervalPresenter
     end
 
     def weekend_or_holiday?(date)
