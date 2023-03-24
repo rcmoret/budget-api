@@ -11,10 +11,6 @@ module API
 
       private
 
-      def account
-        @account ||= Account.fetch(user: api_user, key: key)
-      end
-
       def update_params
         params
           .require(:account)

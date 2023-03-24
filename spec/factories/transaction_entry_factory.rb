@@ -25,15 +25,27 @@ FactoryBot.define do
     trait :budget_exclusion do
       budget_exclusion { true }
       association :account, factory: %i[account non_cash_flow]
+      discretionary
     end
 
     trait :discretionary do
       details_attributes do
         [
           {
+            key: SecureRandom.hex(6),
             amount: rand(-1000..1000),
             budget_item_id: nil,
           },
+        ]
+      end
+    end
+
+    trait :with_multiple_details do
+      details do
+        [
+          association(:transaction_detail),
+          association(:transaction_detail),
+          association(:transaction_detail),
         ]
       end
     end

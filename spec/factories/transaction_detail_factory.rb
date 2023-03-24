@@ -6,5 +6,9 @@ FactoryBot.define do
     amount do
       (-10_000..10_000).to_a.reject(&:zero?).sample
     end
+
+    trait :null_budget_item do
+      budget_item { nil }
+    end
   end
 end

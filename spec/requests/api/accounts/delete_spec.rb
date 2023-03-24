@@ -1,7 +1,7 @@
 require "rails_helper"
 
-RSpec.describe "DELETE /api/accounts/:key", type: :request do
-  subject { delete("/api/accounts/#{key}", headers: headers) }
+RSpec.describe "DELETE /api/account/:key", type: :request do
+  subject { delete(api_account_path(key), headers: headers) }
 
   context "when passing a valid token" do
     let(:user) { FactoryBot.create(:user) }

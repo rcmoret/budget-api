@@ -13,7 +13,7 @@ module User
 
     def transactions
       lambda { |interval|
-        SerializableCollection.new(serializer: TransactionEntrySerializer) do
+        SerializableCollection.new(serializer: Transactions::EntrySerializer) do
           account_transactions.between(interval.date_range, include_pending: interval.current?)
         end
       }

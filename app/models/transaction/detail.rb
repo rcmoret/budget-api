@@ -1,7 +1,6 @@
 module Transaction
   class Detail < ApplicationRecord
     include HasKeyIdentifier
-    include Presentable
 
     belongs_to :budget_item, class_name: "Budget::Item", optional: true
     belongs_to :entry,

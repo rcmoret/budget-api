@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "PUT /api/accounts/:key", type: :request do
-  subject { put("/api/accounts/#{key}", params: params, headers: headers) }
+  subject { put(api_account_path(key), params: params, headers: headers) }
 
   context "when passing a valid token" do
     let(:user) { FactoryBot.create(:user) }

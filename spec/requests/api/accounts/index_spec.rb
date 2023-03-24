@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "GET /api/accounts", type: :request do
-  subject { get("/api/accounts", headers: headers) }
+  subject { get(api_accounts_path, headers: headers) }
 
   context "when providing a valid token" do
     include_context "with valid token"

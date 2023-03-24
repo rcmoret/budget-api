@@ -2,70 +2,37 @@ module Forms
   class TransactionForm
     include ActiveModel::Model
 
-    PERMITTED_PARAMS = [
-      :accountSlug,
-      :budgetExclusion,
-      :checkNumber,
-      :clearanceDate,
-      :description,
-      :key,
-      :notes,
-      :receipt,
-      { detailsAttributes: %i[key amount budgetItemKey _destroy].freeze }.freeze,
-    ].freeze
-
     validate :account_belongs_to_user!
+    validate :unique_detail_keys!
+    validate :eligible_for_exclusion!, if: :budget_exclusion?
 
-    def initialize(user, transaction_entry, raw_params)
+    def initialize(user, transaction_entry, params)
       @user = user
+      @params = params
       @transaction_entry = transaction_entry
-      @initial_parameters = handle_input(raw_params)
     end
 
     def save
-      transaction_entry.assign_attributes(parameters)
+      transaction_entry.assign_attributes(params)
 
       return false unless valid?
 
-      transaction_entry.save
-    end
+      Transaction::Entry.transaction do
+        transaction_entry.tap(&:save).reload
 
-    delegate :slug, to: :account, prefix: true
+        raise ActiveRecord::Rollback unless valid?
+      end
+
+      errors.none?
+    end
 
     private
 
-    def parameters
-      @parameters ||= initial_parameters.reduce({}) do |memo, (key, value)|
-        memo.merge(handle_attribute(key, value))
-      end
-    end
+    def valid?
+      return true if super && transaction_entry.valid?
 
-    def handle_attribute(key, value)
-      return {} if value.blank?
-
-      case key
-      when :account_slug
-        { account: Account.fetch(user: user, slug: value) }
-      when :details_attributes
-        { details_attributes: value.values.map { |detail_attrs| handle_detail(detail_attrs) } }
-      else
-        { key => value }
-      end
-    end
-
-    def handle_detail(detail_attrs)
-      detail_id = transaction_entry.details.by_key(detail_attrs.fetch(:key))&.id
-      budget_item_id = Budget::Item.fetch(user: user, key: detail_attrs.delete(:budget_item_key))&.id
-      detail_attrs.merge(budget_item_id: budget_item_id, id: detail_id)
-    end
-
-    def handle_input(raw_params)
-      raw_params
-        .require(:transaction)
-        .permit(*PERMITTED_PARAMS)
-        .to_h
-        .deep_transform_keys(&:underscore)
-        .deep_symbolize_keys
+      promote_errors
+      false
     end
 
     def account_belongs_to_user!
@@ -74,8 +41,42 @@ module Forms
       errors.add(:account, "not found")
     end
 
-    delegate :account, :account_id, to: :transaction_entry
+    def unique_detail_keys!
+      return if details_attributes.size == detail_keys.uniq.size
 
-    attr_reader :user, :initial_parameters, :transaction_entry
+      errors.add(:details, "keys must be unique")
+    end
+
+    def detail_keys
+      details_attributes.map do |detail_attributes|
+        detail_attributes[:key]
+      end
+    end
+
+    def details_attributes
+      @details_attributes ||= params.fetch(:details_attributes) { [] }
+    end
+
+    def promote_errors
+      transaction_entry.errors.each do |error|
+        errors.add(error.attribute, error.message)
+      end
+    end
+
+    def eligible_for_exclusion!
+      if account.cash_flow?
+        errors.add(:budget_exclusion,
+                   "Budget Exclusions only applicable for non-cash-flow accounts")
+      end
+
+      return if details.all? { |detail| detail.budget_item.nil? }
+
+      errors.add(:budget_exclusion,
+                 "Budget Exclusions cannot be associated with a budget item")
+    end
+
+    delegate :account, :account_id, :budget_exclusion?, :details, to: :transaction_entry
+
+    attr_reader :user, :params, :transaction_entry
   end
 end

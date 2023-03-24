@@ -12,6 +12,10 @@ module HasKeyIdentifier
     def by_key(key)
       find_by(arel_table[:key].lower.eq(key.to_s.strip.downcase))
     end
+
+    def by_keys(keys)
+      where(arel_table[:key].lower.in(keys.map(&:to_s).map(&:strip).map(&:downcase)))
+    end
   end
 
   private

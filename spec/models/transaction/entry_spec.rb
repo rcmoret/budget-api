@@ -58,40 +58,6 @@ RSpec.describe Transaction::Entry, type: :model do
       it { is_expected.to be true }
     end
 
-    context "when the account is a cash-flow account" do
-      let(:account) { FactoryBot.create(:account, cash_flow: true) }
-
-      it "is false and has meaningful error message" do
-        expect(subject).to be false
-        expect(transaction_entry.errors[:budget_exclusion]).to include \
-          "Budget Exclusions only applicable for non-cashflow accounts"
-      end
-    end
-
-    describe "details must not be associated with a budget item" do
-      subject { transaction_entry.valid? }
-
-      let(:budget_item) { FactoryBot.create(:budget_item) }
-      let(:detail) { FactoryBot.build(:transaction_detail, budget_item: budget_item) }
-      let(:transaction_entry) do
-        FactoryBot.build :transaction_entry,
-                         details: [detail],
-                         budget_exclusion: true,
-                         account: FactoryBot.build(:account, cash_flow: true)
-      end
-
-      it "is invalid" do
-        expect(subject).to be false
-      end
-
-      it "has a meaningful error message" do
-        subject
-
-        expect(transaction_entry.errors[:budget_exclusion])
-          .to include "Budget Exclusions cannot be associated with a budget item"
-      end
-    end
-
     context "when there are no details" do
       subject { transaction }
 

@@ -2,7 +2,39 @@ module API
   module Accounts
     module Transactions
       class DeleteController < BaseController
-        def call; end
+        include HasBudgetInterval
+        include HasTransactionEntry
+
+        def call
+          if transaction_entry.destroy
+            render json: serializer.render, status: :accepted
+          else
+            render json: error_serializer.render, status: :unprocessable_entity
+          end
+        end
+
+        private
+
+        def transaction_entry
+          @transaction_entry ||= Transaction::Entry.fetch(user: api_user, key: key)
+        end
+
+        def serializer
+          ::Transactions::ResponseSerializer.new(
+            accounts: [account],
+            transactions: [],
+            interval: interval,
+            deleted_transaction_keys: [transaction_entry.key],
+            budget_items: transaction_entry.budget_items
+          )
+        end
+
+        def error_serializer
+          @error_serializer ||= ErrorSerailzer.new(
+            key: :transaction,
+            model: transaction_entry,
+          )
+        end
       end
     end
   end

@@ -15,14 +15,6 @@ module API
 
       private
 
-      def account
-        @account ||= Account.fetch(user: api_user, key: key)
-      end
-
-      def key
-        params.require(:key)
-      end
-
       def archived?
         account.archived_at.present?
       end

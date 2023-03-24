@@ -2,7 +2,6 @@ module Transaction
   class Entry < ApplicationRecord
     include HasKeyIdentifier
     include Fetchable
-    include Presentable
 
     belongs_to :account
     has_one :debit_transfer,
@@ -21,8 +20,8 @@ module Transaction
              inverse_of: :entry
     accepts_nested_attributes_for :details, allow_destroy: true
 
-    validate :eligible_for_exclusion!, if: :budget_exclusion?
     validate :single_detail!, if: -> { transfer? || budget_exclusion? }
+    validate :eligible_for_transfer!, if: :transfer?
     validate :detail_present!
 
     has_one_attached :receipt
@@ -35,6 +34,7 @@ module Transaction
     scope :in, ->(range) { where(clearance_date: range) }
     scope :between, ->(range, include_pending: false) { include_pending ? self.in(range).or(pending) : self.in(range) }
     scope :budget_inclusions, -> { where(budget_exclusion: false) }
+    scope :budget_exclusions, -> { where(budget_exclusion: true) }
     scope :cash_flow, -> { joins(:account).merge(Account.cash_flow) }
     scope :non_cash_flow, -> { joins(:account).merge(Account.non_cash_flow) }
 
@@ -56,18 +56,16 @@ module Transaction
       [credit_transfer, debit_transfer].any?
     end
 
+    def budget_items
+      details.map(&:budget_item).compact
+    end
+
     private
 
-    def eligible_for_exclusion!
-      if account.cash_flow?
-        errors.add(:budget_exclusion,
-                   "Budget Exclusions only applicable for non-cashflow accounts",)
-      end
-
+    def eligible_for_transfer!
       return if details.all? { |detail| detail.budget_item.nil? }
 
-      errors.add(:budget_exclusion,
-                 "Budget Exclusions cannot be associated with a budget item",)
+      errors.add(:transfer, "Transfer cannot be associated with a budget item")
     end
 
     def single_detail!
@@ -107,10 +105,6 @@ module Transaction
       else # non-tranfer; budget included
         errors.add(:details, "Must have at least one detail for this entry")
       end
-    end
-
-    def presenter_class
-      Presenters::Transactions::EntryPresenter
     end
   end
 end
