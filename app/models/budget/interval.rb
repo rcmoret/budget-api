@@ -49,10 +49,10 @@ module Budget
       end
       alias by_key for
 
-      def current(user:)
+      def current
         today = Date.current
-        belonging_to(user).where(end_date: today..).desc_ordered.take.presence ||
-          belonging_to(user).for(month: today.month, year: today.year)
+        where(start_date: ..today, end_date: today..).ordered.take.presence ||
+          self.for(month: today.month, year: today.year)
       end
     end
 

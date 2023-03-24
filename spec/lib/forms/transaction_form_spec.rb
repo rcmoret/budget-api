@@ -106,7 +106,7 @@ RSpec.describe Forms::TransactionForm do
           it "includes an error" do
             subject = described_class.new(user, transaction_entry, params).tap(&:save)
             expect(subject.errors[:budget_exclusion])
-              .to eq(["Budget Exclusions only applicable for non-cashflow accounts"])
+              .to eq(["Budget Exclusions only applicable for non-cash-flow accounts"])
           end
         end
 
@@ -364,7 +364,7 @@ RSpec.describe Forms::TransactionForm do
             subject = described_class.new(user, transaction_entry, account: account).tap(&:save)
 
             expect(subject.errors[:budget_exclusion])
-              .to eq(["Budget Exclusions only applicable for non-cashflow accounts"])
+              .to eq(["Budget Exclusions only applicable for non-cash-flow accounts"])
           end
         end
 

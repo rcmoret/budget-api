@@ -1,6 +1,8 @@
 module API
   module Accounts
     class UpdateController < BaseController
+      include HasAccount
+
       def call
         if account.update(update_params)
           render json: serializer.render, status: :accepted

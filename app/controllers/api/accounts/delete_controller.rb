@@ -1,6 +1,8 @@
 module API
   module Accounts
     class DeleteController < BaseController
+      include HasAccount
+
       def call
         account.destroy
         case [account.errors.any?, archived?]
