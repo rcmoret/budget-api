@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Budget
   class Category < ApplicationRecord
     include BelongsToUserGroup
@@ -81,9 +79,11 @@ module Budget
       update(archived_at: nil)
     end
 
+    # rubocop:disable Rails/ActiveRecordOverride
     def destroy
       items.none? ? super : archive!
     end
+    # rubocop:enable Rails/ActiveRecordOverride
 
     private
 
