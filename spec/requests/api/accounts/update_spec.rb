@@ -42,7 +42,7 @@ RSpec.describe "PUT /api/accounts/:key", type: :request do
         {
           account: {
             priority: nil,
-            is_cash_flow: true,
+            isCashFlow: true,
           },
         }
       end

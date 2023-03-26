@@ -15,7 +15,7 @@ RSpec.describe "POST /api/accounts", type: :request do
             name: "Fourth County Bank",
             slug: "checking",
             priority: rand(100),
-            is_cash_flow: true,
+            isCashFlow: true,
             key: SecureRandom.hex(6),
           },
         }
