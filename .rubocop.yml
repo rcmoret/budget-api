@@ -86,6 +86,8 @@ RSpec/MultipleExpectations:
 
 RSpec/MultipleMemoizedHelpers:
   Max: 9
+  Exclude:
+    - spec/requests/api/**/*
 
 RSpec/MessageSpies:
   EnforcedStyle: receive
