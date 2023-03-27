@@ -66,6 +66,8 @@ Rails/ApplicationController:
 
 RSpec/ExampleLength:
   Max: 10
+  Exclude:
+    - spec/requests/api/**/*
 
 RSpec/ExpectChange:
   EnforcedStyle: block
