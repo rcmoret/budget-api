@@ -3,6 +3,21 @@ require "rails_helper"
 RSpec.describe "PUT /api/accounts/:key", type: :request do
   subject { put(api_account_path(key), params: params, headers: headers) }
 
+  context "when the account is not found" do
+    include_context "with valid token"
+    let(:key) { account_key }
+    let(:params) do
+      {
+        account: {
+          name: "Fourth County Bank",
+          slug: "checking",
+        },
+      }
+    end
+
+    include_examples "endpoint requires account"
+  end
+
   context "when passing a valid token" do
     let(:user) { FactoryBot.create(:user) }
     let(:account) { FactoryBot.create(:account, user_group: user.user_group) }

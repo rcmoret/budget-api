@@ -8,6 +8,12 @@ RSpec.describe "DELETE /api/account/:key", type: :request do
 
     include_context "with valid token"
 
+    context "when the account is not found" do
+      let(:key) { account_key }
+
+      include_examples "endpoint requires account"
+    end
+
     context "when deleting an account with existing transaction entries" do
       let(:account) { FactoryBot.create(:account, user_group: user.user_group) }
       let(:key) { account.key }

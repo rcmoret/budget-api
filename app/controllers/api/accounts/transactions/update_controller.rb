@@ -2,9 +2,8 @@ module API
   module Accounts
     module Transactions
       class UpdateController < BaseController
+        include HasTransactionEntry
         include UsesTransactionEntryForm
-
-        before_action :insure_transaction_found
 
         def call
           if transaction_form.save
@@ -15,14 +14,6 @@ module API
         end
 
         private
-
-        def transaction_entry
-          @transaction_entry ||= Transaction::Entry.fetch(user: api_user, key: key)
-        end
-
-        def key
-          params.fetch(:key)
-        end
 
         def accounts
           keys = [account_key, params.fetch(:transaction)[:accountKey]].compact.uniq
@@ -37,12 +28,6 @@ module API
 
         def transaction_details_permitted_params
           DEFAULT_TRANSACTION_DETAIL_PARAMS.dup + %i[_destroy]
-        end
-
-        def insure_transaction_found
-          return if transaction_entry.present?
-
-          render json: { transaction: "not found by key: #{key}" }, status: :not_found
         end
       end
     end

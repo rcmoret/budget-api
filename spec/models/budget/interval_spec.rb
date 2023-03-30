@@ -3,6 +3,36 @@ require "rails_helper"
 RSpec.describe Budget::Interval, type: :model do
   it { is_expected.to have_many(:items) }
 
+  describe ".current" do
+    context "when late March 2023" do
+      let(:user) { FactoryBot.create(:user) }
+
+      before do
+        FactoryBot.create(
+          :budget_interval,
+          user_group: user.group,
+          close_out_completed_at: 1.minute.ago,
+          start_date: Date.new(2023, 3, 1),
+          end_date: Date.new(2023, 3, 30),
+          month: 3,
+          year: 2023
+        )
+      end
+
+      around do |ex|
+        travel_to(Date.new(2023, 3, 30)) do
+          ex.run
+        end
+      end
+
+      it "returns the interval for March 23" do
+        subject = described_class.belonging_to(user).current
+        expect(subject.month).to be 3
+        expect(subject.year).to be 2023
+      end
+    end
+  end
+
   describe "month validations" do
     context "when the month is nil" do
       specify do

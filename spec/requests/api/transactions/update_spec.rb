@@ -11,22 +11,10 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
     context "when the account is not found" do
       include_context "with valid token"
 
-      let(:user) { FactoryBot.create(:user) }
-      let(:account_key) { SecureRandom.hex(6) }
-      let(:interval) { FactoryBot.create(:budget_interval, user_group: user.group) }
-      let(:month) { interval.month }
-      let(:year) { interval.year }
-      let(:account) { FactoryBot.create(:account, user_group: user.group) }
-      let(:transaction) { FactoryBot.create(:transaction_entry, :pending, account: account) }
-      let(:transaction_key) { transaction.key }
-      let(:params) { { transaction: {} } }
+      let(:transaction_key) { SecureRandom.hex(6) }
+      let(:params) { {} }
 
-      it "returns a non found status" do
-        subject
-        expect(response).to have_http_status :not_found
-        body = JSON.parse(response.body).deep_symbolize_keys
-        expect(body).to eq(account: "not found by key: #{account_key}")
-      end
+      include_examples "endpoint requires account"
     end
 
     context "when the transaction is not found" do

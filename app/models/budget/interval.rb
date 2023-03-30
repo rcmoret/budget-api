@@ -13,10 +13,8 @@ module Budget
     validates :month, presence: true, inclusion: (1..12)
     validates :year, presence: true, inclusion: (2000..2099)
     validates :month, uniqueness: { scope: %i[year user_group_id] }
-    validate :close_out_completed_at_end_of_month
 
     scope :ordered, -> { order(year: :asc).order(month: :asc) }
-    scope :desc_ordered, -> { order(year: :desc).order(month: :desc) }
 
     scope :prior_to, lambda { |date_hash|
       month, year = date_hash.symbolize_keys.values_at(:month, :year)
@@ -109,13 +107,6 @@ module Budget
     end
 
     private
-
-    def close_out_completed_at_end_of_month
-      return if close_out_completed_at.nil?
-      return if close_out_completed_at >= last_date
-
-      errors.add(:close_out_completed_at, "Must be on or after the last day of the month")
-    end
 
     def weekend_or_holiday?(date)
       date.saturday? || date.sunday? || holiday?(date)

@@ -133,19 +133,7 @@ RSpec.describe "GET /api/accounts/:account_key/transactions/:month/:year" do
     subject { get(api_account_transactions_path(account_key, month, year), headers: headers) }
 
     include_context "with valid token"
-
-    let(:user) { FactoryBot.create(:user) }
-    let(:account_key) { SecureRandom.hex(6) }
-    let(:interval) { FactoryBot.create(:budget_interval) }
-    let(:month) { interval.month }
-    let(:year) { interval.year }
-
-    it "response with a 404, account not found" do
-      subject
-
-      expect(response).to have_http_status :not_found
-      expect(JSON.parse(response.body)).to eq("account" => "not found by key: #{account_key}")
-    end
+    include_examples "endpoint requires account"
   end
 
   context "when providing invalid month/year combination" do

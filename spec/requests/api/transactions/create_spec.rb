@@ -125,9 +125,6 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
   context "when the account is not found" do
     include_context "with valid token"
 
-    let(:account_key) { SecureRandom.hex(6) }
-    let(:month) { (1..12).to_a.sample }
-    let(:year) { (2010..2024).to_a.sample }
     let(:params) do
       {
         "transaction" => {
@@ -144,12 +141,7 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
       }
     end
 
-    it "returns a not found status, an error" do
-      subject
-      expect(response).to have_http_status :not_found
-      body = JSON.parse(response.body).symbolize_keys
-      expect(body).to eq(account: "not found by key: #{account_key}")
-    end
+    include_examples "endpoint requires account"
   end
 
   context "when providing invalid month/year combination" do
