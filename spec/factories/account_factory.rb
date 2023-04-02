@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :account do
-    association :user_group
+    association :user_group, factory: %i[user_group with_user]
     sequence(:name) { |n| "#{n.ordinalize} City Bank" }
     sequence(:slug) { |n| "slug-#{n.ordinalize}" }
     sequence :priority

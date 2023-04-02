@@ -30,7 +30,7 @@ module API
         end
 
         def error_serializer
-          @error_serializer ||= ErrorSerailzer.new(
+          @error_serializer ||= ErrorsSerializer.new(
             key: :transaction,
             model: transaction_entry,
           )

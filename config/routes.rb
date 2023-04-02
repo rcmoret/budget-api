@@ -4,6 +4,8 @@ Rails.application.routes.draw do
     namespace :accounts do
       get "/", to: "index#call"
       post "/", to: "create#call"
+      post "transfers/(:month)/(:year)", to: "transfers/create#call", as: :transfers
+      delete "/transfer/:transfer_key/(:month)/(:year)", to: "transfers/delete#call", as: :transfer
     end
 
     scope "/account/:account_key", module: :accounts, as: :account do

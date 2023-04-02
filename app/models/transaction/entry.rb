@@ -7,17 +7,18 @@ module Transaction
     has_one :debit_transfer,
             class_name: "Transfer",
             foreign_key: :from_transaction_id,
-            dependent: :destroy,
+            dependent: :restrict_with_error,
             inverse_of: :from_transaction
     has_one :credit_transfer,
             class_name: "Transfer",
             foreign_key: :to_transaction_id,
-            dependent: :destroy,
+            dependent: :restrict_with_error,
             inverse_of: :to_transaction
     has_many :details,
              foreign_key: :transaction_entry_id,
              dependent: :destroy,
              inverse_of: :entry
+    has_many :budget_items, through: :details
     accepts_nested_attributes_for :details, allow_destroy: true
 
     validate :single_detail!, if: -> { transfer? || budget_exclusion? }
@@ -54,10 +55,6 @@ module Transaction
 
     def transfer?
       [credit_transfer, debit_transfer].any?
-    end
-
-    def budget_items
-      details.map(&:budget_item).compact
     end
 
     private

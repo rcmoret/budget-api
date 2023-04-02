@@ -21,43 +21,39 @@ module Forms
 
       return [:error, errors.to_hash] if errors.any?
 
-      [:ok, { transfer: transfer }]
+      [:ok, success_hash]
     end
 
     private
 
     def create!
-      Transfer.transaction do
-        { from_transaction: from_transaction, to_transaction: to_transaction, transfer: transfer }.each do |key, model|
-          next if model.save
-
-          promote_errors(key, model.errors)
-        end
-
-        raise ActiveRecord::Rollback if errors.any?
-      end
+      Transfer.transaction { transfer.save }
     end
 
     def transfer
-      @transfer ||= Transfer.new(key: key)
+      @transfer ||= Transfer.new(
+        key: key,
+        from_transaction_attributes: from_transaction_attributes,
+        to_transaction_attributes: to_transaction_attributes,
+      )
     end
 
-    def from_transaction
-      transfer.build_from_transaction(
+    def from_transaction_attributes
+      {
         description: "Transfer to #{to_account}",
         account: from_account,
         key: generate_key_indentifier,
         details_attributes: [{ key: generate_key_indentifier, amount: -amount }],
-      )
+      }
     end
 
-    def to_transaction
-      transfer.build_to_transaction(
+    def to_transaction_attributes
+      {
         description: "Transfer from #{from_account}",
         account: to_account,
         key: generate_key_indentifier,
         details_attributes: [{ key: generate_key_indentifier, amount: amount }],
-      )
+      }
     end
 
     attr_reader :user, :to_account_key, :from_account_key, :amount, :key
@@ -84,6 +80,16 @@ module Forms
 
     def generate_key_indentifier
       SecureRandom.hex(6)
+    end
+
+    def success_hash
+      {
+        transfer: transfer,
+        from_account: from_account,
+        from_transaction: transfer.from_transaction,
+        to_account: to_account,
+        to_transaction: transfer.to_transaction,
+      }
     end
   end
 end
