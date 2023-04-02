@@ -8,8 +8,8 @@ module Forms
 
     def initialize(user:, params:)
       @user = user
-      @to_account_slug = params.fetch(:to_account_slug)
-      @from_account_slug = params.fetch(:from_account_slug)
+      @to_account_key = params.fetch(:to_account_key)
+      @from_account_key = params.fetch(:from_account_key)
       @amount = params.fetch(:amount).to_i.abs
       @key = params.fetch(:key) { generate_key_indentifier }
     end
@@ -60,14 +60,14 @@ module Forms
       )
     end
 
-    attr_reader :user, :to_account_slug, :from_account_slug, :amount, :key
+    attr_reader :user, :to_account_key, :from_account_key, :amount, :key
 
     def to_account
-      @to_account ||= Account.fetch(user: user, slug: to_account_slug)
+      @to_account ||= Account.fetch(user: user, key: to_account_key)
     end
 
     def from_account
-      @from_account ||= Account.fetch(user: user, slug: from_account_slug)
+      @from_account ||= Account.fetch(user: user, key: from_account_key)
     end
 
     def promote_errors(model_name, model_errors)
