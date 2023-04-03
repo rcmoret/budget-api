@@ -20,7 +20,7 @@ module Budget
     scope :create_events, -> { where(type: ItemEventType.where(name: CREATE_EVENTS)) }
     scope :delete_events, -> { where(type: ItemEventType.where(name: DELETE_EVENTS)) }
 
-    VALID_ITEM_TYPES.each do |event_type|
+    VALID_EVENT_TYPES.each do |event_type|
       scope event_type.to_sym, -> { where(type: ItemEventType.for(event_type)) }
     end
 

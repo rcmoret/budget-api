@@ -25,7 +25,7 @@ module Budget
       SETUP_ITEM_DELETE = "setup_item_delete",
     ].freeze
 
-    VALID_ITEM_TYPES = [
+    VALID_EVENT_TYPES = [
       *CREATE_EVENTS,
       *ADJUST_EVENTS,
       *DELETE_EVENTS,

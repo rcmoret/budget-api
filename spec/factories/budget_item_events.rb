@@ -20,7 +20,7 @@ FactoryBot.define do
       end
     end
 
-    Budget::EventTypes::VALID_ITEM_TYPES.map(&:to_sym).each do |event_type|
+    Budget::EventTypes::VALID_EVENT_TYPES.map(&:to_sym).each do |event_type|
       trait event_type do
         type do
           Budget::ItemEventType.find_by(name: event_type) || create(:budget_item_event_type, event_type)
