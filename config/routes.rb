@@ -23,6 +23,10 @@ Rails.application.routes.draw do
       end
     end
 
+    namespace :budget do
+      get "/(:month)/(:year)", to: "items/index#call"
+    end
+
     namespace :tokens do
       post "/", to: "create#call"
       delete "/", to: "delete#call"

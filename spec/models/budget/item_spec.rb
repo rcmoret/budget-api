@@ -9,13 +9,6 @@ RSpec.describe Budget::Item, type: :model do
   it { is_expected.to delegate_method(:expense?).to(:category) }
   it { is_expected.to delegate_method(:monthly?).to(:category) }
 
-  describe "key validations" do
-    subject { FactoryBot.build(:budget_item) }
-
-    it { is_expected.to validate_uniqueness_of(:key) }
-    it { is_expected.to validate_presence_of(:key) }
-  end
-
   describe "validation of uniqueness for weekly items per interval" do
     specify do
       budget_interval = FactoryBot.create(:budget_interval)
@@ -29,9 +22,9 @@ RSpec.describe Budget::Item, type: :model do
   end
 
   context "when deleting an item" do
-    before { travel_to Time.current }
-
-    after { travel_back }
+    around do |ex|
+      freeze_time { ex.run }
+    end
 
     context "when transaction details are present" do
       it "raises an error" do
@@ -52,36 +45,104 @@ RSpec.describe Budget::Item, type: :model do
     end
   end
 
-  describe ".by_key" do
+  describe "#deletable?" do
+    subject { budget_item.deletable? }
+
     let(:budget_item) { FactoryBot.create(:budget_item) }
 
-    context "when passing an upcased version of the key" do
-      let(:key) { budget_item.key.upcase }
-
-      it "returns the item" do
-        subject = described_class.by_key(key)
-
-        expect(subject).to eq budget_item
+    context "when the budget item has no transaction details" do
+      it "returns true" do
+        expect(subject).to be true
       end
     end
 
-    context "when passing an down-cased version of the key" do
-      let(:key) { budget_item.key.downcase }
+    context "when the budget item has at least one transaction detail" do
+      before { FactoryBot.create(:transaction_detail, budget_item: budget_item) }
 
-      it "returns the item" do
-        subject = described_class.by_key(key)
+      it "returns false" do
+        expect(subject).to be false
+      end
+    end
+  end
 
-        expect(subject).to eq budget_item
+  describe "#amount" do
+    subject { budget_item }
+
+    let(:budget_item) { FactoryBot.create(:budget_item) }
+
+    context "when the budget item has no events" do
+      it "returns zero" do
+        expect(subject.amount).to be_zero
       end
     end
 
-    context "when passing a key that does not map to an item" do
-      let(:key) { SecureRandom.hex(6) }
+    context "when the budget item has at least one event" do
+      let!(:budget_item_event) { FactoryBot.create(:budget_item_event, item: budget_item) }
 
-      it "returns the item" do
-        subject = described_class.by_key(key)
+      it "returns the total of the details' amounts" do
+        expect(subject.amount).to be budget_item_event.amount
+      end
+    end
+  end
 
-        expect(subject).to be nil
+  describe "#transaction_detail_count" do
+    subject { FactoryBot.create(:weekly_item) }
+
+    context "when there are no details" do
+      it "returns zero" do
+        expect(subject.transaction_detail_count).to be_zero
+      end
+    end
+
+    context "when there are serveral details" do
+      let(:count) { rand(1..10) }
+
+      before { FactoryBot.create_list(:transaction_detail, count, budget_item: subject) }
+
+      it "returns the count" do
+        expect(subject.transaction_detail_count).to be count
+      end
+    end
+  end
+
+  describe "#spent" do
+    subject { FactoryBot.create(:weekly_item) }
+
+    context "when there are no details" do
+      it "returns zero" do
+        expect(subject.spent).to be_zero
+      end
+    end
+
+    context "when there are serveral details" do
+      let(:count) { rand(1..10) }
+
+      let!(:details) { FactoryBot.create_list(:transaction_detail, count, budget_item: subject) }
+
+      it "returns the count" do
+        expect(subject.spent).to be details.map(&:amount).sum
+      end
+    end
+  end
+
+  describe "#difference" do
+    subject { FactoryBot.create(:weekly_expense) }
+
+    before { FactoryBot.create(:budget_item_event, :create_event, amount: rand(-100_00..-10_00)) }
+
+    context "when there are no details" do
+      it "returns zero" do
+        expect(subject.difference).to be subject.amount
+      end
+    end
+
+    context "when there are serveral details" do
+      let(:count) { rand(1..10) }
+      let!(:details) { FactoryBot.create_list(:transaction_detail, count, budget_item: subject) }
+
+      it "returns the count" do
+        expect(subject.difference)
+          .to be(subject.amount - details.sum(&:amount))
       end
     end
   end

@@ -24,6 +24,7 @@ module Budget
       scope event_type.to_sym, -> { where(type: ItemEventType.for(event_type)) }
     end
 
+    delegate :name, to: :type, prefix: true
     delegate :present?, to: :data, prefix: true
 
     def item_create?

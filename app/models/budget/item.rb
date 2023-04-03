@@ -25,6 +25,7 @@ module Budget
 
     validates :category, presence: true
     validates :budget_category_id, uniqueness: { scope: :budget_interval_id, if: -> { weekly? && active? } }
+    alias_attribute :category_id, :budget_category_id
     scope :prior_to, ->(date_hash) { joins(:interval).merge(Interval.prior_to(date_hash)) }
     scope :in_range, ->(date_args) { joins(:interval).merge(Interval.in_range(date_args)) }
     scope :active, -> { where(deleted_at: nil) }
@@ -43,6 +44,8 @@ module Budget
              :monthly?,
              :name,
              :per_diem_enabled,
+             :revenue?,
+             :weekly?,
              to: :category
 
     def delete
@@ -51,20 +54,24 @@ module Budget
       update(deleted_at: Time.current)
     end
 
-    def weekly?
-      !monthly?
-    end
-
-    def revenue?
-      !expense?
-    end
-
     def deletable?
       transaction_details.none?
     end
 
     def amount
       events.sum(:amount)
+    end
+
+    def spent
+      transaction_details.map(&:amount).sum
+    end
+
+    def transaction_detail_count
+      transaction_details.size
+    end
+
+    def difference
+      amount - spent
     end
 
     NonDeleteableError = Class.new(StandardError)

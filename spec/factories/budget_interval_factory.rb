@@ -5,8 +5,12 @@ FactoryBot.define do
     association :user_group
 
     trait :current do
-      month { Time.zone.today.month }
-      year { Time.zone.today.year }
+      month { Time.current.month }
+      year { Time.current.year }
+    end
+
+    trait :past do
+      year { Time.current.year - rand(1..10) }
     end
 
     trait :set_up do

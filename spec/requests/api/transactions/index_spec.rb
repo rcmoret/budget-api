@@ -1,7 +1,6 @@
 require "rails_helper"
 
 RSpec.describe "GET /api/accounts/:account_key/transactions/:month/:year" do
-
   context "when passing valid month, year combination" do
     subject { get(api_account_transactions_path(account_key, month, year), headers: headers) }
 

@@ -39,7 +39,6 @@ module API
         end
         # rubocop:enable Metrics/MethodLength
 
-
         def transfer_form
           @transfer_form ||= Forms::TransferForm.new(
             user: api_user,

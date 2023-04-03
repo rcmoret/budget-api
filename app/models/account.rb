@@ -13,14 +13,7 @@ class Account < ApplicationRecord
   scope :cash_flow, -> { where(cash_flow: true) }
   scope :non_cash_flow, -> { where(cash_flow: false) }
   scope :details_prior_to, lambda { |date, include_pending:|
-    details = Transaction::Detail.all
-
-    if include_pending
-      joins(:details)
-        .merge(details.prior_to(date).or(details.pending))
-    else
-      joins(:details).merge(details.prior_to(date))
-    end
+    joins(:details).merge(Transaction::Detail.prior_to(date, include_pending: include_pending))
   }
   validates :name, :priority, :slug, if: :active?, uniqueness: { scope: :user_group_id }
   validates :name, :priority, :slug, presence: true

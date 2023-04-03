@@ -14,9 +14,9 @@ module API
 
     def interval
       @interval ||= if month.nil? || year.nil?
-                      Budget::Interval.belonging_to(api_user).current
+                      ::Budget::Interval.belonging_to(api_user).current
                     else
-                      Budget::Interval.fetch(user: api_user, key: { month: month, year: year })
+                      ::Budget::Interval.fetch(user: api_user, key: { month: month, year: year })
                     end
     end
 

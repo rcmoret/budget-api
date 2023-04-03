@@ -1,4 +1,5 @@
 module Budget
+  # rubocop:disable Metrics:ClassLength
   class Interval < ApplicationRecord
     include BelongsToUserGroup
     include Fetchable
@@ -48,9 +49,22 @@ module Budget
       alias by_key for
 
       def current
-        today = Date.current
         where(start_date: ..today, end_date: today..).ordered.take.presence ||
-          self.for(month: today.month, year: today.year)
+          determine_current
+      end
+
+      private
+
+      def determine_current
+        potential_interval = self.for(month: today.month, year: today.year)
+        return potential_interval.next if potential_interval.last_date < today
+        return potential_interval.prev if potential_interval.first_date > today
+
+        potential_interval
+      end
+
+      def today
+        Date.current.to_date
       end
     end
 
@@ -94,16 +108,20 @@ module Budget
       first_date..last_date
     end
 
-    def future?
-      !closed_out? && !current?
-    end
-
     def closed_out?
       close_out_completed_at.present?
     end
 
     def current?
-      !closed_out? && prev.closed_out?
+      self.class.where(user_group: user_group).current == self
+    end
+
+    def future?
+      first_date > today
+    end
+
+    def past?
+      last_date < today
     end
 
     private
@@ -121,6 +139,11 @@ module Budget
       false
     end
 
+    def today
+      Time.current.to_date
+    end
+
     QueryError = Class.new(StandardError)
   end
+  # rubocop:enable Metrics:ClassLength
 end

@@ -8,7 +8,7 @@ RSpec.describe "POST /api/accounts/transfers" do
   end
 
   shared_context "when user has budget interval" do
-    let(:interval) { FactoryBot.create(:budget_interval, user_group: user.group) }
+    let(:interval) { FactoryBot.create(:budget_interval, :current, user_group: user.group) }
     let(:month) { interval.month }
     let(:year) { interval.year }
   end
@@ -22,10 +22,9 @@ RSpec.describe "POST /api/accounts/transfers" do
         .and change { to_account.reload.balance }.by(+amount)
       expect(response).to have_http_status :created
       body = JSON.parse(response.body).deep_symbolize_keys
-      # binding.pry
       expect(body[:accounts]).to contain_exactly(
-        { key: from_account.key, balance: -amount, balancePriorTo: -amount },
-        { key: to_account.key, balance: amount, balancePriorTo: amount },
+        { key: from_account.key, balance: -amount, balancePriorTo: 0 },
+        { key: to_account.key, balance: amount, balancePriorTo: 0 },
       )
       expect(body[:transactions].size).to be 2
     end

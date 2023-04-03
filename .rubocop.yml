@@ -68,6 +68,7 @@ RSpec/ExampleLength:
   Max: 10
   Exclude:
     - spec/requests/api/**/*
+    - spec/serializers/**/*
 
 RSpec/ExpectChange:
   EnforcedStyle: block
@@ -90,6 +91,7 @@ RSpec/MultipleMemoizedHelpers:
   Max: 9
   Exclude:
     - spec/requests/api/**/*
+    - spec/serializers/**/*
 
 RSpec/MessageSpies:
   EnforcedStyle: receive

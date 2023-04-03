@@ -1,6 +1,6 @@
 module Presenters
   module Budget
-    class DayToDayRevenuePresenter < BaseItemPresenter
+    class DayToDayRevenuePresenter < SimpleDelegator
       def remaining
         [difference, 0].max
       end

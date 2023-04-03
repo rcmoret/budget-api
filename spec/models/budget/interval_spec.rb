@@ -12,23 +12,47 @@ RSpec.describe Budget::Interval, type: :model do
           :budget_interval,
           user_group: user.group,
           close_out_completed_at: 1.minute.ago,
-          start_date: Date.new(2023, 3, 1),
+          start_date: Date.new(2023, 3, 2),
           end_date: Date.new(2023, 3, 30),
           month: 3,
           year: 2023
         )
       end
 
-      around do |ex|
-        travel_to(Date.new(2023, 3, 30)) do
-          ex.run
+      context "when in the middle of the month" do
+        around do |ex|
+          travel_to(Date.new(2023, 3, 30)) { ex.run }
+        end
+
+        it "returns the interval for March 2023" do
+          subject = described_class.belonging_to(user).current
+          expect(subject.month).to be 3
+          expect(subject.year).to be 2023
         end
       end
 
-      it "returns the interval for March 23" do
-        subject = described_class.belonging_to(user).current
-        expect(subject.month).to be 3
-        expect(subject.year).to be 2023
+      context "when at the end of the calendar month is part of the next month" do
+        around do |ex|
+          travel_to(Date.new(2023, 3, 31)) { ex.run }
+        end
+
+        it "returns the interval for April 2023" do
+          subject = described_class.belonging_to(user).current
+          expect(subject.month).to be 4
+          expect(subject.year).to be 2023
+        end
+      end
+
+      context "when at the start of the calendar month is part of the previous month" do
+        around do |ex|
+          travel_to(Date.new(2023, 3, 1)) { ex.run }
+        end
+
+        it "returns the interval for Feb 2023" do
+          subject = described_class.belonging_to(user).current
+          expect(subject.month).to be 2
+          expect(subject.year).to be 2023
+        end
       end
     end
   end
@@ -101,9 +125,6 @@ RSpec.describe Budget::Interval, type: :model do
     end
   end
 
-  # describe '.for' do
-  # end
-
   describe "#first_date" do
     context "when the first day lands normally" do # (2/28/19 is a Thursday)
       specify do
@@ -175,6 +196,96 @@ RSpec.describe Budget::Interval, type: :model do
         subject = FactoryBot.build(:budget_interval, month: 12, year: 2023)
         expect(subject.last_date).to eq Date.new(2023, 12, 28)
       end
+    end
+  end
+
+  describe "#current?" do
+    subject do
+      FactoryBot.create(
+        :budget_interval,
+        start_date: Date.new(2023, 3, 2),
+        end_date: Date.new(2023, 3, 30),
+        month: 3,
+        year: 2023
+      )
+    end
+
+    context "when on the start date" do
+      around { |ex| travel_to(Date.new(2023, 3, 2)) { ex.run } }
+
+      specify { expect(subject.current?).to be true }
+    end
+
+    context "when on the end date" do
+      around { |ex| travel_to(Date.new(2023, 3, 30)) { ex.run } }
+
+      specify { expect(subject.current?).to be true }
+    end
+
+    context "when in the middle of the month" do
+      around { |ex| travel_to(Date.new(2023, 3, rand(3..29))) { ex.run } }
+
+      specify { expect(subject.current?).to be true }
+    end
+
+    context "when after the month" do
+      around { |ex| travel_to(Date.new(2023, 3, 31)) { ex.run } }
+
+      specify { expect(subject.current?).to be false }
+    end
+
+    context "when before the month" do
+      around { |ex| travel_to(Date.new(2023, 3, 1)) { ex.run } }
+
+      specify { expect(subject.current?).to be false }
+    end
+  end
+
+  describe "#past?" do
+    subject do
+      FactoryBot.create(
+        :budget_interval,
+        start_date: Date.new(2023, 3, 2),
+        end_date: Date.new(2023, 3, 30),
+        month: 3,
+        year: 2023
+      )
+    end
+
+    context "when today is greater than the interval's end date" do
+      around { |ex| travel_to(Date.new(2023, 3, 31)) { ex.run } }
+
+      specify { expect(subject.past?).to be true }
+    end
+
+    context "when today is less than the interval's start date" do
+      around { |ex| travel_to(Date.new(2023, 3, 1)) { ex.run } }
+
+      specify { expect(subject.past?).to be false }
+    end
+  end
+
+  describe "#future?" do
+    subject do
+      FactoryBot.create(
+        :budget_interval,
+        start_date: Date.new(2023, 3, 2),
+        end_date: Date.new(2023, 3, 30),
+        month: 3,
+        year: 2023
+      )
+    end
+
+    context "when today is greater than the interval's end date" do
+      around { |ex| travel_to(Date.new(2023, 3, 31)) { ex.run } }
+
+      specify { expect(subject.future?).to be false }
+    end
+
+    context "when today is less than the interval's start date" do
+      around { |ex| travel_to(Date.new(2023, 3, 1)) { ex.run } }
+
+      specify { expect(subject.future?).to be true }
     end
   end
 end

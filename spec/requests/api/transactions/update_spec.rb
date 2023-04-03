@@ -65,7 +65,7 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
         expect(body[:accounts]).to eq(
           [
             { key: account.key, balance: 0, balancePriorTo: 0 },
-            { key: savings_account.key, balance: transaction.total, balancePriorTo: 0 },
+            { key: savings_account.key, balance: transaction.total, balancePriorTo: transaction.total },
           ]
         )
         expect(body[:budgetItems]).to be nil

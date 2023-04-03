@@ -13,7 +13,9 @@ module Transaction
     validate :amount_static!, if: :transfer?, on: :update
 
     scope :discretionary, -> { where(budget_item_id: nil) }
-    scope :prior_to, ->(date) { joins(:entry).merge(Entry.prior_to(date)) }
+    scope :prior_to, lambda { |date, include_pending: false|
+                       joins(:entry).merge(Entry.prior_to(date, include_pending: include_pending))
+                     }
     scope :pending, -> { joins(:entry).merge(Entry.pending) }
     scope :budget_inclusions, -> { joins(:entry).merge(Entry.budget_inclusions) }
     scope :for_accounts, lambda { |account_ids|
@@ -22,6 +24,7 @@ module Transaction
     scope :between, lambda { |date_range, include_pending:|
       joins(:entry).merge(Entry.between(date_range, include_pending: include_pending))
     }
+    scope :budget_inclusions, -> { joins(:entry).merge(Entry.budget_inclusions) }
     scope :cash_flow, -> { joins(:entry).merge(Entry.cash_flow) }
     scope :non_cash_flow, -> { joins(:entry).merge(Entry.non_cash_flow) }
     scope :belonging_to, ->(user) { joins(:entry).merge(Entry.belonging_to(user)) }
@@ -39,10 +42,6 @@ module Transaction
       return unless amount_changed?
 
       errors.add(:amount, "Cannot be changed for a transfer")
-    end
-
-    def presenter_class
-      Presenters::Transactions::DetailPresenter
     end
   end
 end
