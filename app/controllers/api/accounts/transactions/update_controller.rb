@@ -19,7 +19,7 @@ module API
           keys = [account_key, params.fetch(:transaction)[:accountKey]].compact.uniq
           return [account] if keys.one?
 
-          Account.belonging_to(api_user).by_keys(keys)
+          Account.fetch_collection(user: api_user, keys: keys)
         end
 
         def transaction_entry_permitted_params

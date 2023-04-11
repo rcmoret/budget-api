@@ -93,8 +93,7 @@ module UsesTransactionEntryForm
   def budget_items
     interval
       .items
-      .belonging_to(api_user)
-      .by_keys(budget_item_keys)
+      .fetch_collection(user: api_user, keys: budget_item_keys)
       .map(&:as_presenter)
   end
 end
