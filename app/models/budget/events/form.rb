@@ -3,6 +3,17 @@ module Budget
     class Form
       include ActiveModel::Model
 
+      PERMITTED_PARAMS = %i[
+        amount
+        budget_category_key
+        budget_item_key
+        data
+        event_type
+        key
+        month
+        year
+      ].freeze
+
       validate :all_valid_event_types
 
       def initialize(current_user, events_data)
@@ -21,10 +32,10 @@ module Budget
       private
 
       def save_all!
-        forms.each_with_index do |form, index|
+        forms.each do |form|
           next if form.save
 
-          promote_errors(form, index)
+          promote_errors(form)
         end
 
         raise ActiveRecord::Rollback if errors.any?
@@ -43,9 +54,9 @@ module Budget
         @forms ||= events_data.map { |event_data| FormGateway.form_for(current_user, event_data) }
       end
 
-      def promote_errors(model, index)
+      def promote_errors(model)
         model.errors.each do |error|
-          errors.add("#{model}.#{index}.#{error.attribute}", error.message)
+          errors.add("#{model}.#{model.key}", { error.attribute => error.message })
         end
       end
 

@@ -83,8 +83,9 @@ RSpec.describe Budget::Events::Form do
           .and_call_original
       end
 
+      let(:event_key) { SecureRandom.hex(6) }
       let(:params) do
-        { events: [{ event_type: Budget::EventTypes::CREATE_EVENTS.sample }] }
+        { events: [{ key: event_key, event_type: Budget::EventTypes::CREATE_EVENTS.sample }] }
       end
 
       it "returns false" do
@@ -92,10 +93,10 @@ RSpec.describe Budget::Events::Form do
         expect(form.save).to be false
       end
 
-      it "calls surfaces the form object errors" do
+      it "calls surfaces the orm object errors" do
         form = described_class.new(user, params)
         form.save
-        expect(form.errors["create_item_form.0.category"]).to include "can't be blank"
+        expect(form.errors["create_item_form.#{event_key}"]).to include(category: "can't be blank")
       end
     end
   end

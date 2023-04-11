@@ -9,7 +9,10 @@ module Budget
         @event_type = params[:event_type]
         @budget_item_key = params[:budget_item_key]
         @data = params[:data]
+        @key = params.fetch(:key) { SecureRandom.hex(6) }
       end
+
+      attr_reader :key
 
       private
 
@@ -17,7 +20,7 @@ module Budget
         @event ||= Budget::ItemEvent.new(item: budget_item,
                                          type: budget_item_event_type,
                                          data: data,
-                                         key: SecureRandom.hex(6),
+                                         key: key,
                                          amount: event_amount,)
       end
 

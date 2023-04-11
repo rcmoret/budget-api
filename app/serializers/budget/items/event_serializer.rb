@@ -1,5 +1,5 @@
 module Budget
-  module Intervals
+  module Items
     class EventSerializer < ApplicationSerializer
       attributes :key,
                  :amount,

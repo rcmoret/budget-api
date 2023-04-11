@@ -136,7 +136,7 @@ RSpec.describe Budget::Events::CreateItemForm do
 
     context "when budget category lookup returns nothing" do
       it "returns false" do
-        params = params_for(category: category, interval: interval, budget_category_slug: "nil")
+        params = params_for(category: category, interval: interval, budget_category_key: "nil")
         form = described_class.new(user, params)
         expect(form.save).to be false
         expect(form.errors["category"]).to include "can't be blank"
@@ -194,7 +194,7 @@ RSpec.describe Budget::Events::CreateItemForm do
       amount: amount,
       month: interval.month,
       year: interval.year,
-      budget_category_slug: category.slug,
+      budget_category_key: category.key,
       budget_item_key: SecureRandom.hex(6),
       data: {},
     }.merge(overrides)

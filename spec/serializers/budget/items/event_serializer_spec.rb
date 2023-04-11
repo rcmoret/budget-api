@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Budget::Intervals::EventSerializer do
+RSpec.describe Budget::Items::EventSerializer do
   describe "#render" do
     subject { described_class.new(budget_item_event) }
 

@@ -29,7 +29,7 @@ module Budget
         @amount = params[:amount]
         @month = params[:month].to_i
         @year = params[:year].to_i
-        @budget_category_slug = params[:budget_category_slug] || ""
+        @budget_category_key = params[:budget_category_key]
       end
 
       def save
@@ -50,7 +50,7 @@ module Budget
 
       private
 
-      attr_reader :amount, :budget_category_slug, :month, :year
+      attr_reader :amount, :budget_category_key, :month, :year
 
       alias event_amount amount
 
@@ -79,7 +79,7 @@ module Budget
       end
 
       def category
-        @category ||= Budget::Category.fetch(user: current_user, slug: budget_category_slug)
+        @category ||= Budget::Category.fetch(user: current_user, key: budget_category_key)
       end
 
       def interval

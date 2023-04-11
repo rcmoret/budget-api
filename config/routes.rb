@@ -25,6 +25,7 @@ Rails.application.routes.draw do
 
     namespace :budget do
       get "/(:month)/(:year)", to: "items/index#call"
+      post "/events/(:month)/(:year)", to: "events/create#call", as: :items_events
     end
 
     namespace :tokens do

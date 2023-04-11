@@ -26,11 +26,11 @@ RSpec.describe Budget::Intervals::ItemSerializer do
     let(:detail_serializer) do
       instance_double(Budget::Intervals::TransactionDetailSerializer, render: {})
     end
-    let(:event_serializer) { instance_double(Budget::Intervals::EventSerializer, render: {}) }
+    let(:event_serializer) { instance_double(Budget::Items::EventSerializer, render: {}) }
 
     before do
       FactoryBot.create(:budget_item_event, :create_event, item_id: budget_item.id).then do |event|
-        allow(Budget::Intervals::EventSerializer)
+        allow(Budget::Items::EventSerializer)
           .to receive(:new)
           .with(event)
           .and_return(event_serializer)
