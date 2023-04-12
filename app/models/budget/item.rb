@@ -4,7 +4,6 @@ module Budget
   class Item < ApplicationRecord
     include HasKeyIdentifier
     include Fetchable
-    include Presentable
 
     has_many :transaction_details,
              class_name: "Transaction::Detail",
@@ -74,11 +73,15 @@ module Budget
       amount - spent
     end
 
+    def decorated
+      decorator_class.new(self)
+    end
+
     NonDeleteableError = Class.new(StandardError)
 
     private
 
-    def presenter_class
+    def decorator_class
       if monthly?
         Presenters::Budget::MonthlyItemPresenter
       elsif expense?

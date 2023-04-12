@@ -55,7 +55,7 @@ RSpec.describe "GET /api/budget/:month/:year" do
           isSetUp: false,
           discretionary: {
             amount: transaction_entry.total,
-            overUnderBudget: budget_item.as_presenter.budget_impact,
+            overUnderBudget: budget_item.decorated.budget_impact,
             transactionDetails: [
               {
                 key: transaction_entry.details.first.key,
@@ -76,7 +76,7 @@ RSpec.describe "GET /api/budget/:month/:year" do
               name: category.name,
               amount: event.amount,
               difference: budget_item.difference,
-              remaining: budget_item.as_presenter.remaining,
+              remaining: budget_item.decorated.remaining,
               spent: item_transaction_entry.total,
               iconClassName: nil,
               isAccrual: category.accrual,

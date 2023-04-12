@@ -94,6 +94,6 @@ module UsesTransactionEntryForm
     interval
       .items
       .fetch_collection(user: api_user, keys: budget_item_keys)
-      .map(&:as_presenter)
+      .map(&:decorated)
   end
 end

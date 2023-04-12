@@ -19,7 +19,7 @@ module Budget
           Budget::Item
             .includes(transaction_details: { entry: :account }, events: :type, category: :icon)
             .fetch_collection(user: user, keys: budget_item_keys)
-            .map(&:as_presenter)
+            .map(&:decorated)
         end
       end
 

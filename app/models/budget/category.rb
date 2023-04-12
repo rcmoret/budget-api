@@ -4,7 +4,6 @@ module Budget
     include Fetchable
     include HasKeyIdentifier
     include Messages
-    include Presentable
     include Slugable
     PERMITTED_PARAMS = %i[
       archived_at
@@ -98,10 +97,6 @@ module Budget
       return unless per_diem_enabled?
 
       errors.add(:is_per_diem_enabled, "not available on monthly category")
-    end
-
-    def presenter_class
-      Presenters::Budget::CategoryPresenter
     end
   end
 end

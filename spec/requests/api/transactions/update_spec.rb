@@ -221,7 +221,7 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
             key: budget_item.key,
             isDeletable: false,
             isMonthly: budget_item.monthly?,
-            remaining: budget_item.as_presenter.remaining,
+            remaining: budget_item.decorated.remaining,
           },
         ]
       )

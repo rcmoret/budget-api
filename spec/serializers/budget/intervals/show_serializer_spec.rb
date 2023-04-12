@@ -81,7 +81,7 @@ RSpec.describe Budget::Intervals::ShowSerializer do
     before { FactoryBot.create(:maturity_interval, interval: interval.next, category: category) }
 
     it "returns the items" do
-      item = budget_item.as_presenter
+      item = budget_item.decorated
 
       expect(subject.items.render).to eq(
         [

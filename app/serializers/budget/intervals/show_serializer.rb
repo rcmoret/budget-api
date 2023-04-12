@@ -60,7 +60,7 @@ module Budget
       end
 
       def item_objects
-        interval.items.map(&:as_presenter).map do |item|
+        interval.items.map(&:decorated).map do |item|
           {
             item: item,
             maturity_interval: upcoming_maturity_intervals.find(item.category_id),

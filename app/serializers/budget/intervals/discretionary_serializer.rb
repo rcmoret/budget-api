@@ -33,7 +33,7 @@ module Budget
       private
 
       def items
-        super.map(&:as_presenter)
+        super.map(&:decorated)
       end
 
       def available_cash

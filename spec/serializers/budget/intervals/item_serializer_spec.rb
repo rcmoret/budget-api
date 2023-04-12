@@ -50,7 +50,7 @@ RSpec.describe Budget::Intervals::ItemSerializer do
         FactoryBot.create(:budget_item,
                           interval: interval,
                           category: category,
-                          user_group: user_group).as_presenter
+                          user_group: user_group).decorated
       end
 
       # rubocop:disable RSpec/ExampleLength
@@ -88,7 +88,7 @@ RSpec.describe Budget::Intervals::ItemSerializer do
         FactoryBot.create(:budget_item,
                           interval: interval,
                           category: category,
-                          user_group: user_group).as_presenter
+                          user_group: user_group).decorated
       end
 
       # rubocop:disable RSpec/ExampleLength
