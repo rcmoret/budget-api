@@ -33,5 +33,9 @@ FactoryBot.define do
     trait :with_icon do
       association :icon
     end
+
+    trait :archived do
+      archived_at { rand(1..300).days.ago }
+    end
   end
 end

@@ -5,18 +5,6 @@ module Budget
     include HasKeyIdentifier
     include Messages
     include Slugable
-    PERMITTED_PARAMS = %i[
-      archived_at
-      default_amount
-      accrual
-      expense
-      icon_id
-      is_per_diem_enabled
-      key
-      monthly
-      name
-      slug
-    ].freeze
 
     has_many :items, foreign_key: :budget_category_id, inverse_of: :category, dependent: :restrict_with_exception
     has_many :transaction_details, through: :items
@@ -58,6 +46,9 @@ module Budget
     scope :expenses, -> { where(expense: true) }
     scope :revenues, -> { where(expense: false) }
 
+    alias_attribute :is_accrual, :accrual
+    alias_attribute :is_expense, :expense
+    alias_attribute :is_monthly, :monthly
     alias_attribute :per_diem_enabled?, :is_per_diem_enabled
     delegate :class_name, :name, to: :icon, prefix: true, allow_nil: true
 
@@ -81,11 +72,9 @@ module Budget
       update(archived_at: nil)
     end
 
-    # rubocop:disable Rails/ActiveRecordOverride
     def destroy
-      items.none? ? super : archive!
+      items.none? ? delete : archive!
     end
-    # rubocop:enable Rails/ActiveRecordOverride
 
     private
 

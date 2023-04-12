@@ -24,6 +24,16 @@ Rails.application.routes.draw do
     end
 
     namespace :budget do
+      namespace :categories do
+        get "/", to: "index#call"
+        post "/", to: "create#call"
+      end
+
+      scope "/category/:category_key", module: :categories, as: :category do
+        put "/", to: "update#call"
+        delete "/", to: "delete#call"
+      end
+
       get "/(:month)/(:year)", to: "items/index#call"
       post "/events/(:month)/(:year)", to: "events/create#call", as: :items_events
     end
