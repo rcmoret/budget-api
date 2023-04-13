@@ -47,6 +47,8 @@ module Budget
     validates :default_amount, :name, presence: true
     validate :accrual_on_expense
     validate :per_diem_disabled, if: :monthly?
+    validate :expense_unchanged!
+    validate :monthly_unchanged!
 
     scope :active, -> { where(archived_at: nil) }
     scope :accruals, -> { where(accrual: true) }
@@ -97,6 +99,18 @@ module Budget
       return unless per_diem_enabled?
 
       errors.add(:is_per_diem_enabled, "not available on monthly category")
+    end
+
+    def expense_unchanged!
+      return if new_record? || !expense_changed?
+
+      errors.add(:expense, "cannot be changed after creation")
+    end
+
+    def monthly_unchanged!
+      return if new_record? || !monthly_changed?
+
+      errors.add(:monthly, "cannot be changed after creation")
     end
   end
 end

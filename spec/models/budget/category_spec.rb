@@ -26,6 +26,24 @@ RSpec.describe Budget::Category, type: :model do
           include "can only be enabled for expenses"
       end
     end
+
+    describe "expense/revenue cannot be changed after create" do
+      subject { FactoryBot.create(:category, :revenue) }
+
+      it "returns false and the object has errors" do
+        expect(subject.update(expense: true, default_amount: -10_00)).to be false
+        expect(subject.errors.to_hash).to eq(expense: ["cannot be changed after creation"])
+      end
+    end
+
+    describe "monthly/day-to-day cannot be changed after create" do
+      subject { FactoryBot.create(:category, :monthly) }
+
+      it "returns false and the object has errors" do
+        expect(subject.update(monthly: false)).to be false
+        expect(subject.errors.to_hash).to eq(monthly: ["cannot be changed after creation"])
+      end
+    end
   end
 
   describe "#revenue?" do
@@ -115,9 +133,7 @@ RSpec.describe Budget::Category, type: :model do
   describe "destroy" do
     subject { category.destroy }
 
-    around do |ex|
-      freeze_time { ex.run }
-    end
+    around { |ex| freeze_time { ex.run } }
 
     let!(:category) { FactoryBot.create(:category) }
 
