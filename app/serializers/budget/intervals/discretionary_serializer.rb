@@ -19,6 +19,7 @@ module Budget
           SerializableCollection.new(serializer: TransactionDetailSerializer) do
             Transaction::Detail
               .includes(entry: %i[account credit_transfer debit_transfer])
+              .belonging_to(user_group)
               .discretionary
               .budget_inclusions
               .between(date_range, include_pending: current?)
@@ -40,7 +41,7 @@ module Budget
         cash_flow_transaction_detail_scope
           .or(non_cash_flow_budget_inclusion_scope)
           .joins(:account)
-          .merge(Account.where(user_group: user_group))
+          .merge(Account.belonging_to(user_group))
           .joins(:details)
           .sum(:amount)
       end
@@ -60,7 +61,7 @@ module Budget
           .between(date_range, include_pending: current?)
           .where(
             budget_exclusion: false,
-            account_id: Account.where(user_group: user_group).non_cash_flow.pluck(:id)
+            account_id: Account.belonging_to(user_group).non_cash_flow.pluck(:id)
           )
       end
     end

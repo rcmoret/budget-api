@@ -172,6 +172,24 @@ RSpec.describe Budget::Intervals::DiscretionarySerializer do
   describe "#transaction_details" do
     subject { described_class.new(interval) }
 
+    before do
+      other_group = FactoryBot.create(:user_group)
+      other_group_account = FactoryBot.create(:account, user_group: other_group)
+      FactoryBot.create(
+        :transaction_entry,
+        account: other_group_account,
+        description: Faker::Music::GratefulDead.song,
+        clearance_date: interval.date_range.to_a.sample,
+        details_attributes: [
+          {
+            key: SecureRandom.hex(6),
+            amount: rand(-100_00..100_00),
+            budget_item_id: nil,
+          },
+        ],
+      )
+    end
+
     context "when a detail is present within the date range" do
       include_context "when a detail is present within the date range"
       include_context "with a stubbed out detail serializer"

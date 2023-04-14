@@ -89,17 +89,17 @@ module Budget
 
     def prev
       if month > 1
-        self.class.where(user_group: user_group).for(month: (month - 1), year: year)
+        self.class.belonging_to(user_group).for(month: (month - 1), year: year)
       else
-        self.class.where(user_group: user_group).for(month: 12, year: (year - 1))
+        self.class.belonging_to(user_group).for(month: 12, year: (year - 1))
       end
     end
 
     def next_month
       if month < 12
-        self.class.where(user_group: user_group).for(month: (month + 1), year: year)
+        self.class.belonging_to(user_group).for(month: (month + 1), year: year)
       else
-        self.class.where(user_group: user_group).for(month: 1, year: (year + 1))
+        self.class.belonging_to(user_group).for(month: 1, year: (year + 1))
       end
     end
     alias next next_month
@@ -113,7 +113,7 @@ module Budget
     end
 
     def current?
-      self.class.where(user_group: user_group).current == self
+      self.class.belonging_to(user_group).current == self
     end
 
     def future?
