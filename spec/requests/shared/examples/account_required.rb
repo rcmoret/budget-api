@@ -1,6 +1,5 @@
 RSpec.shared_examples "endpoint requires account" do
   let(:user) { FactoryBot.create(:user) }
-  let(:account_key) { SecureRandom.hex(6) }
   let(:interval) { FactoryBot.create(:budget_interval, user_group: user.group) }
   let(:month) { interval.month }
   let(:year) { interval.year }

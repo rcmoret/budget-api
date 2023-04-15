@@ -140,6 +140,17 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
         },
       }
     end
+    let(:account_key) { SecureRandom.hex(6) }
+
+    include_examples "endpoint requires account"
+  end
+
+  context "when providing a key to an unrelated account" do
+    include_context "with valid token"
+    include_context "with an account belonging to a different user group"
+
+    let(:account_key) { other_groups_account.key }
+    let(:params) { {} }
 
     include_examples "endpoint requires account"
   end

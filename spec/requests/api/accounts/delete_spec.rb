@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "DELETE /api/account/:key", type: :request do
-  subject { delete(api_account_path(key), headers: headers) }
+  subject { delete(api_account_path(account_key), headers: headers) }
 
   context "when passing a valid token" do
     let(:user) { FactoryBot.create(:user) }
@@ -9,14 +9,21 @@ RSpec.describe "DELETE /api/account/:key", type: :request do
     include_context "with valid token"
 
     context "when the account is not found" do
-      let(:key) { account_key }
+      let(:account_key) { SecureRandom.hex(6) }
+
+      include_examples "endpoint requires account"
+    end
+
+    context "when passing the key for an unrelated account" do
+      include_context "with an account belonging to a different user group"
+      let(:account_key) { other_groups_account.key }
 
       include_examples "endpoint requires account"
     end
 
     context "when deleting an account with existing transaction entries" do
       let(:account) { FactoryBot.create(:account, user_group: user.user_group) }
-      let(:key) { account.key }
+      let(:account_key) { account.key }
 
       before do
         FactoryBot.create_list(:transaction_entry, 2, account: account)
@@ -36,10 +43,10 @@ RSpec.describe "DELETE /api/account/:key", type: :request do
 
     context "when deleting an account with no existing transaction entries" do
       before do
-        FactoryBot.create(:account, user_group: user.user_group, key: key)
+        FactoryBot.create(:account, user_group: user.user_group, key: account_key)
       end
 
-      let(:key) { SecureRandom.hex(6) }
+      let(:account_key) { SecureRandom.hex(6) }
 
       it "deletes the account" do
         expect { subject }
@@ -49,7 +56,7 @@ RSpec.describe "DELETE /api/account/:key", type: :request do
     end
 
     context "when the deletion does not process successfully" do
-      let(:key) { SecureRandom.hex(6) }
+      let(:account_key) { SecureRandom.hex(6) }
       let(:account_double) { instance_double(Account, destroy: nil, errors: errors_double, archived_at: nil) }
       let(:errors_double) do
         instance_double(ActiveModel::Errors, any?: true, to_hash: { account: "could not be saved" })

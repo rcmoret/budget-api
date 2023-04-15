@@ -8,8 +8,19 @@ RSpec.describe "DELETE /api/account/:account_key/transactions/:key/:month/:year"
 
   context "when the account is not found" do
     let(:transaction_key) { SecureRandom.hex(6) }
+    let(:account_key) { SecureRandom.hex(6) }
 
     include_context "with valid token"
+    include_examples "endpoint requires account"
+  end
+
+  context "when passing an account key for an unrelated account" do
+    include_context "with valid token"
+    include_context "with an account belonging to a different user group"
+
+    let(:account_key) { other_groups_account.key }
+    let(:transaction_key) { SecureRandom.hex(6) }
+
     include_examples "endpoint requires account"
   end
 

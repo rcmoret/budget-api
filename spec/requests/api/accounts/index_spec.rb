@@ -5,6 +5,7 @@ RSpec.describe "GET /api/accounts", type: :request do
 
   context "when providing a valid token" do
     include_context "with valid token"
+    include_context "with an account belonging to a different user group"
 
     let(:user) { FactoryBot.create(:user) }
     let(:user_group) { user.user_group }

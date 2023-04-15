@@ -1,11 +1,12 @@
 require "rails_helper"
 
 RSpec.describe "PUT /api/accounts/:key", type: :request do
-  subject { put(api_account_path(key), params: params, headers: headers) }
+  subject { put(api_account_path(account_key), params: params, headers: headers) }
 
   context "when the account is not found" do
     include_context "with valid token"
-    let(:key) { account_key }
+
+    let(:account_key) { SecureRandom.hex(6) }
     let(:params) do
       {
         account: {
@@ -18,10 +19,20 @@ RSpec.describe "PUT /api/accounts/:key", type: :request do
     include_examples "endpoint requires account"
   end
 
+  context "when passing a key for an unrelated account" do
+    include_context "with valid token"
+    include_context "with an account belonging to a different user group"
+
+    let(:params) { {} }
+    let(:account_key) { other_groups_account.key }
+
+    include_examples "endpoint requires account"
+  end
+
   context "when passing a valid token" do
     let(:user) { FactoryBot.create(:user) }
     let(:account) { FactoryBot.create(:account, user_group: user.user_group) }
-    let(:key) { account.key }
+    let(:account_key) { account.key }
 
     include_context "with valid token"
 
@@ -52,7 +63,7 @@ RSpec.describe "PUT /api/accounts/:key", type: :request do
     context "when passing invalid params" do
       let(:user) { FactoryBot.create(:user) }
       let(:account) { FactoryBot.create(:account, user_group: user.user_group) }
-      let(:key) { account.key }
+      let(:account_key) { account.key }
       let(:params) do
         {
           account: {
@@ -72,8 +83,17 @@ RSpec.describe "PUT /api/accounts/:key", type: :request do
   context "when providing an invalid token" do
     let(:user) { FactoryBot.create(:user) }
     let(:account) { FactoryBot.create(:account, user_group: user.user_group) }
-    let(:key) { account.key }
+    let(:account_key) { account.key }
 
     it_behaves_like "a token authenticated endpoint"
+  end
+
+  context "when providing another group's account key" do
+    include_context "with valid token"
+    include_context "with an account belonging to a different user group"
+    let(:params) { { account: { isCashFlow: true } } }
+    let(:account_key) { other_groups_account.key }
+
+    include_examples "endpoint requires account"
   end
 end

@@ -11,6 +11,18 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
     context "when the account is not found" do
       include_context "with valid token"
 
+      let(:account_key) { SecureRandom.hex(6) }
+      let(:transaction_key) { SecureRandom.hex(6) }
+      let(:params) { {} }
+
+      include_examples "endpoint requires account"
+    end
+
+    context "when passing an unrelated account key" do
+      include_context "with valid token"
+      include_context "with an account belonging to a different user group"
+
+      let(:account_key) { other_groups_account.key }
       let(:transaction_key) { SecureRandom.hex(6) }
       let(:params) { {} }
 

@@ -131,7 +131,19 @@ RSpec.describe "GET /api/accounts/:account_key/transactions/:month/:year" do
   context "when the account is not found" do
     subject { get(api_account_transactions_path(account_key, month, year), headers: headers) }
 
+    let(:account_key) { SecureRandom.hex(6) }
+
     include_context "with valid token"
+    include_examples "endpoint requires account"
+  end
+
+  context "when passing an unrelated account's key" do
+    subject { get(api_account_transactions_path(account_key, month, year), headers: headers) }
+
+    include_context "with valid token"
+    include_context "with an account belonging to a different user group"
+    let(:account_key) { SecureRandom.hex(6) }
+
     include_examples "endpoint requires account"
   end
 
