@@ -11,7 +11,7 @@ module User
     private
 
     def accounts_array
-      account_scope.map do |account|
+      ::Account.belonging_to(user).map do |account|
         {
           account: account,
           balance: balances_by_account_id.find { |struct| struct.account_id == account.id }&.balance.to_i,
@@ -23,14 +23,10 @@ module User
       @balances_by_account_id ||=
         Transaction::Detail
         .joins(:entry)
-        .where(entry: { account: account_scope })
+        .merge(Transaction::Entry.belonging_to(user))
         .group(:account_id)
         .sum(:amount)
         .map { |id, balance| AccountIdWithBalance.new(id, balance) }
-    end
-
-    def account_scope
-      ::Account.belonging_to(user)
     end
 
     def user
