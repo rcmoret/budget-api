@@ -69,7 +69,7 @@ RSpec.describe Budget::Intervals::ShowSerializer do
     let(:category) do
       FactoryBot.create(:category, :expense, :accrual, user_group: user.group, icon: icon)
     end
-    let(:interval) { FactoryBot.create(:budget_interval, month: 12, year: 2024) }
+    let(:interval) { FactoryBot.create(:budget_interval, month: 12, year: 2024, user_group: user.group) }
     let!(:budget_item) do
       FactoryBot.create(:budget_item, :expense, category: category, interval: interval, user_group: user.group)
     end

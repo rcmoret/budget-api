@@ -31,11 +31,9 @@ class Account < ApplicationRecord
     archived_at.present?
   end
 
-  # rubocop:disable Rails/ActiveRecordOverride
   def destroy
-    transactions.any? ? archive! : super
+    transactions.any? ? archive! : delete
   end
-  # rubocop:enable Rails/ActiveRecordOverride
 
   def to_s
     name

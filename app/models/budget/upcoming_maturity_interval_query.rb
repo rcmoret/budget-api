@@ -4,8 +4,7 @@ module Budget
     BUDGET_INTERVALS = Interval.arel_table
     BUDGET_CATEGORY_MATURITY_INTERVALS = CategoryMaturityInterval.arel_table
 
-    def initialize(user:, interval:)
-      @user = user
+    def initialize(interval:)
       @interval = interval
     end
 
@@ -24,7 +23,7 @@ module Budget
         .on(BUDGET_INTERVALS[:id].eq(BUDGET_CATEGORY_MATURITY_INTERVALS[:budget_interval_id]))
         .join(BUDGET_CATEGORIES)
         .on(BUDGET_CATEGORIES[:id].eq(BUDGET_CATEGORY_MATURITY_INTERVALS[:budget_category_id])
-        .and(BUDGET_CATEGORIES[:user_group_id].eq(user.group.id)))
+        .and(BUDGET_CATEGORIES[:user_group_id].eq(user_group_id)))
         .project(*project)
         .where(where_clause)
         .group(BUDGET_CATEGORIES[:id])
@@ -50,7 +49,9 @@ module Budget
       )
     end
 
-    attr_reader :user, :interval
+    attr_reader :interval
+
+    delegate :user_group_id, to: :interval
 
     NullSerializer = Class.new(ApplicationSerializer) do
       attributes :budget_category_id, :month, :year

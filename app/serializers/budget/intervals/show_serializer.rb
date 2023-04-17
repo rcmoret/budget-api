@@ -54,7 +54,6 @@ module Budget
 
       def upcoming_maturity_intervals
         @upcoming_maturity_intervals ||= Budget::UpcomingMaturityIntervalQuery.new(
-          user: user,
           interval: interval
         ).call
       end

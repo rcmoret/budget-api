@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Budget::UpcomingMaturityIntervalQuery do
-  subject { described_class.new(user: user, interval: current_interval).call }
+  subject { described_class.new(interval: current_interval).call }
 
   let(:user) { FactoryBot.create(:user) }
   let(:current_interval) { FactoryBot.create(:budget_interval, user_group: user.group) }

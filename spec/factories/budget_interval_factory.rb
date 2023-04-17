@@ -9,6 +9,11 @@ FactoryBot.define do
       year { Time.current.year }
     end
 
+    trait :future do
+      month { rand(1..12) }
+      year { Time.current.year + 1 }
+    end
+
     trait :past do
       year { Time.current.year - rand(1..10) }
     end
