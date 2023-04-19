@@ -13,7 +13,7 @@ module API
         def serializer
           IndividualSerializer.new(
             key: :interval,
-            serializeable: ::Budget::Intervals::ShowSerializer.new(api_user, interval),
+            serializable: ::Budget::Intervals::ShowSerializer.new(api_user, interval),
           )
         end
       end

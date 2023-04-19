@@ -11,7 +11,7 @@ module API
         def serializer
           @serializer ||= IndividualSerializer.new(
             key: :account,
-            serializeable: AccountTransactionsIndexSerializer.new(account: account, interval: interval)
+            serializable: AccountTransactionsIndexSerializer.new(account: account, interval: interval)
           )
         end
       end

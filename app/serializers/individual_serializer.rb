@@ -1,11 +1,11 @@
 class IndividualSerializer
-  def initialize(key:, serializeable:)
+  def initialize(key:, serializable:)
     @key = key
-    @serializeable = serializeable
+    @serializable = serializable
   end
 
   def render(camelize: :lower)
-    hash = { key => serializeable.render(camelize: camelize) }
+    hash = { key => serializable.render(camelize: camelize) }
 
     return hash unless camelize
 
@@ -14,5 +14,5 @@ class IndividualSerializer
 
   private
 
-  attr_reader :key, :serializeable
+  attr_reader :key, :serializable
 end
