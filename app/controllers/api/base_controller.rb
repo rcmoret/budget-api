@@ -1,6 +1,7 @@
 module API
   class BaseController < ApplicationController
     include CubanLinx::CallChain
+    include ActionController::HttpAuthentication::Token::ControllerMethods
 
     before_action :authenticate_token!
 
@@ -8,20 +9,11 @@ module API
 
     execution_chain :token_auth,
                     functions: %i[
-                      check_token_presence
                       decode_token
                       lookup_user
                       validate_auth_token_context
                       check_ip_address
                     ]
-
-    define_link :check_token_presence do |*|
-      if request.env["HTTP_AUTHORIZATION"].present?
-        [:ok, { token: request.env["HTTP_AUTHORIZATION"].match(/\ABearer (?<token>.*)\z/)[:token] }]
-      else
-        [:error, { token: :missing }]
-      end
-    end
 
     define_link :decode_token do |payload|
       case Auth::Token::JWT.decode(payload.fetch(:token))
@@ -58,14 +50,20 @@ module API
     end
 
     def authenticate_token!
-      token_auth.call do |result|
-        if result.ok?
-          @api_user = result.fetch(:user)
-          @current_user_group = result.fetch(:user).user_group
-          @current_token_context = result.fetch(:auth_token_context)
-        else
-          render json: {}, status: :unauthorized
+      authenticate_with_http_token do |token|
+        token_auth.call(:ok, token: token) do |result|
+          token_auth_handler(result)
         end
+      end
+    end
+
+    def token_auth_handler(result)
+      if result.ok?
+        @api_user = result.fetch(:user)
+        @current_user_group = result.fetch(:user).user_group
+        @current_token_context = result.fetch(:auth_token_context)
+      else
+        render json: {}, status: :unauthorized
       end
     end
 
