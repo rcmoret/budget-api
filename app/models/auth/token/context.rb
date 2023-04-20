@@ -8,7 +8,7 @@ module Auth
 
       scope :belonging_to, ->(user) { where(user: user) }
       scope :active, -> { where(manually_expired_at: nil, expires_at: Time.current..) }
-      belongs_to :user, class_name: "User::Account"
+      belongs_to :user, class_name: "User::Profile"
 
       validates :expires_at, :ip_address, presence: true
       validates :ip_address, length: { maximum: 200 }

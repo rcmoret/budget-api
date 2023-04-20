@@ -24,7 +24,7 @@ module API
       end
 
       def user
-        @user ||= User::Account.find_by(email: user_params[:email])
+        @user ||= User::Profile.find_by(email: user_params[:email])
       end
 
       def user_params
