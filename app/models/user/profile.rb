@@ -1,5 +1,5 @@
 module User
-  class Account < ApplicationRecord
+  class Profile < ApplicationRecord
     include HasKeyIdentifier
 
     self.table_name = :users

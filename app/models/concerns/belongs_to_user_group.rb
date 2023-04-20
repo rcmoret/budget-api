@@ -7,8 +7,8 @@ module BelongsToUserGroup
     belongs_to :user_group, class_name: "User::Group"
     scope :belonging_to, lambda { |user_or_group|
       case user_or_group
-      in User::Account => user
-        joins(:user_group).where(user_group: user.user_group)
+      in User::Profile => user
+        joins(:user_group).where(user_group: user.group)
       in User::Group => group
         joins(:user_group).where(user_group: group)
       end

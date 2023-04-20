@@ -25,7 +25,7 @@ module API
     end
 
     define_link :lookup_user do |payload|
-      User::Account.by_key(payload.fetch(:decoded)[:user_key]).then do |potential_user|
+      User::Profile.by_key(payload.fetch(:decoded)[:user_key]).then do |potential_user|
         if potential_user.present?
           [:ok, { user: potential_user }]
         else
