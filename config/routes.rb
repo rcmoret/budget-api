@@ -32,6 +32,11 @@ Rails.application.routes.draw do
       scope "/category/:category_key", module: :categories, as: :category do
         put "/", to: "update#call"
         delete "/", to: "delete#call"
+
+        scope "/maturity_intervals/(:month)/(:year)", module: :maturity_intervals, as: :maturity_intervals do
+          post "/", to: "create#call"
+          delete "/", to: "delete#call"
+        end
       end
 
       get "/(:month)/(:year)", to: "items/index#call"
