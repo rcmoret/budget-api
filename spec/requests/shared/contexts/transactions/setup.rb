@@ -105,7 +105,7 @@ RSpec.shared_context "when there is a current interval and item" do
   let(:icon) { FactoryBot.create(:icon) }
   let(:budget_category) { FactoryBot.create(:category, :monthly, user_group: user.group, icon: icon) }
   let(:budget_item) do
-    FactoryBot.create(:budget_item, interval: interval, category: budget_category, user_group: user.group)
+    FactoryBot.create(:budget_item, interval: interval, category: budget_category)
   end
 
   before do

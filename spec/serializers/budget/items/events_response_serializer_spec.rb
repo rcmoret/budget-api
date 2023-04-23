@@ -21,9 +21,12 @@ RSpec.describe Budget::Items::EventsResponseSerializer do
 
   describe "#items" do
     let(:user) { FactoryBot.create(:user) }
-    let(:budget_item1) { FactoryBot.create(:budget_item, user_group: user.group) }
-    let(:budget_item2) { FactoryBot.create(:budget_item, user_group: user.group) }
-    let(:budget_item3) { FactoryBot.create(:budget_item, user_group: user.group) }
+    let(:category1) { FactoryBot.create(:category, user_group: user.group) }
+    let(:category2) { FactoryBot.create(:category, user_group: user.group) }
+    let(:category3) { FactoryBot.create(:category, user_group: user.group) }
+    let(:budget_item1) { FactoryBot.create(:budget_item, category: category1) }
+    let(:budget_item2) { FactoryBot.create(:budget_item, category: category2) }
+    let(:budget_item3) { FactoryBot.create(:budget_item, category: category3) }
 
     let(:interval) { instance_double(Budget::Interval) }
     let(:budget_items) do

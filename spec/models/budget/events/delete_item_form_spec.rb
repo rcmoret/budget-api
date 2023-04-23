@@ -19,8 +19,9 @@ RSpec.describe Budget::Events::DeleteItemForm do
 
   describe "validations" do
     let(:user) { FactoryBot.create(:user) }
-    let(:budget_interval) { FactoryBot.create(:budget_interval, user_group: user.user_group) }
-    let(:budget_item) { FactoryBot.create(:budget_item, user_group: user.user_group, interval: budget_interval) }
+    let(:budget_interval) { FactoryBot.create(:budget_interval, user_group: user.group) }
+    let(:budget_category) { FactoryBot.create(:category, user_group: user.group) }
+    let(:budget_item) { FactoryBot.create(:budget_item, category: budget_category, interval: budget_interval) }
 
     describe "event type validation" do
       context "when a valid event" do
@@ -48,7 +49,8 @@ RSpec.describe Budget::Events::DeleteItemForm do
     end
 
     describe "item validation" do
-      let(:budget_item) { FactoryBot.create(:budget_item, user_group: user.user_group) }
+      let(:category) { FactoryBot.create(:category, user_group: user.group) }
+      let(:budget_item) { FactoryBot.create(:budget_item, category: category) }
 
       context "when a budget item exists" do
         it "is a valid form object" do
@@ -77,7 +79,8 @@ RSpec.describe Budget::Events::DeleteItemForm do
       context "when there is a transaction detail associated" do
         before { FactoryBot.create(:transaction_detail, budget_item: budget_item) }
 
-        let(:budget_item) { FactoryBot.create(:budget_item, user_group: user.user_group) }
+        let(:category) { FactoryBot.create(:category, user_group: user.group) }
+        let(:budget_item) { FactoryBot.create(:budget_item, category: category) }
 
         it "is an invalid form object" do
           params = {
@@ -105,7 +108,8 @@ RSpec.describe Budget::Events::DeleteItemForm do
 
   describe "save" do
     let(:user) { FactoryBot.create(:user) }
-    let(:budget_item) { FactoryBot.create(:budget_item, user_group: user.user_group) }
+    let(:category) { FactoryBot.create(:category, user_group: user.group) }
+    let(:budget_item) { FactoryBot.create(:budget_item, category: category) }
 
     before { travel_to Time.current }
 

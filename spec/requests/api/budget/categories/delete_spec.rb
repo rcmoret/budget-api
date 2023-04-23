@@ -13,7 +13,7 @@ RSpec.describe "DELETE /api/budget/category/:category_key" do
     let(:category_key) { category.key }
 
     before do
-      FactoryBot.create(:budget_item, category: category, user_group: user.group)
+      FactoryBot.create(:budget_item, category: category)
     end
 
     it "updates the category, and returns a serialized category" do
