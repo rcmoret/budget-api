@@ -71,7 +71,7 @@ RSpec.describe Budget::Intervals::ShowSerializer do
     end
     let(:interval) { FactoryBot.create(:budget_interval, month: 12, year: 2024, user_group: user.group) }
     let!(:budget_item) do
-      FactoryBot.create(:budget_item, :expense, category: category, interval: interval, user_group: user.group)
+      FactoryBot.create(:budget_item, :expense, category: category, interval: interval)
     end
     let!(:create_event) do
       FactoryBot.create(:budget_item_event, :create_event, item: budget_item, amount: rand(-100_00..-100))

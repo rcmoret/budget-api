@@ -20,7 +20,8 @@ RSpec.describe Forms::TransactionForm do
       let(:budget_exclusion) { false }
 
       context "when passing valid params" do
-        let(:budget_item) { FactoryBot.create(:budget_item, user_group: user.user_group) }
+        let(:category) { FactoryBot.create(:category, user_group: user.group) }
+        let(:budget_item) { FactoryBot.create(:budget_item, category: category) }
         let(:details_attributes) do
           [
             {
@@ -52,7 +53,8 @@ RSpec.describe Forms::TransactionForm do
         end
 
         context "when creating multiple details" do
-          let(:additional_budget_item) { FactoryBot.create(:budget_item, user_group: user.user_group) }
+          let(:category) { FactoryBot.create(:category, user_group: user.user_group) }
+          let(:additional_budget_item) { FactoryBot.create(:budget_item, category: category) }
           let(:details_attributes) do
             [
               { key: SecureRandom.hex(6), amount: 100_00, budget_item_id: additional_budget_item.id },
@@ -113,7 +115,8 @@ RSpec.describe Forms::TransactionForm do
         context "when providing a budget item with the detail" do
           let(:account) { FactoryBot.create(:account, :non_cash_flow, user_group: user.group) }
           let(:transaction_entry) { Transaction::Entry.new(account: account) }
-          let(:budget_item) { FactoryBot.create(:budget_item, user_group: user.group) }
+          let(:category) { FactoryBot.create(:category, user_group: user.group) }
+          let(:budget_item) { FactoryBot.create(:budget_item, category: category) }
           let(:details_attributes) do
             [
               {
@@ -170,8 +173,10 @@ RSpec.describe Forms::TransactionForm do
       end
 
       context "when creating multiple details with the same key" do
-        let(:budget_item) { FactoryBot.create(:budget_item, user_group: user.user_group) }
-        let(:additional_budget_item) { FactoryBot.create(:budget_item, user_group: user.user_group) }
+        let(:budget_item) { FactoryBot.create(:budget_item, category: category) }
+        let(:category) { FactoryBot.create(:category, user_group: user.group) }
+        let(:second_category) { FactoryBot.create(:category, user_group: user.group) }
+        let(:additional_budget_item) { FactoryBot.create(:budget_item, category: second_category) }
         let(:key) { SecureRandom.hex(6) }
         let(:details_attributes) do
           [
@@ -273,7 +278,8 @@ RSpec.describe Forms::TransactionForm do
       end
 
       context "when adding a transaction detail" do
-        let(:budget_item) { FactoryBot.create(:budget_item, user_group: user.group) }
+        let(:category) { FactoryBot.create(:category, user_group: user.group) }
+        let(:budget_item) { FactoryBot.create(:budget_item, category: category) }
 
         it "creates a transaction detail" do
           expect do
@@ -398,7 +404,8 @@ RSpec.describe Forms::TransactionForm do
         end
 
         context "when updating the single detail with a budget item" do
-          let(:budget_item) { FactoryBot.create(:budget_item, user_group: user.group) }
+          let(:category) { FactoryBot.create(:category, user_group: user.group) }
+          let(:budget_item) { FactoryBot.create(:budget_item, category: category) }
 
           it "does not change the detail" do
             detail = transaction_entry.details.first
@@ -448,7 +455,8 @@ RSpec.describe Forms::TransactionForm do
         end
 
         context "when updating the single detail with a budget item" do
-          let(:budget_item) { FactoryBot.create(:budget_item, user_group: user.group) }
+          let(:category) { FactoryBot.create(:category, user_group: user.group) }
+          let(:budget_item) { FactoryBot.create(:budget_item, category: category) }
 
           it "does not change the detail" do
             detail = to_transaction.details.first

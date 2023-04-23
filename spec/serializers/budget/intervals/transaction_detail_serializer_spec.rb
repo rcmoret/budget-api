@@ -13,7 +13,6 @@ RSpec.describe Budget::Intervals::TransactionDetailSerializer do
         :budget_item,
         category: category,
         interval: interval,
-        user_group: user_group
       )
     end
     let(:detail_key) { SecureRandom.hex(6) }

@@ -9,7 +9,7 @@ RSpec.describe Accounts::BudgetItemSerializer do
     let(:category) { FactoryBot.create(:category, icon: icon, user_group: user_group) }
     let(:interval) { FactoryBot.create(:budget_interval, user_group: user_group) }
     let(:budget_item) do
-      FactoryBot.create(:budget_item, category: category, interval: interval, user_group: user_group)
+      FactoryBot.create(:budget_item, category: category, interval: interval)
     end
     let(:decorated) { budget_item.decorated }
     let(:date) { Date.new(2022, 1, 1) }

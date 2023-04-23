@@ -161,7 +161,8 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
       let(:transaction) { FactoryBot.create(:transaction_entry, :discretionary, account: account) }
       let(:transaction_key) { transaction.key }
       let(:interval) { FactoryBot.create(:budget_interval, user_group: user.group) }
-      let(:budget_item) { FactoryBot.create(:budget_item, interval: interval, user_group: user.group) }
+      let(:category) { FactoryBot.create(:category, user_group: user.group) }
+      let(:budget_item) { FactoryBot.create(:budget_item, interval: interval, category: category) }
       let(:month) { interval.month }
       let(:year) { interval.year }
       let(:detail) { transaction.details.first }
@@ -206,7 +207,8 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
     let!(:transaction) { FactoryBot.create(:transaction_entry, :discretionary, account: account) }
     let(:transaction_key) { transaction.key }
     let(:interval) { FactoryBot.create(:budget_interval, user_group: user.group) }
-    let(:budget_item) { FactoryBot.create(:budget_item, interval: interval, user_group: user.group) }
+    let(:category) { FactoryBot.create(:category, user_group: user.group) }
+    let(:budget_item) { FactoryBot.create(:budget_item, interval: interval, category: category) }
     let(:month) { interval.month }
     let(:year) { interval.year }
     let(:params) do
@@ -256,7 +258,8 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
     let!(:transaction) { FactoryBot.create(:transaction_entry, :discretionary, account: account) }
     let(:transaction_key) { transaction.key }
     let(:interval) { FactoryBot.create(:budget_interval, user_group: user.group) }
-    let(:budget_item) { FactoryBot.create(:budget_item, interval: interval.prev, user_group: user.group) }
+    let(:category) { FactoryBot.create(:category, user_group: user.group) }
+    let(:budget_item) { FactoryBot.create(:budget_item, interval: interval.prev, category: category) }
     let(:month) { interval.month }
     let(:year) { interval.year }
     let(:params) do

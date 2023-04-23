@@ -90,6 +90,7 @@ RSpec/MultipleExpectations:
 RSpec/MultipleMemoizedHelpers:
   Max: 9
   Exclude:
+    - spec/lib/forms/**/*
     - spec/requests/api/**/*
     - spec/serializers/**/*
 

@@ -148,7 +148,7 @@ RSpec.describe Budget::Events::CreateItemForm do
       let(:interval) { FactoryBot.create(:budget_interval, user_group: user.user_group) }
 
       it "returns false" do
-        FactoryBot.create(:budget_item, category: category, interval: interval, user_group: user.user_group)
+        FactoryBot.create(:budget_item, category: category, interval: interval)
         params = params_for(category: category, interval: interval)
         form = described_class.new(user, params)
         expect(form.save).to be false

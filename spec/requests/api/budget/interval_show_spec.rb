@@ -9,9 +9,7 @@ RSpec.describe "GET /api/budget/:month/:year" do
     let(:user) { FactoryBot.create(:user) }
     let(:category) { FactoryBot.create(:category, user_group: user.group) }
     let(:account) { FactoryBot.create(:account, user_group: user.group) }
-    let(:budget_item) do
-      FactoryBot.create(:budget_item, category: category, interval: interval, user_group: user.group)
-    end
+    let(:budget_item) { FactoryBot.create(:budget_item, category: category, interval: interval) }
     let!(:event) { FactoryBot.create(:budget_item_event, :create_event, item: budget_item) }
     let!(:transaction_entry) do
       FactoryBot.create(:transaction_entry, :discretionary, clearance_date: interval.first_date, account: account)

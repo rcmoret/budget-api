@@ -14,7 +14,7 @@ RSpec.describe Transactions::DetailSerializer do
     )
   end
   let(:budget_item) do
-    FactoryBot.create(:budget_item, user_group: user_group, category: category, interval: interval)
+    FactoryBot.create(:budget_item, category: category, interval: interval)
   end
   let(:detail_key) { SecureRandom.hex(6) }
   let(:amount) { rand(-100..200) }

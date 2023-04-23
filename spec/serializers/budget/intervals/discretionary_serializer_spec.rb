@@ -246,15 +246,17 @@ RSpec.describe Budget::Intervals::DiscretionarySerializer do
 
     include_context "with a user and an interval"
 
+    let(:monthly_category) { FactoryBot.create(:category, :monthly, user_group: user.group) }
     let(:monthly_item) do
-      FactoryBot.create(:monthly_item, interval: interval, user_group: user.group)
+      FactoryBot.create(:budget_item, interval: interval, category: monthly_category)
     end
     let(:monthly_presenter) do
       instance_double(Presenters::Budget::MonthlyItemPresenter, budget_impact: 10_00)
     end
 
+    let(:day_to_day_category) { FactoryBot.create(:category, :weekly, user_group: user.group) }
     let(:day_to_day_item) do
-      FactoryBot.create(:weekly_item, interval: interval, user_group: user.group)
+      FactoryBot.create(:weekly_item, interval: interval, category: day_to_day_category)
     end
     let(:day_to_day_presenter) do
       instance_double(Presenters::Budget::DayToDayExpensePresenter, budget_impact: -50_80)
