@@ -3,12 +3,11 @@ require "rails_helper"
 RSpec.shared_examples "a token authenticated endpoint" do
   before { subject }
 
-  let(:headers) do
-    { "Authorization" => "Bearer #{token}" }
-  end
-  let(:params) { {} }
-
   context "when a token that does not map to a user or token context is provided" do
+    let(:headers) do
+      { "Authorization" => "Bearer #{token}" }
+    end
+    let(:params) { {} }
     let(:token) do
       Auth::Token::JWT.encode(
         payload: {
@@ -22,6 +21,10 @@ RSpec.shared_examples "a token authenticated endpoint" do
   end
 
   context "when an expired token is provided" do
+    let(:headers) do
+      { "Authorization" => "Bearer #{token}" }
+    end
+    let(:params) { {} }
     let(:user) { FactoryBot.create(:user) }
     let(:auth_token_context) { FactoryBot.create(:auth_token_context, user: user) }
     let(:token) do
@@ -38,6 +41,10 @@ RSpec.shared_examples "a token authenticated endpoint" do
   end
 
   context "when a token that was manually expired is provided" do
+    let(:headers) do
+      { "Authorization" => "Bearer #{token}" }
+    end
+    let(:params) { {} }
     let(:user) { FactoryBot.create(:user) }
     let(:auth_token_context) { FactoryBot.create(:auth_token_context, :manually_expired, user: user) }
     let(:token) do
@@ -53,6 +60,10 @@ RSpec.shared_examples "a token authenticated endpoint" do
   end
 
   context "when the request ip does not match the context's ip" do
+    let(:headers) do
+      { "Authorization" => "Bearer #{token}" }
+    end
+    let(:params) { {} }
     let(:user) { FactoryBot.create(:user) }
     let(:auth_token_context) do
       FactoryBot.create(
@@ -69,6 +80,13 @@ RSpec.shared_examples "a token authenticated endpoint" do
         }
       )
     end
+
+    specify { expect(response).to have_http_status :unauthorized }
+  end
+
+  context "when passing empty headers" do
+    let(:headers) { {} }
+    let(:params) { {} }
 
     specify { expect(response).to have_http_status :unauthorized }
   end
