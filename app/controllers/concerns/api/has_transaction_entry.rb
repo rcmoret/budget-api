@@ -9,7 +9,7 @@ module API
     private
 
     def transaction_entry
-      @transaction_entry ||= account.transactions.fetch(user: api_user, key: key)
+      @transaction_entry ||= account.transactions.fetch(api_user, key: key)
     end
 
     def key

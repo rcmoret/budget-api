@@ -60,7 +60,7 @@ module UsesTransactionEntryForm
 
     case key
     when :account_key
-      { account: Account.fetch(user: api_user, key: value) }
+      { account: Account.fetch(api_user, key: value) }
     when :details_attributes
       { details_attributes: value.values.map { |detail_attrs| handle_detail(detail_attrs) } }
     else
@@ -83,7 +83,7 @@ module UsesTransactionEntryForm
   def budget_item_look_up(budget_item_key)
     return if budget_item_key.nil?
 
-    Budget::Item.fetch(user: api_user, key: budget_item_key)
+    Budget::Item.fetch(api_user, key: budget_item_key)
   end
 
   def details_attributes
@@ -93,7 +93,7 @@ module UsesTransactionEntryForm
   def budget_items
     interval
       .items
-      .fetch_collection(user: api_user, keys: budget_item_keys)
+      .fetch_collection(api_user, keys: budget_item_keys)
       .map(&:decorated)
   end
 end

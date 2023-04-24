@@ -21,8 +21,8 @@ RSpec.describe Forms::TransferForm do
       let(:amount) { rand(100..1000) }
 
       before do
-        allow(Account).to receive(:fetch).with(user: user, key: to_account.key).and_return(nil)
-        allow(Account).to receive(:fetch).with(user: user, key: from_account.key).and_call_original
+        allow(Account).to receive(:fetch).with(user, key: to_account.key).and_return(nil)
+        allow(Account).to receive(:fetch).with(user, key: from_account.key).and_call_original
       end
 
       it "returns an error tuple" do
@@ -36,8 +36,8 @@ RSpec.describe Forms::TransferForm do
       let(:amount) { rand(100..1000) }
 
       before do
-        allow(Account).to receive(:fetch).with(user: user, key: to_account.key).and_return(to_account)
-        allow(Account).to receive(:fetch).with(user: user, key: from_account.key).and_return(nil)
+        allow(Account).to receive(:fetch).with(user, key: to_account.key).and_return(to_account)
+        allow(Account).to receive(:fetch).with(user, key: from_account.key).and_return(nil)
       end
 
       it "returns an error tuple" do

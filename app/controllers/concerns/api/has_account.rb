@@ -9,7 +9,7 @@ module API
     private
 
     def account
-      @account ||= Account.fetch(user: api_user, key: account_key)
+      @account ||= Account.fetch(api_user, key: account_key)
     end
 
     def account_key

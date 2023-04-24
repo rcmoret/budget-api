@@ -44,7 +44,7 @@ module API
 
     define_link :validate_auth_token_context do |payload|
       auth_token_key = payload.fetch(:decoded)[:token_identifier]
-      Auth::Token::Context.fetch(user: payload.fetch(:user), key: auth_token_key).then do |auth_token_context|
+      Auth::Token::Context.fetch(payload.fetch(:user), key: auth_token_key).then do |auth_token_context|
         if auth_token_context.nil? || auth_token_context.expired?
           [:error, { token: :invalid }]
         else
