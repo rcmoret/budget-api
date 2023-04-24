@@ -1,7 +1,10 @@
 class SerializableCollection < Array
-  def initialize(serializer:, **args)
+  def initialize(serializer: :none, **args)
     super()
-    yield.map { |item| self << serializer.new(item, **args) }
+    Array.wrap(yield).map do |item|
+      object = serializer == :none ? item : serializer.new(item, **args)
+      self << object
+    end
   end
 
   def render(camelize: :lower)
