@@ -28,7 +28,7 @@ module Budget
       private
 
       def budget_item
-        @budget_item ||= Budget::Item.fetch(user: current_user, key: budget_item_key)
+        @budget_item ||= Budget::Item.fetch(current_user, key: budget_item_key)
       end
 
       def event_amount

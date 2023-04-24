@@ -79,11 +79,11 @@ module Budget
       end
 
       def category
-        @category ||= Budget::Category.fetch(user: current_user, key: budget_category_key)
+        @category ||= Budget::Category.fetch(current_user, key: budget_category_key)
       end
 
       def interval
-        @interval ||= Budget::Interval.fetch(user: current_user, key: { month: month, year: year })
+        @interval ||= Budget::Interval.fetch(current_user, key: { month: month, year: year })
       end
 
       def expense?

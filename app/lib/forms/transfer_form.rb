@@ -59,11 +59,11 @@ module Forms
     attr_reader :user, :to_account_key, :from_account_key, :amount, :key
 
     def to_account
-      @to_account ||= Account.fetch(user: user, key: to_account_key)
+      @to_account ||= Account.fetch(user, key: to_account_key)
     end
 
     def from_account
-      @from_account ||= Account.fetch(user: user, key: from_account_key)
+      @from_account ||= Account.fetch(user, key: from_account_key)
     end
 
     def promote_errors(model_name, model_errors)

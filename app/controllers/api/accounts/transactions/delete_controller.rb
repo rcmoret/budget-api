@@ -15,7 +15,7 @@ module API
         private
 
         def transaction_entry
-          @transaction_entry ||= Transaction::Entry.fetch(user: api_user, key: key)
+          @transaction_entry ||= Transaction::Entry.fetch(api_user, key: key)
         end
 
         def serializer

@@ -39,7 +39,7 @@ module API
         end
 
         def transfer
-          @transfer ||= Transfer.fetch(user: api_user, key: transfer_key)
+          @transfer ||= Transfer.fetch(api_user, key: transfer_key)
         end
 
         def transfer_key

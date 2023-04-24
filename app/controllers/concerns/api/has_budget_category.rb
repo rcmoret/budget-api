@@ -17,7 +17,7 @@ module API
     end
 
     def budget_category
-      @budget_category ||= ::Budget::Category.fetch(user: api_user, key: category_key)
+      @budget_category ||= ::Budget::Category.fetch(api_user, key: category_key)
     end
 
     def category_key

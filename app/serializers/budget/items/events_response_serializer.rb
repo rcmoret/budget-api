@@ -18,7 +18,7 @@ module Budget
         SerializableCollection.new(serializer: ItemSerializer) do
           Budget::Item
             .includes(transaction_details: { entry: :account }, events: :type, category: :icon)
-            .fetch_collection(user: user, keys: budget_item_keys)
+            .fetch_collection(user, keys: budget_item_keys)
             .map(&:decorated)
         end
       end
