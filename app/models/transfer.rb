@@ -10,11 +10,11 @@ class Transfer < ApplicationRecord
   after_destroy :destroy_transactions!
 
   scope :recent_first, -> { order(created_at: :desc) }
-  scope :belonging_to, lambda { |user|
+  scope :belonging_to, lambda { |user_or_group|
     joins(:to_transaction)
-      .merge(Transaction::Entry.belonging_to(user))
+      .merge(Transaction::Entry.belonging_to(user_or_group))
       .joins(:from_transaction)
-      .merge(Transaction::Entry.belonging_to(user))
+      .merge(Transaction::Entry.belonging_to(user_or_group))
   }
 
   def transaction_keys

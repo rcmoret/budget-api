@@ -10,7 +10,7 @@ module Budget
 
     scope :ordered, -> { joins(:interval).merge(Interval.ordered) }
     scope :on_or_after, ->(month:, year:) { joins(:interval).merge(Interval.on_or_after(month: month, year: year)) }
-    scope :belonging_to, ->(user) { joins(:category).merge(Category.belonging_to(user)) }
+    scope :belonging_to, ->(user_or_group) { joins(:category).merge(Category.belonging_to(user_or_group)) }
 
     delegate :month, :year, to: :interval
 
