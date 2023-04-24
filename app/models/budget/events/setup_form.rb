@@ -3,14 +3,13 @@ module Budget
     class SetupForm
       include ActiveModel::Model
 
-      validate :interval_presence!
       validate :interval_needs_setup!
       validate :events_form_valid!
 
-      def initialize(user:, **options)
+      def initialize(user:, interval:, **options)
         @events_form = Budget::Events::Form.new(user, events: options.delete(:events))
-        @interval = Interval.belonging_to(user).by_key(**options.slice(:month, :year))
-        @options = options
+        @interval = interval
+        @options = default_options.merge(options)
       end
 
       def save
@@ -31,21 +30,17 @@ module Budget
       attr_reader :interval, :events_form, :options
 
       def update_interval
-        interval.set_up_completed_at = Time.current
-        interval.start_date ||= start_date
-        interval.end_date ||= end_date
-
-        return if interval.save
+        return if interval.update(options)
 
         promote_errors(interval)
       end
 
-      def start_date
-        options.fetch(:start_date, interval.first_date)
-      end
-
-      def end_date
-        options.fetch(:end_date, interval.last_date)
+      def default_options
+        {
+          start_date: interval.first_date,
+          end_date: interval.last_date,
+          set_up_completed_at: Time.current,
+        }
       end
 
       def save_events
@@ -58,12 +53,6 @@ module Budget
         return unless interval.set_up?
 
         errors.add(:interval, "has already been set up")
-      end
-
-      def interval_presence!
-        return if interval.persisted?
-
-        errors.add(:interval, "must be present and valid")
       end
 
       def events_form_valid!

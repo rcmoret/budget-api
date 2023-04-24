@@ -3,65 +3,26 @@ require "rails_helper"
 RSpec.describe Budget::Events::SetupForm do
   let(:user) { FactoryBot.create(:user) }
 
-  describe "interval presence validation" do
-    before do
-      allow(Budget::Interval)
-        .to receive(:by_key)
-        .and_return(instance_double(Budget::Interval, persisted?: false, set_up?: false))
-      allow(Budget::Events::Form)
-        .to receive(:new)
-        .and_return(instance_double(Budget::Events::Form, valid?: true, save: true))
-    end
-
-    it "records an error" do
-      events_params = [{ event_type: valid_create_event }]
-      form = described_class.new(month: month, year: year, user: user, events: events_params)
-
-      form.save
-
-      expect(form.errors["interval"]).to include "must be present and valid"
-    end
-
-    it "returns false" do
-      events_params = [{ event_type: valid_create_event }]
-      form = described_class.new(user: user, month: month, year: year, events: events_params)
-      expect(form.save).to be false
-    end
-  end
-
   describe "interval not setup validation" do
     before do
-      interval_double = instance_double(
-        Budget::Interval,
-        persisted?: true,
-        set_up?: true,
-      )
-      allow(Budget::Interval)
-        .to receive(:by_key)
-        .and_return(interval_double)
       allow(Budget::Events::Form)
         .to receive(:new)
         .and_return(instance_double(Budget::Events::Form, valid?: true, save: true))
     end
 
+    let(:interval) { FactoryBot.create(:budget_interval, :set_up, user_group: user.group) }
+
     it "records an error" do
       events_params = [{ event_type: valid_create_event }]
-      form = described_class.new(user: user, month: month, year: year, events: events_params)
+      form = described_class.new(user: user, interval: interval, events: events_params)
 
-      form.save
-
-      expect(form.errors["interval"]).to include "has already been set up"
-    end
-
-    it "returns false" do
-      events_params = [{ event_type: valid_create_event }]
-      form = described_class.new(user: user, month: month, year: year, events: events_params)
       expect(form.save).to be false
+      expect(form.errors["interval"]).to include "has already been set up"
     end
   end
 
   describe "events form validation" do
-    subject { described_class.new(user: user, month: month, year: year, events: events_params) }
+    subject { described_class.new(user: user, interval: interval, events: events_params) }
 
     before do
       allow(Budget::Events::Form)
@@ -69,6 +30,7 @@ RSpec.describe Budget::Events::SetupForm do
         .and_return(events_form_double)
     end
 
+    let(:interval) { FactoryBot.create(:budget_interval) }
     let(:errors_double) do
       instance_double(ActiveModel::Errors).tap do |double|
         allow(double).to receive(:each).and_yield(error_double)
@@ -94,16 +56,18 @@ RSpec.describe Budget::Events::SetupForm do
   end
 
   context "when the form does not save correctly" do
-    subject { described_class.new(user: user, month: month, year: year, events: events_params) }
+    subject { described_class.new(user: user, interval: interval, events: events_params) }
 
     before do
       allow(Budget::Events::Form)
         .to receive(:new)
         .and_return(form_double)
-      FactoryBot.create(:budget_interval, user_group: user.user_group, month: month, year: year)
     end
 
     let(:user) { FactoryBot.create(:user) }
+    let(:interval) do
+      FactoryBot.create(:budget_interval, user_group: user.user_group)
+    end
     let(:errors_double) do
       instance_double(ActiveModel::Errors).tap do |double|
         allow(double).to receive(:each).and_yield(error_double)
@@ -117,20 +81,15 @@ RSpec.describe Budget::Events::SetupForm do
     end
     let(:events_params) { [{ event_type: valid_create_event }] }
 
-    it "returns false" do
+    it "returns false, has the promoted errors" do
       expect(subject.save).to be false
-    end
-
-    it "has the promoted errors" do
-      subject.save
-
       expect(subject.errors["create.0.amount"]).to include "Can't be blank"
     end
   end
 
   describe "updates to the interval" do
     subject do
-      described_class.new(user: user, month: interval.month, year: interval.year, events: events_params)
+      described_class.new(user: user, interval: interval, events: events_params)
     end
 
     around { |ex| travel_to(Time.current.beginning_of_minute) { ex.run } }
@@ -191,8 +150,7 @@ RSpec.describe Budget::Events::SetupForm do
       subject do
         described_class.new(
           user: interval.user_group.users.first,
-          month: interval.month,
-          year: interval.year,
+          interval: interval,
           events: events_params,
           start_date: start_date,
           end_date: end_date,
@@ -220,7 +178,7 @@ RSpec.describe Budget::Events::SetupForm do
   end
 
   describe "initializing and saving the events form" do
-    subject { described_class.new(user: user, month: month, year: year, events: events_params) }
+    subject { described_class.new(user: user, interval: interval, events: events_params) }
 
     before do
       allow(Budget::Events::Form)
@@ -230,6 +188,7 @@ RSpec.describe Budget::Events::SetupForm do
 
     let(:form_double) { instance_double(Budget::Events::Form, valid?: true, save: true) }
     let(:events_params) { [{ event_type: valid_create_event }] }
+    let(:interval) { FactoryBot.create(:budget_interval) }
 
     it "initializes the events form" do
       expect(Budget::Events::Form)
@@ -252,7 +211,7 @@ RSpec.describe Budget::Events::SetupForm do
   end
 
   describe ".save" do
-    subject { described_class.new(user: user, month: month, year: year, events: []) }
+    subject { described_class.new(user: user, interval: interval, events: []) }
 
     before do
       allow(Budget::Events::Form)
@@ -261,6 +220,7 @@ RSpec.describe Budget::Events::SetupForm do
     end
 
     let(:form_double) { instance_double(Budget::Events::Form, valid?: true, save: true) }
+    let(:interval) { FactoryBot.create(:budget_interval) }
 
     it "returns true" do
       expect(subject.save).to be true

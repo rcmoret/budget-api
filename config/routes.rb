@@ -39,6 +39,15 @@ Rails.application.routes.draw do
         end
       end
 
+      namespace :interval do
+        namespace :set_up do
+          scope "/:month/:year" do
+            get "/", to: "index#call"
+            put "/", to: "update#call"
+          end
+        end
+      end
+
       get "/(:month)/(:year)", to: "items/index#call"
       post "/events/(:month)/(:year)", to: "events/create#call", as: :items_events
     end
