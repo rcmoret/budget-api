@@ -8,15 +8,13 @@ module Budget
 
         def budget_categories
           SerializableCollection.new do
-            category_scope.filter_map do |category|
+            categories.filter_map do |category|
               category_serializer(category) if reviewable_items_for(category).any?
             end
           end
         end
 
         private
-
-        delegate :user_group, to: :interval
 
         def category_serializer(category)
           CategorySerializer.new(
@@ -27,8 +25,8 @@ module Budget
           )
         end
 
-        def category_scope
-          @category_scope ||= budget_items.values.flatten.map(&:category)
+        def categories
+          @categories ||= budget_items.values.flatten.map(&:category)
         end
 
         def base_interval
@@ -39,7 +37,6 @@ module Budget
           @budget_items ||=
             Budget::Item
             .includes(:transaction_details, :events, category: { maturity_intervals: :interval })
-            .belonging_to(user_group)
             .where(interval: [base_interval, target_interval])
             .map(&:decorated)
             .group_by(&:budget_interval_id)

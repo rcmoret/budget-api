@@ -55,8 +55,8 @@ Rails.application.routes.draw do
         end
       end
 
-      get "/(:month)/(:year)", to: "items/index#call"
       post "/events/(:month)/(:year)", to: "events/create#call", as: :items_events
+      get "/(:month)/(:year)", to: "items/index#call"
     end
 
     namespace :tokens do

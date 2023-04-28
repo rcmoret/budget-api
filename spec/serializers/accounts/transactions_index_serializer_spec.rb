@@ -7,7 +7,7 @@ RSpec.describe Accounts::TransactionsIndexSerializer do
     end
 
     context "when the interval is past" do
-      it "does not inlcude pending transactions"
+      it "does not include pending transactions"
     end
   end
 end
