@@ -37,7 +37,7 @@ RSpec.describe "PUT /api/budget/intervals/set_up/:month/:year" do
       }
     end
 
-    fit "creates an item and event" do
+    it "creates an item and event" do
       expect { subject }
         .to change { Budget::Item.count }
         .by(+1)
@@ -46,7 +46,6 @@ RSpec.describe "PUT /api/budget/intervals/set_up/:month/:year" do
         .and(change { interval.reload.end_date })
         .and(change { Budget::ItemEvent.count }.by(+1))
       expect(response).to have_http_status :accepted
-      binding.pry
     end
   end
 

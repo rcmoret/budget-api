@@ -40,6 +40,13 @@ Rails.application.routes.draw do
       end
 
       namespace :interval do
+        namespace :finalize do
+          scope "/(:month)/(:year)" do
+            get "/", to: "index#call"
+            put "/", to: "update#call"
+          end
+        end
+
         namespace :set_up do
           scope "/:month/:year" do
             get "/", to: "index#call"
