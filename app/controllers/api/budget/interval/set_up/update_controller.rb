@@ -31,7 +31,7 @@ module API
                 :start_date,
                 :end_date,
                 :set_up_completed_at,
-                events: ::Budget::Events::Form::PERMITTED_PARAMS,
+                events: Forms::Budget::EventParams::PERMITTED,
               ).to_h.deep_symbolize_keys
           end
 

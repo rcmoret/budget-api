@@ -5,9 +5,9 @@ RSpec.describe Budget::Events::SetupForm do
 
   describe "interval not setup validation" do
     before do
-      allow(Budget::Events::Form)
+      allow(Forms::Budget::EventsForm)
         .to receive(:new)
-        .and_return(instance_double(Budget::Events::Form, valid?: true, save: true))
+        .and_return(instance_double(Forms::Budget::EventsForm, valid?: true, save: true))
     end
 
     let(:interval) { FactoryBot.create(:budget_interval, :set_up, user_group: user.group) }
@@ -25,7 +25,7 @@ RSpec.describe Budget::Events::SetupForm do
     subject { described_class.new(user: user, interval: interval, events: events_params) }
 
     before do
-      allow(Budget::Events::Form)
+      allow(Forms::Budget::EventsForm)
         .to receive(:new)
         .and_return(events_form_double)
     end
@@ -40,7 +40,7 @@ RSpec.describe Budget::Events::SetupForm do
       instance_double(ActiveModel::Error, attribute: "event_type", full_message: "No registered handler")
     end
     let(:events_form_double) do
-      instance_double(Budget::Events::Form, valid?: false, errors: errors_double)
+      instance_double(Forms::Budget::EventsForm, valid?: false, errors: errors_double)
     end
     let(:events_params) { [{ event_type: valid_create_event }] }
 
@@ -59,7 +59,7 @@ RSpec.describe Budget::Events::SetupForm do
     subject { described_class.new(user: user, interval: interval, events: events_params) }
 
     before do
-      allow(Budget::Events::Form)
+      allow(Forms::Budget::EventsForm)
         .to receive(:new)
         .and_return(form_double)
     end
@@ -77,7 +77,7 @@ RSpec.describe Budget::Events::SetupForm do
       instance_double(ActiveModel::Error, attribute: "create.0.amount", full_message: "Can't be blank")
     end
     let(:form_double) do
-      instance_double(Budget::Events::Form, valid?: true, save: false, errors: errors_double)
+      instance_double(Forms::Budget::EventsForm, valid?: true, save: false, errors: errors_double)
     end
     let(:events_params) { [{ event_type: valid_create_event }] }
 
@@ -95,9 +95,9 @@ RSpec.describe Budget::Events::SetupForm do
     around { |ex| travel_to(Time.current.beginning_of_minute) { ex.run } }
 
     before do
-      allow(Budget::Events::Form)
+      allow(Forms::Budget::EventsForm)
         .to receive(:new)
-        .and_return(instance_double(Budget::Events::Form, save: true, valid?: true))
+        .and_return(instance_double(Forms::Budget::EventsForm, save: true, valid?: true))
     end
 
     let(:user) { FactoryBot.create(:user) }
@@ -181,17 +181,17 @@ RSpec.describe Budget::Events::SetupForm do
     subject { described_class.new(user: user, interval: interval, events: events_params) }
 
     before do
-      allow(Budget::Events::Form)
+      allow(Forms::Budget::EventsForm)
         .to receive(:new)
         .and_return(form_double)
     end
 
-    let(:form_double) { instance_double(Budget::Events::Form, valid?: true, save: true) }
+    let(:form_double) { instance_double(Forms::Budget::EventsForm, valid?: true, save: true) }
     let(:events_params) { [{ event_type: valid_create_event }] }
     let(:interval) { FactoryBot.create(:budget_interval) }
 
     it "initializes the events form" do
-      expect(Budget::Events::Form)
+      expect(Forms::Budget::EventsForm)
         .to receive(:new)
         .with(user, events: events_params)
       subject.save
@@ -214,12 +214,12 @@ RSpec.describe Budget::Events::SetupForm do
     subject { described_class.new(user: user, interval: interval, events: []) }
 
     before do
-      allow(Budget::Events::Form)
+      allow(Forms::Budget::EventsForm)
         .to receive(:new)
         .and_return(form_double)
     end
 
-    let(:form_double) { instance_double(Budget::Events::Form, valid?: true, save: true) }
+    let(:form_double) { instance_double(Forms::Budget::EventsForm, valid?: true, save: true) }
     let(:interval) { FactoryBot.create(:budget_interval) }
 
     it "returns true" do

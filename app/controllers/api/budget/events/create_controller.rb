@@ -15,7 +15,7 @@ module API
         private
 
         def form
-          @form ||= ::Budget::Events::Form.new(api_user, events: events_params)
+          @form ||= Forms::Budget::EventsForm.new(api_user, events: events_params)
         end
 
         def error_serializer
@@ -27,7 +27,7 @@ module API
 
         def events_params
           params.require(:events).map do |event_params|
-            event_params.permit(*::Budget::Events::Form::PERMITTED_PARAMS)
+            event_params.permit(*::Forms::Budget::EventParams::PERMITTED)
           end
         end
 

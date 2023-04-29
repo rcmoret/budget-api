@@ -12,10 +12,10 @@ RSpec.describe Forms::Budget::FinalizeIntervalForm do
       let(:user) { FactoryBot.create(:user) }
       let(:interval) { FactoryBot.create(:budget_interval, :closed_out, user_group: user.group) }
       let(:events) { [] }
-      let(:form_double) { instance_double(Forms::Budget::CreateEventsForm, valid?: true) }
+      let(:form_double) { instance_double(Forms::Budget::EventsForm, valid?: true) }
 
       before do
-        allow(Forms::Budget::CreateEventsForm).to receive(:new).and_return(form_double)
+        allow(Forms::Budget::EventsForm).to receive(:new).and_return(form_double)
       end
 
       it "returns false and the form has errors" do

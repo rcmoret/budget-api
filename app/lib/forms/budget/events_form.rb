@@ -1,18 +1,7 @@
-module Budget
-  module Events
-    class Form
+module Forms
+  module Budget
+    class EventsForm
       include ActiveModel::Model
-
-      PERMITTED_PARAMS = %i[
-        amount
-        budget_category_key
-        budget_item_key
-        data
-        event_type
-        key
-        month
-        year
-      ].freeze
 
       validate :all_valid_event_types
 
@@ -24,7 +13,7 @@ module Budget
       def save
         return false unless valid?
 
-        Budget::ItemEvent.transaction { save_all! }
+        ::Budget::ItemEvent.transaction { save_all! }
 
         errors.none?
       end
@@ -44,20 +33,24 @@ module Budget
       def all_valid_event_types
         events_data.each do |event_data|
           type = event_data[:event_type]
-          next if FormGateway.handler_registered?(type)
+          next if form_gateway.handler_registered?(type)
 
           errors.add(:event_type, "No registered handler for #{type}")
         end
       end
 
       def forms
-        @forms ||= events_data.map { |event_data| FormGateway.form_for(current_user, event_data) }
+        @forms ||= events_data.map { |event_data| form_gateway.form_for(current_user, event_data) }
       end
 
       def promote_errors(model)
         model.errors.each do |error|
           errors.add("#{model}.#{model.key}", { error.attribute => error.message })
         end
+      end
+
+      def form_gateway
+        ::Budget::Events::FormGateway
       end
 
       attr_reader :current_user, :events_data

@@ -1,33 +1,23 @@
 module Budget
   module Events
     class SetupForm
-      include ActiveModel::Model
+      include Forms::Budget::UsesCreateEventsForm
 
       validate :interval_needs_setup!
-      validate :events_form_valid!
 
       def initialize(user:, interval:, **options)
-        @events_form = Budget::Events::Form.new(user, events: options.delete(:events))
+        @events_form = Forms::Budget::EventsForm.new(user, events: options.delete(:events))
         @interval = interval
         @options = default_options.merge(options)
       end
 
       def save
-        return false unless valid?
-
-        ApplicationRecord.transaction do
-          update_interval
-          save_events
-
-          raise ActiveRecord::Rollback if errors.any?
-        end
-
-        errors.none?
+        with_transaction { update_interval }
       end
 
       private
 
-      attr_reader :interval, :events_form, :options
+      attr_reader :interval, :options, :events_form
 
       def update_interval
         return if interval.update(options)
@@ -43,28 +33,10 @@ module Budget
         }
       end
 
-      def save_events
-        return if events_form.save
-
-        promote_errors(events_form)
-      end
-
       def interval_needs_setup!
         return unless interval.set_up?
 
         errors.add(:interval, "has already been set up")
-      end
-
-      def events_form_valid!
-        return if events_form.valid?
-
-        promote_errors(events_form)
-      end
-
-      def promote_errors(object)
-        object.errors.each do |error|
-          errors.add(error.attribute, error.full_message)
-        end
       end
     end
   end

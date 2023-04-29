@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Budget::Events::Form do
+RSpec.describe Forms::Budget::EventsForm do
   let(:user) { FactoryBot.create(:user) }
 
   describe "validations" do
