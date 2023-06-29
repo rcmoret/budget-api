@@ -22,6 +22,7 @@ module API
             :cash_flow,
             :is_cash_flow,
             :priority,
+            :archived_at
           )
       end
 
