@@ -38,7 +38,7 @@ RSpec.describe "POST /api/tokens" do
 
     it "an error message, unprocessable entity status" do
       subject
-      expect(JSON.parse(response.body)).to eq("password" => "incorrect")
+      expect(JSON.parse(response.body)).to eq("password" => ["incorrect password"])
       expect(response).to have_http_status :unauthorized
     end
   end

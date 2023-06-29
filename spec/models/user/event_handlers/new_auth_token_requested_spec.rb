@@ -108,7 +108,7 @@ RSpec.describe User::EventHandlers::NewAuthTokenRequested do
 
       expect(Auth::Token::JWT).not_to receive(:encode)
       expect(Auth::Token::Context).not_to receive(:new)
-      expect(subject.call).to eq([:error, { user: "actor and target user mismatch" }])
+      expect(subject.call).to eq([:error, { user: ["actor and target user mismatch"] }])
     end
   end
 
@@ -124,7 +124,7 @@ RSpec.describe User::EventHandlers::NewAuthTokenRequested do
 
       expect(Auth::Token::JWT).not_to receive(:encode)
       expect(Auth::Token::Context).not_to receive(:new)
-      expect(subject.call).to eq([:error, { password: :incorrect }])
+      expect(subject.call).to eq([:error, { password: ["incorrect password"] }])
     end
 
     it "records an event" do

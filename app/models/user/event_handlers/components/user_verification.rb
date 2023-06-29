@@ -9,7 +9,7 @@ module User
             if payload.fetch(:actor) == payload.fetch(:target_user)
               :ok
             else
-              [:error, { user: "actor and target user mismatch" }]
+              [:error, { user: ["actor and target user mismatch"] }]
             end
           end
 
@@ -19,7 +19,7 @@ module User
                 :ok
               else
                 User::EventForm.new(actor: payload.fetch(:actor), event_type: :incorrect_password_attempt).call
-                [:error, { password: :incorrect }]
+                [:error, { password: ["incorrect password"] }]
               end
             end
           end

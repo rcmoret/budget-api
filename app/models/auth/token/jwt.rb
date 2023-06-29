@@ -15,7 +15,7 @@ module Auth
       SIGNATURE_PRIVATE_KEY = OpenSSL::PKey::RSA.new(ENV["JWT_SECRET_KEY"])
       SIGNATURE_PUBLIC_KEY = SIGNATURE_PRIVATE_KEY.public_key
 
-      def encode(payload: {}, exp: 24.hours.from_now)
+      def encode(payload: {}, exp: 4.days.from_now)
         ::JWT.encode(
           payload.merge(default_options).merge(exp: exp.to_i),
           SIGNATURE_PRIVATE_KEY,

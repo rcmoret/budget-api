@@ -2,6 +2,7 @@ module API
   module Tokens
     class CreateController < BaseController
       skip_before_action :authenticate_token!
+      before_action :user_lookup!
 
       def call
         case event.call
@@ -29,6 +30,13 @@ module API
 
       def user_params
         params.require(:user).permit(:email, :password)
+      end
+
+      def user_lookup!
+        return if user.present?
+
+        render json: { email: ["user profile not found by email: #{user_params[:email]}"] },
+               status: :not_found
       end
     end
   end

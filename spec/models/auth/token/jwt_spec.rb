@@ -9,11 +9,11 @@ RSpec.describe Auth::Token::JWT do
         expect(subject).to be_a String
       end
 
-      it "uses 24 hours from now as the default expiration" do
+      it "uses 4 days from now as the default expiration" do
         freeze_time do
           expect(::JWT)
             .to receive(:encode)
-            .with(hash_including(exp: 24.hours.from_now.to_i), anything, anything)
+            .with(hash_including(exp: 4.days.from_now.to_i), anything, anything)
 
           described_class.encode(payload: { user_id: rand(100) })
         end
