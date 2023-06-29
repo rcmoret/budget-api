@@ -34,8 +34,9 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
           [
             {
               key: params.fetch("transaction").fetch("key"),
+              accountKey: account_key,
               amount: amount,
-              clearanceDate: params.fetch("transaction").fetch("clearanceDate"),
+              clearanceDate: params.fetch("transaction").fetch("clearance_date"),
               description: params.fetch("transaction").fetch("description"),
               checkNumber: nil,
               notes: nil,
@@ -43,7 +44,7 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
               updatedAt: Time.current.strftime("%FT%TZ"),
               details: [
                 {
-                  key: params.dig("transaction", "detailsAttributes", "0", "key"),
+                  key: params.dig("transaction", "details_attributes", 0, "key"),
                   amount: amount,
                   budgetCategoryName: budget_category.name,
                   budgetItemKey: budget_item.key,
@@ -78,8 +79,9 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
           [
             {
               key: params.fetch("transaction").fetch("key"),
+              accountKey: account_key,
               amount: total,
-              clearanceDate: params.fetch("transaction").fetch("clearanceDate"),
+              clearanceDate: params.fetch("transaction").fetch("clearance_date"),
               description: params.fetch("transaction").fetch("description"),
               checkNumber: nil,
               notes: nil,
@@ -87,14 +89,14 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
               updatedAt: Time.current.strftime("%FT%TZ"),
               details: [
                 {
-                  key: params.dig("transaction", "detailsAttributes", "0", "key"),
+                  key: params.dig("transaction", "details_attributes", 0, "key"),
                   amount: first_amount,
                   budgetCategoryName: budget_category.name,
                   budgetItemKey: budget_item.key,
                   iconClassName: budget_category.icon_class_name,
                 },
                 {
-                  key: params.dig("transaction", "detailsAttributes", "1", "key"),
+                  key: params.dig("transaction", "details_attributes", 1, "key"),
                   amount: second_amount,
                   budgetCategoryName: nil,
                   budgetItemKey: nil,
@@ -129,14 +131,14 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
       {
         "transaction" => {
           "description" => "Publix",
-          "clearanceDate" => nil,
+          "clearance_date" => nil,
           "key" => SecureRandom.hex(6),
-          "detailsAttributes" => {
-            "0" => {
+          "details_attributes" => [
+            {
               "key" => SecureRandom.hex(6),
               "amount" => 170_35,
             },
-          },
+          ],
         },
       }
     end
@@ -207,8 +209,9 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
             [
               {
                 key: params.fetch("transaction").fetch("key"),
+                accountKey: account_key,
                 amount: amount,
-                clearanceDate: params.fetch("transaction").fetch("clearanceDate"),
+                clearanceDate: params.fetch("transaction").fetch("clearance_date"),
                 description: params.fetch("transaction").fetch("description"),
                 checkNumber: nil,
                 notes: nil,
@@ -216,7 +219,7 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
                 updatedAt: Time.current.strftime("%FT%TZ"),
                 details: [
                   {
-                    key: params.dig("transaction", "detailsAttributes", "0", "key"),
+                    key: params.dig("transaction", "details_attributes", 0, "key"),
                     amount: amount,
                     budgetCategoryName: nil,
                     budgetItemKey: nil,
@@ -256,8 +259,9 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
           [
             {
               key: params.fetch("transaction").fetch("key"),
+              accountKey: account_key,
               amount: amount,
-              clearanceDate: params.fetch("transaction").fetch("clearanceDate").strftime("%F"),
+              clearanceDate: params.fetch("transaction").fetch("clearance_date").strftime("%F"),
               description: params.fetch("transaction").fetch("description"),
               checkNumber: nil,
               notes: nil,
@@ -265,7 +269,7 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
               updatedAt: Time.current.strftime("%FT%TZ"),
               details: [
                 {
-                  key: params.dig("transaction", "detailsAttributes", "0", "key"),
+                  key: params.dig("transaction", "details_attributes", 0, "key"),
                   amount: amount,
                   budgetCategoryName: budget_category.name,
                   budgetItemKey: budget_item.key,
@@ -296,7 +300,14 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
       expect(response).to have_http_status :unprocessable_entity
       body = JSON.parse(response.body)
       expect(body["transaction"])
-        .to eq("details.budgetItemId" => ["has already been taken"])
+        .to include(
+          "details" => [
+            {
+              "identifier" => params.dig("transaction", "details_attributes", 0, "key"),
+              "budgetItemId" => ["has already been taken"],
+            },
+          ]
+        )
     end
   end
 

@@ -1,8 +1,8 @@
 module UsesTransactionEntryForm
   DEFAULT_TRANSACTION_ENTRY_PERMITTED_PARAMS = %i[
-    budgetExclusion
-    checkNumber
-    clearanceDate
+    is_budget_exclusion
+    check_number
+    clearance_date
     description
     notes
     receipt
@@ -11,7 +11,7 @@ module UsesTransactionEntryForm
   DEFAULT_TRANSACTION_DETAIL_PARAMS = %i[
     key
     amount
-    budgetItemKey
+    budget_item_key
   ].freeze
 
   private
@@ -37,7 +37,7 @@ module UsesTransactionEntryForm
   end
 
   def permitted_parameters
-    transaction_entry_permitted_params << { detailsAttributes: transaction_details_permitted_params }
+    transaction_entry_permitted_params << { details_attributes: transaction_details_permitted_params }
   end
 
   def formatted_params
@@ -56,14 +56,14 @@ module UsesTransactionEntryForm
   end
 
   def handle_attribute(key, value)
-    return {} if value.blank?
-
-    case key
-    when :account_key
-      { account: Account.fetch(api_user, key: value) }
-    when :details_attributes
-      { details_attributes: value.values.map { |detail_attrs| handle_detail(detail_attrs) } }
-    else
+    case [key, value]
+    in [:account_key, *]
+      value.blank? ? {} : { account: Account.fetch(api_user, key: value) }
+    in [:details_attributes, *]
+      { details_attributes: value.map { |detail_attrs| handle_detail(detail_attrs) } }
+    in [^key, ""]
+      { key => nil }
+    in [^key, ^value]
       { key => value }
     end
   end

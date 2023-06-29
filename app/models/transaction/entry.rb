@@ -24,6 +24,7 @@ module Transaction
     validate :single_detail!, if: -> { transfer? || budget_exclusion? }
     validate :eligible_for_transfer!, if: :transfer?
     validate :detail_present!
+    alias_attribute :is_budget_exclusion, :budget_exclusion
 
     has_one_attached :receipt
 

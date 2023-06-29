@@ -11,14 +11,14 @@ module Budget
       attribute :discretionary, on_render: :render
       attribute :items, on_render: :render
 
-      def initialize(user, interval)
-        @user = user
+      def initialize(user_or_group, interval)
+        @user_or_group = user_or_group
         super(interval)
       end
 
       def categories
         SerializableCollection.new(serializer: CategorySerializer) do
-          Category.belonging_to(user)
+          Category.belonging_to(user_or_group)
         end
       end
 
@@ -46,7 +46,7 @@ module Budget
 
       private
 
-      attr_reader :user
+      attr_reader :user_or_group
 
       def interval
         __getobj__

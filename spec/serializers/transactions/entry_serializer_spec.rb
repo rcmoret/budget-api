@@ -33,6 +33,7 @@ RSpec.describe Transactions::EntrySerializer do
       it "returns the correct serialized data" do
         expect(subject.render).to eq(
           "key" => entry_key,
+          "accountKey" => account.key,
           "amount" => detail_amount,
           "clearanceDate" => interval.first_date.strftime("%F"),
           "checkNumber" => check_number.to_s,

@@ -60,8 +60,8 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
       let(:params) do
         {
           "transaction" => {
-            "clearanceDate" => interval.first_date,
-            "accountKey" => savings_account.key,
+            "clearance_date" => interval.first_date,
+            "account_key" => savings_account.key,
           },
         }
       end
@@ -84,7 +84,8 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
             {
               key: transaction.key,
               amount: transaction.total,
-              clearanceDate: params.fetch("transaction").fetch("clearanceDate")&.strftime("%F"),
+              accountKey: savings_account.key,
+              clearanceDate: params.fetch("transaction").fetch("clearance_date")&.strftime("%F"),
               description: transaction.description,
               checkNumber: transaction.check_number,
               notes: transaction.notes,
@@ -117,7 +118,7 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
         let(:interval) { FactoryBot.create(:budget_interval, user_group: user.group) }
         let(:month) { interval.month }
         let(:year) { interval.year }
-        let(:params) { { "transaction" => { "budgetExclusion" => true } } }
+        let(:params) { { "transaction" => { "is_budget_exclusion" => true } } }
 
         it "returns an unprocessable entity status, error message" do
           subject
@@ -167,12 +168,12 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
       let(:params) do
         {
           "transaction" => {
-            "detailsAttributes" => {
-              "0" => {
+            "details_attributes" => [
+              {
                 "key" => detail.key,
-                "budgetItemKey" => budget_item.key,
+                "budget_item_key" => budget_item.key,
               },
-            },
+            ],
           },
         }
       end
@@ -212,13 +213,13 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
     let(:params) do
       {
         "transaction" => {
-          "detailsAttributes" => {
-            "0" => {
+          "details_attributes" => [
+            {
               "key" => SecureRandom.hex(6),
-              "budgetItemKey" => budget_item.key,
+              "budget_item_key" => budget_item.key,
               "amount" => rand(100_00),
             },
-          },
+          ],
         },
       }
     end
@@ -238,8 +239,8 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
         ]
       )
       expect(body.dig(:transactions, 0, :details)).to include(
-        key: params.dig("transaction", "detailsAttributes", "0", "key"),
-        amount: params.dig("transaction", "detailsAttributes", "0", "amount"),
+        key: params.dig("transaction", "details_attributes", 0, "key"),
+        amount: params.dig("transaction", "details_attributes", 0, "amount"),
         budgetItemKey: budget_item.key,
         budgetCategoryName: budget_item.name,
         iconClassName: budget_item.category.icon_class_name,
@@ -263,13 +264,13 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
     let(:params) do
       {
         "transaction" => {
-          "detailsAttributes" => {
-            "0" => {
+          "details_attributes" => [
+            {
               "key" => SecureRandom.hex(6),
-              "budgetItemKey" => budget_item.key,
+              "budget_item_key" => budget_item.key,
               "amount" => rand(100_00),
             },
-          },
+          ],
         },
       }
     end
@@ -299,12 +300,12 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
       let(:params) do
         {
           "transaction" => {
-            "detailsAttributes" => {
-              "0" => {
+            "details_attributes" => [
+              {
                 "key" => detail.key,
                 "_destroy" => true,
               },
-            },
+            ],
           },
         }
       end
@@ -330,12 +331,12 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
       let(:params) do
         {
           "transaction" => {
-            "detailsAttributes" => {
-              "0" => {
+            "details_attributes" => [
+              {
                 "key" => detail.key,
                 "_destroy" => true,
               },
-            },
+            ],
           },
         }
       end
@@ -377,12 +378,12 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
     let(:params) do
       {
         "transaction" => {
-          "detailsAttributes" => {
-            "0" => {
+          "details_attributes" => [
+            {
               "key" => detail_key,
               "amount" => (rand(100_00) + original_amount),
             },
-          },
+          ],
         },
       }
     end
@@ -391,10 +392,9 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
       expect { subject }.not_to(change { transaction_entry.reload.total })
       expect(response).to have_http_status :unprocessable_entity
       body = JSON.parse(response.body)
-      expect(body).to eq(
-        "transaction" => {
-          "details.amount" => ["Cannot be changed for a transfer"],
-        },
+      expect(body.dig("transaction", "details")).to include(
+        "identifier" => detail_key,
+        "amount" => ["Cannot be changed for a transfer"]
       )
     end
   end

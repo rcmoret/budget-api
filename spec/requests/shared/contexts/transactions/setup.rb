@@ -7,16 +7,16 @@ RSpec.shared_context "when the user posts transaction with a single detail" do
     {
       "transaction" => {
         "description" => "Publix",
-        "clearanceDate" => nil,
+        "clearance_date" => nil,
         "key" => SecureRandom.hex(6),
-        "budgetExclusion" => budget_exclusion,
-        "detailsAttributes" => {
-          "0" => {
+        "is_budget_exclusion" => budget_exclusion,
+        "details_attributes" => [
+          {
             "key" => SecureRandom.hex(6),
-            "budgetItemKey" => budget_item&.key,
+            "budget_item_key" => budget_item&.key,
             "amount" => amount,
           },
-        },
+        ],
       },
     }
   end
@@ -29,16 +29,16 @@ RSpec.shared_context "when the user posts transaction with a single detail and a
     {
       "transaction" => {
         "description" => "Publix",
-        "clearanceDate" => clearance_date,
+        "clearance_date" => clearance_date,
         "key" => SecureRandom.hex(6),
-        "budgetExclusion" => budget_exclusion,
-        "detailsAttributes" => {
-          "0" => {
+        "is_budget_exclusion" => budget_exclusion,
+        "details_attributes" => [
+          {
             "key" => SecureRandom.hex(6),
-            "budgetItemKey" => budget_item&.key,
+            "budget_item_key" => budget_item&.key,
             "amount" => amount,
           },
-        },
+        ],
       },
     }
   end
@@ -54,19 +54,19 @@ RSpec.shared_context "when user posts transaction with multiple details" do
     {
       "transaction" => {
         "description" => "Publix",
-        "clearanceDate" => nil,
+        "clearance_date" => nil,
         "key" => SecureRandom.hex(6),
-        "detailsAttributes" => {
-          "0" => {
+        "details_attributes" => [
+          {
             "key" => SecureRandom.hex(6),
-            "budgetItemKey" => budget_item.key,
+            "budget_item_key" => budget_item.key,
             "amount" => first_amount,
           },
-          "1" => {
+          {
             "key" => SecureRandom.hex(6),
             "amount" => second_amount,
           },
-        },
+        ],
       },
     }
   end
@@ -80,9 +80,9 @@ RSpec.shared_context "when user posts transaction with no details" do
     {
       "transaction" => {
         "description" => "Publix",
-        "clearanceDate" => nil,
+        "clearance_date" => nil,
         "key" => SecureRandom.hex(6),
-        "detailsAttributes" => {},
+        "details_attributes" => {},
       },
     }
   end

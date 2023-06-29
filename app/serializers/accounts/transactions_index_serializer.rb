@@ -5,7 +5,7 @@ module Accounts
     attribute :is_cash_flow, alias_of: :cash_flow?
     attribute :is_archived, alias_of: :archived?
     attribute :archived_at, on_render: proc { |datetime| datetime&.strftime("%F") }
-    attribute :items, on_render: :render
+    attribute :budget, serializer: BudgetSerializer, alias_of: :interval
 
     def initialize(account:, interval:)
       super(account: account)
@@ -20,24 +20,6 @@ module Accounts
       super.call(interval)
     end
 
-    def items
-      SerializableCollection.new(serializer: BudgetItemSerializer) do
-        interval.items.map(&:decorated).map do |item|
-          {
-            item: item,
-            maturity_interval: upcoming_maturity_intervals.find(item.category_id),
-          }
-        end
-      end
-    end
-
-    private
-
     attr_reader :interval
-
-    def upcoming_maturity_intervals
-      @upcoming_maturity_intervals ||=
-        Budget::UpcomingMaturityIntervalQuery.new(interval: interval).call
-    end
   end
 end

@@ -198,7 +198,58 @@ RSpec.describe Forms::TransactionForm do
         it "includes an error" do
           subject = described_class.new(user, transaction_entry, params).tap(&:save)
           expect(subject.errors[:details])
-            .to eq(["keys must be unique"])
+            .to eq([{ identifier: key, key: ["must be unique"] }])
+        end
+      end
+
+      context "when creating multiple details with the same monthly budget item" do
+        let(:budget_item) { FactoryBot.create(:budget_item, category: category) }
+        let(:category) { FactoryBot.create(:category, :monthly, user_group: user.group) }
+        let(:detail_1_key) { SecureRandom.hex(6) }
+        let(:detail_2_key) { SecureRandom.hex(6) }
+        let(:details_attributes) do
+          [
+            { key: detail_1_key, amount: 40_00, budget_item_id: budget_item.id },
+            { key: detail_2_key, amount: 25_00, budget_item_id: budget_item.id },
+          ]
+        end
+
+        it "does not create a transaction entry" do
+          expect { described_class.new(user, transaction_entry, params).save }
+            .not_to(change { Transaction::Entry.count })
+        end
+
+        it "returns false" do
+          expect(described_class.new(user, transaction_entry, params).save)
+            .to be false
+        end
+
+        # rubocop:disable RSpec/ExampleLength
+        it "includes an error" do
+          subject = described_class.new(user, transaction_entry, params).tap(&:save)
+          expect(subject.errors[:details]).to contain_exactly(
+            {
+              identifier: detail_1_key,
+              budget_item_id: ["has already been taken"],
+            },
+            {
+              identifier: detail_2_key,
+              budget_item_id: ["has already been taken"],
+            }
+          )
+        end
+        # rubocop:enable RSpec/ExampleLength
+      end
+
+      context "when passing empty details" do
+        let(:budget_item) { FactoryBot.create(:budget_item, category: category) }
+        let(:category) { FactoryBot.create(:category, :monthly, user_group: user.group) }
+        let(:details_attributes) { [] }
+
+        it "return errors" do
+          subject = described_class.new(user, transaction_entry, params).tap(&:save)
+
+          expect(subject.errors[:details]).to eq(["Must have at least one detail for this entry"])
         end
       end
 

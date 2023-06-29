@@ -110,7 +110,9 @@ RSpec.describe Accounts::TransactionsIndexSerializer do
     subject { described_class.new(account: account, interval: interval) }
 
     let(:user_group) { FactoryBot.create(:user_group) }
-    let(:account) { instance_double(Account, balance: rand(100..100_00)) }
+    let(:account) do
+      FactoryBot.create(:account, user_group: user_group)
+    end
     let(:interval) { FactoryBot.create(:budget_interval, :current, user_group: user_group) }
     let(:accrual_category) { FactoryBot.create(:category, :accrual, :with_icon, user_group: user_group) }
     let(:category) { FactoryBot.create(:category, :with_icon, :expense, user_group: user_group) }
@@ -130,7 +132,7 @@ RSpec.describe Accounts::TransactionsIndexSerializer do
     end
 
     it "returns serialized items" do
-      expect(subject.items.render.map(&:symbolize_keys)).to contain_exactly(
+      expect(subject.budget.items.render.map(&:symbolize_keys)).to contain_exactly(
         {
           key: expense_item.key,
           name: category.name,

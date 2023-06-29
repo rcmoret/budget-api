@@ -1,6 +1,7 @@
 module Transactions
   class EntrySerializer < ApplicationSerializer
     attributes :key,
+               :account_key,
                :amount,
                :check_number,
                :description,
@@ -11,6 +12,7 @@ module Transactions
     attribute :updated_at, on_render: proc { |timestamp| timestamp.strftime("%FT%TZ") }
     attribute :clearance_date, on_render: proc { |timestamp| timestamp&.strftime("%F") }
 
+    delegate :key, to: :account, prefix: true
     delegate :key, to: :transfer, prefix: true
 
     def amount

@@ -26,10 +26,16 @@ module Forms
       errors.none?
     end
 
+    def errors
+      return transaction_errors.to_hash if details_errors.empty?
+
+      transaction_errors.to_hash.merge(details: details_errors)
+    end
+
     private
 
     def valid?
-      return true if super && transaction_entry.valid?
+      return true if super && transaction_entry.valid? && details.all?(&:valid?)
 
       promote_errors
       false
@@ -38,13 +44,30 @@ module Forms
     def account_belongs_to_user!
       return if Account.belonging_to(user).exists?(account_id)
 
-      errors.add(:account, "not found")
+      transaction_errors.add(:account, "not found")
     end
 
+    # rubocop:disable Metrics/AbcSize
     def unique_detail_keys!
       return if details_attributes.size == detail_keys.uniq.size
 
-      errors.add(:details, "keys must be unique")
+      details.each do |detail|
+        next if detail_keys.one? { |key| key == detail.key }
+        next if detail_model_errors[detail.key][:key].include?("must be unique")
+
+        detail_model_errors[detail.key].add(:key, "must be unique")
+      end
+    end
+    # rubocop:enable Metrics/AbcSize
+
+    def promote_errors
+      details.each do |detail|
+        next if detail.valid?
+
+        detail.errors.each do |error|
+          detail_model_errors[detail.key].add(error.attribute, error.message)
+        end
+      end
     end
 
     def detail_keys
@@ -57,22 +80,32 @@ module Forms
       @details_attributes ||= params.fetch(:details_attributes) { [] }
     end
 
-    def promote_errors
-      transaction_entry.errors.each do |error|
-        errors.add(error.attribute, error.message)
-      end
-    end
-
     def eligible_for_exclusion!
       if account.cash_flow?
-        errors.add(:budget_exclusion,
-                   "Budget Exclusions only applicable for non-cash-flow accounts")
+        transaction_errors.add(:budget_exclusion,
+                               "Budget Exclusions only applicable for non-cash-flow accounts")
       end
 
       return if details.all? { |detail| detail.budget_item.nil? }
 
-      errors.add(:budget_exclusion,
-                 "Budget Exclusions cannot be associated with a budget item")
+      transaction_errors.add(:budget_exclusion,
+                             "Budget Exclusions cannot be associated with a budget item")
+    end
+
+    def details_errors
+      detail_model_errors.filter_map do |key, err|
+        err.to_hash.merge(identifier: key) if err.any?
+      end
+    end
+
+    def transaction_errors
+      transaction_entry.errors
+    end
+
+    def detail_model_errors
+      @detail_model_errors ||= details.reduce({}) do |memo, detail|
+        memo.merge(detail.key => ActiveModel::Errors.new(detail))
+      end
     end
 
     delegate :account, :account_id, :budget_exclusion?, :details, to: :transaction_entry
