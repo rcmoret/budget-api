@@ -55,18 +55,20 @@ module UsesTransactionEntryForm
     end
   end
 
+  # rubocop:disable Metrics/CyclomaticComplexity
   def handle_attribute(key, value)
     case [key, value]
     in [:account_key, *]
       value.blank? ? {} : { account: Account.fetch(api_user, key: value) }
     in [:details_attributes, *]
       { details_attributes: value.map { |detail_attrs| handle_detail(detail_attrs) } }
-    in [^key, ""]
-      { key => nil }
+    in [^key, String => string]
+      string.blank? ? { key => nil } : { key => string.strip }
     in [^key, ^value]
       { key => value }
     end
   end
+  # rubocop:enable Metrics/CyclomaticComplexity
 
   def handle_detail(detail_attrs)
     detail_id = transaction_entry.details.by_key(detail_attrs.fetch(:key))&.id
