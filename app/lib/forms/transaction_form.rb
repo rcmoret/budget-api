@@ -29,7 +29,10 @@ module Forms
     def errors
       return transaction_errors.to_hash if details_errors.empty?
 
-      transaction_errors.to_hash.merge(details: details_errors)
+      transaction_errors
+        .to_hash
+        .merge(detail_items: details_errors)
+        .reject { |key, _val| key.to_s.starts_with?("details.") }
     end
 
     private

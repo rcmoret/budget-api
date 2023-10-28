@@ -99,7 +99,7 @@ RSpec.describe Accounts::BudgetSerializer do
             "maturityMonth" => 1,
             "maturityYear" => 2025,
             "name" => category.name,
-            "remaining" => 0,
+            "remaining" => create_event.amount,
           },
         ]
       )

@@ -301,13 +301,53 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
       body = JSON.parse(response.body)
       expect(body["transaction"])
         .to include(
-          "details" => [
+          "detailItems" => [
             {
               "identifier" => params.dig("transaction", "details_attributes", 0, "key"),
               "budgetItemId" => ["has already been taken"],
             },
           ]
         )
+    end
+  end
+
+  context "when providing two details with the same key" do
+    include_context "with valid token"
+    include_context "when the user has an account"
+    include_context "when there is a current interval and item"
+
+    let(:account_key) { account.key }
+    let(:first_amount) { rand(100_00) }
+    let(:second_amount) { -1 * rand(100_00) }
+    let(:detail_key) { SecureRandom.hex(6) }
+
+    let(:params) do
+      {
+        "transaction" => {
+          "description" => "Publix",
+          "clearance_date" => nil,
+          "key" => SecureRandom.hex(6),
+          "details_attributes" => [
+            {
+              "key" => detail_key,
+              "budget_item_key" => budget_item.key,
+              "amount" => first_amount,
+            },
+            {
+              "key" => detail_key,
+              "amount" => second_amount,
+            },
+          ],
+        },
+      }
+    end
+
+    it "returns an unprocessable entity status, an error message" do
+      subject
+      expect(response).to have_http_status :unprocessable_entity
+      body = JSON.parse(response.body)
+      expect(body["transaction"]["detailItems"])
+        .to eq(["key" => ["must be unique"], "identifier" => detail_key])
     end
   end
 

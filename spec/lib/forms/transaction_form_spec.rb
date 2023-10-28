@@ -197,7 +197,7 @@ RSpec.describe Forms::TransactionForm do
 
         it "includes an error" do
           subject = described_class.new(user, transaction_entry, params).tap(&:save)
-          expect(subject.errors[:details])
+          expect(subject.errors[:detail_items])
             .to eq([{ identifier: key, key: ["must be unique"] }])
         end
       end
@@ -227,7 +227,7 @@ RSpec.describe Forms::TransactionForm do
         # rubocop:disable RSpec/ExampleLength
         it "includes an error" do
           subject = described_class.new(user, transaction_entry, params).tap(&:save)
-          expect(subject.errors[:details]).to contain_exactly(
+          expect(subject.errors[:detail_items]).to contain_exactly(
             {
               identifier: detail_1_key,
               budget_item_id: ["has already been taken"],

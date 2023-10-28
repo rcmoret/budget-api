@@ -392,9 +392,13 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
       expect { subject }.not_to(change { transaction_entry.reload.total })
       expect(response).to have_http_status :unprocessable_entity
       body = JSON.parse(response.body)
-      expect(body.dig("transaction", "details")).to include(
-        "identifier" => detail_key,
-        "amount" => ["Cannot be changed for a transfer"]
+      expect(body.dig("transaction", "detailItems")).to eq(
+        [
+          {
+            "identifier" => detail_key,
+            "amount" => ["Cannot be changed for a transfer"],
+          },
+        ]
       )
     end
   end
