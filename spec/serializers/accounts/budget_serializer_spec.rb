@@ -4,8 +4,8 @@ RSpec.describe Accounts::BudgetSerializer do
   describe "delegated methods" do
     subject { described_class.new(interval) }
 
-    let(:user) { FactoryBot.create(:user) }
-    let(:interval) { FactoryBot.create(:budget_interval, user_group: user.group) }
+    let(:user) { create(:user) }
+    let(:interval) { create(:budget_interval, user_group: user.group) }
 
     specify do
       expect(subject.month).to eq interval.month
@@ -19,9 +19,9 @@ RSpec.describe Accounts::BudgetSerializer do
   describe "#days_remaining" do
     subject { described_class.new(interval) }
 
-    let(:user) { FactoryBot.create(:user) }
+    let(:user) { create(:user) }
     let(:interval) do
-      FactoryBot.create(
+      create(
         :budget_interval,
         user_group: user.group,
         start_date: Date.new(2022, 3, 1),
@@ -30,7 +30,7 @@ RSpec.describe Accounts::BudgetSerializer do
     end
 
     context "when in the interval is in the past" do
-      around { |ex| travel_to(Date.new(2022, 4, 20)) { ex.run } }
+      before { travel_to(Date.new(2022, 4, 20)) }
 
       it "returns zero" do
         expect(subject.days_remaining).to be_zero
@@ -38,7 +38,7 @@ RSpec.describe Accounts::BudgetSerializer do
     end
 
     context "when in the interval is in the future" do
-      around { |ex| travel_to(Date.new(2022, 1, 30)) { ex.run } }
+      before { travel_to(Date.new(2022, 1, 30)) }
 
       it "returns the total number of days" do
         expect(subject.days_remaining).to be 31
@@ -46,7 +46,7 @@ RSpec.describe Accounts::BudgetSerializer do
     end
 
     context "when the interval is current" do
-      around { |ex| travel_to(Date.new(2022, 3, 10)) { ex.run } }
+      before { travel_to(Date.new(2022, 3, 10)) }
 
       it "returns the difference + 1" do
         expect(subject.days_remaining).to be 22
@@ -57,8 +57,8 @@ RSpec.describe Accounts::BudgetSerializer do
   describe "#total_days" do
     subject { described_class.new(interval) }
 
-    let(:user) { FactoryBot.create(:user) }
-    let(:interval) { FactoryBot.create(:budget_interval, user_group: user.group) }
+    let(:user) { create(:user) }
+    let(:interval) { create(:budget_interval, user_group: user.group) }
 
     it "returns the difference + 1" do
       expect(subject.total_days).to eq((interval.last_date - interval.first_date).to_i + 1)

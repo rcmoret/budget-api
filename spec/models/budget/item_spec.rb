@@ -1,8 +1,11 @@
 require "rails_helper"
 
-RSpec.describe Budget::Item, type: :model do
-  xit { is_expected.to belong_to(:category).required }
-  xit { is_expected.to belong_to(:interval).required }
+RSpec.describe Budget::Item do
+  it pending: "fails associated validation" do
+    expect(subject).to belong_to(:category).required
+    expect(subject).to belong_to(:interval).required
+  end
+
   it { is_expected.to have_many(:transaction_details) }
   it { is_expected.to delegate_method(:name).to(:category) }
   it { is_expected.to delegate_method(:icon_class_name).to(:category) }
@@ -11,24 +14,22 @@ RSpec.describe Budget::Item, type: :model do
 
   describe "validation of uniqueness for weekly items per interval" do
     specify do
-      budget_interval = FactoryBot.create(:budget_interval)
-      category = FactoryBot.create(:category, :weekly)
-      FactoryBot.create(:budget_item, category: category, interval: budget_interval)
+      budget_interval = create(:budget_interval)
+      category = create(:category, :weekly)
+      create(:budget_item, category: category, interval: budget_interval)
 
-      subject = FactoryBot.build(:budget_item, category: category, interval: budget_interval)
+      subject = build(:budget_item, category: category, interval: budget_interval)
 
       expect(subject).to be_invalid
     end
   end
 
   context "when deleting an item" do
-    around do |ex|
-      freeze_time { ex.run }
-    end
+    before { freeze_time }
 
     context "when transaction details are present" do
       it "raises an error" do
-        transaction_detail = FactoryBot.create(:transaction_detail)
+        transaction_detail = create(:transaction_detail)
         subject = transaction_detail.budget_item
 
         expect { subject.delete }.to raise_error(described_class::NonDeleteableError)
@@ -37,7 +38,7 @@ RSpec.describe Budget::Item, type: :model do
 
     context "when transaction details are not present" do
       it "updates the deleted at time stamp" do
-        subject = FactoryBot.create(:budget_item)
+        subject = create(:budget_item)
 
         expect { subject.delete }
           .to(change { subject.reload.deleted_at }.from(nil).to(Time.current))
@@ -48,7 +49,7 @@ RSpec.describe Budget::Item, type: :model do
   describe "#deletable?" do
     subject { budget_item.deletable? }
 
-    let(:budget_item) { FactoryBot.create(:budget_item) }
+    let(:budget_item) { create(:budget_item) }
 
     context "when the budget item has no transaction details" do
       it "returns true" do
@@ -57,7 +58,7 @@ RSpec.describe Budget::Item, type: :model do
     end
 
     context "when the budget item has at least one transaction detail" do
-      before { FactoryBot.create(:transaction_detail, budget_item: budget_item) }
+      before { create(:transaction_detail, budget_item: budget_item) }
 
       it "returns false" do
         expect(subject).to be false
@@ -68,7 +69,7 @@ RSpec.describe Budget::Item, type: :model do
   describe "#amount" do
     subject { budget_item }
 
-    let(:budget_item) { FactoryBot.create(:budget_item) }
+    let(:budget_item) { create(:budget_item) }
 
     context "when the budget item has no events" do
       it "returns zero" do
@@ -77,7 +78,7 @@ RSpec.describe Budget::Item, type: :model do
     end
 
     context "when the budget item has at least one event" do
-      let!(:budget_item_event) { FactoryBot.create(:budget_item_event, item: budget_item) }
+      let!(:budget_item_event) { create(:budget_item_event, item: budget_item) }
 
       it "returns the total of the details' amounts" do
         expect(subject.amount).to be budget_item_event.amount
@@ -86,7 +87,7 @@ RSpec.describe Budget::Item, type: :model do
   end
 
   describe "#transaction_detail_count" do
-    subject { FactoryBot.create(:weekly_item) }
+    subject { create(:weekly_item) }
 
     context "when there are no details" do
       it "returns zero" do
@@ -97,7 +98,7 @@ RSpec.describe Budget::Item, type: :model do
     context "when there are serveral details" do
       let(:count) { rand(1..10) }
 
-      before { FactoryBot.create_list(:transaction_detail, count, budget_item: subject) }
+      before { create_list(:transaction_detail, count, budget_item: subject) }
 
       it "returns the count" do
         expect(subject.transaction_detail_count).to be count
@@ -106,7 +107,7 @@ RSpec.describe Budget::Item, type: :model do
   end
 
   describe "#spent" do
-    subject { FactoryBot.create(:weekly_item) }
+    subject { create(:weekly_item) }
 
     context "when there are no details" do
       it "returns zero" do
@@ -117,7 +118,7 @@ RSpec.describe Budget::Item, type: :model do
     context "when there are serveral details" do
       let(:count) { rand(1..10) }
 
-      let!(:details) { FactoryBot.create_list(:transaction_detail, count, budget_item: subject) }
+      let!(:details) { create_list(:transaction_detail, count, budget_item: subject) }
 
       it "returns the count" do
         expect(subject.spent).to be details.map(&:amount).sum
@@ -126,9 +127,9 @@ RSpec.describe Budget::Item, type: :model do
   end
 
   describe "#difference" do
-    subject { FactoryBot.create(:weekly_expense) }
+    subject { create(:weekly_expense) }
 
-    before { FactoryBot.create(:budget_item_event, :create_event, amount: rand(-100_00..-10_00)) }
+    before { create(:budget_item_event, :create_event, amount: rand(-100_00..-10_00)) }
 
     context "when there are no details" do
       it "returns zero" do
@@ -138,7 +139,7 @@ RSpec.describe Budget::Item, type: :model do
 
     context "when there are serveral details" do
       let(:count) { rand(1..10) }
-      let!(:details) { FactoryBot.create_list(:transaction_detail, count, budget_item: subject) }
+      let!(:details) { create_list(:transaction_detail, count, budget_item: subject) }
 
       it "returns the count" do
         expect(subject.difference)

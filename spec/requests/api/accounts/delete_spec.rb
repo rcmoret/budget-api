@@ -1,10 +1,10 @@
 require "rails_helper"
 
-RSpec.describe "DELETE /api/account/:key", type: :request do
+RSpec.describe "DELETE /api/account/:key" do
   subject { delete(api_account_path(account_key), headers: headers) }
 
   context "when passing a valid token" do
-    let(:user) { FactoryBot.create(:user) }
+    let(:user) { create(:user) }
 
     include_context "with valid token"
 
@@ -22,11 +22,11 @@ RSpec.describe "DELETE /api/account/:key", type: :request do
     end
 
     context "when deleting an account with existing transaction entries" do
-      let(:account) { FactoryBot.create(:account, user_group: user.user_group) }
+      let(:account) { create(:account, user_group: user.user_group) }
       let(:account_key) { account.key }
 
       before do
-        FactoryBot.create_list(:transaction_entry, 2, account: account)
+        create_list(:transaction_entry, 2, account: account)
       end
 
       it "archives the account" do
@@ -43,7 +43,7 @@ RSpec.describe "DELETE /api/account/:key", type: :request do
 
     context "when deleting an account with no existing transaction entries" do
       before do
-        FactoryBot.create(:account, user_group: user.user_group, key: account_key)
+        create(:account, user_group: user.user_group, key: account_key)
       end
 
       let(:account_key) { SecureRandom.hex(6) }
@@ -69,7 +69,7 @@ RSpec.describe "DELETE /api/account/:key", type: :request do
 
       it "returns the errors and an unprocessable entity status" do
         expect(response).to have_http_status :unprocessable_entity
-        expect(JSON.parse(response.body)).to eq errors_double.to_hash.stringify_keys
+        expect(response.parsed_body).to eq errors_double.to_hash.stringify_keys
       end
     end
   end

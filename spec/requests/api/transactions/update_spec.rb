@@ -48,13 +48,13 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
     context "when changing the associated account" do
       include_context "with valid token"
 
-      let(:user) { FactoryBot.create(:user) }
-      let(:account) { FactoryBot.create(:account, user_group: user.group) }
+      let(:user) { create(:user) }
+      let(:account) { create(:account, user_group: user.group) }
       let(:account_key) { account.key }
-      let(:savings_account) { FactoryBot.create(:savings_account, user_group: user.group) }
-      let(:transaction) { FactoryBot.create(:transaction_entry, :pending, account: account) }
+      let(:savings_account) { create(:savings_account, user_group: user.group) }
+      let(:transaction) { create(:transaction_entry, :pending, account: account) }
       let(:transaction_key) { transaction.key }
-      let(:interval) { FactoryBot.create(:budget_interval, user_group: user.group) }
+      let(:interval) { create(:budget_interval, user_group: user.group) }
       let(:month) { interval.month }
       let(:year) { interval.year }
       let(:params) do
@@ -73,12 +73,12 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
       it "returns an accepted status, the transactions, accounts and budget items" do
         subject
         expect(response).to have_http_status :accepted
-        body = JSON.parse(response.body).deep_symbolize_keys
+        body = response.parsed_body.deep_symbolize_keys
         expect(body[:accounts]).to contain_exactly(
           { key: account.key, balance: 0, balancePriorTo: 0 },
           { key: savings_account.key, balance: transaction.total, balancePriorTo: transaction.total }
         )
-        expect(body[:budgetItems]).to be nil
+        expect(body[:budgetItems]).to be_nil
         expect(body[:transactions]).to eq(
           [
             {
@@ -110,12 +110,12 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
       context "when the account is non-cash flow" do
         include_context "with valid token"
 
-        let(:user) { FactoryBot.create(:user) }
-        let(:account) { FactoryBot.create(:account, user_group: user.group) }
+        let(:user) { create(:user) }
+        let(:account) { create(:account, user_group: user.group) }
         let(:account_key) { account.key }
-        let(:transaction) { FactoryBot.create(:transaction_entry, :discretionary, account: account) }
+        let(:transaction) { create(:transaction_entry, :discretionary, account: account) }
         let(:transaction_key) { transaction.key }
-        let(:interval) { FactoryBot.create(:budget_interval, user_group: user.group) }
+        let(:interval) { create(:budget_interval, user_group: user.group) }
         let(:month) { interval.month }
         let(:year) { interval.year }
         let(:params) { { "transaction" => { "is_budget_exclusion" => true } } }
@@ -123,7 +123,7 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
         it "returns an unprocessable entity status, error message" do
           subject
           expect(response).to have_http_status :unprocessable_entity
-          body = JSON.parse(response.body).deep_symbolize_keys
+          body = response.parsed_body.deep_symbolize_keys
           expect(body)
             .to eq(transaction: { budgetExclusion: ["Budget Exclusions only applicable for non-cash-flow accounts"] })
         end
@@ -132,12 +132,12 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
       context "when the account is cash flow" do
         include_context "with valid token"
 
-        let(:user) { FactoryBot.create(:user) }
-        let(:savings_account) { FactoryBot.create(:savings_account, user_group: user.group) }
+        let(:user) { create(:user) }
+        let(:savings_account) { create(:savings_account, user_group: user.group) }
         let(:account_key) { savings_account.key }
-        let(:transaction) { FactoryBot.create(:transaction_entry, :discretionary, account: savings_account) }
+        let(:transaction) { create(:transaction_entry, :discretionary, account: savings_account) }
         let(:transaction_key) { transaction.key }
-        let(:interval) { FactoryBot.create(:budget_interval, user_group: user.group) }
+        let(:interval) { create(:budget_interval, user_group: user.group) }
         let(:month) { interval.month }
         let(:year) { interval.year }
         let(:params) { { "transaction" => { "budgetExclusion" => true } } }
@@ -154,14 +154,14 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
     context "when changing the budget item" do
       include_context "with valid token"
 
-      let(:user) { FactoryBot.create(:user) }
-      let(:account) { FactoryBot.create(:account, user_group: user.group) }
+      let(:user) { create(:user) }
+      let(:account) { create(:account, user_group: user.group) }
       let(:account_key) { account.key }
-      let(:transaction) { FactoryBot.create(:transaction_entry, :discretionary, account: account) }
+      let(:transaction) { create(:transaction_entry, :discretionary, account: account) }
       let(:transaction_key) { transaction.key }
-      let(:interval) { FactoryBot.create(:budget_interval, user_group: user.group) }
-      let(:category) { FactoryBot.create(:category, user_group: user.group) }
-      let(:budget_item) { FactoryBot.create(:budget_item, interval: interval, category: category) }
+      let(:interval) { create(:budget_interval, user_group: user.group) }
+      let(:category) { create(:category, user_group: user.group) }
+      let(:budget_item) { create(:budget_item, interval: interval, category: category) }
       let(:month) { interval.month }
       let(:year) { interval.year }
       let(:detail) { transaction.details.first }
@@ -181,7 +181,7 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
       it "returns an accepted status" do
         subject
         expect(response).to have_http_status :accepted
-        body = JSON.parse(response.body).deep_symbolize_keys
+        body = response.parsed_body.deep_symbolize_keys
         expect(body.dig(:transactions, 0, :details)).to eq(
           [
             {
@@ -200,14 +200,14 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
   context "when adding an additional detail" do
     include_context "with valid token"
 
-    let(:user) { FactoryBot.create(:user) }
-    let(:account) { FactoryBot.create(:account, user_group: user.group) }
+    let(:user) { create(:user) }
+    let(:account) { create(:account, user_group: user.group) }
     let(:account_key) { account.key }
-    let!(:transaction) { FactoryBot.create(:transaction_entry, :discretionary, account: account) }
+    let!(:transaction) { create(:transaction_entry, :discretionary, account: account) }
     let(:transaction_key) { transaction.key }
-    let(:interval) { FactoryBot.create(:budget_interval, user_group: user.group) }
-    let(:category) { FactoryBot.create(:category, user_group: user.group) }
-    let(:budget_item) { FactoryBot.create(:budget_item, interval: interval, category: category) }
+    let(:interval) { create(:budget_interval, user_group: user.group) }
+    let(:category) { create(:category, user_group: user.group) }
+    let(:budget_item) { create(:budget_item, interval: interval, category: category) }
     let(:month) { interval.month }
     let(:year) { interval.year }
     let(:params) do
@@ -227,7 +227,7 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
     it "returns an accepted status" do
       expect { subject }.to change { Transaction::Detail.count }.by(+1)
       expect(response).to have_http_status :accepted
-      body = JSON.parse(response.body).deep_symbolize_keys
+      body = response.parsed_body.deep_symbolize_keys
       expect(body[:budgetItems]).to eq(
         [
           {
@@ -251,14 +251,14 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
   context "when adding an additional detail where the budget item belongs to a different interval" do
     include_context "with valid token"
 
-    let(:user) { FactoryBot.create(:user) }
-    let(:account) { FactoryBot.create(:account, user_group: user.group) }
+    let(:user) { create(:user) }
+    let(:account) { create(:account, user_group: user.group) }
     let(:account_key) { account.key }
-    let!(:transaction) { FactoryBot.create(:transaction_entry, :discretionary, account: account) }
+    let!(:transaction) { create(:transaction_entry, :discretionary, account: account) }
     let(:transaction_key) { transaction.key }
-    let(:interval) { FactoryBot.create(:budget_interval, user_group: user.group) }
-    let(:category) { FactoryBot.create(:category, user_group: user.group) }
-    let(:budget_item) { FactoryBot.create(:budget_item, interval: interval.prev, category: category) }
+    let(:interval) { create(:budget_interval, user_group: user.group) }
+    let(:category) { create(:category, user_group: user.group) }
+    let(:budget_item) { create(:budget_item, interval: interval.prev, category: category) }
     let(:month) { interval.month }
     let(:year) { interval.year }
     let(:params) do
@@ -278,8 +278,8 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
     it "returns an accepted status" do
       expect { subject }.to change { Transaction::Detail.count }.by(+1)
       expect(response).to have_http_status :accepted
-      body = JSON.parse(response.body).deep_symbolize_keys
-      expect(body[:budgetItems]).to be nil
+      body = response.parsed_body.deep_symbolize_keys
+      expect(body[:budgetItems]).to be_nil
     end
   end
 
@@ -287,11 +287,11 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
     context "when multiple details are present" do
       include_context "with valid token"
 
-      let(:user) { FactoryBot.create(:user) }
-      let(:account) { FactoryBot.create(:account, user_group: user.group) }
+      let(:user) { create(:user) }
+      let(:account) { create(:account, user_group: user.group) }
       let(:account_key) { account.key }
       let(:transaction) do
-        FactoryBot.create(:transaction_entry, :with_multiple_details, account: account)
+        create(:transaction_entry, :with_multiple_details, account: account)
       end
       let(:transaction_key) { transaction.key }
       let(:detail) { transaction.details.to_a.sample }
@@ -318,11 +318,11 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
     context "when there is only one detail present" do
       include_context "with valid token"
 
-      let(:user) { FactoryBot.create(:user) }
-      let(:account) { FactoryBot.create(:account, user_group: user.group) }
+      let(:user) { create(:user) }
+      let(:account) { create(:account, user_group: user.group) }
       let(:account_key) { account.key }
       let(:transaction) do
-        FactoryBot.create(:transaction_entry, account: account)
+        create(:transaction_entry, account: account)
       end
       let(:transaction_key) { transaction.key }
       let(:detail) { transaction.details.first }
@@ -344,7 +344,7 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
       it "deletes the transaction" do
         expect { subject }.not_to(change { transaction.reload.details.count })
         expect(response).to have_http_status :unprocessable_entity
-        body = JSON.parse(response.body).deep_symbolize_keys
+        body = response.parsed_body.deep_symbolize_keys
         expect(body).to eq(
           transaction: { details: ["Must have at least one detail for this entry"] }
         )
@@ -355,11 +355,11 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
   context "when updating an entry that is a transfer" do
     include_context "with valid token"
 
-    let(:interval) { FactoryBot.create(:budget_interval, user_group: user.group) }
+    let(:interval) { create(:budget_interval, user_group: user.group) }
     let(:month) { interval.month }
     let(:year) { interval.year }
-    let(:account) { FactoryBot.create(:account, user_group: user.group) }
-    let(:savings_account) { FactoryBot.create(:savings_account, user_group: user.group) }
+    let(:account) { create(:account, user_group: user.group) }
+    let(:savings_account) { create(:savings_account, user_group: user.group) }
     let(:original_amount) { rand(100_00) }
     let(:transfer_result) do
       Forms::TransferForm.new(
@@ -391,7 +391,7 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
     it "does not update the transaction" do
       expect { subject }.not_to(change { transaction_entry.reload.total })
       expect(response).to have_http_status :unprocessable_entity
-      body = JSON.parse(response.body)
+      body = response.parsed_body
       expect(body.dig("transaction", "detailItems")).to eq(
         [
           {

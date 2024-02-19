@@ -1,19 +1,19 @@
 require "rails_helper"
 
-RSpec.describe Transaction::Detail, type: :model do
+RSpec.describe Transaction::Detail do
   describe "associations" do
     subject do
       described_class.new(amount: -1000, budget_item: budget_item)
     end
 
-    let(:budget_item) { FactoryBot.create(:budget_item) }
+    let(:budget_item) { create(:budget_item) }
 
     it { is_expected.to belong_to(:entry).required }
     it { is_expected.to belong_to(:budget_item).optional(true) }
   end
 
   describe "validations" do
-    let(:entry) { FactoryBot.create(:transaction_entry) }
+    let(:entry) { create(:transaction_entry) }
 
     describe "a valid detail" do
       it "returns true for valid?" do
@@ -52,11 +52,11 @@ RSpec.describe Transaction::Detail, type: :model do
       subject { described_class.new(budget_item: item, entry: entry) }
 
       before do
-        FactoryBot.create(:transaction_detail, entry: entry, budget_item: item)
+        create(:transaction_detail, entry: entry, budget_item: item)
       end
 
-      let(:entry) { FactoryBot.create(:transaction_entry) }
-      let(:item) { FactoryBot.create(:monthly_expense) }
+      let(:entry) { create(:transaction_entry) }
+      let(:item) { create(:monthly_expense) }
 
       it { is_expected.not_to be_valid }
 
@@ -68,7 +68,7 @@ RSpec.describe Transaction::Detail, type: :model do
     end
 
     describe "amount changed raises an error if transfer" do
-      let(:transfer) { FactoryBot.create(:transfer) }
+      let(:transfer) { create(:transfer) }
       let(:entry) { transfer.to_transaction }
       let(:detail) { entry.reload.details.first }
 

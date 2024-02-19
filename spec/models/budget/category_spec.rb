@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Budget::Category, type: :model do
+RSpec.describe Budget::Category do
   describe "associations" do
     it { is_expected.to have_many(:items) }
     it { is_expected.to have_many(:transaction_details) }
@@ -10,13 +10,13 @@ RSpec.describe Budget::Category, type: :model do
   end
 
   describe "validations" do
-    subject { FactoryBot.create(:category) }
+    subject { create(:category) }
 
     it { is_expected.to validate_presence_of(:name) }
     it { is_expected.to validate_uniqueness_of(:name).scoped_to(:user_group_id) }
 
     describe "accrual on expense" do
-      subject { FactoryBot.build(:category, :revenue, :accrual) }
+      subject { build(:category, :revenue, :accrual) }
 
       it { is_expected.not_to be_valid }
 
@@ -28,7 +28,7 @@ RSpec.describe Budget::Category, type: :model do
     end
 
     describe "expense/revenue cannot be changed after create" do
-      subject { FactoryBot.create(:category, :revenue) }
+      subject { create(:category, :revenue) }
 
       it "returns false and the object has errors" do
         expect(subject.update(expense: true, default_amount: -10_00)).to be false
@@ -37,7 +37,7 @@ RSpec.describe Budget::Category, type: :model do
     end
 
     describe "monthly/day-to-day cannot be changed after create" do
-      subject { FactoryBot.create(:category, :monthly) }
+      subject { create(:category, :monthly) }
 
       it "returns false and the object has errors" do
         expect(subject.update(monthly: false)).to be false
@@ -49,7 +49,7 @@ RSpec.describe Budget::Category, type: :model do
   describe "#revenue?" do
     subject { category.revenue? }
 
-    let(:category) { FactoryBot.create(:category, expense?) }
+    let(:category) { create(:category, expense?) }
 
     context "when category is revenue" do
       let(:expense?) { :revenue }
@@ -67,7 +67,7 @@ RSpec.describe Budget::Category, type: :model do
   describe "#weekly?" do
     subject { category.weekly? }
 
-    let(:category) { FactoryBot.create(:category, monthly: monthly?) }
+    let(:category) { create(:category, monthly: monthly?) }
 
     context "when category is weekly" do
       let(:monthly?) { false }
@@ -85,7 +85,7 @@ RSpec.describe Budget::Category, type: :model do
   describe "#archived?" do
     subject { category.archived? }
 
-    let(:category) { FactoryBot.create(:category, archived_at: archived_at) }
+    let(:category) { create(:category, archived_at: archived_at) }
 
     context "when category was archived" do
       let(:archived_at) { 1.day.ago }
@@ -101,11 +101,9 @@ RSpec.describe Budget::Category, type: :model do
   end
 
   describe "archiving/unarchiving" do
-    around do |ex|
-      freeze_time { ex.run }
-    end
+    before { freeze_time }
 
-    let(:category) { FactoryBot.create(:category) }
+    let(:category) { create(:category) }
 
     describe "#archive!" do
       subject { category.archive! }
@@ -133,9 +131,9 @@ RSpec.describe Budget::Category, type: :model do
   describe "destroy" do
     subject { category.destroy }
 
-    around { |ex| freeze_time { ex.run } }
+    before { freeze_time }
 
-    let!(:category) { FactoryBot.create(:category) }
+    let!(:category) { create(:category) }
 
     context "when there are no associated items" do
       it "deletes the record" do
@@ -145,7 +143,7 @@ RSpec.describe Budget::Category, type: :model do
 
     context "when there are associated items" do
       before do
-        FactoryBot.create(:budget_item, category: category)
+        create(:budget_item, category: category)
         allow(category).to receive(:update).and_call_original
       end
 

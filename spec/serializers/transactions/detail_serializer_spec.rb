@@ -3,25 +3,25 @@ require "rails_helper"
 RSpec.describe Transactions::DetailSerializer do
   subject { described_class.new(transaction_detail) }
 
-  let(:user_group) { FactoryBot.create(:user_group) }
-  let(:icon) { FactoryBot.create(:icon) }
-  let(:interval) { FactoryBot.create(:budget_interval, user_group: user_group) }
+  let(:user_group) { create(:user_group) }
+  let(:icon) { create(:icon) }
+  let(:interval) { create(:budget_interval, user_group: user_group) }
   let(:category) do
-    FactoryBot.create(
+    create(
       :category,
       user_group: user_group,
       icon: icon,
     )
   end
   let(:budget_item) do
-    FactoryBot.create(:budget_item, category: category, interval: interval)
+    create(:budget_item, category: category, interval: interval)
   end
   let(:detail_key) { SecureRandom.hex(6) }
   let(:amount) { rand(-100..200) }
   let(:transaction_entry) do
-    FactoryBot.create(
+    create(
       :transaction_entry,
-      account: FactoryBot.create(:account, user_group: user_group),
+      account: create(:account, user_group: user_group),
       details_attributes: [
         {
           key: detail_key,

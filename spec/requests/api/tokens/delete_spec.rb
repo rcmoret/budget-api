@@ -4,7 +4,7 @@ RSpec.describe "DELETE /api/tokens" do
   subject { delete("/api/tokens", headers: headers) }
 
   context "when passing a valid token" do
-    let(:user) { FactoryBot.create(:user) }
+    let(:user) { create(:user) }
 
     before { auth_token_context }
 
@@ -15,7 +15,7 @@ RSpec.describe "DELETE /api/tokens" do
         .to change { Auth::Token::Context.belonging_to(user).active.count }
         .by(-1)
       expect(response).to have_http_status :accepted
-      expect(JSON.parse(response.body)).to be_empty
+      expect(response.parsed_body).to be_empty
     end
   end
 

@@ -2,15 +2,15 @@ require "rails_helper"
 
 RSpec.describe User::AccountsSerializer do
   describe "#accounts" do
-    let(:user) { FactoryBot.create(:user) }
-    let(:checking_account) { FactoryBot.create(:account, user_group: user.group) }
-    let(:savings_account) { FactoryBot.create(:savings_account, user_group: user.group) }
-    let!(:empty_account) { FactoryBot.create(:account, user_group: user.group) }
+    let(:user) { create(:user) }
+    let(:checking_account) { create(:account, user_group: user.group) }
+    let(:savings_account) { create(:savings_account, user_group: user.group) }
+    let!(:empty_account) { create(:account, user_group: user.group) }
 
     before do
-      FactoryBot.create_list(:transaction_entry, 10, account: checking_account)
-      FactoryBot.create_list(:transaction_entry, 10, account: savings_account)
-      FactoryBot.create(:account)
+      create_list(:transaction_entry, 10, account: checking_account)
+      create_list(:transaction_entry, 10, account: savings_account)
+      create(:account)
     end
 
     it "calls the user account serializer with each of the user group accounts" do

@@ -61,7 +61,7 @@ module Budget
           .between(date_range, include_pending: current?)
           .where(
             budget_exclusion: false,
-            account_id: Account.belonging_to(user_group).non_cash_flow.pluck(:id)
+            account_id: Account.belonging_to(user_group).non_cash_flow.select(:id)
           )
       end
     end

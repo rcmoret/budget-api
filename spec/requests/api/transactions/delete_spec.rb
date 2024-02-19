@@ -44,15 +44,15 @@ RSpec.describe "DELETE /api/account/:account_key/transactions/:key/:month/:year"
   context "when deleting a transaction" do
     include_context "with valid token"
 
-    let(:account) { FactoryBot.create(:account, user_group: user.group) }
+    let(:account) { create(:account, user_group: user.group) }
     let(:account_key) { account.key }
-    let!(:transaction) { FactoryBot.create(:transaction_entry, account: account) }
+    let!(:transaction) { create(:transaction_entry, account: account) }
     let(:transaction_key) { transaction.key }
 
     it "deletes the transaction, returns accepted status and a response" do
       expect { subject }.to change { account.reload.transactions.count }.by(-1)
       expect(response).to have_http_status :accepted
-      body = JSON.parse(response.body).deep_symbolize_keys
+      body = response.parsed_body.deep_symbolize_keys
       expect(body).to eq(
         accounts: [{ key: account.key, balance: 0, balancePriorTo: 0 }],
         deletedTransactionKeys: [transaction.key],
@@ -64,8 +64,8 @@ RSpec.describe "DELETE /api/account/:account_key/transactions/:key/:month/:year"
   context "when deleting a transfer" do
     include_context "with valid token"
 
-    let(:account) { FactoryBot.create(:account, user_group: user.group) }
-    let(:savings_account) { FactoryBot.create(:savings_account, user_group: user.group) }
+    let(:account) { create(:account, user_group: user.group) }
+    let(:savings_account) { create(:savings_account, user_group: user.group) }
     let(:transfer_result) do
       Forms::TransferForm.new(
         user: user,
@@ -83,7 +83,7 @@ RSpec.describe "DELETE /api/account/:account_key/transactions/:key/:month/:year"
     it "does not delete the transaction" do
       subject
       expect(response).to have_http_status :unprocessable_entity
-      body = JSON.parse(response.body).deep_symbolize_keys
+      body = response.parsed_body.deep_symbolize_keys
       expect(body).to eq(
         transaction: {
           base: ["Cannot delete record because a dependent credit transfer exists"],

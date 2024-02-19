@@ -12,7 +12,7 @@ RSpec.describe "PUT /api/budget/category/:category_key" do
   context "when passing valid params" do
     include_context "with valid token"
 
-    let(:category) { FactoryBot.create(:category, :accrual, user_group: user.group) }
+    let(:category) { create(:category, :accrual, user_group: user.group) }
     let(:category_key) { category.key }
     let(:params) do
       { budget_category: { is_accrual: false } }
@@ -29,7 +29,7 @@ RSpec.describe "PUT /api/budget/category/:category_key" do
   context "when passing invalid params" do
     include_context "with valid token"
 
-    let(:category) { FactoryBot.create(:category, :expense, user_group: user.group) }
+    let(:category) { create(:category, :expense, user_group: user.group) }
     let(:category_key) { category.key }
     let(:params) do
       { budget_category: { default_amount: 100_00, expense: false } }
@@ -38,7 +38,7 @@ RSpec.describe "PUT /api/budget/category/:category_key" do
     it "returns an unprocessable entity status, error messages" do
       subject
       expect(response).to have_http_status :unprocessable_entity
-      body = JSON.parse(response.body).deep_symbolize_keys
+      body = response.parsed_body.deep_symbolize_keys
       expect(body).to eq(budgetCategory: { expense: ["cannot be changed after creation"] })
     end
   end

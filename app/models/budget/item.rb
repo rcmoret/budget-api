@@ -22,7 +22,6 @@ module Budget
                foreign_key: :budget_interval_id,
                inverse_of: :items
 
-    validates :category, presence: true
     validates :budget_category_id, uniqueness: { scope: :budget_interval_id, if: -> { weekly? && active? } }
     alias_attribute :category_id, :budget_category_id
     scope :prior_to, ->(date_hash) { joins(:interval).merge(Interval.prior_to(date_hash)) }

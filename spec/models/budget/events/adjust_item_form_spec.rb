@@ -18,10 +18,10 @@ RSpec.describe Budget::Events::AdjustItemForm do
   end
 
   describe "validations" do
-    let(:user) { FactoryBot.create(:user) }
-    let(:category) { FactoryBot.create(:category, user_group: user.group) }
-    let(:budget_item) { FactoryBot.create(:budget_item, category: category) }
-    let(:interval) { FactoryBot.create(:budget_interval, user_group: user.group) }
+    let(:user) { create(:user) }
+    let(:category) { create(:category, user_group: user.group) }
+    let(:budget_item) { create(:budget_item, category: category) }
+    let(:interval) { create(:budget_interval, user_group: user.group) }
 
     describe "event type validation" do
       context "when a valid event" do
@@ -79,8 +79,8 @@ RSpec.describe Budget::Events::AdjustItemForm do
         end
 
         it "has a meaningful error message" do
-          category = FactoryBot.create(:category, :revenue, user_group: user.user_group)
-          item = FactoryBot.create(:budget_item, category: category, interval: interval)
+          category = create(:category, :revenue, user_group: user.user_group)
+          item = create(:budget_item, category: category, interval: interval)
           form = build_form(user, budget_item_key: item.key, amount: 0.4)
           form.valid?
           expect(form.errors["amount"]).to include "must be an integer"
@@ -90,8 +90,8 @@ RSpec.describe Budget::Events::AdjustItemForm do
       context "when the item category is a revenue" do
         context "when the amount is positive" do
           it "is valid" do
-            category = FactoryBot.create(:category, :revenue, user_group: user.user_group)
-            item = FactoryBot.create(:budget_item, category: category, interval: interval)
+            category = create(:category, :revenue, user_group: user.user_group)
+            item = create(:budget_item, category: category, interval: interval)
             form = build_form(user, budget_item_key: item.key, amount: 129_50)
             expect(form).to be_valid
           end
@@ -99,15 +99,15 @@ RSpec.describe Budget::Events::AdjustItemForm do
 
         context "when the amount is negative" do
           it "is not valid" do
-            category = FactoryBot.create(:category, :revenue, user_group: user.user_group)
-            budget_item = FactoryBot.create(:budget_item, interval: interval, category: category)
+            category = create(:category, :revenue, user_group: user.user_group)
+            budget_item = create(:budget_item, interval: interval, category: category)
             form = build_form(user, budget_item_key: budget_item.key, amount: -129_50)
             expect(form).not_to be_valid
           end
 
           it "provides an error message" do
-            category = FactoryBot.create(:category, :revenue, user_group: user.group)
-            item = FactoryBot.create(:budget_item, category: category, interval: interval)
+            category = create(:category, :revenue, user_group: user.group)
+            item = create(:budget_item, category: category, interval: interval)
             form = build_form(user, amount: -129_50, budget_item_key: item.key)
             form.valid?
             expect(form.errors["amount"])
@@ -119,8 +119,8 @@ RSpec.describe Budget::Events::AdjustItemForm do
       context "when the item category is an expense" do
         context "when the amount is negative" do
           it "is valid" do
-            category = FactoryBot.create(:category, :expense, user_group: user.group)
-            item = FactoryBot.create(:budget_item, category: category, interval: interval)
+            category = create(:category, :expense, user_group: user.group)
+            item = create(:budget_item, category: category, interval: interval)
             form = build_form(user, amount: -32_09, budget_item_key: item.key)
             expect(form).to be_valid
           end
@@ -128,15 +128,15 @@ RSpec.describe Budget::Events::AdjustItemForm do
 
         context "when the amount is positive" do
           it "is not valid" do
-            category = FactoryBot.create(:category, :expense, user_group: user.user_group)
-            item = FactoryBot.create(:budget_item, category: category, interval: interval)
+            category = create(:category, :expense, user_group: user.user_group)
+            item = create(:budget_item, category: category, interval: interval)
             form = build_form(user, amount: 32_09, budget_item_key: item.key)
             expect(form).not_to be_valid
           end
 
           it "provides an error message" do
-            category = FactoryBot.create(:category, :expense, user_group: user.user_group)
-            item = FactoryBot.create(:budget_item, category: category, interval: interval)
+            category = create(:category, :expense, user_group: user.user_group)
+            item = create(:budget_item, category: category, interval: interval)
             form = build_form(user, amount: 32_09, budget_item_key: item.key)
             form.valid?
             expect(form.errors["amount"]).to include "expense items must be less than or equal to 0"
@@ -147,20 +147,20 @@ RSpec.describe Budget::Events::AdjustItemForm do
   end
 
   describe ".save" do
-    let(:interval) { FactoryBot.create(:budget_interval, user_group: user.group) }
-    let(:user) { FactoryBot.create(:user) }
+    let(:interval) { create(:budget_interval, user_group: user.group) }
+    let(:user) { create(:user) }
 
     describe "creates an event" do
       it "adds an adjustment event" do
-        category = FactoryBot.create(:category, :expense, user_group: user.group)
-        item = FactoryBot.create(:budget_item, category: category, interval: interval)
+        category = create(:category, :expense, user_group: user.group)
+        item = create(:budget_item, category: category, interval: interval)
         form = build_form(user, event_type: "item_adjust", budget_item_key: item.key)
         expect { form.save }.to(change { Budget::ItemEvent.item_adjust.count }.from(0).to(+1))
       end
 
       it "returns true" do
-        category = FactoryBot.create(:category, :expense, user_group: user.group)
-        item = FactoryBot.create(:budget_item, category: category, interval: interval)
+        category = create(:category, :expense, user_group: user.group)
+        item = create(:budget_item, category: category, interval: interval)
         form = build_form(user, event_type: "item_adjust", budget_item_key: item.key)
         expect(form.save).to be true
       end
@@ -253,8 +253,8 @@ RSpec.describe Budget::Events::AdjustItemForm do
       end
 
       it "includes the event errors" do
-        category = FactoryBot.create(:category, :revenue, user_group: user.group)
-        item = FactoryBot.create(:budget_item, category: category, interval: interval)
+        category = create(:category, :revenue, user_group: user.group)
+        item = create(:budget_item, category: category, interval: interval)
         form = build_form(user, amount: 100, budget_item_key: item.key)
         form.save
         expect(form.errors["count"]).to include "cannot be greater than 0"

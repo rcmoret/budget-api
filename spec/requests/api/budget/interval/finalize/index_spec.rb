@@ -9,7 +9,7 @@ RSpec.describe "GET /api/budget/intervals/finalize/(:month)/(:year)" do
     include_context "with valid token"
 
     let(:url_args) { [interval.month, interval.year] }
-    let(:interval) { FactoryBot.create(:budget_interval, :current, user_group: user.group) }
+    let(:interval) { create(:budget_interval, :current, user_group: user.group) }
 
     before { interval }
 
@@ -18,7 +18,7 @@ RSpec.describe "GET /api/budget/intervals/finalize/(:month)/(:year)" do
 
       it "returns an :ok status and data" do
         expect(response).to have_http_status :ok
-        body = JSON.parse(response.body).deep_symbolize_keys
+        body = response.parsed_body.deep_symbolize_keys
         expect(body).to eq(
           data: {
             firstDate: interval.first_date.strftime("%F"),
@@ -31,11 +31,11 @@ RSpec.describe "GET /api/budget/intervals/finalize/(:month)/(:year)" do
 
     context "when a budget category has a base items, no target items" do
       context "when the category is monthly" do
-        let(:category) { FactoryBot.create(:category, :monthly, :expense, user_group: user.group) }
+        let(:category) { create(:category, :monthly, :expense, user_group: user.group) }
         let(:amount) { rand(-100_00..-100) }
         let!(:budget_item) do
-          FactoryBot.create(:budget_item, category: category, interval: interval.prev).tap do |item|
-            FactoryBot.create(:budget_item_event, :create_event, item: item, amount: amount)
+          create(:budget_item, category: category, interval: interval.prev).tap do |item|
+            create(:budget_item_event, :create_event, item: item, amount: amount)
           end
         end
 
@@ -43,7 +43,7 @@ RSpec.describe "GET /api/budget/intervals/finalize/(:month)/(:year)" do
 
         it "returns an :ok status and data - including a create event" do
           expect(response).to have_http_status :ok
-          body = JSON.parse(response.body).deep_symbolize_keys
+          body = response.parsed_body.deep_symbolize_keys
           expect(body[:data]).to include(
             firstDate: interval.first_date.strftime("%F"),
             lastDate: interval.last_date.strftime("%F"),
@@ -74,11 +74,11 @@ RSpec.describe "GET /api/budget/intervals/finalize/(:month)/(:year)" do
       end
 
       context "when the category is weekly" do
-        let(:category) { FactoryBot.create(:category, :weekly, user_group: user.group) }
+        let(:category) { create(:category, :weekly, user_group: user.group) }
         let(:amount) { rand(-100_00..-100) }
         let!(:budget_item) do
-          FactoryBot.create(:budget_item, category: category, interval: interval.prev).tap do |item|
-            FactoryBot.create(:budget_item_event, :create_event, item: item, amount: amount)
+          create(:budget_item, category: category, interval: interval.prev).tap do |item|
+            create(:budget_item_event, :create_event, item: item, amount: amount)
           end
         end
 
@@ -86,7 +86,7 @@ RSpec.describe "GET /api/budget/intervals/finalize/(:month)/(:year)" do
 
         it "returns an :ok status and data - including a create event" do
           expect(response).to have_http_status :ok
-          body = JSON.parse(response.body).deep_symbolize_keys
+          body = response.parsed_body.deep_symbolize_keys
           expect(body[:data]).to include(
             firstDate: interval.first_date.strftime("%F"),
             lastDate: interval.last_date.strftime("%F"),
@@ -119,16 +119,16 @@ RSpec.describe "GET /api/budget/intervals/finalize/(:month)/(:year)" do
 
     context "when a budget category has a base items, and a target items" do
       context "when the category is monthly" do
-        let(:category) { FactoryBot.create(:category, :expense, :monthly, user_group: user.group) }
+        let(:category) { create(:category, :expense, :monthly, user_group: user.group) }
         let(:amount) { rand(-100_00..-100) }
         let!(:previous_budget_item) do
-          FactoryBot.create(:budget_item, category: category, interval: interval.prev).tap do |item|
-            FactoryBot.create(:budget_item_event, :create_event, item: item, amount: amount)
+          create(:budget_item, category: category, interval: interval.prev).tap do |item|
+            create(:budget_item_event, :create_event, item: item, amount: amount)
           end
         end
         let!(:upcoming_budget_item) do
-          FactoryBot.create(:budget_item, category: category, interval: interval).tap do |item|
-            FactoryBot.create(:budget_item_event, :create_event, item: item, amount: amount)
+          create(:budget_item, category: category, interval: interval).tap do |item|
+            create(:budget_item_event, :create_event, item: item, amount: amount)
           end
         end
 
@@ -136,7 +136,7 @@ RSpec.describe "GET /api/budget/intervals/finalize/(:month)/(:year)" do
 
         it "returns an :ok status and data - including a create event and an adjust event" do
           expect(response).to have_http_status :ok
-          body = JSON.parse(response.body).deep_symbolize_keys
+          body = response.parsed_body.deep_symbolize_keys
           expect(body[:data]).to include(
             firstDate: interval.first_date.strftime("%F"),
             lastDate: interval.last_date.strftime("%F"),
@@ -167,21 +167,21 @@ RSpec.describe "GET /api/budget/intervals/finalize/(:month)/(:year)" do
       end
 
       context "when the category is a monthly accrual" do
-        let(:category) { FactoryBot.create(:category, :accrual, :expense, :monthly, user_group: user.group) }
+        let(:category) { create(:category, :accrual, :expense, :monthly, user_group: user.group) }
         let(:amount) { rand(-100_00..-100) }
 
         before do
-          FactoryBot.create(:budget_item, category: category, interval: interval.prev).tap do |item|
-            FactoryBot.create(:budget_item_event, :create_event, item: item, amount: amount)
+          create(:budget_item, category: category, interval: interval.prev).tap do |item|
+            create(:budget_item_event, :create_event, item: item, amount: amount)
           end
-          FactoryBot.create(:budget_item, category: category, interval: interval).tap do |item|
-            FactoryBot.create(:budget_item_event, :create_event, item: item, amount: amount)
+          create(:budget_item, category: category, interval: interval).tap do |item|
+            create(:budget_item_event, :create_event, item: item, amount: amount)
           end
           subject
         end
 
         it "returns an :ok status and data - including an adjust event" do
-          body = JSON.parse(response.body).deep_symbolize_keys
+          body = response.parsed_body.deep_symbolize_keys
           expect(body.dig(:data, :budgetCategories, 0, :events).size).to be 1
           expect(body.dig(:data, :budgetCategories, 0, :events, 0)).to include(
             name: category.name,
@@ -195,24 +195,24 @@ RSpec.describe "GET /api/budget/intervals/finalize/(:month)/(:year)" do
       end
 
       context "when the category is weekly" do
-        let(:category) { FactoryBot.create(:category, :expense, :weekly, user_group: user.group) }
+        let(:category) { create(:category, :expense, :weekly, user_group: user.group) }
         let(:amount) { rand(-100_00..-100) }
         let!(:upcoming_budget_item) do
-          FactoryBot.create(:budget_item, category: category, interval: interval).tap do |item|
-            FactoryBot.create(:budget_item_event, :create_event, item: item, amount: amount)
+          create(:budget_item, category: category, interval: interval).tap do |item|
+            create(:budget_item_event, :create_event, item: item, amount: amount)
           end
         end
 
         before do
-          FactoryBot.create(:budget_item, category: category, interval: interval.prev).tap do |item|
-            FactoryBot.create(:budget_item_event, :create_event, item: item, amount: amount)
+          create(:budget_item, category: category, interval: interval.prev).tap do |item|
+            create(:budget_item_event, :create_event, item: item, amount: amount)
           end
           subject
         end
 
         it "returns an :ok status and data - including an adjust event" do
           expect(response).to have_http_status :ok
-          body = JSON.parse(response.body).deep_symbolize_keys
+          body = response.parsed_body.deep_symbolize_keys
           expect(body[:data]).to include(
             firstDate: interval.first_date.strftime("%F"),
             lastDate: interval.last_date.strftime("%F"),
@@ -235,13 +235,13 @@ RSpec.describe "GET /api/budget/intervals/finalize/(:month)/(:year)" do
   context "when not passing month / year url params" do
     include_context "with valid token"
 
-    let(:interval) { FactoryBot.build(:budget_interval, :current, user_group: user.group) }
+    let(:interval) { build(:budget_interval, :current, user_group: user.group) }
     let(:url_args) { [] }
 
     it "returns an :ok status and data" do
       subject
       expect(response).to have_http_status :ok
-      body = JSON.parse(response.body).deep_symbolize_keys
+      body = response.parsed_body.deep_symbolize_keys
       expect(body).to eq(
         data: {
           firstDate: interval.first_date.strftime("%F"),

@@ -24,7 +24,6 @@ module Transaction
     scope :between, lambda { |date_range, include_pending:|
       joins(:entry).merge(Entry.between(date_range, include_pending: include_pending))
     }
-    scope :budget_inclusions, -> { joins(:entry).merge(Entry.budget_inclusions) }
     scope :cash_flow, -> { joins(:entry).merge(Entry.cash_flow) }
     scope :non_cash_flow, -> { joins(:entry).merge(Entry.non_cash_flow) }
     scope :belonging_to, ->(user_or_group) { joins(:entry).merge(Entry.belonging_to(user_or_group)) }

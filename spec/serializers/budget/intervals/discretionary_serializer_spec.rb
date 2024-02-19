@@ -2,8 +2,8 @@ require "rails_helper"
 
 RSpec.describe Budget::Intervals::DiscretionarySerializer do
   shared_context "with a user and an interval" do
-    let(:user) { FactoryBot.create(:user) }
-    let(:interval) { FactoryBot.create(:budget_interval, user_group: user.group) }
+    let(:user) { create(:user) }
+    let(:interval) { create(:budget_interval, user_group: user.group) }
   end
 
   shared_context "when no details are present within the date range" do
@@ -11,12 +11,12 @@ RSpec.describe Budget::Intervals::DiscretionarySerializer do
   end
 
   shared_context "when a detail is present within the date range" do
-    let(:user) { FactoryBot.create(:user) }
-    let(:interval) { FactoryBot.create(:budget_interval, user_group: user.group) }
+    let(:user) { create(:user) }
+    let(:interval) { create(:budget_interval, user_group: user.group) }
     let(:transaction_entry) do
-      FactoryBot.create(
+      create(
         :transaction_entry,
-        account: FactoryBot.create(:account, user_group: user.group),
+        account: create(:account, user_group: user.group),
         description: Faker::Music::GratefulDead.song,
         clearance_date: interval.date_range.to_a.sample,
         details_attributes: [
@@ -45,12 +45,12 @@ RSpec.describe Budget::Intervals::DiscretionarySerializer do
   end
 
   shared_context "when a detail is present within the date range" do
-    let(:user) { FactoryBot.create(:user) }
-    let(:interval) { FactoryBot.create(:budget_interval, user_group: user.group) }
+    let(:user) { create(:user) }
+    let(:interval) { create(:budget_interval, user_group: user.group) }
     let(:transaction_entry) do
-      FactoryBot.create(
+      create(
         :transaction_entry,
-        account: FactoryBot.create(:account, user_group: user.group),
+        account: create(:account, user_group: user.group),
         description: Faker::Music::GratefulDead.song,
         clearance_date: interval.date_range.to_a.sample,
         details_attributes: [
@@ -79,13 +79,13 @@ RSpec.describe Budget::Intervals::DiscretionarySerializer do
   end
 
   shared_context "when there is a pending details and the interval is current" do
-    let(:user) { FactoryBot.create(:user) }
-    let(:interval) { FactoryBot.create(:budget_interval, user_group: user.group) }
+    let(:user) { create(:user) }
+    let(:interval) { create(:budget_interval, user_group: user.group) }
 
     let!(:transaction_entry) do
-      FactoryBot.create(
+      create(
         :transaction_entry,
-        account: FactoryBot.create(:account, user_group: user.group),
+        account: create(:account, user_group: user.group),
         description: Faker::Music::GratefulDead.song,
         clearance_date: nil,
         details_attributes: [
@@ -99,18 +99,16 @@ RSpec.describe Budget::Intervals::DiscretionarySerializer do
     end
     let(:transaction_detail) { transaction_entry.details.take }
 
-    around do |ex|
-      travel_to(interval.date_range.to_a.sample) { ex.run }
-    end
+    before { travel_to(interval.date_range.to_a.sample) }
   end
 
   shared_context "when there is a pending details and the interval is not current" do
-    let(:user) { FactoryBot.create(:user) }
-    let(:interval) { FactoryBot.create(:budget_interval, :past, user_group: user.group) }
+    let(:user) { create(:user) }
+    let(:interval) { create(:budget_interval, :past, user_group: user.group) }
     let!(:transaction_entry) do
-      FactoryBot.create(
+      create(
         :transaction_entry,
-        account: FactoryBot.create(:account, user_group: user.group),
+        account: create(:account, user_group: user.group),
         description: Faker::Music::GratefulDead.song,
         clearance_date: nil,
         details_attributes: [
@@ -126,12 +124,12 @@ RSpec.describe Budget::Intervals::DiscretionarySerializer do
   end
 
   shared_context "when there is a budget exclusion within the date range" do
-    let(:user) { FactoryBot.create(:user) }
-    let(:interval) { FactoryBot.create(:budget_interval, user_group: user.group) }
+    let(:user) { create(:user) }
+    let(:interval) { create(:budget_interval, user_group: user.group) }
     let(:transaction_entry) do
-      FactoryBot.create(
+      create(
         :transaction_entry,
-        account: FactoryBot.create(:account, user_group: user.group),
+        account: create(:account, user_group: user.group),
         description: Faker::Music::GratefulDead.song,
         clearance_date: interval.date_range.to_a.sample,
         budget_excludion: true,
@@ -148,14 +146,12 @@ RSpec.describe Budget::Intervals::DiscretionarySerializer do
   end
 
   shared_context "when there is a transfer within the date range" do
-    let(:user) { FactoryBot.create(:user) }
-    let(:account) { FactoryBot.create(:account, user_group: user.group) }
-    let(:savings_account) { FactoryBot.create(:savings_account, user_group: user.group) }
-    let(:interval) { FactoryBot.create(:budget_interval, user_group: user.group) }
+    let(:user) { create(:user) }
+    let(:account) { create(:account, user_group: user.group) }
+    let(:savings_account) { create(:savings_account, user_group: user.group) }
+    let(:interval) { create(:budget_interval, user_group: user.group) }
 
-    around do |ex|
-      travel_to(interval.date_range.to_a.sample) { ex.run }
-    end
+    before { travel_to(interval.date_range.to_a.sample) }
 
     before do
       Forms::TransferForm.new(
@@ -173,9 +169,9 @@ RSpec.describe Budget::Intervals::DiscretionarySerializer do
     subject { described_class.new(interval) }
 
     before do
-      other_group = FactoryBot.create(:user_group)
-      other_group_account = FactoryBot.create(:account, user_group: other_group)
-      FactoryBot.create(
+      other_group = create(:user_group)
+      other_group_account = create(:account, user_group: other_group)
+      create(
         :transaction_entry,
         account: other_group_account,
         description: Faker::Music::GratefulDead.song,
@@ -246,17 +242,17 @@ RSpec.describe Budget::Intervals::DiscretionarySerializer do
 
     include_context "with a user and an interval"
 
-    let(:monthly_category) { FactoryBot.create(:category, :monthly, user_group: user.group) }
+    let(:monthly_category) { create(:category, :monthly, user_group: user.group) }
     let(:monthly_item) do
-      FactoryBot.create(:budget_item, interval: interval, category: monthly_category)
+      create(:budget_item, interval: interval, category: monthly_category)
     end
     let(:monthly_presenter) do
       instance_double(Presenters::Budget::MonthlyItemPresenter, budget_impact: 10_00)
     end
 
-    let(:day_to_day_category) { FactoryBot.create(:category, :weekly, user_group: user.group) }
+    let(:day_to_day_category) { create(:category, :weekly, user_group: user.group) }
     let(:day_to_day_item) do
-      FactoryBot.create(:weekly_item, interval: interval, category: day_to_day_category)
+      create(:weekly_item, interval: interval, category: day_to_day_category)
     end
     let(:day_to_day_presenter) do
       instance_double(Presenters::Budget::DayToDayExpensePresenter, budget_impact: -50_80)
@@ -338,19 +334,19 @@ RSpec.describe Budget::Intervals::DiscretionarySerializer do
     subject { described_class.new(interval) }
 
     include_context "with a user and an interval"
-    let(:account) { FactoryBot.create(:account, user_group: user.group) }
-    let(:savings_account) { FactoryBot.create(:savings_account, user_group: user.group) }
-    let(:weekly_expense) { FactoryBot.create(:weekly_expense, interval: interval) }
+    let(:account) { create(:account, user_group: user.group) }
+    let(:savings_account) { create(:savings_account, user_group: user.group) }
+    let(:weekly_expense) { create(:weekly_expense, interval: interval) }
     let(:weekly_expense_double) do
       instance_double(Presenters::Budget::DayToDayExpensePresenter, remaining: -143_00)
     end
-    let(:monthly_expense) { FactoryBot.create(:monthly_expense, interval: interval) }
+    let(:monthly_expense) { create(:monthly_expense, interval: interval) }
     let(:monthly_expense_double) do
       instance_double(Presenters::Budget::MonthlyItemPresenter, remaining: -13_40)
     end
     let(:remaining) { [weekly_expense_double, monthly_expense_double].map(&:remaining).sum }
     let!(:existing_cash_flow_transaction) do
-      FactoryBot.create(
+      create(
         :transaction_entry,
         account: account,
         clearance_date: (interval.first_date - 10.days),
@@ -372,7 +368,7 @@ RSpec.describe Budget::Intervals::DiscretionarySerializer do
         .to receive(:new)
         .with(monthly_expense)
         .and_return(monthly_expense_double)
-      FactoryBot.create(
+      create(
         :transaction_entry,
         :budget_exclusion,
         account: savings_account,
@@ -387,9 +383,7 @@ RSpec.describe Budget::Intervals::DiscretionarySerializer do
     end
 
     context "when future" do
-      around do |ex|
-        travel_to(interval.first_date - 1.day) { ex.run }
-      end
+      before { travel_to(interval.first_date - 1.day) }
 
       context "when there are no budget inclusions in non-cash-flow accounts, no pending transactions" do
         it "returns the remaining only" do
@@ -399,7 +393,7 @@ RSpec.describe Budget::Intervals::DiscretionarySerializer do
 
       context "when there are no budget inclusions in non-cash-flow accounts, some pending transactions" do
         before do
-          FactoryBot.create(
+          create(
             :transaction_entry,
             account: account,
             clearance_date: nil,
@@ -419,7 +413,7 @@ RSpec.describe Budget::Intervals::DiscretionarySerializer do
 
       context "when there are some cleared transactions in the interval" do
         let!(:current_transaction) do
-          FactoryBot.create(
+          create(
             :transaction_entry,
             account: savings_account,
             clearance_date: interval.date_range.to_a.sample,
@@ -439,7 +433,7 @@ RSpec.describe Budget::Intervals::DiscretionarySerializer do
 
       context "when there are cleared budget inclusions in non-cash-flow accounts" do
         let!(:current_transaction) do
-          FactoryBot.create(
+          create(
             :transaction_entry,
             account: savings_account,
             clearance_date: interval.date_range.to_a.sample,
@@ -459,13 +453,11 @@ RSpec.describe Budget::Intervals::DiscretionarySerializer do
     end
 
     context "when current" do
-      around do |ex|
-        travel_to(interval.date_range.to_a.sample) { ex.run }
-      end
+      before { travel_to(interval.date_range.to_a.sample) }
 
       context "when there are no budget inclusions in non-cash-flow accounts, no pending transactions" do
         before do
-          FactoryBot.create(
+          create(
             :transaction_entry,
             account: account,
             clearance_date: (interval.last_date + 1.day),
@@ -479,7 +471,7 @@ RSpec.describe Budget::Intervals::DiscretionarySerializer do
         end
 
         let!(:current_transaction) do
-          FactoryBot.create(
+          create(
             :transaction_entry,
             account: account,
             clearance_date: interval.date_range.to_a.sample,
@@ -500,7 +492,7 @@ RSpec.describe Budget::Intervals::DiscretionarySerializer do
 
       context "when there are no budget inclusions in non-cash-flow accounts, some pending transactions" do
         let!(:pending_transaction) do
-          FactoryBot.create(
+          create(
             :transaction_entry,
             account: account,
             clearance_date: nil,
@@ -521,7 +513,7 @@ RSpec.describe Budget::Intervals::DiscretionarySerializer do
 
       context "when there are some cleared budget inclusions in non-cash-flow accounts" do
         let!(:cleared_budget_inclusion) do
-          FactoryBot.create(
+          create(
             :transaction_entry,
             budget_exclusion: false,
             account: savings_account,
@@ -543,7 +535,7 @@ RSpec.describe Budget::Intervals::DiscretionarySerializer do
 
       context "when there are some pending budget inclusions in non-cash-flow accounts" do
         let!(:pending_budget_inclusion) do
-          FactoryBot.create(
+          create(
             :transaction_entry,
             budget_exclusion: false,
             account: savings_account,
@@ -565,9 +557,7 @@ RSpec.describe Budget::Intervals::DiscretionarySerializer do
     end
 
     context "when in the past" do
-      around do |ex|
-        travel_to(interval.last_date + 1.day) { ex.run }
-      end
+      before { travel_to(interval.last_date + 1.day) }
 
       context "when there are no budget inclusions in non-cash-flow accounts, no pending transactions" do
         it "returns the remaining plus existing cash flow" do
@@ -577,7 +567,7 @@ RSpec.describe Budget::Intervals::DiscretionarySerializer do
 
       context "when there are no budget inclusions in non-cash-flow accounts, some pending transactions" do
         before do
-          FactoryBot.create(
+          create(
             :transaction_entry,
             account: account,
             clearance_date: nil,
@@ -597,7 +587,7 @@ RSpec.describe Budget::Intervals::DiscretionarySerializer do
 
       context "when there are some cleared budget inclusions in non-cash-flow accounts" do
         before do
-          FactoryBot.create(
+          create(
             :transaction_entry,
             :budget_exclusion,
             account: savings_account,
@@ -618,7 +608,7 @@ RSpec.describe Budget::Intervals::DiscretionarySerializer do
 
       context "when there are some pending budget inclusions in non-cash-flow accounts" do
         before do
-          FactoryBot.create(
+          create(
             :transaction_entry,
             :budget_exclusion,
             account: savings_account,

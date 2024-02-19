@@ -1,9 +1,8 @@
 require "rails_helper"
 
-RSpec.describe Transaction::Entry, type: :model do
+RSpec.describe Transaction::Entry do
   it { is_expected.to belong_to(:account) }
   it { is_expected.to have_many(:details) }
-  xit { is_expected.to have_one(:view) }
   it { is_expected.to accept_nested_attributes_for(:details) }
 
   describe ".between" do
@@ -13,7 +12,7 @@ RSpec.describe Transaction::Entry, type: :model do
       end
     end
 
-    let(:account) { FactoryBot.create(:account) }
+    let(:account) { create(:account) }
     let!(:old_transactions) { create_account_entries(account, 2.days.ago) }
     let!(:this_months) { create_account_entries(account, 2.days.ago) }
     let(:pending) { create_account_entries(account, nil) }
@@ -40,20 +39,20 @@ RSpec.describe Transaction::Entry, type: :model do
     subject { transaction_entry.valid? }
 
     let(:transaction_entry) do
-      FactoryBot.build :transaction_entry,
-                       details_attributes: [
-                         {
-                           key: SecureRandom.hex(6),
-                           amount: rand(10_000),
-                           budget_item_id: nil,
-                         },
-                       ],
-                       budget_exclusion: true,
-                       account: account
+      build(:transaction_entry,
+            details_attributes: [
+              {
+                key: SecureRandom.hex(6),
+                amount: rand(10_000),
+                budget_item_id: nil,
+              },
+            ],
+            budget_exclusion: true,
+            account: account)
     end
 
     context "when account is a non-cashflow account" do
-      let(:account) { FactoryBot.create(:account, :non_cash_flow) }
+      let(:account) { create(:account, :non_cash_flow) }
 
       it { is_expected.to be true }
     end
@@ -62,7 +61,7 @@ RSpec.describe Transaction::Entry, type: :model do
       subject { transaction }
 
       let(:transaction) do
-        FactoryBot.build(
+        build(
           :transaction_entry,
           :budget_exclusion,
           details_attributes: [],
@@ -74,7 +73,7 @@ RSpec.describe Transaction::Entry, type: :model do
       it "includes an error message" do
         subject.valid?
         expect(subject.errors["details"])
-          .to include "This type of transaction (budget_exclusion) "\
+          .to include "This type of transaction (budget_exclusion) " \
                       "must have exactly 1 detail"
       end
     end
@@ -87,7 +86,7 @@ RSpec.describe Transaction::Entry, type: :model do
       end
 
       let(:transaction) do
-        FactoryBot.build(:transaction_entry, :budget_exclusion)
+        build(:transaction_entry, :budget_exclusion)
       end
 
       it "does not allow a second detail" do
@@ -105,7 +104,7 @@ RSpec.describe Transaction::Entry, type: :model do
   describe "validation around transfers" do
     context "when there no detail is provided" do
       let(:transaction) do
-        FactoryBot.build(
+        build(
           :transaction_entry,
           details_attributes: [],
         )
@@ -123,7 +122,7 @@ RSpec.describe Transaction::Entry, type: :model do
     context "when trying to add another detail" do
       subject { transaction.details.build(amount: new_amount) }
 
-      let(:transfer) { FactoryBot.create(:transfer) }
+      let(:transfer) { create(:transfer) }
       let(:new_amount) do
         transaction.details.map(&:amount).reduce(0) do |total, amount|
           total + (amount * 2)
@@ -145,7 +144,7 @@ RSpec.describe Transaction::Entry, type: :model do
     end
 
     context "when updating other attributes" do
-      let(:transfer) { FactoryBot.create(:transfer) }
+      let(:transfer) { create(:transfer) }
       let(:transaction) { transfer.from_transaction }
 
       it "allows other attributes to be updated" do
@@ -155,7 +154,7 @@ RSpec.describe Transaction::Entry, type: :model do
   end
 
   def create_account_entries(account, date)
-    FactoryBot.create_list(
+    create_list(
       :transaction_entry,
       2,
       account: account,

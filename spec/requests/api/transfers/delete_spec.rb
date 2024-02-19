@@ -19,7 +19,7 @@ RSpec.describe "DELETE /api/accounts/transfer/:key/(:month)/(:year)" do
         .and change { Transfer.belonging_to(user).count }
         .by(-1)
       expect(response).to have_http_status :accepted
-      body = JSON.parse(response.body).deep_symbolize_keys
+      body = response.parsed_body.deep_symbolize_keys
       expect(body[:accounts]).to eq(transfer.transaction_accounts.map do |account|
         { key: account.key, balance: 0, balancePriorTo: 0 }
       end)
@@ -56,8 +56,8 @@ RSpec.describe "DELETE /api/accounts/transfer/:key/(:month)/(:year)" do
   end
 
   def transfer_params(user, options)
-    to_account = options.fetch(:to_account) { FactoryBot.create(:account, user_group: user.group) }
-    from_account = options.fetch(:from_account) { FactoryBot.create(:account, user_group: user.group) }
+    to_account = options.fetch(:to_account) { create(:account, user_group: user.group) }
+    from_account = options.fetch(:from_account) { create(:account, user_group: user.group) }
 
     {
       amount: options.fetch(:amount) { rand(100_00) },

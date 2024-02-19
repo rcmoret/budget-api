@@ -9,8 +9,8 @@ RSpec.describe Forms::Budget::FinalizeIntervalForm do
     let(:optional_args) { {} }
 
     context "when the interval is closed out" do
-      let(:user) { FactoryBot.create(:user) }
-      let(:interval) { FactoryBot.create(:budget_interval, :closed_out, user_group: user.group) }
+      let(:user) { create(:user) }
+      let(:interval) { create(:budget_interval, :closed_out, user_group: user.group) }
       let(:events) { [] }
       let(:form_double) { instance_double(Forms::Budget::EventsForm, valid?: true) }
 
@@ -26,9 +26,9 @@ RSpec.describe Forms::Budget::FinalizeIntervalForm do
     end
 
     context "when the interval is not closed out" do
-      let(:user) { FactoryBot.create(:user) }
-      let(:interval) { FactoryBot.create(:budget_interval, user_group: user.group) }
-      let(:category) { FactoryBot.create(:category, :expense, user_group: user.group) }
+      let(:user) { create(:user) }
+      let(:interval) { create(:budget_interval, user_group: user.group) }
+      let(:category) { create(:category, :expense, user_group: user.group) }
       let(:amount) { rand(-100_00..-100) }
       let(:events) do
         [
@@ -43,7 +43,7 @@ RSpec.describe Forms::Budget::FinalizeIntervalForm do
         ]
       end
 
-      around { |ex| travel_to(Time.current.beginning_of_minute) { ex.run } }
+      before { travel_to(Time.current.beginning_of_minute) }
 
       it "returns true" do
         expect(subject.save).to be true

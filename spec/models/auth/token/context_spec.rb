@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe Auth::Token::Context do
   subject { described_class.new(user: user) }
 
-  let(:user) { FactoryBot.create(:user) }
+  let(:user) { create(:user) }
 
   it { is_expected.to validate_presence_of(:expires_at) }
   it { is_expected.to validate_presence_of(:ip_address) }
@@ -12,7 +12,7 @@ RSpec.describe Auth::Token::Context do
   it { is_expected.to validate_length_of(:ip_address).is_at_most(200) }
 
   describe "manual expiration validation" do
-    subject { FactoryBot.build(:auth_token_context) }
+    subject { build(:auth_token_context) }
 
     context "when current" do
       it "validates manual expiration is current or in past" do

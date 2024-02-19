@@ -1,24 +1,24 @@
 require "rails_helper"
 
-RSpec.describe "GET /api/accounts", type: :request do
+RSpec.describe "GET /api/accounts" do
   subject { get(api_accounts_path, headers: headers) }
 
   context "when providing a valid token" do
     include_context "with valid token"
     include_context "with an account belonging to a different user group"
 
-    let(:user) { FactoryBot.create(:user) }
+    let(:user) { create(:user) }
     let(:user_group) { user.user_group }
-    let(:spend_account) { FactoryBot.create(:account, user_group: user_group) }
+    let(:spend_account) { create(:account, user_group: user_group) }
     let(:transactions) do
       user_accounts.map do |user_account|
-        FactoryBot.create_list(:transaction_entry, (1..10).to_a.sample, account: user_account)
+        create_list(:transaction_entry, (1..10).to_a.sample, account: user_account)
       end
     end
-    let(:save_account) { FactoryBot.create(:account, :non_cash_flow, user_group: user_group) }
-    let(:archived_account) { FactoryBot.create(:account, :archived, user_group: user_group) }
+    let(:save_account) { create(:account, :non_cash_flow, user_group: user_group) }
+    let(:archived_account) { create(:account, :archived, user_group: user_group) }
     let(:collection) do
-      JSON.parse(response.body).fetch("accounts").map(&:deep_symbolize_keys)
+      response.parsed_body.fetch("accounts").map(&:deep_symbolize_keys)
     end
     let(:user_accounts) { [spend_account, save_account, archived_account] }
 

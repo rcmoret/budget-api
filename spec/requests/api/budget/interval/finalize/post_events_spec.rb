@@ -12,8 +12,8 @@ RSpec.describe "POST /api/budget/interval/finalize/(:month)/(:year)" do
   context "when providing a events" do
     include_context "with valid token"
 
-    let(:interval) { FactoryBot.create(:budget_interval, :current, user_group: user.group) }
-    let(:category) { FactoryBot.create(:category, :expense, user_group: user.group) }
+    let(:interval) { create(:budget_interval, :current, user_group: user.group) }
+    let(:category) { create(:category, :expense, user_group: user.group) }
     let(:amount) { rand(-100_00..-100) }
     let(:url_args) { [] }
     let(:params) do
@@ -46,7 +46,7 @@ RSpec.describe "POST /api/budget/interval/finalize/(:month)/(:year)" do
     include_context "with valid token"
 
     let(:params) { { interval: { events: [] } } }
-    let(:interval) { FactoryBot.create(:budget_interval, :past, user_group: user.group) }
+    let(:interval) { create(:budget_interval, :past, user_group: user.group) }
     let(:url_args) { [interval.month, interval.year] }
 
     it "closes out the provided interval" do
@@ -62,7 +62,7 @@ RSpec.describe "POST /api/budget/interval/finalize/(:month)/(:year)" do
 
     let(:url_args) { [] }
     let(:params) { { interval: { events: [] } } }
-    let(:interval) { FactoryBot.create(:budget_interval, :current, user_group: user.group) }
+    let(:interval) { create(:budget_interval, :current, user_group: user.group) }
 
     it "closes out the current interval" do
       expect { subject }

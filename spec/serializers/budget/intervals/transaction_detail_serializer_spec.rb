@@ -4,12 +4,12 @@ RSpec.describe Budget::Intervals::TransactionDetailSerializer do
   describe "#render" do
     subject { described_class.new(transaction_detail) }
 
-    let(:user_group) { FactoryBot.create(:user_group, :with_user) }
-    let(:account) { FactoryBot.create(:account, user_group: user_group) }
-    let(:category) { FactoryBot.create(:category, user_group: user_group) }
-    let(:interval) { FactoryBot.create(:budget_interval, user_group: user_group) }
+    let(:user_group) { create(:user_group, :with_user) }
+    let(:account) { create(:account, user_group: user_group) }
+    let(:category) { create(:category, user_group: user_group) }
+    let(:interval) { create(:budget_interval, user_group: user_group) }
     let(:item) do
-      FactoryBot.create(
+      create(
         :budget_item,
         category: category,
         interval: interval,
@@ -20,7 +20,7 @@ RSpec.describe Budget::Intervals::TransactionDetailSerializer do
     let(:clearance_date) { 2.days.ago }
     let(:transaction_description) { Faker::Music::GratefulDead.song }
     let(:transaction_entry) do
-      FactoryBot.create(
+      create(
         :transaction_entry,
         account: account,
         clearance_date: clearance_date,

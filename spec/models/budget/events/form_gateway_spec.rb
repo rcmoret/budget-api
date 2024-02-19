@@ -18,7 +18,7 @@ RSpec.describe Budget::Events::FormGateway do
   end
 
   describe ".form_for" do
-    let(:user) { FactoryBot.create(:user) }
+    let(:user) { create(:user) }
 
     context "when a create event" do
       it "returns the create event form object initialized with event data" do

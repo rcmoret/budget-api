@@ -4,10 +4,10 @@ RSpec.describe Budget::Intervals::Finalize::CreateEventSerializer do
   describe "the following methods" do
     subject { described_class.new(budget_item, interval: interval) }
 
-    let(:user_group) { FactoryBot.create(:user_group) }
-    let(:interval) { FactoryBot.create(:budget_interval, user_group: user_group) }
-    let(:category) { FactoryBot.create(:category, user_group: user_group) }
-    let(:budget_item) { FactoryBot.create(:budget_item, category: category, interval: interval.prev) }
+    let(:user_group) { create(:user_group) }
+    let(:interval) { create(:budget_interval, user_group: user_group) }
+    let(:category) { create(:category, user_group: user_group) }
+    let(:budget_item) { create(:budget_item, category: category, interval: interval.prev) }
 
     before { allow(SecureRandom).to receive(:hex).and_call_original }
 

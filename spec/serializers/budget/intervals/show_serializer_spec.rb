@@ -4,9 +4,9 @@ RSpec.describe Budget::Intervals::ShowSerializer do
   describe "#days_remaining" do
     subject { described_class.new(user, interval) }
 
-    let(:user) { FactoryBot.create(:user) }
+    let(:user) { create(:user) }
     let(:interval) do
-      FactoryBot.create(
+      create(
         :budget_interval,
         user_group: user.group,
         start_date: Date.new(2022, 3, 1),
@@ -15,7 +15,7 @@ RSpec.describe Budget::Intervals::ShowSerializer do
     end
 
     context "when in the interval is in the past" do
-      around { |ex| travel_to(Date.new(2022, 4, 20)) { ex.run } }
+      before { travel_to(Date.new(2022, 4, 20)) }
 
       it "returns zero" do
         expect(subject.days_remaining).to be_zero
@@ -23,7 +23,7 @@ RSpec.describe Budget::Intervals::ShowSerializer do
     end
 
     context "when in the interval is in the future" do
-      around { |ex| travel_to(Date.new(2022, 1, 30)) { ex.run } }
+      before { travel_to(Date.new(2022, 1, 30)) }
 
       it "returns the total number of days" do
         expect(subject.days_remaining).to be 31
@@ -31,7 +31,7 @@ RSpec.describe Budget::Intervals::ShowSerializer do
     end
 
     context "when the interval is current" do
-      around { |ex| travel_to(Date.new(2022, 3, 10)) { ex.run } }
+      before { travel_to(Date.new(2022, 3, 10)) }
 
       it "returns the difference + 1" do
         expect(subject.days_remaining).to be 22
@@ -42,8 +42,8 @@ RSpec.describe Budget::Intervals::ShowSerializer do
   describe "#discretionary" do
     subject { described_class.new(user, interval) }
 
-    let(:user) { FactoryBot.create(:user) }
-    let(:interval) { FactoryBot.create(:budget_interval, user_group: user.group) }
+    let(:user) { create(:user) }
+    let(:interval) { create(:budget_interval, user_group: user.group) }
     let(:discretionary_serializer_double) do
       instance_double(Budget::Intervals::DiscretionarySerializer)
     end
@@ -63,10 +63,10 @@ RSpec.describe Budget::Intervals::ShowSerializer do
   describe "#categories" do
     subject { described_class.new(user, interval) }
 
-    let(:user) { FactoryBot.create(:user) }
-    let(:interval) { FactoryBot.create(:budget_interval, user_group: user.group) }
-    let(:groceries) { FactoryBot.create(:category, :expense, user_group: user.group) }
-    let(:salary) { FactoryBot.create(:category, :revenue, user_group: user.group) }
+    let(:user) { create(:user) }
+    let(:interval) { create(:budget_interval, user_group: user.group) }
+    let(:groceries) { create(:category, :expense, user_group: user.group) }
+    let(:salary) { create(:category, :revenue, user_group: user.group) }
     let(:groceries_serializer) { instance_double(Budget::Intervals::CategorySerializer) }
     let(:salary_serializer) { instance_double(Budget::Intervals::CategorySerializer) }
 
@@ -89,8 +89,8 @@ RSpec.describe Budget::Intervals::ShowSerializer do
   describe "#total_days" do
     subject { described_class.new(user, interval) }
 
-    let(:user) { FactoryBot.create(:user) }
-    let(:interval) { FactoryBot.create(:budget_interval, user_group: user.group) }
+    let(:user) { create(:user) }
+    let(:interval) { create(:budget_interval, user_group: user.group) }
 
     it "returns the difference + 1" do
       expect(subject.total_days).to eq((interval.last_date - interval.first_date).to_i + 1)
@@ -100,21 +100,21 @@ RSpec.describe Budget::Intervals::ShowSerializer do
   describe "#items" do
     subject { described_class.new(user, interval) }
 
-    let(:user) { FactoryBot.create(:user) }
-    let(:icon) { FactoryBot.create(:icon) }
+    let(:user) { create(:user) }
+    let(:icon) { create(:icon) }
     let(:category) do
-      FactoryBot.create(:category, :expense, :accrual, user_group: user.group, icon: icon)
+      create(:category, :expense, :accrual, user_group: user.group, icon: icon)
     end
-    let(:interval) { FactoryBot.create(:budget_interval, month: 12, year: 2024, user_group: user.group) }
+    let(:interval) { create(:budget_interval, month: 12, year: 2024, user_group: user.group) }
     let!(:budget_item) do
-      FactoryBot.create(:budget_item, :expense, category: category, interval: interval)
+      create(:budget_item, :expense, category: category, interval: interval)
     end
     let!(:create_event) do
-      FactoryBot.create(:budget_item_event, :create_event, item: budget_item, amount: rand(-100_00..-100))
+      create(:budget_item_event, :create_event, item: budget_item, amount: rand(-100_00..-100))
     end
-    let!(:transaction_detail) { FactoryBot.create(:transaction_detail, budget_item: budget_item) }
+    let!(:transaction_detail) { create(:transaction_detail, budget_item: budget_item) }
 
-    before { FactoryBot.create(:maturity_interval, interval: interval.next, category: category) }
+    before { create(:maturity_interval, interval: interval.next, category: category) }
 
     it "returns the items" do
       item = budget_item.decorated

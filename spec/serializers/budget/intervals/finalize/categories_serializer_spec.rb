@@ -4,7 +4,7 @@ RSpec.describe Budget::Intervals::Finalize::CategoriesSerializer do
   describe "#first_date" do
     subject { described_class.new(interval).first_date }
 
-    let(:interval) { FactoryBot.build(:budget_interval) }
+    let(:interval) { build(:budget_interval) }
 
     specify do
       expect(subject).to eq interval.first_date.strftime("%F")
@@ -14,7 +14,7 @@ RSpec.describe Budget::Intervals::Finalize::CategoriesSerializer do
   describe "#last_date" do
     subject { described_class.new(interval).last_date }
 
-    let(:interval) { FactoryBot.build(:budget_interval) }
+    let(:interval) { build(:budget_interval) }
 
     specify do
       expect(subject).to eq interval.last_date.strftime("%F")
@@ -27,10 +27,10 @@ RSpec.describe Budget::Intervals::Finalize::CategoriesSerializer do
     let(:rendered) { subject.render }
 
     context "when a budget category has no items" do
-      let(:user_group) { FactoryBot.create(:user_group) }
-      let(:interval) { FactoryBot.create(:budget_interval, user_group: user_group) }
+      let(:user_group) { create(:user_group) }
+      let(:interval) { create(:budget_interval, user_group: user_group) }
 
-      before { FactoryBot.create(:category, user_group: user_group) }
+      before { create(:category, user_group: user_group) }
 
       it "responds with an emtpy object" do
         expect(subject).to eq []
@@ -38,18 +38,18 @@ RSpec.describe Budget::Intervals::Finalize::CategoriesSerializer do
     end
 
     context "when a budget category has a base items, no target items" do
-      let(:user_group) { FactoryBot.create(:user_group) }
-      let(:interval) { FactoryBot.create(:budget_interval, user_group: user_group) }
+      let(:user_group) { create(:user_group) }
+      let(:interval) { create(:budget_interval, user_group: user_group) }
 
       before do
         allow(Budget::Intervals::Finalize::CreateEventSerializer).to receive(:new).and_call_original
       end
 
       context "when the crategory is monthly" do
-        let(:category) { FactoryBot.create(:category, :monthly, user_group: user_group) }
+        let(:category) { create(:category, :monthly, user_group: user_group) }
 
         before do
-          FactoryBot.create_list(:budget_item, 2, category: category, interval: interval.prev)
+          create_list(:budget_item, 2, category: category, interval: interval.prev)
         end
 
         it "responds with 2 create events" do
@@ -69,11 +69,11 @@ RSpec.describe Budget::Intervals::Finalize::CategoriesSerializer do
       end
 
       context "when the crategory is weekly" do
-        let(:category) { FactoryBot.create(:category, :weekly, user_group: user_group) }
+        let(:category) { create(:category, :weekly, user_group: user_group) }
 
         before do
-          FactoryBot.create(:budget_item, category: category, interval: interval.prev).then do |reviewable_item|
-            FactoryBot.create(:budget_item_event, :create_event, amount: -100_00, item: reviewable_item)
+          create(:budget_item, category: category, interval: interval.prev).then do |reviewable_item|
+            create(:budget_item_event, :create_event, amount: -100_00, item: reviewable_item)
           end
         end
 
@@ -95,8 +95,8 @@ RSpec.describe Budget::Intervals::Finalize::CategoriesSerializer do
     end
 
     context "when a budget category has a base items, and a target items" do
-      let(:user_group) { FactoryBot.create(:user_group) }
-      let(:interval) { FactoryBot.create(:budget_interval, user_group: user_group) }
+      let(:user_group) { create(:user_group) }
+      let(:interval) { create(:budget_interval, user_group: user_group) }
 
       before do
         allow(Budget::Intervals::Finalize::CreateEventSerializer).to receive(:new).and_call_original
@@ -104,11 +104,11 @@ RSpec.describe Budget::Intervals::Finalize::CategoriesSerializer do
       end
 
       context "when the category is monthly" do
-        let(:category) { FactoryBot.create(:category, :monthly, user_group: user_group) }
+        let(:category) { create(:category, :monthly, user_group: user_group) }
 
         before do
-          FactoryBot.create(:budget_item, category: category, interval: interval.prev)
-          FactoryBot.create(:budget_item, category: category, interval: interval)
+          create(:budget_item, category: category, interval: interval.prev)
+          create(:budget_item, category: category, interval: interval)
         end
 
         it "responds with a create events and an adjust event" do
@@ -129,11 +129,11 @@ RSpec.describe Budget::Intervals::Finalize::CategoriesSerializer do
       end
 
       context "when the category is a monthly accrual" do
-        let(:category) { FactoryBot.create(:category, :monthly, :accrual, user_group: user_group) }
+        let(:category) { create(:category, :monthly, :accrual, user_group: user_group) }
 
         before do
-          FactoryBot.create(:budget_item, category: category, interval: interval.prev)
-          FactoryBot.create(:budget_item, category: category, interval: interval)
+          create(:budget_item, category: category, interval: interval.prev)
+          create(:budget_item, category: category, interval: interval)
         end
 
         it "responds with an adjust event only" do
@@ -145,12 +145,12 @@ RSpec.describe Budget::Intervals::Finalize::CategoriesSerializer do
       end
 
       context "when the category is day to day" do
-        let(:category) { FactoryBot.create(:category, :expense, :weekly, user_group: user_group) }
-        let(:reviewable_item) { FactoryBot.create(:budget_item, category: category, interval: interval.prev) }
+        let(:category) { create(:category, :expense, :weekly, user_group: user_group) }
+        let(:reviewable_item) { create(:budget_item, category: category, interval: interval.prev) }
 
         before do
-          FactoryBot.create(:budget_item_event, :create_event, amount: -100_00, item: reviewable_item)
-          FactoryBot.create(:budget_item, category: category, interval: interval)
+          create(:budget_item_event, :create_event, amount: -100_00, item: reviewable_item)
+          create(:budget_item, category: category, interval: interval)
         end
 
         it "responds with an adjust event only" do

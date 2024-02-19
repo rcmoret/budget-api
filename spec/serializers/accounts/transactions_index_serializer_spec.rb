@@ -4,9 +4,9 @@ RSpec.describe Accounts::TransactionsIndexSerializer do
   describe "delegated methods" do
     subject { described_class.new(account: account, interval: interval) }
 
-    let(:user_group) { FactoryBot.create(:user_group) }
-    let(:account) { FactoryBot.create(:account, :archived, user_group: user_group) }
-    let(:interval) { FactoryBot.build(:budget_interval, user_group: user_group) }
+    let(:user_group) { create(:user_group) }
+    let(:account) { create(:account, :archived, user_group: user_group) }
+    let(:interval) { build(:budget_interval, user_group: user_group) }
 
     it "delegates methods to account" do
       expect(subject.key).to eq account.key
@@ -21,9 +21,9 @@ RSpec.describe Accounts::TransactionsIndexSerializer do
   describe "archive related methods" do
     subject { described_class.new(account: account, interval: interval) }
 
-    let(:user_group) { FactoryBot.create(:user_group) }
-    let(:account) { FactoryBot.create(:account, :archived, user_group: user_group) }
-    let(:interval) { FactoryBot.build(:budget_interval, user_group: user_group) }
+    let(:user_group) { create(:user_group) }
+    let(:account) { create(:account, :archived, user_group: user_group) }
+    let(:interval) { build(:budget_interval, user_group: user_group) }
 
     it "decorates the archived info" do
       expect(subject.is_archived).to eq account.archived_at.present?
@@ -34,19 +34,19 @@ RSpec.describe Accounts::TransactionsIndexSerializer do
   describe "#transactions" do
     subject { described_class.new(account: account, interval: interval) }
 
-    let(:user_group) { FactoryBot.create(:user_group) }
-    let(:account) { FactoryBot.create(:account, user_group: user_group) }
+    let(:user_group) { create(:user_group) }
+    let(:account) { create(:account, user_group: user_group) }
 
     let!(:interval_transaction) do
-      FactoryBot.create(:transaction_entry, account: account, clearance_date: interval.date_range.to_a.sample)
+      create(:transaction_entry, account: account, clearance_date: interval.date_range.to_a.sample)
     end
 
     before do
-      FactoryBot.create(:transaction_entry, :pending, account: account)
+      create(:transaction_entry, :pending, account: account)
     end
 
     context "when the interval is current" do
-      let(:interval) { FactoryBot.create(:budget_interval, :current, user_group: user_group) }
+      let(:interval) { create(:budget_interval, :current, user_group: user_group) }
 
       it "includes pending transactions" do
         expect(subject.transactions.size).to be 2
@@ -56,7 +56,7 @@ RSpec.describe Accounts::TransactionsIndexSerializer do
     end
 
     context "when the interval is past" do
-      let(:interval) { FactoryBot.create(:budget_interval, :past, user_group: user_group) }
+      let(:interval) { create(:budget_interval, :past, user_group: user_group) }
 
       it "does not inlcude pending transactions" do
         expect(subject.transactions.size).to be 1
@@ -68,21 +68,21 @@ RSpec.describe Accounts::TransactionsIndexSerializer do
   describe "#balance_prior_to" do
     subject { described_class.new(account: account, interval: interval) }
 
-    let(:user_group) { FactoryBot.create(:user_group) }
-    let(:account) { FactoryBot.create(:account, user_group: user_group) }
+    let(:user_group) { create(:user_group) }
+    let(:account) { create(:account, user_group: user_group) }
     let!(:entries) do
-      FactoryBot.create_list(:transaction_entry, 10, account: account, clearance_date: (interval.first_date - 1.day))
+      create_list(:transaction_entry, 10, account: account, clearance_date: (interval.first_date - 1.day))
     end
     let!(:pending_entries) do
-      FactoryBot.create_list(:transaction_entry, 10, :pending, account: account)
+      create_list(:transaction_entry, 10, :pending, account: account)
     end
 
     before do
-      FactoryBot.create_list(:transaction_entry, 10, account: account, clearance_date: interval.date_range.to_a.sample)
+      create_list(:transaction_entry, 10, account: account, clearance_date: interval.date_range.to_a.sample)
     end
 
     context "when the interval is current" do
-      let(:interval) { FactoryBot.build(:budget_interval, :current, user_group: user_group) }
+      let(:interval) { build(:budget_interval, :current, user_group: user_group) }
 
       it "returns the sum of the prior entries" do
         expect(subject.balance_prior_to).to eq entries.sum(&:total)
@@ -90,7 +90,7 @@ RSpec.describe Accounts::TransactionsIndexSerializer do
     end
 
     context "when the interval is in the past" do
-      let(:interval) { FactoryBot.build(:budget_interval, :past, user_group: user_group) }
+      let(:interval) { build(:budget_interval, :past, user_group: user_group) }
 
       it "returns the sum of the prior entries" do
         expect(subject.balance_prior_to).to eq entries.sum(&:total)
@@ -98,7 +98,7 @@ RSpec.describe Accounts::TransactionsIndexSerializer do
     end
 
     context "when the interval is in the future" do
-      let(:interval) { FactoryBot.build(:budget_interval, :future, user_group: user_group) }
+      let(:interval) { build(:budget_interval, :future, user_group: user_group) }
 
       it "returns the sum of the prior entries plus the pending entries" do
         expect(subject.balance_prior_to).to eq entries.sum(&:total) + pending_entries.sum(&:total)
@@ -109,26 +109,26 @@ RSpec.describe Accounts::TransactionsIndexSerializer do
   describe "#items" do
     subject { described_class.new(account: account, interval: interval) }
 
-    let(:user_group) { FactoryBot.create(:user_group) }
+    let(:user_group) { create(:user_group) }
     let(:account) do
-      FactoryBot.create(:account, user_group: user_group)
+      create(:account, user_group: user_group)
     end
-    let(:interval) { FactoryBot.create(:budget_interval, :current, user_group: user_group) }
-    let(:accrual_category) { FactoryBot.create(:category, :accrual, :with_icon, user_group: user_group) }
-    let(:category) { FactoryBot.create(:category, :with_icon, :expense, user_group: user_group) }
+    let(:interval) { create(:budget_interval, :current, user_group: user_group) }
+    let(:accrual_category) { create(:category, :accrual, :with_icon, user_group: user_group) }
+    let(:category) { create(:category, :with_icon, :expense, user_group: user_group) }
     let!(:accrual_item) do
-      FactoryBot.create(:budget_item, interval: interval, category: accrual_category).tap do |item|
-        FactoryBot.create(:budget_item_event, :create_event, item: item, amount: rand(-100_00..-100))
+      create(:budget_item, interval: interval, category: accrual_category).tap do |item|
+        create(:budget_item_event, :create_event, item: item, amount: rand(-100_00..-100))
       end.decorated
     end
     let!(:expense_item) do
-      FactoryBot.create(:budget_item, interval: interval, category: category).tap do |item|
-        FactoryBot.create(:budget_item_event, :create_event, item: item, amount: rand(-100_00..-100))
+      create(:budget_item, interval: interval, category: category).tap do |item|
+        create(:budget_item_event, :create_event, item: item, amount: rand(-100_00..-100))
       end.decorated
     end
 
     before do
-      FactoryBot.create(:maturity_interval, category: accrual_category, interval: interval.next)
+      create(:maturity_interval, category: accrual_category, interval: interval.next)
     end
 
     it "returns serialized items" do

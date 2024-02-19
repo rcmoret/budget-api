@@ -35,7 +35,7 @@ module API
           ::Budget::Items::EventsResponseSerializer.new(
             user: api_user,
             interval: interval,
-            budget_item_keys: events_params.map { |event_params| event_params[:budget_item_key] }
+            budget_item_keys: events_params.pluck(:budget_item_key)
           )
         end
       end

@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Forms::Budget::EventsForm do
-  let(:user) { FactoryBot.create(:user) }
+  let(:user) { create(:user) }
 
   describe "validations" do
     context "when providing a single item array that is valid" do
@@ -29,7 +29,7 @@ RSpec.describe Forms::Budget::EventsForm do
         allow(Budget::Events::CreateItemForm)
           .to receive(:new)
           .with(user, params[:events].first.symbolize_keys)
-          .and_return(OpenStruct.new(save: true))
+          .and_return(instance_double(Budget::Events::CreateItemForm, save: true))
       end
 
       it "initializes a create item event form object" do

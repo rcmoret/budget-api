@@ -11,36 +11,36 @@ RSpec.describe "GET /api/budget/intervals/set_up/:month/:year" do
   context "when trying to set up a previously set up interval" do
     include_context "with valid token"
 
-    let(:interval) { FactoryBot.create(:budget_interval, :set_up, user_group: user.group) }
+    let(:interval) { create(:budget_interval, :set_up, user_group: user.group) }
     let(:month) { interval.month }
     let(:year) { interval.year }
 
     it "returns a bad request" do
       subject
       expect(response).to have_http_status :bad_request
-      expect(JSON.parse(response.body)).to eq({ "budgetInterval" => "has been set up" })
+      expect(response.parsed_body).to eq({ "budgetInterval" => "has been set up" })
     end
   end
 
   context "when setting up an interval" do
     include_context "with valid token"
-    let(:user) { FactoryBot.create(:user) }
-    let(:current_interval) { FactoryBot.create(:budget_interval, user_group: user.group) }
+    let(:user) { create(:user) }
+    let(:current_interval) { create(:budget_interval, user_group: user.group) }
     let(:upcoming_interval) { current_interval.next }
     let(:further_upcoming_interval) { upcoming_interval.next.next }
     let(:accrual_category) { create_category(user, :monthly, :accrual) }
     let(:day_to_day_category) { create_category(user, :expense, :weekly) }
     let(:monthly_category) { create_category(user, :revenue, :monthly) }
-    let(:accrual_item) { FactoryBot.create(:budget_item, interval: current_interval, category: accrual_category) }
-    let(:day_to_day_item) { FactoryBot.create(:budget_item, interval: current_interval, category: day_to_day_category) }
+    let(:accrual_item) { create(:budget_item, interval: current_interval, category: accrual_category) }
+    let(:day_to_day_item) { create(:budget_item, interval: current_interval, category: day_to_day_category) }
     let(:day_to_day_upcoming_item) do
-      FactoryBot.create(:budget_item, interval: upcoming_interval, category: day_to_day_category)
+      create(:budget_item, interval: upcoming_interval, category: day_to_day_category)
     end
     let(:monthly_item) do
-      FactoryBot.create(:budget_item, interval: current_interval, category: monthly_category)
+      create(:budget_item, interval: current_interval, category: monthly_category)
     end
     let(:monthly_upcoming_item) do
-      FactoryBot.create(:budget_item, interval: upcoming_interval, category: monthly_category)
+      create(:budget_item, interval: upcoming_interval, category: monthly_category)
     end
     let(:month) { upcoming_interval.month }
     let(:year) { upcoming_interval.year }
@@ -52,16 +52,16 @@ RSpec.describe "GET /api/budget/intervals/set_up/:month/:year" do
     let(:expected_accrual_category_keys) { expected_category_keys + [:upcomingMaturityIntervals] }
 
     before do
-      FactoryBot.create(:maturity_interval, category: accrual_category, interval: current_interval.prev)
-      FactoryBot.create(:maturity_interval, category: accrual_category, interval: upcoming_interval)
-      FactoryBot.create(:maturity_interval, category: accrual_category, interval: further_upcoming_interval)
+      create(:maturity_interval, category: accrual_category, interval: current_interval.prev)
+      create(:maturity_interval, category: accrual_category, interval: upcoming_interval)
+      create(:maturity_interval, category: accrual_category, interval: further_upcoming_interval)
       [day_to_day_item, day_to_day_upcoming_item, accrual_item, monthly_item, monthly_upcoming_item]
     end
 
     it "returns data" do
       subject
       expect(response).to have_http_status :ok
-      body = JSON.parse(response.body).deep_symbolize_keys
+      body = response.parsed_body.deep_symbolize_keys
       expect(body[:data]).to include(
         firstDate: upcoming_interval.first_date,
         lastDate: upcoming_interval.last_date,
@@ -143,6 +143,6 @@ RSpec.describe "GET /api/budget/intervals/set_up/:month/:year" do
   end
 
   def create_category(user, *traits, **optional_attributes)
-    FactoryBot.create(:category, *traits, user_group: user.group, **optional_attributes)
+    create(:category, *traits, user_group: user.group, **optional_attributes)
   end
 end

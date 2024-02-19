@@ -5,15 +5,15 @@ RSpec.describe "GET /api/accounts/:account_key/transactions/:month/:year" do
     subject { get(api_account_transactions_path(account_key, month, year), headers: headers) }
 
     include_context "with valid token"
-    let(:user) { FactoryBot.create(:user) }
-    let(:account) { FactoryBot.create(:account, user_group: user.user_group) }
+    let(:user) { create(:user) }
+    let(:account) { create(:account, user_group: user.user_group) }
     let(:account_key) { account.key }
-    let(:interval) { FactoryBot.create(:budget_interval) }
+    let(:interval) { create(:budget_interval) }
     let(:month) { interval.month }
     let(:year) { interval.year }
     let(:date_range) { interval.date_range.to_a }
     let(:previous_transactions) do
-      FactoryBot.create_list(
+      create_list(
         :transaction_entry,
         10,
         account: account,
@@ -21,7 +21,7 @@ RSpec.describe "GET /api/accounts/:account_key/transactions/:month/:year" do
       )
     end
     let(:current_transactions) do
-      FactoryBot.create_list(
+      create_list(
         :transaction_entry,
         10,
         account: account,
@@ -29,7 +29,7 @@ RSpec.describe "GET /api/accounts/:account_key/transactions/:month/:year" do
       )
     end
     let(:future_transactions) do
-      FactoryBot.create_list(
+      create_list(
         :transaction_entry,
         10,
         account: account,
@@ -47,20 +47,20 @@ RSpec.describe "GET /api/accounts/:account_key/transactions/:month/:year" do
 
     it "returns a collection of transaction entries" do
       expect(response).to have_http_status :ok
-      body = JSON.parse(response.body).deep_symbolize_keys
+      body = response.parsed_body.deep_symbolize_keys
       expect(body).to have_key(:account)
       expect(body.dig(:account, :transactions).size).to be 10
     end
 
     it "returns the account information including balance" do
-      body = JSON.parse(response.body).deep_symbolize_keys
+      body = response.parsed_body.deep_symbolize_keys
       expect(body[:account][:balance])
         .to be account_transactions.map(&:total).sum
     end
 
     it "includes a balance prior to attribute" do
       subject
-      body = JSON.parse(response.body).deep_symbolize_keys
+      body = response.parsed_body.deep_symbolize_keys
       expect(body[:account][:balancePriorTo])
         .to be previous_transactions.map(&:total).sum
     end
@@ -70,12 +70,12 @@ RSpec.describe "GET /api/accounts/:account_key/transactions/:month/:year" do
     subject { get(api_account_transactions_path(account_key), headers: headers) }
 
     include_context "with valid token"
-    let(:user) { FactoryBot.create(:user) }
-    let(:account) { FactoryBot.create(:account, user_group: user.user_group) }
+    let(:user) { create(:user) }
+    let(:account) { create(:account, user_group: user.user_group) }
     let(:account_key) { account.key }
     let(:interval) { Budget::Interval.belonging_to(user).current }
     let(:previous_transactions) do
-      FactoryBot.create_list(
+      create_list(
         :transaction_entry,
         10,
         account: account,
@@ -83,7 +83,7 @@ RSpec.describe "GET /api/accounts/:account_key/transactions/:month/:year" do
       )
     end
     let(:current_transactions) do
-      FactoryBot.create_list(
+      create_list(
         :transaction_entry,
         10,
         account: account,
@@ -91,7 +91,7 @@ RSpec.describe "GET /api/accounts/:account_key/transactions/:month/:year" do
       )
     end
     let(:future_transactions) do
-      FactoryBot.create_list(
+      create_list(
         :transaction_entry,
         10,
         account: account,
@@ -109,20 +109,20 @@ RSpec.describe "GET /api/accounts/:account_key/transactions/:month/:year" do
 
     it "returns a collection of transaction entries" do
       expect(response).to have_http_status :ok
-      body = JSON.parse(response.body).deep_symbolize_keys
+      body = response.parsed_body.deep_symbolize_keys
       expect(body).to have_key(:account)
       expect(body.dig(:account, :transactions).size).to be 10
     end
 
     it "returns the account information including balance" do
-      body = JSON.parse(response.body).deep_symbolize_keys
+      body = response.parsed_body.deep_symbolize_keys
       expect(body[:account][:balance])
         .to be account_transactions.map(&:total).sum
     end
 
     it "includes a balance prior to attribute" do
       subject
-      body = JSON.parse(response.body).deep_symbolize_keys
+      body = response.parsed_body.deep_symbolize_keys
       expect(body[:account][:balancePriorTo])
         .to be previous_transactions.map(&:total).sum
     end

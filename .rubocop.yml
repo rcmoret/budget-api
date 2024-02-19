@@ -1,9 +1,10 @@
 AllCops:
+  NewCops: enable
   TargetRubyVersion: 3.2.0
   Exclude:
-    - 'db/schema.rb'
-    - 'db/migrate/*.rb'
-    - 'node_modules/**/*'
+    - "db/schema.rb"
+    - "db/migrate/*.rb"
+    - "node_modules/**/*"
 
 require:
   - rubocop-rails

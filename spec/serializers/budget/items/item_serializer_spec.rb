@@ -4,8 +4,8 @@ RSpec.describe Budget::Items::ItemSerializer do
   describe "delegated methods" do
     subject { described_class.new(budget_item) }
 
-    let(:category) { FactoryBot.create(:category, :with_icon) }
-    let(:budget_item) { FactoryBot.create(:budget_item, category: category).decorated }
+    let(:category) { create(:category, :with_icon) }
+    let(:budget_item) { create(:budget_item, category: category).decorated }
 
     it "delegates most methods" do
       expect(subject.key).to eq budget_item.key

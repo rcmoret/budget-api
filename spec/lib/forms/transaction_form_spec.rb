@@ -3,8 +3,8 @@ require "rails_helper"
 RSpec.describe Forms::TransactionForm do
   describe ".save" do
     context "when creating a new transaction" do
-      let(:user) { FactoryBot.create(:user) }
-      let(:account) { FactoryBot.create(:account, user_group: user.user_group) }
+      let(:user) { create(:user) }
+      let(:account) { create(:account, user_group: user.user_group) }
       let(:transaction_entry) { Transaction::Entry.new(account: account) }
       let(:params) do
         {
@@ -20,8 +20,8 @@ RSpec.describe Forms::TransactionForm do
       let(:budget_exclusion) { false }
 
       context "when passing valid params" do
-        let(:category) { FactoryBot.create(:category, user_group: user.group) }
-        let(:budget_item) { FactoryBot.create(:budget_item, category: category) }
+        let(:category) { create(:category, user_group: user.group) }
+        let(:budget_item) { create(:budget_item, category: category) }
         let(:details_attributes) do
           [
             {
@@ -53,8 +53,8 @@ RSpec.describe Forms::TransactionForm do
         end
 
         context "when creating multiple details" do
-          let(:category) { FactoryBot.create(:category, user_group: user.user_group) }
-          let(:additional_budget_item) { FactoryBot.create(:budget_item, category: category) }
+          let(:category) { create(:category, user_group: user.user_group) }
+          let(:additional_budget_item) { create(:budget_item, category: category) }
           let(:details_attributes) do
             [
               { key: SecureRandom.hex(6), amount: 100_00, budget_item_id: additional_budget_item.id },
@@ -74,7 +74,7 @@ RSpec.describe Forms::TransactionForm do
         let(:budget_exclusion) { true }
 
         context "when the account is non-cash-flow" do
-          let(:account) { FactoryBot.create(:account, :non_cash_flow, user_group: user.group) }
+          let(:account) { create(:account, :non_cash_flow, user_group: user.group) }
           let(:transaction_entry) { Transaction::Entry.new(account: account) }
           let(:details_attributes) { [{ key: SecureRandom.hex(6), amount: 250_00 }] }
 
@@ -91,7 +91,7 @@ RSpec.describe Forms::TransactionForm do
         end
 
         context "when the account is cash-flow" do
-          let(:account) { FactoryBot.create(:account, :cash_flow, user_group: user.group) }
+          let(:account) { create(:account, :cash_flow, user_group: user.group) }
           let(:transaction_entry) { Transaction::Entry.new(account: account) }
           let(:details_attributes) { [{ key: SecureRandom.hex(6), amount: 250_00 }] }
 
@@ -113,10 +113,10 @@ RSpec.describe Forms::TransactionForm do
         end
 
         context "when providing a budget item with the detail" do
-          let(:account) { FactoryBot.create(:account, :non_cash_flow, user_group: user.group) }
+          let(:account) { create(:account, :non_cash_flow, user_group: user.group) }
           let(:transaction_entry) { Transaction::Entry.new(account: account) }
-          let(:category) { FactoryBot.create(:category, user_group: user.group) }
-          let(:budget_item) { FactoryBot.create(:budget_item, category: category) }
+          let(:category) { create(:category, user_group: user.group) }
+          let(:budget_item) { create(:budget_item, category: category) }
           let(:details_attributes) do
             [
               {
@@ -137,7 +137,7 @@ RSpec.describe Forms::TransactionForm do
               .not_to(change { Transaction::Entry.budget_exclusions.count })
           end
 
-          it " includes an error" do
+          it "includes an error" do
             subject = described_class.new(user, transaction_entry, params).tap(&:save)
             expect(subject.errors[:budget_exclusion])
               .to eq(["Budget Exclusions cannot be associated with a budget item"])
@@ -145,7 +145,7 @@ RSpec.describe Forms::TransactionForm do
         end
 
         context "when providing multiple details" do
-          let(:account) { FactoryBot.create(:account, :non_cash_flow, user_group: user.group) }
+          let(:account) { create(:account, :non_cash_flow, user_group: user.group) }
           let(:transaction_entry) { Transaction::Entry.new(account: account) }
           let(:details_attributes) do
             [
@@ -173,10 +173,10 @@ RSpec.describe Forms::TransactionForm do
       end
 
       context "when creating multiple details with the same key" do
-        let(:budget_item) { FactoryBot.create(:budget_item, category: category) }
-        let(:category) { FactoryBot.create(:category, user_group: user.group) }
-        let(:second_category) { FactoryBot.create(:category, user_group: user.group) }
-        let(:additional_budget_item) { FactoryBot.create(:budget_item, category: second_category) }
+        let(:budget_item) { create(:budget_item, category: category) }
+        let(:category) { create(:category, user_group: user.group) }
+        let(:second_category) { create(:category, user_group: user.group) }
+        let(:additional_budget_item) { create(:budget_item, category: second_category) }
         let(:key) { SecureRandom.hex(6) }
         let(:details_attributes) do
           [
@@ -203,8 +203,8 @@ RSpec.describe Forms::TransactionForm do
       end
 
       context "when creating multiple details with the same monthly budget item" do
-        let(:budget_item) { FactoryBot.create(:budget_item, category: category) }
-        let(:category) { FactoryBot.create(:category, :monthly, user_group: user.group) }
+        let(:budget_item) { create(:budget_item, category: category) }
+        let(:category) { create(:category, :monthly, user_group: user.group) }
         let(:detail_1_key) { SecureRandom.hex(6) }
         let(:detail_2_key) { SecureRandom.hex(6) }
         let(:details_attributes) do
@@ -242,8 +242,8 @@ RSpec.describe Forms::TransactionForm do
       end
 
       context "when passing empty details" do
-        let(:budget_item) { FactoryBot.create(:budget_item, category: category) }
-        let(:category) { FactoryBot.create(:category, :monthly, user_group: user.group) }
+        let(:budget_item) { create(:budget_item, category: category) }
+        let(:category) { create(:category, :monthly, user_group: user.group) }
         let(:details_attributes) { [] }
 
         it "return errors" do
@@ -254,7 +254,7 @@ RSpec.describe Forms::TransactionForm do
       end
 
       context "when passing a user that does not have access to the account" do
-        let(:other_user) { FactoryBot.create(:user) }
+        let(:other_user) { create(:user) }
         let(:details_attributes) { [{ key: SecureRandom.hex(6), amount: 100_00 }] }
 
         it "does not create a transaction entry" do
@@ -295,13 +295,13 @@ RSpec.describe Forms::TransactionForm do
     end
 
     context "when updating an existing transaction" do
-      let(:user) { FactoryBot.create(:user) }
-      let(:account) { FactoryBot.create(:account, user_group: user.group) }
-      let(:transaction_entry) { FactoryBot.create(:transaction_entry, account: account) }
+      let(:user) { create(:user) }
+      let(:account) { create(:account, user_group: user.group) }
+      let(:transaction_entry) { create(:transaction_entry, account: account) }
 
       context "when updating the account" do
         context "when switching to another account the user has access to" do
-          let(:alternate_account) { FactoryBot.create(:savings_account, user_group: user.group) }
+          let(:alternate_account) { create(:savings_account, user_group: user.group) }
 
           it "updates the account id" do
             expect { described_class.new(user, transaction_entry, { account: alternate_account }).save }
@@ -312,7 +312,7 @@ RSpec.describe Forms::TransactionForm do
         end
 
         context "when switching to another account the user does not have access to" do
-          let(:alternate_account) { FactoryBot.create(:account) }
+          let(:alternate_account) { create(:account) }
 
           it "does not update the account it" do
             subject = described_class.new(user, transaction_entry, { account: alternate_account })
@@ -329,8 +329,8 @@ RSpec.describe Forms::TransactionForm do
       end
 
       context "when adding a transaction detail" do
-        let(:category) { FactoryBot.create(:category, user_group: user.group) }
-        let(:budget_item) { FactoryBot.create(:budget_item, category: category) }
+        let(:category) { create(:category, user_group: user.group) }
+        let(:budget_item) { create(:budget_item, category: category) }
 
         it "creates a transaction detail" do
           expect do
@@ -360,7 +360,7 @@ RSpec.describe Forms::TransactionForm do
 
       context "when deleting a transaction detail" do
         let(:transaction_entry) do
-          FactoryBot.create(:transaction_entry, :with_multiple_details, account: account)
+          create(:transaction_entry, :with_multiple_details, account: account)
         end
 
         it "deletes the transaction detail" do
@@ -379,7 +379,7 @@ RSpec.describe Forms::TransactionForm do
 
       context "when updating one (of multiple) transaction detail" do
         let(:transaction_entry) do
-          FactoryBot.create(:transaction_entry, :with_multiple_details, account: account)
+          create(:transaction_entry, :with_multiple_details, account: account)
         end
 
         it "updates the targeted detail" do
@@ -406,9 +406,9 @@ RSpec.describe Forms::TransactionForm do
       end
 
       context "when the transaction entry is a budget exclusion" do
-        let(:savings_account) { FactoryBot.create(:savings_account, user_group: user.group) }
+        let(:savings_account) { create(:savings_account, user_group: user.group) }
         let(:transaction_entry) do
-          FactoryBot.create(:transaction_entry, :budget_exclusion, account: savings_account)
+          create(:transaction_entry, :budget_exclusion, account: savings_account)
         end
 
         context "when the updated account is cash flow" do
@@ -426,7 +426,7 @@ RSpec.describe Forms::TransactionForm do
         end
 
         context "when the updated account is non cash flow" do
-          let(:alt_savings_account) { FactoryBot.create(:savings_account, user_group: user.group) }
+          let(:alt_savings_account) { create(:savings_account, user_group: user.group) }
 
           it "updates the transaction entry's account id" do
             expect { described_class.new(user, transaction_entry, account: alt_savings_account).save }
@@ -455,8 +455,8 @@ RSpec.describe Forms::TransactionForm do
         end
 
         context "when updating the single detail with a budget item" do
-          let(:category) { FactoryBot.create(:category, user_group: user.group) }
-          let(:budget_item) { FactoryBot.create(:budget_item, category: category) }
+          let(:category) { create(:category, user_group: user.group) }
+          let(:budget_item) { create(:budget_item, category: category) }
 
           it "does not change the detail" do
             detail = transaction_entry.details.first
@@ -479,12 +479,12 @@ RSpec.describe Forms::TransactionForm do
       end
 
       context "when the transaction entry is a part of a transfer" do
-        let(:savings_account) { FactoryBot.create(:savings_account, user_group: user.group) }
-        let(:to_transaction) { FactoryBot.create(:transaction_entry, :discretionary, account: savings_account) }
-        let(:from_transaction) { FactoryBot.create(:transaction_entry, :discretionary, account: account) }
+        let(:savings_account) { create(:savings_account, user_group: user.group) }
+        let(:to_transaction) { create(:transaction_entry, :discretionary, account: savings_account) }
+        let(:from_transaction) { create(:transaction_entry, :discretionary, account: account) }
 
         before do
-          FactoryBot.create(:transfer, to_transaction: to_transaction, from_transaction: from_transaction)
+          create(:transfer, to_transaction: to_transaction, from_transaction: from_transaction)
         end
 
         context "when adding a detail" do
@@ -506,8 +506,8 @@ RSpec.describe Forms::TransactionForm do
         end
 
         context "when updating the single detail with a budget item" do
-          let(:category) { FactoryBot.create(:category, user_group: user.group) }
-          let(:budget_item) { FactoryBot.create(:budget_item, category: category) }
+          let(:category) { create(:category, user_group: user.group) }
+          let(:budget_item) { create(:budget_item, category: category) }
 
           it "does not change the detail" do
             detail = to_transaction.details.first

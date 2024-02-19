@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Budget::Events::SetupForm do
-  let(:user) { FactoryBot.create(:user) }
+  let(:user) { create(:user) }
 
   describe "interval not setup validation" do
     before do
@@ -10,7 +10,7 @@ RSpec.describe Budget::Events::SetupForm do
         .and_return(instance_double(Forms::Budget::EventsForm, valid?: true, save: true))
     end
 
-    let(:interval) { FactoryBot.create(:budget_interval, :set_up, user_group: user.group) }
+    let(:interval) { create(:budget_interval, :set_up, user_group: user.group) }
 
     it "records an error" do
       events_params = [{ event_type: valid_create_event }]
@@ -30,7 +30,7 @@ RSpec.describe Budget::Events::SetupForm do
         .and_return(events_form_double)
     end
 
-    let(:interval) { FactoryBot.create(:budget_interval) }
+    let(:interval) { create(:budget_interval) }
     let(:errors_double) do
       instance_double(ActiveModel::Errors).tap do |double|
         allow(double).to receive(:each).and_yield(error_double)
@@ -64,9 +64,9 @@ RSpec.describe Budget::Events::SetupForm do
         .and_return(form_double)
     end
 
-    let(:user) { FactoryBot.create(:user) }
+    let(:user) { create(:user) }
     let(:interval) do
-      FactoryBot.create(:budget_interval, user_group: user.user_group)
+      create(:budget_interval, user_group: user.user_group)
     end
     let(:errors_double) do
       instance_double(ActiveModel::Errors).tap do |double|
@@ -92,17 +92,16 @@ RSpec.describe Budget::Events::SetupForm do
       described_class.new(user: user, interval: interval, events: events_params)
     end
 
-    around { |ex| travel_to(Time.current.beginning_of_minute) { ex.run } }
-
     before do
+      travel_to(Time.current.beginning_of_minute)
       allow(Forms::Budget::EventsForm)
         .to receive(:new)
         .and_return(instance_double(Forms::Budget::EventsForm, save: true, valid?: true))
     end
 
-    let(:user) { FactoryBot.create(:user) }
+    let(:user) { create(:user) }
     let(:user_group) { user.user_group }
-    let(:interval) { FactoryBot.create(:budget_interval, user_group: user_group, month: month, year: year) }
+    let(:interval) { create(:budget_interval, user_group: user_group, month: month, year: year) }
     let(:events_params) { [{ event_type: valid_create_event }] }
 
     it "updates the interval's set up completed at timestamp" do
@@ -131,10 +130,10 @@ RSpec.describe Budget::Events::SetupForm do
     context "when the start and end dates are pre-popluated" do
       let(:today) { Time.zone.today }
       let(:interval) do
-        FactoryBot.create(:budget_interval,
-                          user_group: user.user_group,
-                          start_date: Date.new(today.year, today.month, 2),
-                          end_date: Date.new(today.year, today.month, -2),)
+        create(:budget_interval,
+               user_group: user.user_group,
+               start_date: Date.new(today.year, today.month, 2),
+               end_date: Date.new(today.year, today.month, -2),)
       end
 
       it "does not change the interval's start date" do
@@ -188,7 +187,7 @@ RSpec.describe Budget::Events::SetupForm do
 
     let(:form_double) { instance_double(Forms::Budget::EventsForm, valid?: true, save: true) }
     let(:events_params) { [{ event_type: valid_create_event }] }
-    let(:interval) { FactoryBot.create(:budget_interval) }
+    let(:interval) { create(:budget_interval) }
 
     it "initializes the events form" do
       expect(Forms::Budget::EventsForm)
@@ -220,7 +219,7 @@ RSpec.describe Budget::Events::SetupForm do
     end
 
     let(:form_double) { instance_double(Forms::Budget::EventsForm, valid?: true, save: true) }
-    let(:interval) { FactoryBot.create(:budget_interval) }
+    let(:interval) { create(:budget_interval) }
 
     it "returns true" do
       expect(subject.save).to be true

@@ -4,7 +4,7 @@ RSpec.describe Budget::Intervals::CategorySerializer do
   describe "#render" do
     subject { described_class.new(budget_category) }
 
-    let(:budget_category) { FactoryBot.create(:category) }
+    let(:budget_category) { create(:category) }
 
     it "returns a hash of attributes" do
       expect(subject.render).to eq(

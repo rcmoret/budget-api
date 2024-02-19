@@ -1,10 +1,10 @@
 require "rails_helper"
 
-RSpec.describe "POST /api/accounts", type: :request do
+RSpec.describe "POST /api/accounts" do
   subject { post("/api/accounts", params: params, headers: headers) }
 
   context "when passing a valid token" do
-    let(:user) { FactoryBot.create(:user) }
+    let(:user) { create(:user) }
 
     include_context "with valid token"
 
@@ -30,7 +30,7 @@ RSpec.describe "POST /api/accounts", type: :request do
       it "returns a created status an account object" do
         subject
         expect(response).to have_http_status :created
-        expect(JSON.parse(response.body).fetch("account")).to eq(
+        expect(response.parsed_body.fetch("account")).to eq(
           params
           .fetch(:account)
           .merge(

@@ -12,11 +12,11 @@ RSpec.describe "POST /api/tokens" do
       { user: { email: email, password: password } }
     end
 
-    before { FactoryBot.create(:user, email: email, password: password) }
+    before { create(:user, email: email, password: password) }
 
     it "returns a token" do
       subject
-      body = JSON.parse(response.body)
+      body = response.parsed_body
       expect(body).to have_key("token")
       expect(response).to have_http_status :created
     end
@@ -34,11 +34,11 @@ RSpec.describe "POST /api/tokens" do
       { user: { email: email, password: incorrect_password } }
     end
 
-    before { FactoryBot.create(:user, email: email, password: password) }
+    before { create(:user, email: email, password: password) }
 
     it "an error message, unprocessable entity status" do
       subject
-      expect(JSON.parse(response.body)).to eq("password" => ["incorrect password"])
+      expect(response.parsed_body).to eq("password" => ["incorrect password"])
       expect(response).to have_http_status :unauthorized
     end
   end

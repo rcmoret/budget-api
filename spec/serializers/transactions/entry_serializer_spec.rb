@@ -5,17 +5,17 @@ RSpec.describe Transactions::EntrySerializer do
     context "when a transfer" do
       subject { described_class.new(transaction_entry.reload) }
 
-      let(:user_group) { FactoryBot.create(:user_group) }
-      let(:account) { FactoryBot.create(:account, user_group: user_group) }
+      let(:user_group) { create(:user_group) }
+      let(:account) { create(:account, user_group: user_group) }
       let(:detail_amount) { rand(1..100) }
       let(:detail_key) { SecureRandom.hex(6) }
       let(:description) { Faker::Music::GratefulDead.song }
       let(:notes) { Faker::Music::GratefulDead.song }
       let(:entry_key) { SecureRandom.hex(6) }
       let(:check_number) { Faker::Number.number(digits: 4) }
-      let(:interval) { FactoryBot.build(:budget_interval) }
+      let(:interval) { build(:budget_interval) }
       let(:transaction_entry) do
-        FactoryBot.create(
+        create(
           :transaction_entry,
           description: description,
           account: account,
@@ -27,7 +27,7 @@ RSpec.describe Transactions::EntrySerializer do
         )
       end
       let!(:transfer) do
-        FactoryBot.create(:transfer, to_transaction: transaction_entry)
+        create(:transfer, to_transaction: transaction_entry)
       end
 
       it "returns the correct serialized data" do
@@ -58,9 +58,9 @@ RSpec.describe Transactions::EntrySerializer do
     context "when a budget exclusion" do
       subject { described_class.new(transaction_entry) }
 
-      let(:account) { FactoryBot.create(:savings_account) }
+      let(:account) { create(:savings_account) }
       let(:transaction_entry) do
-        FactoryBot.create(:transaction_entry, :budget_exclusion, account: account)
+        create(:transaction_entry, :budget_exclusion, account: account)
       end
 
       it "returns true for budget exclusion, false for transfer" do

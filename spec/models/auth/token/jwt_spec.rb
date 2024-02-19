@@ -11,7 +11,7 @@ RSpec.describe Auth::Token::JWT do
 
       it "uses 4 days from now as the default expiration" do
         freeze_time do
-          expect(::JWT)
+          expect(JWT)
             .to receive(:encode)
             .with(hash_including(exp: 4.days.from_now.to_i), anything, anything)
 
@@ -21,7 +21,7 @@ RSpec.describe Auth::Token::JWT do
 
       it "allows for a different time interval to be provided for expiration" do
         freeze_time do
-          expect(::JWT)
+          expect(JWT)
             .to receive(:encode)
             .with(hash_including(exp: 5.minutes.from_now.to_i), anything, anything)
 
@@ -30,7 +30,7 @@ RSpec.describe Auth::Token::JWT do
       end
 
       it "uses #{described_class::SIGNATURE_ALGORITHM} as the alg" do
-        expect(::JWT)
+        expect(JWT)
           .to receive(:encode)
           .with(anything, anything, described_class::SIGNATURE_ALGORITHM)
 
@@ -40,7 +40,7 @@ RSpec.describe Auth::Token::JWT do
       it "uses the app url for issuer" do
         expect(JWT)
           .to receive(:encode)
-          .with(hash_including(iss: ENV["APP_URL"]), anything, anything)
+          .with(hash_including(iss: ENV.fetch("APP_URL", nil)), anything, anything)
 
         described_class.encode(payload: { user_id: rand(100) })
       end
@@ -117,7 +117,7 @@ RSpec.describe Auth::Token::JWT do
 
     context "when the issuer does not match" do
       let(:error_message) do
-        %(Invalid issuer. Expected ["#{ENV['APP_URL']}"], received example.com)
+        %(Invalid issuer. Expected ["#{ENV.fetch('APP_URL', nil)}"], received example.com)
       end
 
       it "returns an error tuple" do

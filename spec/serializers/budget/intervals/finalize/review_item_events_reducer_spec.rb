@@ -2,8 +2,8 @@ require "rails_helper"
 
 RSpec.describe Budget::Intervals::Finalize::ReviewItemEventsReducer do
   describe "#events" do
-    let(:user_group) { FactoryBot.create(:user_group) }
-    let(:interval) { FactoryBot.build(:budget_interval, user_group: user_group) }
+    let(:user_group) { create(:user_group) }
+    let(:interval) { build(:budget_interval, user_group: user_group) }
 
     before do
       allow(Budget::Intervals::Finalize::AdjustEventSerializer).to receive(:new)
@@ -11,7 +11,7 @@ RSpec.describe Budget::Intervals::Finalize::ReviewItemEventsReducer do
     end
 
     context "when the category is a monthly and non-accrual" do
-      let(:category) { FactoryBot.create(:category, :monthly, user_group: user_group) }
+      let(:category) { create(:category, :monthly, user_group: user_group) }
       let(:reviewable_items) do
         [
           instance_double(Presenters::Budget::MonthlyItemPresenter),
@@ -62,7 +62,7 @@ RSpec.describe Budget::Intervals::Finalize::ReviewItemEventsReducer do
     end
 
     context "when the category is day to day" do
-      let(:category) { FactoryBot.create(:category, :weekly, user_group: user_group) }
+      let(:category) { create(:category, :weekly, user_group: user_group) }
       let(:reviewable_items) { [instance_double(Presenters::Budget::DayToDayExpensePresenter)] }
 
       context "when there is a target item" do
@@ -110,7 +110,7 @@ RSpec.describe Budget::Intervals::Finalize::ReviewItemEventsReducer do
     end
 
     context "when the category is an accrual" do
-      let(:category) { FactoryBot.create(:category, :accrual, user_group: user_group) }
+      let(:category) { create(:category, :accrual, user_group: user_group) }
       let(:reviewable_items) { [instance_double(Presenters::Budget::DayToDayExpensePresenter)] }
 
       context "when there are target items" do

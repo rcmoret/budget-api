@@ -6,7 +6,7 @@ RSpec.describe ApplicationSerializer do
 
     let(:name) { "Account Name" }
     let(:slug) { "account-slug" }
-    let(:account) { FactoryBot.build(:account, name: name, slug: slug) }
+    let(:account) { build(:account, name: name, slug: slug) }
 
     let(:serializer) do
       Class.new(described_class) do
@@ -33,7 +33,7 @@ RSpec.describe ApplicationSerializer do
 
     let(:name) { "Account Name" }
     let(:slug) { "account-slug" }
-    let(:account) { FactoryBot.build(:account, name: name, slug: slug) }
+    let(:account) { build(:account, name: name, slug: slug) }
 
     context "when added by name only" do
       let(:serializer) do
@@ -124,8 +124,8 @@ RSpec.describe ApplicationSerializer do
     subject { transaction_serializer.new(transaction) }
 
     let(:name) { "Account Name" }
-    let(:account) { FactoryBot.create(:account, name: name) }
-    let(:transaction) { FactoryBot.create(:transaction_entry, :pending, account: account) }
+    let(:account) { create(:account, name: name) }
+    let(:transaction) { create(:transaction_entry, :pending, account: account) }
 
     let(:transaction_serializer) do
       account_serializer = Class.new(described_class) do
@@ -163,7 +163,7 @@ RSpec.describe ApplicationSerializer do
     context "when declaring a relationship without any options" do
       subject { serializer.new(account) }
 
-      let(:account) { FactoryBot.build(:account) }
+      let(:account) { build(:account) }
       let(:serializer) do
         transaction_serializer = Class.new(described_class) do
           attribute :key
@@ -175,7 +175,7 @@ RSpec.describe ApplicationSerializer do
       end
 
       before do
-        FactoryBot.create_list(:transaction_entry, 2, account: account)
+        create_list(:transaction_entry, 2, account: account)
       end
 
       it "delegates the relationship to the underlying object" do
@@ -192,7 +192,7 @@ RSpec.describe ApplicationSerializer do
     context "when declaring a relationship with an alias" do
       subject { serializer.new(account) }
 
-      let(:account) { FactoryBot.build(:account) }
+      let(:account) { build(:account) }
       let(:serializer) do
         transaction_serializer = Class.new(described_class) do
           attribute :key
@@ -204,7 +204,7 @@ RSpec.describe ApplicationSerializer do
       end
 
       before do
-        FactoryBot.create_list(:transaction_entry, 2, account: account)
+        create_list(:transaction_entry, 2, account: account)
       end
 
       it "serializes the related records" do
@@ -217,7 +217,7 @@ RSpec.describe ApplicationSerializer do
     context "when declaring a relationship with a conditional" do
       subject { serializer.new(account) }
 
-      let(:account) { FactoryBot.build(:account) }
+      let(:account) { build(:account) }
       let(:serializer) do
         transaction_serializer = Class.new(described_class) do
           attribute :key
@@ -229,7 +229,7 @@ RSpec.describe ApplicationSerializer do
       end
 
       before do
-        FactoryBot.create_list(:transaction_entry, 2, account: account)
+        create_list(:transaction_entry, 2, account: account)
       end
 
       it "does not serialize the relation if false-y" do

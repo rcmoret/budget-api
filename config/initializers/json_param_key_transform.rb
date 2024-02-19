@@ -10,5 +10,5 @@ ActionDispatch::Request.parameter_parsers[:json] = lambda { |raw_post|
   end
 
   # Return data
-  data.is_a?(Hash) ? data : { '_json': data }
+  data.is_a?(Hash) ? data : { _json: data }
 }

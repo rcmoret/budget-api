@@ -74,9 +74,7 @@ module Forms
     end
 
     def detail_keys
-      details_attributes.map do |detail_attributes|
-        detail_attributes[:key]
-      end
+      details_attributes.pluck(:key)
     end
 
     def details_attributes

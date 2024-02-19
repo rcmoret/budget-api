@@ -7,7 +7,7 @@ RSpec.describe User::EventForm do
         allow(User::Event).to receive(:new).and_return(instance_double(User::Event, save: true))
       end
 
-      let(:actor) { FactoryBot.create(:user) }
+      let(:actor) { create(:user) }
 
       context "when a passing the minumum arguments" do
         subject do
@@ -29,7 +29,7 @@ RSpec.describe User::EventForm do
           described_class.new(actor: actor, event_type: event_type_name, target_user: target_user)
         end
 
-        let(:target_user) { FactoryBot.create(:user) }
+        let(:target_user) { create(:user) }
         let(:event_type) { User::EventType.for(event_type_name) }
         let(:event_type_name) { :user_update_requested }
 
@@ -49,7 +49,7 @@ RSpec.describe User::EventForm do
 
         let(:event_type_name) { :user_auth_token_requested }
         let(:event_handler_double) { instance_double(User::EventHandlers::NewAuthTokenRequested, call: [:ok]) }
-        let(:actor) { FactoryBot.create(:user) }
+        let(:actor) { create(:user) }
 
         context "when no data or transient data is passed" do
           subject do
@@ -153,7 +153,7 @@ RSpec.describe User::EventForm do
         described_class.new(actor: user, event_type: :invalid_event_type_name)
       end
 
-      let(:user) { FactoryBot.create(:user) }
+      let(:user) { create(:user) }
 
       before do
         allow(User::Event).to receive(:new).and_return(instance_double(User::Event, save: false))

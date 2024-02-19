@@ -89,23 +89,23 @@ RSpec.shared_context "when user posts transaction with no details" do
 end
 
 RSpec.shared_context "when the user has an account" do
-  let(:user) { FactoryBot.create(:user) }
-  let(:account) { FactoryBot.create(:account, user_group: user.group) }
+  let(:user) { create(:user) }
+  let(:account) { create(:account, user_group: user.group) }
 end
 
 RSpec.shared_context "when the user has a non-cash-flow account" do
-  let(:user) { FactoryBot.create(:user) }
-  let(:account) { FactoryBot.create(:savings_account, user_group: user.group) }
+  let(:user) { create(:user) }
+  let(:account) { create(:savings_account, user_group: user.group) }
 end
 
 RSpec.shared_context "when there is a current interval and item" do
   let(:month) { interval.month }
   let(:year) { interval.year }
-  let(:interval) { FactoryBot.create(:budget_interval, :current, user_group: user.group) }
-  let(:icon) { FactoryBot.create(:icon) }
-  let(:budget_category) { FactoryBot.create(:category, :monthly, user_group: user.group, icon: icon) }
+  let(:interval) { create(:budget_interval, :current, user_group: user.group) }
+  let(:icon) { create(:icon) }
+  let(:budget_category) { create(:category, :monthly, user_group: user.group, icon: icon) }
   let(:budget_item) do
-    FactoryBot.create(:budget_item, interval: interval, category: budget_category)
+    create(:budget_item, interval: interval, category: budget_category)
   end
 
   before do

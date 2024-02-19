@@ -12,12 +12,12 @@ RSpec.describe Forms::TransferForm do
     )
   end
 
-  let(:user) { FactoryBot.create(:user) }
+  let(:user) { create(:user) }
 
   describe "validations" do
     context 'when the "to" account is not present' do
-      let(:to_account) { FactoryBot.create(:account, user_group: user.user_group) }
-      let(:from_account) { FactoryBot.create(:account, user_group: user.user_group) }
+      let(:to_account) { create(:account, user_group: user.user_group) }
+      let(:from_account) { create(:account, user_group: user.user_group) }
       let(:amount) { rand(100..1000) }
 
       before do
@@ -31,8 +31,8 @@ RSpec.describe Forms::TransferForm do
     end
 
     context 'when the "from" account is not present' do
-      let(:to_account) { FactoryBot.create(:account) }
-      let(:from_account) { FactoryBot.create(:account) }
+      let(:to_account) { create(:account) }
+      let(:from_account) { create(:account) }
       let(:amount) { rand(100..1000) }
 
       before do
@@ -46,7 +46,7 @@ RSpec.describe Forms::TransferForm do
     end
 
     context "when the both account ids are the same" do
-      let(:to_account) { FactoryBot.create(:account, user_group: user.user_group) }
+      let(:to_account) { create(:account, user_group: user.user_group) }
       let(:from_account) { to_account }
       let(:amount) { rand(100..1000) }
 
@@ -57,8 +57,8 @@ RSpec.describe Forms::TransferForm do
     end
 
     context "when the amount is zero" do
-      let(:to_account) { FactoryBot.create(:account) }
-      let(:from_account) { FactoryBot.create(:account) }
+      let(:to_account) { create(:account) }
+      let(:from_account) { create(:account) }
       let(:amount) { 0 }
 
       it "returns an error tuple" do
@@ -67,8 +67,8 @@ RSpec.describe Forms::TransferForm do
     end
 
     context "when the amount is a negative number" do
-      let(:to_account) { FactoryBot.create(:account, user_group: user.user_group) }
-      let(:from_account) { FactoryBot.create(:account, user_group: user.user_group) }
+      let(:to_account) { create(:account, user_group: user.user_group) }
+      let(:from_account) { create(:account, user_group: user.user_group) }
       let(:amount) { -1 * rand(100..1000) }
 
       it "returns an :ok tuple" do

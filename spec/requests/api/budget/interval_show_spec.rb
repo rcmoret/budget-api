@@ -6,16 +6,16 @@ RSpec.describe "GET /api/budget/:month/:year" do
   context "with a valid request" do
     include_context "with valid token"
 
-    let(:user) { FactoryBot.create(:user) }
-    let(:category) { FactoryBot.create(:category, user_group: user.group) }
-    let(:account) { FactoryBot.create(:account, user_group: user.group) }
-    let(:budget_item) { FactoryBot.create(:budget_item, category: category, interval: interval) }
-    let!(:event) { FactoryBot.create(:budget_item_event, :create_event, item: budget_item) }
+    let(:user) { create(:user) }
+    let(:category) { create(:category, user_group: user.group) }
+    let(:account) { create(:account, user_group: user.group) }
+    let(:budget_item) { create(:budget_item, category: category, interval: interval) }
+    let!(:event) { create(:budget_item_event, :create_event, item: budget_item) }
     let!(:transaction_entry) do
-      FactoryBot.create(:transaction_entry, :discretionary, clearance_date: interval.first_date, account: account)
+      create(:transaction_entry, :discretionary, clearance_date: interval.first_date, account: account)
     end
     let!(:item_transaction_entry) do
-      FactoryBot.create(
+      create(
         :transaction_entry,
         account: account,
         details_attributes: [
@@ -27,7 +27,7 @@ RSpec.describe "GET /api/budget/:month/:year" do
         ]
       )
     end
-    let(:interval) { FactoryBot.create(:budget_interval, :past, user_group: user.group) }
+    let(:interval) { create(:budget_interval, :past, user_group: user.group) }
     let(:month) { interval.month }
     let(:year) { interval.year }
     let(:expected) do
@@ -115,7 +115,7 @@ RSpec.describe "GET /api/budget/:month/:year" do
 
     it "returns a lot of data" do
       expect(response).to have_http_status :ok
-      body = JSON.parse(response.body).deep_symbolize_keys
+      body = response.parsed_body.deep_symbolize_keys
       expect(body).to eq(expected)
     end
   end

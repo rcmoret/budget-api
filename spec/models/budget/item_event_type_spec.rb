@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Budget::ItemEventType, type: :model do
+RSpec.describe Budget::ItemEventType do
   describe "name format validation" do
     context "when the name is underscored lowercase string no numbers" do
       it "is valid" do

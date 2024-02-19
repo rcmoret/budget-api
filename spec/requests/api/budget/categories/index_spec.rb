@@ -7,17 +7,17 @@ RSpec.describe "GET /api/budget/categories" do
     include_context "with valid token"
     include_context "with a budget category belonging to a different user group"
 
-    let(:interval) { FactoryBot.create(:budget_interval, user_group: user.group) }
-    let(:icon) { FactoryBot.create(:icon) }
+    let(:interval) { create(:budget_interval, user_group: user.group) }
+    let(:icon) { create(:icon) }
 
     context "when the category is non-accrual" do
-      let!(:grocery) { FactoryBot.create(:category, :weekly, icon: icon, user_group: user.group) }
+      let!(:grocery) { create(:category, :weekly, icon: icon, user_group: user.group) }
 
       before { subject }
 
       it "returns the budget categories for the current user" do
         expect(response).to have_http_status :ok
-        body = JSON.parse(response.body).deep_symbolize_keys
+        body = response.parsed_body.deep_symbolize_keys
         expect(body).to eq(
           budgetCategories: [
             {
@@ -38,9 +38,9 @@ RSpec.describe "GET /api/budget/categories" do
     end
 
     context "when the category is accrual" do
-      let(:holiday_fund) { FactoryBot.create(:category, :accrual, user_group: user.group) }
+      let(:holiday_fund) { create(:category, :accrual, user_group: user.group) }
       let(:next_years_interval) do
-        FactoryBot.create(
+        create(
           :budget_interval,
           user_group: user.group,
           month: interval.month,
@@ -49,14 +49,14 @@ RSpec.describe "GET /api/budget/categories" do
       end
 
       before do
-        FactoryBot.create(:maturity_interval, interval: interval, category: holiday_fund)
-        FactoryBot.create(:maturity_interval, interval: next_years_interval, category: holiday_fund)
+        create(:maturity_interval, interval: interval, category: holiday_fund)
+        create(:maturity_interval, interval: next_years_interval, category: holiday_fund)
         subject
       end
 
       it "returns the budget categories for the current user" do
         expect(response).to have_http_status :ok
-        body = JSON.parse(response.body).deep_symbolize_keys
+        body = response.parsed_body.deep_symbolize_keys
         expect(body[:budgetCategories].first).to include(
           isAccrual: true,
           maturityIntervals: [
@@ -68,12 +68,12 @@ RSpec.describe "GET /api/budget/categories" do
     end
 
     context "when the category is archived" do
-      let!(:defunkt_category) { FactoryBot.create(:category, :archived, user_group: user.group) }
+      let!(:defunkt_category) { create(:category, :archived, user_group: user.group) }
 
       it "returns the budget categories for the current user" do
         subject
         expect(response).to have_http_status :ok
-        body = JSON.parse(response.body).deep_symbolize_keys
+        body = response.parsed_body.deep_symbolize_keys
         expect(body[:budgetCategories].first).to include(
           archivedAt: defunkt_category.archived_at.strftime("%F")
         )

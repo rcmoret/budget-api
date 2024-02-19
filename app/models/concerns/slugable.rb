@@ -5,6 +5,7 @@ module Slugable
 
   SLUG_FORMAT_MESSAGE = "must be combination of lowercase letters, numbers and dashes"
 
+  # rubocop:disable Rails/I18nLocaleTexts
   included do
     validates :slug, presence: true
     validates :slug, format: { with: /\A[a-z]/, message: "must begin with a lower case letter" }
@@ -12,6 +13,7 @@ module Slugable
     validates :slug, format: { with: /[a-z0-9]\z/, message: "must end with a lower case letter or number" }
     validates :slug, uniqueness: { scope: :user_group_id }
   end
+  # rubocop:enable Rails/I18nLocaleTexts
 
   class_methods do
     def by_slug(slug)

@@ -18,10 +18,10 @@ RSpec.describe Budget::Events::DeleteItemForm do
   end
 
   describe "validations" do
-    let(:user) { FactoryBot.create(:user) }
-    let(:budget_interval) { FactoryBot.create(:budget_interval, user_group: user.group) }
-    let(:budget_category) { FactoryBot.create(:category, user_group: user.group) }
-    let(:budget_item) { FactoryBot.create(:budget_item, category: budget_category, interval: budget_interval) }
+    let(:user) { create(:user) }
+    let(:budget_interval) { create(:budget_interval, user_group: user.group) }
+    let(:budget_category) { create(:category, user_group: user.group) }
+    let(:budget_item) { create(:budget_item, category: budget_category, interval: budget_interval) }
 
     describe "event type validation" do
       context "when a valid event" do
@@ -49,8 +49,8 @@ RSpec.describe Budget::Events::DeleteItemForm do
     end
 
     describe "item validation" do
-      let(:category) { FactoryBot.create(:category, user_group: user.group) }
-      let(:budget_item) { FactoryBot.create(:budget_item, category: category) }
+      let(:category) { create(:category, user_group: user.group) }
+      let(:budget_item) { create(:budget_item, category: category) }
 
       context "when a budget item exists" do
         it "is a valid form object" do
@@ -77,10 +77,10 @@ RSpec.describe Budget::Events::DeleteItemForm do
 
     describe "item transacations validations" do
       context "when there is a transaction detail associated" do
-        before { FactoryBot.create(:transaction_detail, budget_item: budget_item) }
+        before { create(:transaction_detail, budget_item: budget_item) }
 
-        let(:category) { FactoryBot.create(:category, user_group: user.group) }
-        let(:budget_item) { FactoryBot.create(:budget_item, category: category) }
+        let(:category) { create(:category, user_group: user.group) }
+        let(:budget_item) { create(:budget_item, category: category) }
 
         it "is an invalid form object" do
           params = {
@@ -96,7 +96,7 @@ RSpec.describe Budget::Events::DeleteItemForm do
 
     describe "cannot call a duplicate delete event" do
       it "is invalid" do
-        FactoryBot.create(:budget_item_event, :item_delete, item: budget_item, amount: 0)
+        create(:budget_item_event, :item_delete, item: budget_item, amount: 0)
         params = {
           budget_item_key: budget_item.key,
           event_type: Budget::EventTypes::DELETE_EVENTS.sample,
@@ -107,13 +107,11 @@ RSpec.describe Budget::Events::DeleteItemForm do
   end
 
   describe "save" do
-    let(:user) { FactoryBot.create(:user) }
-    let(:category) { FactoryBot.create(:category, user_group: user.group) }
-    let(:budget_item) { FactoryBot.create(:budget_item, category: category) }
+    let(:user) { create(:user) }
+    let(:category) { create(:category, user_group: user.group) }
+    let(:budget_item) { create(:budget_item, category: category) }
 
-    before { travel_to Time.current }
-
-    after { travel_back }
+    before { freeze_time }
 
     context "when the happy path" do
       it "returns true" do

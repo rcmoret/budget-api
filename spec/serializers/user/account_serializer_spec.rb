@@ -4,7 +4,7 @@ RSpec.describe User::AccountSerializer do
   describe "delegated methods" do
     subject { described_class.new(account: account) }
 
-    let(:account) { FactoryBot.build(:account) }
+    let(:account) { build(:account) }
 
     it "delegates most methods" do
       expect(subject.key).to eq account.key
@@ -45,7 +45,7 @@ RSpec.describe User::AccountSerializer do
     subject { described_class.new(account: account) }
 
     context "when the account is active" do
-      let(:account) { FactoryBot.build(:account) }
+      let(:account) { build(:account) }
 
       it "returns nil and false" do
         expect(subject.archived_at).to be_nil
@@ -54,7 +54,7 @@ RSpec.describe User::AccountSerializer do
     end
 
     context "when the account is archived" do
-      let(:account) { FactoryBot.build(:account, :archived) }
+      let(:account) { build(:account, :archived) }
 
       it "returns nil and false" do
         expect(subject.render["archivedAt"]).to eq account.archived_at.strftime("%F")

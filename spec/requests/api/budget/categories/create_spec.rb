@@ -12,7 +12,7 @@ RSpec.describe "POST /api/budget/categories" do
   context "when passing valid params" do
     include_context "with valid token"
 
-    let(:icon) { FactoryBot.create(:icon) }
+    let(:icon) { create(:icon) }
     let(:name) { Faker::Music::GratefulDead.song }
     let(:slug) { Faker::Lorem.word.downcase }
     let(:key) { SecureRandom.hex(6) }
@@ -44,7 +44,7 @@ RSpec.describe "POST /api/budget/categories" do
           .to change { Budget::Category.belonging_to(user).count }
           .by(+1)
         expect(response).to have_http_status :created
-        body = JSON.parse(response.body).deep_symbolize_keys
+        body = response.parsed_body.deep_symbolize_keys
         expect(body).to eq(
           budgetCategory: {
             key: key,
@@ -74,7 +74,7 @@ RSpec.describe "POST /api/budget/categories" do
           .to change { Budget::Category.belonging_to(user).count }
           .by(+1)
         expect(response).to have_http_status :created
-        body = JSON.parse(response.body).deep_symbolize_keys
+        body = response.parsed_body.deep_symbolize_keys
         expect(body).to eq(
           budgetCategory: {
             key: key,
@@ -104,7 +104,7 @@ RSpec.describe "POST /api/budget/categories" do
           .to change { Budget::Category.belonging_to(user).count }
           .by(+1)
         expect(response).to have_http_status :created
-        body = JSON.parse(response.body).deep_symbolize_keys
+        body = response.parsed_body.deep_symbolize_keys
         expect(body).to eq(
           budgetCategory: {
             key: key,
@@ -127,7 +127,7 @@ RSpec.describe "POST /api/budget/categories" do
   context "when passing invalid params" do
     include_context "with valid token"
 
-    let(:icon) { FactoryBot.create(:icon) }
+    let(:icon) { create(:icon) }
     let(:name) { Faker::Music::GratefulDead.song }
     let(:slug) { Faker::Lorem.word.downcase }
     let(:key) { SecureRandom.hex(6) }
@@ -150,7 +150,7 @@ RSpec.describe "POST /api/budget/categories" do
     it "does not create a new catgory, returns the errors" do
       expect { subject }.not_to(change { Budget::Category.belonging_to(user).count })
       expect(response).to have_http_status :unprocessable_entity
-      body = JSON.parse(response.body).deep_symbolize_keys
+      body = response.parsed_body.deep_symbolize_keys
       expect(body).to eq(
         budgetCategory: { defaultAmount: ["expense items must be less than or equal to 0"] }
       )

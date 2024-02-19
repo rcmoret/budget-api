@@ -8,7 +8,7 @@ module Budget
       ].freeze
 
       REGISTERED_EVENT_TYPES = REGISTERED_CLASSES.reduce([]) do |list, klass|
-        raise DuplicateEventTypeRegistrationError if (list & klass.applicable_event_types).any?
+        raise DuplicateEventTypeRegistrationError if list.intersect?(klass.applicable_event_types)
 
         [*list, *klass.applicable_event_types.dup]
       end.freeze

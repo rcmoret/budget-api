@@ -4,9 +4,9 @@ RSpec.describe Budget::Intervals::SetUp::CategorySerializer do
   subject { described_class.new(category, interval: current_interval) }
 
   describe "delegated methods" do
-    let(:icon) { FactoryBot.create(:icon) }
-    let(:category) { FactoryBot.build(:category, icon: icon) }
-    let(:current_interval) { FactoryBot.build(:budget_interval) }
+    let(:icon) { create(:icon) }
+    let(:category) { build(:category, icon: icon) }
+    let(:current_interval) { build(:budget_interval) }
 
     it "delegates most methods" do
       expect(subject.key).to eq category.key
@@ -21,16 +21,16 @@ RSpec.describe Budget::Intervals::SetUp::CategorySerializer do
   describe "upcoming maturity intervals" do
     subject { described_class.new(category, interval: current_interval) }
 
-    let(:category) { FactoryBot.create(:category, :accrual, user_group: user_group) }
-    let(:user_group) { FactoryBot.create(:user_group) }
-    let(:current_interval) { FactoryBot.create(:budget_interval, :current, user_group: user_group) }
-    let(:past_interval) { FactoryBot.create(:budget_interval, :past, user_group: user_group) }
+    let(:category) { create(:category, :accrual, user_group: user_group) }
+    let(:user_group) { create(:user_group) }
+    let(:current_interval) { create(:budget_interval, :current, user_group: user_group) }
+    let(:past_interval) { create(:budget_interval, :past, user_group: user_group) }
     let(:upcoming_interval) { current_interval.next }
     let(:additional_upcoming_interval) { upcoming_interval.next }
 
     before do
       [current_interval, past_interval, upcoming_interval, additional_upcoming_interval].each do |interval|
-        FactoryBot.create(:maturity_interval, category: category, interval: interval)
+        create(:maturity_interval, category: category, interval: interval)
       end
     end
 
@@ -48,11 +48,11 @@ RSpec.describe Budget::Intervals::SetUp::CategorySerializer do
       described_class.new(category, interval: interval, base_items: base_items, target_items: target_items)
     end
 
-    let(:category) { FactoryBot.create(:category, :monthly, user_group: user_group) }
-    let!(:budget_item) { FactoryBot.create(:budget_item, category: category, interval: current_interval) }
+    let(:category) { create(:category, :monthly, user_group: user_group) }
+    let!(:budget_item) { create(:budget_item, category: category, interval: current_interval) }
     let(:interval) { current_interval.next }
-    let(:user_group) { FactoryBot.create(:user_group) }
-    let(:current_interval) { FactoryBot.create(:budget_interval, :current, user_group: user_group) }
+    let(:user_group) { create(:user_group) }
+    let(:current_interval) { create(:budget_interval, :current, user_group: user_group) }
     let(:base_items) { [] }
     let(:target_items) { [] }
 
@@ -82,7 +82,7 @@ RSpec.describe Budget::Intervals::SetUp::CategorySerializer do
 
     context "when two target items exists" do
       let(:target_items) do
-        [budget_item, FactoryBot.create(:budget_item, category: category, interval: interval)]
+        [budget_item, create(:budget_item, category: category, interval: interval)]
       end
 
       it "call new on the create event serializer" do
@@ -96,8 +96,8 @@ RSpec.describe Budget::Intervals::SetUp::CategorySerializer do
 
     context "when a base and target item exist" do
       context "when the category is monthly" do
-        let(:category) { FactoryBot.create(:category, :monthly, user_group: user_group) }
-        let(:base_item) { FactoryBot.create(:budget_item, category: category, interval: current_interval.prev) }
+        let(:category) { create(:category, :monthly, user_group: user_group) }
+        let(:base_item) { create(:budget_item, category: category, interval: current_interval.prev) }
         let(:base_items) { [base_item] }
         let(:target_items) { [budget_item] }
 
@@ -114,8 +114,8 @@ RSpec.describe Budget::Intervals::SetUp::CategorySerializer do
       end
 
       context "when the category is day to day" do
-        let(:category) { FactoryBot.create(:category, :weekly, user_group: user_group) }
-        let(:base_item) { FactoryBot.create(:budget_item, category: category, interval: current_interval.prev) }
+        let(:category) { create(:category, :weekly, user_group: user_group) }
+        let(:base_item) { create(:budget_item, category: category, interval: current_interval.prev) }
         let(:base_items) { [base_item] }
         let(:target_items) { [budget_item] }
 

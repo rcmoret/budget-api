@@ -11,18 +11,18 @@ RSpec.describe "DELETE /api/budget/category/:category_key/maturity_interals/:mon
     include_context "with valid token"
 
     context "when not passing a month / year" do
-      let(:category) { FactoryBot.create(:category, :accrual, user_group: user.group) }
+      let(:category) { create(:category, :accrual, user_group: user.group) }
       let(:category_key) { category.key }
       let(:interval) { Budget::Interval.belonging_to(user).current }
 
       before do
-        FactoryBot.create(:maturity_interval, category: category, interval: interval)
+        create(:maturity_interval, category: category, interval: interval)
       end
 
       it "creates a new maturity interval" do
         expect { subject }.to change { Budget::CategoryMaturityInterval.count }.by(-1)
         expect(response).to have_http_status :accepted
-        body = JSON.parse(response.body).deep_symbolize_keys
+        body = response.parsed_body.deep_symbolize_keys
         expect(body).to eq(
           budgetCategory: {
             key: category_key,
@@ -33,19 +33,19 @@ RSpec.describe "DELETE /api/budget/category/:category_key/maturity_interals/:mon
     end
 
     context "when passing a specific month / year" do
-      let(:category) { FactoryBot.create(:category, :accrual, user_group: user.group) }
+      let(:category) { create(:category, :accrual, user_group: user.group) }
       let(:category_key) { category.key }
-      let(:interval) { FactoryBot.create(:budget_interval, :future, user_group: user.group) }
+      let(:interval) { create(:budget_interval, :future, user_group: user.group) }
       let(:optional_path_args) { [interval.month, interval.year] }
 
       before do
-        FactoryBot.create(:maturity_interval, category: category, interval: interval)
+        create(:maturity_interval, category: category, interval: interval)
       end
 
       it "deletes a maturity interval" do
         expect { subject }.to change { Budget::CategoryMaturityInterval.count }.by(-1)
         expect(response).to have_http_status :accepted
-        body = JSON.parse(response.body).deep_symbolize_keys
+        body = response.parsed_body.deep_symbolize_keys
         expect(body).to eq(
           budgetCategory: {
             key: category_key,
@@ -59,15 +59,15 @@ RSpec.describe "DELETE /api/budget/category/:category_key/maturity_interals/:mon
   context "when the maturity interval is not found" do
     include_context "with valid token"
 
-    let(:category) { FactoryBot.create(:category, :accrual, user_group: user.group) }
+    let(:category) { create(:category, :accrual, user_group: user.group) }
     let(:category_key) { category.key }
-    let(:interval) { FactoryBot.create(:budget_interval, :future, user_group: user.group) }
+    let(:interval) { create(:budget_interval, :future, user_group: user.group) }
     let(:optional_path_args) { [interval.month, interval.year] }
 
     it "returns a 404, error message" do
       subject
       expect(response).to have_http_status :not_found
-      expect(JSON.parse(response.body).deep_symbolize_keys).to eq(
+      expect(response.parsed_body.deep_symbolize_keys).to eq(
         budgetCategory: { maturityInterval: "not found" }
       )
     end

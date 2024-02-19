@@ -25,8 +25,8 @@ RSpec.shared_examples "a token authenticated endpoint" do
       { "Authorization" => "Bearer #{token}" }
     end
     let(:params) { {} }
-    let(:user) { FactoryBot.create(:user) }
-    let(:auth_token_context) { FactoryBot.create(:auth_token_context, user: user) }
+    let(:user) { create(:user) }
+    let(:auth_token_context) { create(:auth_token_context, user: user) }
     let(:token) do
       Auth::Token::JWT.encode(
         exp: 1.second.ago,
@@ -45,8 +45,8 @@ RSpec.shared_examples "a token authenticated endpoint" do
       { "Authorization" => "Bearer #{token}" }
     end
     let(:params) { {} }
-    let(:user) { FactoryBot.create(:user) }
-    let(:auth_token_context) { FactoryBot.create(:auth_token_context, :manually_expired, user: user) }
+    let(:user) { create(:user) }
+    let(:auth_token_context) { create(:auth_token_context, :manually_expired, user: user) }
     let(:token) do
       Auth::Token::JWT.encode(
         payload: {
@@ -64,9 +64,9 @@ RSpec.shared_examples "a token authenticated endpoint" do
       { "Authorization" => "Bearer #{token}" }
     end
     let(:params) { {} }
-    let(:user) { FactoryBot.create(:user) }
+    let(:user) { create(:user) }
     let(:auth_token_context) do
-      FactoryBot.create(
+      create(
         :auth_token_context,
         user: user,
         ip_address: Faker::Internet.ip_v4_address

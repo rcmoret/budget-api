@@ -10,9 +10,9 @@ RSpec.describe "POST /api/budget/events" do
   context "when passing a single, valid event" do
     include_context "with valid token"
 
-    let(:icon) { FactoryBot.create(:icon) }
-    let(:category) { FactoryBot.create(:category, :expense, icon: icon, user_group: user.group) }
-    let(:interval) { FactoryBot.create(:budget_interval, :set_up, user_group: user.group) }
+    let(:icon) { create(:icon) }
+    let(:category) { create(:category, :expense, icon: icon, user_group: user.group) }
+    let(:interval) { create(:budget_interval, :set_up, user_group: user.group) }
     let(:event_type) { "item_create" }
     let(:month) { interval.month }
     let(:year) { interval.year }
@@ -69,14 +69,14 @@ RSpec.describe "POST /api/budget/events" do
       }
     end
 
-    around { |ex| freeze_time { ex.run } }
+    before { freeze_time }
 
     it "creates a new item" do
       expect { subject }
         .to change { Budget::Item.belonging_to(user).count }
         .by(+1)
       expect(response).to have_http_status :ok
-      body = JSON.parse(response.body).deep_symbolize_keys
+      body = response.parsed_body.deep_symbolize_keys
       expect(body).to eq(expected_response)
     end
   end
@@ -84,9 +84,9 @@ RSpec.describe "POST /api/budget/events" do
   context "when passing a single, invalid event" do
     include_context "with valid token"
 
-    let(:icon) { FactoryBot.create(:icon) }
-    let(:category) { FactoryBot.create(:category, :expense, icon: icon, user_group: user.group) }
-    let(:interval) { FactoryBot.create(:budget_interval, :set_up, user_group: user.group) }
+    let(:icon) { create(:icon) }
+    let(:category) { create(:category, :expense, icon: icon, user_group: user.group) }
+    let(:interval) { create(:budget_interval, :set_up, user_group: user.group) }
     let(:event_type) { "item_create" }
     let(:month) { interval.month }
     let(:year) { interval.year }
@@ -111,7 +111,7 @@ RSpec.describe "POST /api/budget/events" do
       expect { subject }
         .not_to(change { Budget::Item.belonging_to(user).count })
       expect(response).to have_http_status :unprocessable_entity
-      body = JSON.parse(response.body)
+      body = response.parsed_body
       expect(body).to eq(
         "eventsForm" => {
           "createItemForm.#{event_key}" => [

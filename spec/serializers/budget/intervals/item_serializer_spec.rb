@@ -6,13 +6,13 @@ RSpec.describe Budget::Intervals::ItemSerializer do
       described_class.new(item: budget_item, maturity_interval: maturity_interval_double)
     end
 
-    let(:user_group) { FactoryBot.create(:user_group, :with_user) }
-    let(:interval) { FactoryBot.create(:budget_interval, user_group: user_group) }
-    let(:icon) { FactoryBot.create(:icon) }
+    let(:user_group) { create(:user_group, :with_user) }
+    let(:interval) { create(:budget_interval, user_group: user_group) }
+    let(:icon) { create(:icon) }
     let(:transaction_entry) do
-      FactoryBot.create(
+      create(
         :transaction_entry,
-        account: FactoryBot.create(:account, user_group: user_group),
+        account: create(:account, user_group: user_group),
         details_attributes: [
           {
             key: SecureRandom.hex(6),
@@ -29,7 +29,7 @@ RSpec.describe Budget::Intervals::ItemSerializer do
     let(:event_serializer) { instance_double(Budget::Items::EventSerializer, render: {}) }
 
     before do
-      FactoryBot.create(:budget_item_event, :create_event, item_id: budget_item.id).then do |event|
+      create(:budget_item_event, :create_event, item_id: budget_item.id).then do |event|
         allow(Budget::Items::EventSerializer)
           .to receive(:new)
           .with(event)
@@ -42,14 +42,14 @@ RSpec.describe Budget::Intervals::ItemSerializer do
     end
 
     context "when a non-accrual" do
-      let(:category) { FactoryBot.create(:category, icon: icon, user_group: user_group) }
+      let(:category) { create(:category, icon: icon, user_group: user_group) }
       let(:maturity_interval_double) do
         instance_double(Budget::UpcomingMaturityIntervalQuery::NullSerializer, month: nil, year: nil)
       end
       let(:budget_item) do
-        FactoryBot.create(:budget_item,
-                          interval: interval,
-                          category: category).decorated
+        create(:budget_item,
+               interval: interval,
+               category: category).decorated
       end
 
       # rubocop:disable RSpec/ExampleLength
@@ -73,7 +73,7 @@ RSpec.describe Budget::Intervals::ItemSerializer do
     end
 
     context "when an accrual" do
-      let(:category) { FactoryBot.create(:category, :accrual, icon: icon, user_group: user_group) }
+      let(:category) { create(:category, :accrual, icon: icon, user_group: user_group) }
       let(:month) { rand(1..12) }
       let(:year) { rand(2020..2049) }
       let(:maturity_interval_double) do
@@ -84,9 +84,9 @@ RSpec.describe Budget::Intervals::ItemSerializer do
         )
       end
       let(:budget_item) do
-        FactoryBot.create(:budget_item,
-                          interval: interval,
-                          category: category).decorated
+        create(:budget_item,
+               interval: interval,
+               category: category).decorated
       end
 
       # rubocop:disable RSpec/ExampleLength

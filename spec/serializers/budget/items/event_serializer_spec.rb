@@ -7,7 +7,7 @@ RSpec.describe Budget::Items::EventSerializer do
     let(:event_description) { Budget::EventTypes::VALID_EVENT_TYPES.sample }
     let(:budget_item_event_type) { Budget::ItemEventType.for(event_description) }
     let(:budget_item_event) do
-      FactoryBot.create(:budget_item_event, type: budget_item_event_type)
+      create(:budget_item_event, type: budget_item_event_type)
     end
 
     it "returns the attributes as a hash" do

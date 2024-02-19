@@ -99,8 +99,8 @@ module Transaction
       if transfer? || budget_exclusion?
         errors.add(
           :details,
-          "This type of transaction "\
-          "(#{transfer? ? :transfer : :budget_exclusion}) "\
+          "This type of transaction " \
+          "(#{transfer? ? :transfer : :budget_exclusion}) " \
           "must have exactly 1 detail",
         )
       else # non-tranfer; budget included

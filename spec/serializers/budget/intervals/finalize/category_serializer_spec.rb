@@ -3,9 +3,9 @@ require "rails_helper"
 RSpec.describe Budget::Intervals::Finalize::CategorySerializer do
   shared_context "with two reviewable items" do
     let(:reviewable_items) do
-      FactoryBot.create_list(:budget_item, 2, category: category, interval: interval).tap do |items|
+      create_list(:budget_item, 2, category: category, interval: interval).tap do |items|
         items.each do |item|
-          FactoryBot.create(:budget_item_event, :create_event, item: item, amount: -200_00)
+          create(:budget_item_event, :create_event, item: item, amount: -200_00)
         end
       end
     end
@@ -13,8 +13,8 @@ RSpec.describe Budget::Intervals::Finalize::CategorySerializer do
 
   shared_context "with a single reviewable item" do
     let(:reviewable_item) do
-      FactoryBot.create(:budget_item, category: category, interval: interval).tap do |item|
-        FactoryBot.create(:budget_item_event, :create_event, item: item, amount: -200_00)
+      create(:budget_item, category: category, interval: interval).tap do |item|
+        create(:budget_item_event, :create_event, item: item, amount: -200_00)
       end
     end
     let(:reviewable_items) { [reviewable_item] }
@@ -22,8 +22,8 @@ RSpec.describe Budget::Intervals::Finalize::CategorySerializer do
 
   shared_context "with a single target item" do
     let(:target_item) do
-      FactoryBot.create(:budget_item, category: category, interval: target_interval).tap do |item|
-        FactoryBot.create(:budget_item_event, :create_event, item: item, amount: -130_00)
+      create(:budget_item, category: category, interval: target_interval).tap do |item|
+        create(:budget_item_event, :create_event, item: item, amount: -130_00)
       end
     end
     let(:target_items) { [target_item] }
@@ -38,9 +38,9 @@ RSpec.describe Budget::Intervals::Finalize::CategorySerializer do
       described_class.new(category, interval: interval)
     end
 
-    let(:user_group) { FactoryBot.create(:user_group) }
-    let(:category) { FactoryBot.create(:category, :with_icon, user_group: user_group) }
-    let(:interval) { FactoryBot.create(:budget_interval, user_group: user_group) }
+    let(:user_group) { create(:user_group) }
+    let(:category) { create(:category, :with_icon, user_group: user_group) }
+    let(:interval) { create(:budget_interval, user_group: user_group) }
 
     it "delegates methods to category" do
       expect(subject.render["key"]).to eq category.key
@@ -58,17 +58,17 @@ RSpec.describe Budget::Intervals::Finalize::CategorySerializer do
       described_class.new(category, interval: interval)
     end
 
-    let(:user_group) { FactoryBot.create(:user_group) }
-    let(:category) { FactoryBot.create(:category, :accrual, user_group: user_group) }
-    let(:interval) { FactoryBot.create(:budget_interval, :current, user_group: user_group) }
+    let(:user_group) { create(:user_group) }
+    let(:category) { create(:category, :accrual, user_group: user_group) }
+    let(:interval) { create(:budget_interval, :current, user_group: user_group) }
     let(:upcoming_interval) { interval.next.next }
     let(:additional_upcoming_interval) { upcoming_interval.next.next }
 
     before do
-      FactoryBot.create(:maturity_interval, category: category, interval: interval.prev)
-      FactoryBot.create(:maturity_interval, category: category, interval: interval)
-      FactoryBot.create(:maturity_interval, category: category, interval: upcoming_interval)
-      FactoryBot.create(:maturity_interval, category: category, interval: additional_upcoming_interval)
+      create(:maturity_interval, category: category, interval: interval.prev)
+      create(:maturity_interval, category: category, interval: interval)
+      create(:maturity_interval, category: category, interval: upcoming_interval)
+      create(:maturity_interval, category: category, interval: additional_upcoming_interval)
     end
 
     it "returns the upcoming maturity intervals" do
@@ -99,12 +99,12 @@ RSpec.describe Budget::Intervals::Finalize::CategorySerializer do
       )
     end
 
-    let(:user_group) { FactoryBot.create(:user_group) }
-    let(:interval) { FactoryBot.create(:budget_interval, user_group: user_group) }
+    let(:user_group) { create(:user_group) }
+    let(:interval) { create(:budget_interval, user_group: user_group) }
     let(:target_interval) { interval.next }
 
     context "when the category is monthly non-accrual" do
-      let(:category) { FactoryBot.create(:category, :monthly, :expense, user_group: user_group) }
+      let(:category) { create(:category, :monthly, :expense, user_group: user_group) }
 
       context "when there are only reviewable items" do
         include_context "with two reviewable items"
@@ -129,7 +129,7 @@ RSpec.describe Budget::Intervals::Finalize::CategorySerializer do
     end
 
     context "when the category is a monthly accrual" do
-      let(:category) { FactoryBot.create(:category, :accrual, :monthly, user_group: user_group) }
+      let(:category) { create(:category, :accrual, :monthly, user_group: user_group) }
 
       context "when there are only reviewable items" do
         include_context "with two reviewable items"
@@ -163,7 +163,7 @@ RSpec.describe Budget::Intervals::Finalize::CategorySerializer do
     end
 
     context "when the category is day-to-day" do
-      let(:category) { FactoryBot.create(:category, :weekly, user_group: user_group) }
+      let(:category) { create(:category, :weekly, user_group: user_group) }
 
       context "when there are only reviewable items" do
         include_context "with a single reviewable item"

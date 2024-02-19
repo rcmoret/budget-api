@@ -8,7 +8,7 @@ RSpec.describe "POST /api/accounts/transfers" do
   end
 
   shared_context "when user has budget interval" do
-    let(:interval) { FactoryBot.create(:budget_interval, :current, user_group: user.group) }
+    let(:interval) { create(:budget_interval, :current, user_group: user.group) }
     let(:month) { interval.month }
     let(:year) { interval.year }
   end
@@ -21,7 +21,7 @@ RSpec.describe "POST /api/accounts/transfers" do
         .and change { to_account.reload.transactions.count }.by(+1)
         .and change { to_account.reload.balance }.by(+amount)
       expect(response).to have_http_status :created
-      body = JSON.parse(response.body).deep_symbolize_keys
+      body = response.parsed_body.deep_symbolize_keys
       expect(body[:accounts]).to contain_exactly(
         { key: from_account.key, balance: -amount, balancePriorTo: 0 },
         { key: to_account.key, balance: amount, balancePriorTo: 0 },
@@ -34,8 +34,8 @@ RSpec.describe "POST /api/accounts/transfers" do
     include_context "with valid token"
     include_context "when user has budget interval"
 
-    let(:from_account) { FactoryBot.create(:account, user_group: user.group) }
-    let(:to_account) { FactoryBot.create(:account, user_group: user.group) }
+    let(:from_account) { create(:account, user_group: user.group) }
+    let(:to_account) { create(:account, user_group: user.group) }
 
     context "when the amount is positive" do
       let(:amount) { rand(100_00) }
@@ -72,7 +72,7 @@ RSpec.describe "POST /api/accounts/transfers" do
     include_context "with valid token"
     include_context "when user has budget interval"
 
-    let(:to_account) { FactoryBot.create(:account, user_group: user.group) }
+    let(:to_account) { create(:account, user_group: user.group) }
     let(:params) do
       {
         transfer: {
@@ -86,7 +86,7 @@ RSpec.describe "POST /api/accounts/transfers" do
     it "response with a not found status, an error message" do
       subject
       expect(response).to have_http_status :not_found
-      body = JSON.parse(response.body).deep_symbolize_keys
+      body = response.parsed_body.deep_symbolize_keys
       expect(body).to eq(from_account: ["can't be blank"])
     end
   end
@@ -95,7 +95,7 @@ RSpec.describe "POST /api/accounts/transfers" do
     include_context "with valid token"
     include_context "when user has budget interval"
 
-    let(:from_account) { FactoryBot.create(:account, user_group: user.group) }
+    let(:from_account) { create(:account, user_group: user.group) }
     let(:params) do
       {
         transfer: {
@@ -109,7 +109,7 @@ RSpec.describe "POST /api/accounts/transfers" do
     it "response with a not found status, an error message" do
       subject
       expect(response).to have_http_status :not_found
-      body = JSON.parse(response.body).deep_symbolize_keys
+      body = response.parsed_body.deep_symbolize_keys
       expect(body).to eq(to_account: ["can't be blank"])
     end
   end
@@ -118,8 +118,8 @@ RSpec.describe "POST /api/accounts/transfers" do
     include_context "with valid token"
     include_context "when user has budget interval"
 
-    let(:from_account) { FactoryBot.create(:account, user_group: user.group) }
-    let(:to_account) { FactoryBot.create(:account, user_group: user.group) }
+    let(:from_account) { create(:account, user_group: user.group) }
+    let(:to_account) { create(:account, user_group: user.group) }
     let(:params) do
       {
         transfer: {
@@ -133,7 +133,7 @@ RSpec.describe "POST /api/accounts/transfers" do
     it "response with a not found status, an error message" do
       subject
       expect(response).to have_http_status :unprocessable_entity
-      body = JSON.parse(response.body).deep_symbolize_keys
+      body = response.parsed_body.deep_symbolize_keys
       expect(body).to eq(amount: ["must be greater than 0"])
     end
   end

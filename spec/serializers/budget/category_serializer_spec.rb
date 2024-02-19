@@ -4,8 +4,8 @@ RSpec.describe Budget::CategorySerializer do
   describe "delegated methods" do
     subject { described_class.new(category) }
 
-    let(:icon) { FactoryBot.create(:icon) }
-    let(:category) { FactoryBot.build(:category, icon: icon) }
+    let(:icon) { create(:icon) }
+    let(:category) { build(:category, icon: icon) }
 
     it "delegate most methods" do
       expect(subject.key).to eq category.key
@@ -24,7 +24,7 @@ RSpec.describe Budget::CategorySerializer do
     subject { described_class.new(category) }
 
     context "when the category is active" do
-      let(:category) { FactoryBot.build(:category) }
+      let(:category) { build(:category) }
 
       it "returns nil" do
         expect(subject.archived_at).to be_nil
@@ -32,7 +32,7 @@ RSpec.describe Budget::CategorySerializer do
     end
 
     context "when the category is archived" do
-      let(:category) { FactoryBot.build(:category, :archived) }
+      let(:category) { build(:category, :archived) }
 
       it "returns nil" do
         expect(subject.render["archivedAt"]).to eq category.archived_at.strftime("%F")
@@ -44,7 +44,7 @@ RSpec.describe Budget::CategorySerializer do
     subject { described_class.new(category) }
 
     context "when a non-accrual category" do
-      let(:category) { FactoryBot.build(:category) }
+      let(:category) { build(:category) }
 
       it "does not include maturity intervals in the render" do
         expect(subject.render).not_to have_key("maturityIntervals")
@@ -52,11 +52,11 @@ RSpec.describe Budget::CategorySerializer do
     end
 
     context "when an accrual category" do
-      let(:user) { FactoryBot.create(:user) }
-      let(:interval) { FactoryBot.create(:budget_interval, user_group: user.group) }
-      let(:category) { FactoryBot.create(:category, :accrual, user_group: user.group) }
+      let(:user) { create(:user) }
+      let(:interval) { create(:budget_interval, user_group: user.group) }
+      let(:category) { create(:category, :accrual, user_group: user.group) }
 
-      before { FactoryBot.create(:maturity_interval, interval: interval, category: category) }
+      before { create(:maturity_interval, interval: interval, category: category) }
 
       it "returns the maturity intervals" do
         expect(subject.maturity_intervals.first.month).to eq interval.month

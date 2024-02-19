@@ -12,10 +12,10 @@ RSpec.describe "PUT /api/budget/intervals/set_up/:month/:year" do
   context "when passing events" do
     include_context "with valid token"
 
-    let(:interval) { FactoryBot.create(:budget_interval, user_group: user.group) }
+    let(:interval) { create(:budget_interval, user_group: user.group) }
     let(:month) { interval.month }
     let(:year) { interval.year }
-    let(:category) { FactoryBot.create(:category, :expense, user_group: user.group) }
+    let(:category) { create(:category, :expense, user_group: user.group) }
     let(:amount) { rand(-100_00..-100) }
     let(:event_type) { "setup_item_create" }
     let(:event_key) { SecureRandom.hex(6) }
@@ -52,7 +52,7 @@ RSpec.describe "PUT /api/budget/intervals/set_up/:month/:year" do
   context "when trying to set up a previously set up interval" do
     include_context "with valid token"
 
-    let(:interval) { FactoryBot.create(:budget_interval, :set_up, user_group: user.group) }
+    let(:interval) { create(:budget_interval, :set_up, user_group: user.group) }
     let(:month) { interval.month }
     let(:year) { interval.year }
     let(:params) { {} }
@@ -60,7 +60,7 @@ RSpec.describe "PUT /api/budget/intervals/set_up/:month/:year" do
     it "returns a bad request" do
       subject
       expect(response).to have_http_status :bad_request
-      expect(JSON.parse(response.body)).to eq({ "budgetInterval" => "has been set up" })
+      expect(response.parsed_body).to eq({ "budgetInterval" => "has been set up" })
     end
   end
 

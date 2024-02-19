@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "PUT /api/accounts/:key", type: :request do
+RSpec.describe "PUT /api/accounts/:key" do
   subject { put(api_account_path(account_key), params: params, headers: headers) }
 
   context "when the account is not found" do
@@ -30,8 +30,8 @@ RSpec.describe "PUT /api/accounts/:key", type: :request do
   end
 
   context "when passing a valid token" do
-    let(:user) { FactoryBot.create(:user) }
-    let(:account) { FactoryBot.create(:account, user_group: user.user_group) }
+    let(:user) { create(:user) }
+    let(:account) { create(:account, user_group: user.user_group) }
     let(:account_key) { account.key }
 
     include_context "with valid token"
@@ -55,14 +55,14 @@ RSpec.describe "PUT /api/accounts/:key", type: :request do
       it "returns a created status an account object" do
         subject
         expect(response).to have_http_status :accepted
-        expect(JSON.parse(response.body).fetch("account"))
+        expect(response.parsed_body.fetch("account"))
           .to include params.fetch(:account).stringify_keys
       end
     end
 
     context "when passing invalid params" do
-      let(:user) { FactoryBot.create(:user) }
-      let(:account) { FactoryBot.create(:account, user_group: user.user_group) }
+      let(:user) { create(:user) }
+      let(:account) { create(:account, user_group: user.user_group) }
       let(:account_key) { account.key }
       let(:params) do
         {
@@ -81,8 +81,8 @@ RSpec.describe "PUT /api/accounts/:key", type: :request do
   end
 
   context "when providing an invalid token" do
-    let(:user) { FactoryBot.create(:user) }
-    let(:account) { FactoryBot.create(:account, user_group: user.user_group) }
+    let(:user) { create(:user) }
+    let(:account) { create(:account, user_group: user.user_group) }
     let(:account_key) { account.key }
 
     it_behaves_like "a token authenticated endpoint"

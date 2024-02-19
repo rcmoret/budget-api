@@ -4,7 +4,7 @@ RSpec.describe Budget::Intervals::SetUp::CategoriesSerializer do
   describe "#first_date" do
     subject { described_class.new(interval) }
 
-    let(:interval) { FactoryBot.create(:budget_interval) }
+    let(:interval) { create(:budget_interval) }
 
     specify { expect(subject.first_date).to eq interval.first_date.strftime("%F") }
   end
@@ -12,7 +12,7 @@ RSpec.describe Budget::Intervals::SetUp::CategoriesSerializer do
   describe "#last_date" do
     subject { described_class.new(interval) }
 
-    let(:interval) { FactoryBot.create(:budget_interval) }
+    let(:interval) { create(:budget_interval) }
 
     specify { expect(subject.last_date).to eq interval.last_date.strftime("%F") }
   end
@@ -20,16 +20,16 @@ RSpec.describe Budget::Intervals::SetUp::CategoriesSerializer do
   describe "#budget_categories" do
     subject { described_class.new(target_interval) }
 
-    before { FactoryBot.create(:category) }
+    before { create(:category) }
 
-    let(:target_interval) { FactoryBot.create(:budget_interval, :current) }
+    let(:target_interval) { create(:budget_interval, :current) }
     let(:base_interval) { target_interval.prev }
     let(:user_group) { target_interval.user_group }
 
     context "when base interval items exists, no target items exist" do
-      let(:category) { FactoryBot.create(:category, user_group: user_group) }
+      let(:category) { create(:category, user_group: user_group) }
       let(:budget_item) do
-        FactoryBot.create(:monthly_item, interval: target_interval, category: category)
+        create(:monthly_item, interval: target_interval, category: category)
       end
       let(:budget_item_double) do
         instance_double(Budget::Item, category: category, budget_interval_id: target_interval.id)
@@ -52,9 +52,9 @@ RSpec.describe Budget::Intervals::SetUp::CategoriesSerializer do
     end
 
     context "when a target interval item exists, no base items exist" do
-      let(:category) { FactoryBot.create(:category, :monthly, user_group: user_group) }
+      let(:category) { create(:category, :monthly, user_group: user_group) }
       let(:budget_item) do
-        FactoryBot.create(:monthly_item, interval: base_interval, category: category)
+        create(:monthly_item, interval: base_interval, category: category)
       end
       let(:budget_item_double) do
         instance_double(Budget::Item, category: category, budget_interval_id: base_interval.id)
@@ -78,12 +78,12 @@ RSpec.describe Budget::Intervals::SetUp::CategoriesSerializer do
 
     context "when a base interval item exists, target item exists too" do
       let(:base_interval_item) do
-        FactoryBot.create(:monthly_item, interval: base_interval, category: category)
+        create(:monthly_item, interval: base_interval, category: category)
       end
       let(:target_interval_item) do
-        FactoryBot.create(:monthly_item, category: category, interval: target_interval)
+        create(:monthly_item, category: category, interval: target_interval)
       end
-      let(:category) { FactoryBot.create(:category, user_group: user_group) }
+      let(:category) { create(:category, user_group: user_group) }
       let(:base_interval_item_double) do
         instance_double(Budget::Item, category: category, budget_interval_id: base_interval.id)
       end
@@ -115,7 +115,7 @@ RSpec.describe Budget::Intervals::SetUp::CategoriesSerializer do
     end
 
     context "when no items exist" do
-      let(:category) { FactoryBot.create(:category, user_group: user_group) }
+      let(:category) { create(:category, user_group: user_group) }
 
       it "calls the serializer with the category and empty arrays" do
         expect(Budget::Intervals::SetUp::CategorySerializer)

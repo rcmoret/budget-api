@@ -4,9 +4,9 @@ RSpec.describe Budget::Intervals::Finalize::AdjustEventSerializer do
   describe "delegated methods" do
     subject { described_class.new(budget_item) }
 
-    let(:icon) { FactoryBot.create(:icon) }
-    let(:category) { FactoryBot.create(:category, icon: icon) }
-    let(:budget_item) { FactoryBot.create(:budget_item, category: category) }
+    let(:icon) { create(:icon) }
+    let(:category) { create(:category, icon: icon) }
+    let(:budget_item) { create(:budget_item, category: category) }
 
     before { allow(SecureRandom).to receive(:hex).and_call_original }
 

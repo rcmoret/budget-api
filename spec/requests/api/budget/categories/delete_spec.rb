@@ -8,12 +8,12 @@ RSpec.describe "DELETE /api/budget/category/:category_key" do
   context "when at least one related budget item exists" do
     include_context "with valid token"
 
-    let(:icon) { FactoryBot.create(:icon) }
-    let(:category) { FactoryBot.create(:category, :accrual, icon: icon, user_group: user.group) }
+    let(:icon) { create(:icon) }
+    let(:category) { create(:category, :accrual, icon: icon, user_group: user.group) }
     let(:category_key) { category.key }
 
     before do
-      FactoryBot.create(:budget_item, category: category)
+      create(:budget_item, category: category)
     end
 
     it "updates the category, and returns a serialized category" do
@@ -22,7 +22,7 @@ RSpec.describe "DELETE /api/budget/category/:category_key" do
         .from(false)
         .to(true)
       expect(response).to have_http_status :accepted
-      body = JSON.parse(response.body).deep_symbolize_keys
+      body = response.parsed_body.deep_symbolize_keys
       expect(body).to eq(
         budgetCategory: {
           key: category.key,
@@ -44,7 +44,7 @@ RSpec.describe "DELETE /api/budget/category/:category_key" do
   context "when no related budget item exists" do
     include_context "with valid token"
 
-    let!(:category) { FactoryBot.create(:category, :expense, user_group: user.group) }
+    let!(:category) { create(:category, :expense, user_group: user.group) }
     let(:category_key) { category.key }
 
     it "returns an unprocessable entity status, error messages" do
@@ -52,7 +52,7 @@ RSpec.describe "DELETE /api/budget/category/:category_key" do
         .to change { Budget::Category.count }
         .by(-1)
       expect(response).to have_http_status :accepted
-      body = JSON.parse(response.body).deep_symbolize_keys
+      body = response.parsed_body.deep_symbolize_keys
       expect(body).to eq(budgetCategory: { deletedBudgetCategoryIds: [category.id] })
     end
   end

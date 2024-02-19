@@ -2,9 +2,9 @@ require "rails_helper"
 
 RSpec.describe Budget::Events::CreateItemForm do
   describe "event type validation" do
-    let(:user) { FactoryBot.create(:user) }
-    let(:category) { FactoryBot.create(:category, :expense, user_group: user.user_group) }
-    let(:interval) { FactoryBot.create(:budget_interval, user_group: user.user_group) }
+    let(:user) { create(:user) }
+    let(:category) { create(:category, :expense, user_group: user.user_group) }
+    let(:interval) { create(:budget_interval, user_group: user.user_group) }
 
     context "when a valid event" do
       it "is a valid form object" do
@@ -25,9 +25,9 @@ RSpec.describe Budget::Events::CreateItemForm do
   end
 
   describe "amount validation" do
-    let(:user) { FactoryBot.create(:user) }
-    let(:category) { FactoryBot.create(:category, :expense, user_group: user.user_group) }
-    let(:interval) { FactoryBot.create(:budget_interval, user_group: user.user_group) }
+    let(:user) { create(:user) }
+    let(:category) { create(:category, :expense, user_group: user.user_group) }
+    let(:interval) { create(:budget_interval, user_group: user.user_group) }
 
     context "when a integer" do
       it "is a valid form object" do
@@ -56,7 +56,7 @@ RSpec.describe Budget::Events::CreateItemForm do
     end
 
     context "when passing a negative amount for a revenue item" do
-      let(:category) { FactoryBot.create(:category, :revenue, user_group: user.user_group) }
+      let(:category) { create(:category, :revenue, user_group: user.user_group) }
 
       it "returns false" do
         params = params_for(amount: -22_50, category: category, interval: interval)
@@ -68,9 +68,9 @@ RSpec.describe Budget::Events::CreateItemForm do
   end
 
   describe "#save" do
-    let(:user) { FactoryBot.create(:user) }
-    let(:category) { FactoryBot.create(:category, :expense, user_group: user.user_group) }
-    let(:interval) { FactoryBot.create(:budget_interval, month: 2, year: 2023, user_group: user.user_group) }
+    let(:user) { create(:user) }
+    let(:category) { create(:category, :expense, user_group: user.user_group) }
+    let(:interval) { create(:budget_interval, month: 2, year: 2023, user_group: user.user_group) }
 
     context "when the happy path" do
       it "returns true" do
@@ -123,7 +123,7 @@ RSpec.describe Budget::Events::CreateItemForm do
       end
 
       context "when the event is created after the interval is set up" do
-        let(:interval) { FactoryBot.create(:budget_interval, :set_up, user_group: user.user_group) }
+        let(:interval) { create(:budget_interval, :set_up, user_group: user.user_group) }
 
         it "creates a regular item create event" do
           params = params_for(interval: interval, category: category, event_type: described_class::ITEM_CREATE)
@@ -144,11 +144,11 @@ RSpec.describe Budget::Events::CreateItemForm do
     end
 
     context "when creating an invalid weekly item" do
-      let(:category) { FactoryBot.create(:category, :expense, :weekly, user_group: user.user_group) }
-      let(:interval) { FactoryBot.create(:budget_interval, user_group: user.user_group) }
+      let(:category) { create(:category, :expense, :weekly, user_group: user.user_group) }
+      let(:interval) { create(:budget_interval, user_group: user.user_group) }
 
       it "returns false" do
-        FactoryBot.create(:budget_item, category: category, interval: interval)
+        create(:budget_item, category: category, interval: interval)
         params = params_for(category: category, interval: interval)
         form = described_class.new(user, params)
         expect(form.save).to be false

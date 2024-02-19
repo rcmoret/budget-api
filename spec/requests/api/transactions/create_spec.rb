@@ -10,9 +10,7 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
   end
 
   context "when providing a single detail" do
-    around do |ex|
-      freeze_time { ex.run }
-    end
+    before { freeze_time }
 
     include_context "with valid token"
     include_context "when the user posts transaction with a single detail"
@@ -25,7 +23,7 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
     it "returns a created status, the account and transaction" do
       subject
       expect(response).to have_http_status :created
-      body = JSON.parse(response.body).deep_symbolize_keys
+      body = response.parsed_body.deep_symbolize_keys
       expect(body.fetch(:accounts)).to eq([{ key: account_key, balance: amount, balancePriorTo: 0 }])
       expect(body.fetch(:budgetItems))
         .to eq([{ key: budget_item.key, remaining: 0, isDeletable: false, isMonthly: true }])
@@ -58,9 +56,7 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
   end
 
   context "when providing multiple details" do
-    around do |ex|
-      freeze_time { ex.run }
-    end
+    before { freeze_time }
 
     include_context "with valid token"
     include_context "when user posts transaction with multiple details"
@@ -70,7 +66,7 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
     it "returns a created status, the account and transaction" do
       subject
       expect(response).to have_http_status :created
-      body = JSON.parse(response.body).deep_symbolize_keys
+      body = response.parsed_body.deep_symbolize_keys
       expect(body.fetch(:accounts)).to eq([{ key: account_key, balance: total, balancePriorTo: 0 }])
       expect(body.fetch(:budgetItems))
         .to eq([{ key: budget_item.key, remaining: 0, isDeletable: false, isMonthly: true }])
@@ -118,7 +114,7 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
     it "returns an unprocessable entity status, an error" do
       subject
       expect(response).to have_http_status :unprocessable_entity
-      body = JSON.parse(response.body).deep_symbolize_keys
+      body = response.parsed_body.deep_symbolize_keys
       expect(body)
         .to eq(transaction: { details: ["Must have at least one detail for this entry"] })
     end
@@ -178,16 +174,14 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
       it "returns an unprocessable entity status, an error message" do
         expect { subject }.not_to(change { Transaction::Entry.count })
         expect(response).to have_http_status :unprocessable_entity
-        body = JSON.parse(response.body).deep_symbolize_keys
+        body = response.parsed_body.deep_symbolize_keys
         expect(body[:transaction])
           .to eq(budgetExclusion: ["Budget Exclusions only applicable for non-cash-flow accounts"])
       end
     end
 
     context "when the account is non-cash flow" do
-      around do |ex|
-        freeze_time { ex.run }
-      end
+      before { freeze_time }
 
       include_context "with valid token"
       include_context "when the user posts transaction with a single detail"
@@ -201,9 +195,9 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
       it "returns a created status, the account and transaction" do
         subject
         expect(response).to have_http_status :created
-        body = JSON.parse(response.body).deep_symbolize_keys
+        body = response.parsed_body.deep_symbolize_keys
         expect(body.fetch(:accounts)).to eq([{ key: account_key, balance: amount, balancePriorTo: 0 }])
-        expect(body[:budgetItems]).to be nil
+        expect(body[:budgetItems]).to be_nil
         expect(body.fetch(:transactions))
           .to eq(
             [
@@ -243,14 +237,12 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
     let(:amount) { 100_00 }
     let(:account_key) { account.key }
 
-    around do |ex|
-      freeze_time { ex.run }
-    end
+    before { freeze_time }
 
     it "returns a created status, the account and transaction" do
       subject
       expect(response).to have_http_status :created
-      body = JSON.parse(response.body).deep_symbolize_keys
+      body = response.parsed_body.deep_symbolize_keys
       expect(body.fetch(:accounts)).to eq([{ key: account_key, balance: amount, balancePriorTo: amount }])
       expect(body.fetch(:budgetItems))
         .to eq([{ key: budget_item.key, remaining: 0, isDeletable: false, isMonthly: true }])
@@ -292,13 +284,13 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
     let(:budget_exclusion) { false }
 
     before do
-      FactoryBot.create(:transaction_detail, budget_item: budget_item)
+      create(:transaction_detail, budget_item: budget_item)
     end
 
     it "returns an unprocessable entity status, an error message" do
       subject
       expect(response).to have_http_status :unprocessable_entity
-      body = JSON.parse(response.body)
+      body = response.parsed_body
       expect(body["transaction"])
         .to include(
           "detailItems" => [

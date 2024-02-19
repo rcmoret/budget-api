@@ -1,9 +1,9 @@
 require "rails_helper"
 
 RSpec.shared_context "with valid token" do
-  let(:user) { FactoryBot.create(:user) }
+  let(:user) { create(:user) }
   let(:auth_token_context) do
-    FactoryBot.create(
+    create(
       :auth_token_context,
       user: user,
       ip_address: "127.0.0.1",
