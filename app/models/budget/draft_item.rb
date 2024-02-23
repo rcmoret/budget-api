@@ -7,13 +7,9 @@ module Budget
         key: budget_item_key,
         interval: interval,
         category: Category.fetch(interval.user_group, key: budget_category_key)
-      )
+      ).decorated
       item.events.build(amount: amount)
       super(item)
-    end
-
-    def amount
-      events.sum(&:amount)
     end
   end
 end

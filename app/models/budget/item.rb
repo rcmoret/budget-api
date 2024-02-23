@@ -57,11 +57,11 @@ module Budget
     end
 
     def amount
-      events.sum(:amount)
+      events.sum(&:amount)
     end
 
     def spent
-      transaction_details.map(&:amount).sum
+      transaction_details.sum(:amount)
     end
 
     def transaction_detail_count

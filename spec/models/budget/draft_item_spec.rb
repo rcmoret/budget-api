@@ -10,25 +10,30 @@ RSpec.describe Budget::DraftItem do
       let(:user_group) { create(:user_group) }
       let(:interval) { create(:budget_interval, user_group: user_group) }
       let(:item) { create(:budget_item, interval: interval, category: category) }
-      let(:category) { create(:category, user_group: user_group) }
+      let(:category) { create(:category, :expense, :weekly, user_group: user_group) }
       let(:change) do
         {
           interval: interval,
           budget_item_key: item.key,
           budget_category_key: category.key,
-          amount: -20_00,
+          amount: -15_00,
         }
       end
-      let(:expected_amount) do
-        item.amount + change[:amount]
+      let(:expected) do
+        {
+          amount: item.amount + change[:amount],
+          impact: (item.spent - item.amount - change[:amount]),
+        }
       end
 
       before do
-        create(:budget_item_event, :create_event, amount: -200_00, item: item)
+        create(:budget_item_event, :create_event, amount: -100_00, item: item)
+        create(:transaction_detail, budget_item: item, amount: -130_00)
       end
 
       it "returns an adjusted item" do
-        expect(subject.amount).to eq expected_amount
+        expect(subject.amount).to eq expected[:amount]
+        expect(subject.budget_impact).to eq expected[:impact]
         expect(subject.persisted?).to be true
       end
     end
@@ -48,6 +53,7 @@ RSpec.describe Budget::DraftItem do
 
       it "returns a proposed item" do
         expect(subject.amount).to eq change[:amount]
+        expect(subject.budget_impact).to be_zero
         expect(subject.persisted?).to be false
       end
     end
