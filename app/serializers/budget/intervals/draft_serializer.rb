@@ -4,8 +4,7 @@ module Budget
       attribute :discretionary, on_render: :render
       attribute :items, on_render: :render
 
-      def initialize(user_or_group, interval, changes:)
-        @user_or_group = user_or_group
+      def initialize(interval, changes:)
         @changes = changes.map { |change| DraftItem.new(**change) }
         super(interval)
       end
@@ -20,7 +19,7 @@ module Budget
 
       private
 
-      attr_reader :user_or_group, :changes
+      attr_reader :changes
 
       def interval
         __getobj__

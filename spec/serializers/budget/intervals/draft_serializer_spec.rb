@@ -1,22 +1,8 @@
 require "rails_helper"
 
 RSpec.describe Budget::Intervals::DraftSerializer do
-  describe "#days_remaining" do
-    subject { described_class.new(user, interval) }
-
-    let(:user) { create(:user) }
-    let(:interval) do
-      create(
-        :budget_interval,
-        user_group: user.group,
-        start_date: Date.new(2022, 3, 1),
-        end_date: Date.new(2022, 3, 31)
-      )
-    end
-  end
-
   describe "#discretionary" do
-    subject { described_class.new(user, interval, changes: []) }
+    subject { described_class.new(interval, changes: []) }
 
     let(:user) { create(:user) }
     let(:interval) { create(:budget_interval, user_group: user.group) }
@@ -37,7 +23,7 @@ RSpec.describe Budget::Intervals::DraftSerializer do
   end
 
   describe "#items" do
-    subject { described_class.new(user, interval, changes: changes) }
+    subject { described_class.new(interval, changes: changes) }
 
     let(:user) { create(:user) }
     let(:changes) do

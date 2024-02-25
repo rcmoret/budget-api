@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe Budget::DraftItem do
   describe "#amount" do
     subject do
-      described_class.new(**change)
+      described_class.new(change)
     end
 
     context "when passing a key for an existing item" do
@@ -12,17 +12,17 @@ RSpec.describe Budget::DraftItem do
       let(:item) { create(:budget_item, interval: interval, category: category) }
       let(:category) { create(:category, :expense, :weekly, user_group: user_group) }
       let(:change) do
-        {
-          interval: interval,
+        Forms::Budget::DraftChangeForm.new(
+          interval,
           budget_item_key: item.key,
-          category_id: category.id,
+          budget_category_key: category.key,
           amount: -15_00,
-        }
+        )
       end
       let(:expected) do
         {
-          amount: item.amount + change[:amount],
-          impact: (item.spent - item.amount - change[:amount]),
+          amount: item.amount + change.amount,
+          impact: (item.spent - item.amount - change.amount),
         }
       end
 
@@ -43,16 +43,16 @@ RSpec.describe Budget::DraftItem do
       let(:interval) { create(:budget_interval, user_group: user_group) }
       let(:category) { create(:category, user_group: user_group) }
       let(:change) do
-        {
-          interval: interval,
+        Forms::Budget::DraftChangeForm.new(
+          interval,
           budget_item_key: SecureRandom.hex(6),
-          category_id: category.id,
+          budget_category_key: category.key,
           amount: -32_00,
-        }
+        )
       end
 
       it "returns a proposed item" do
-        expect(subject.amount).to eq change[:amount]
+        expect(subject.amount).to eq change.amount
         expect(subject.budget_impact).to be_zero
         expect(subject.persisted?).to be false
       end
