@@ -15,7 +15,7 @@ RSpec.describe Budget::DraftItem do
         {
           interval: interval,
           budget_item_key: item.key,
-          budget_category_key: category.key,
+          category_id: category.id,
           amount: -15_00,
         }
       end
@@ -46,7 +46,7 @@ RSpec.describe Budget::DraftItem do
         {
           interval: interval,
           budget_item_key: SecureRandom.hex(6),
-          budget_category_key: category.key,
+          category_id: category.id,
           amount: -32_00,
         }
       end

@@ -45,7 +45,7 @@ RSpec.describe Budget::Intervals::DraftSerializer do
         {
           interval: interval,
           budget_item_key: groceries.key,
-          budget_category_key: expense.key,
+          category_id: expense.id,
           amount: -15_00,
         },
       ]
@@ -89,7 +89,7 @@ RSpec.describe Budget::Intervals::DraftSerializer do
           {
             interval: interval,
             budget_item_key: item_key,
-            budget_category_key: util_category.key,
+            category_id: util_category.id,
             amount: -142_00,
           },
         ]

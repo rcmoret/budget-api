@@ -26,7 +26,7 @@ RSpec.describe Budget::Intervals::DraftDiscretionarySerializer do
         Budget::DraftItem.new(
           interval: interval,
           budget_item_key: groceries.key,
-          budget_category_key: expense.key,
+          category_id: expense.id,
           amount: update_amount,
         )
       end
@@ -57,7 +57,7 @@ RSpec.describe Budget::Intervals::DraftDiscretionarySerializer do
         Budget::DraftItem.new(
           interval: interval,
           budget_item_key: item_key,
-          budget_category_key: util_category.key,
+          category_id: util_category.id,
           amount: -142_00,
         )
       end
