@@ -14,10 +14,6 @@ module API
 
         private
 
-        def transaction_entry
-          @transaction_entry ||= Transaction::Entry.fetch(api_user, key: key)
-        end
-
         def serializer
           ::Transactions::ResponseSerializer.new(
             accounts: [account],
