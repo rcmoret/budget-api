@@ -28,12 +28,12 @@ RSpec.describe Budget::Intervals::DraftSerializer do
     let(:user) { create(:user) }
     let(:changes) do
       [
-        {
-          interval: interval,
+        Forms::Budget::DraftChangeForm.new(
+          interval,
           budget_item_key: groceries.key,
-          category_id: expense.id,
+          budget_category_key: expense.key,
           amount: -15_00,
-        },
+        ),
       ]
     end
     let(:group) { user.group }
@@ -72,12 +72,12 @@ RSpec.describe Budget::Intervals::DraftSerializer do
       let(:item_key) { SecureRandom.hex(6) }
       let(:changes) do
         [
-          {
-            interval: interval,
+          Forms::Budget::DraftChangeForm.new(
+            interval,
             budget_item_key: item_key,
-            category_id: util_category.id,
+            budget_category_key: util_category.key,
             amount: -142_00,
-          },
+          ),
         ]
       end
 

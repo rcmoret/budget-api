@@ -24,10 +24,12 @@ RSpec.describe Budget::Intervals::DraftDiscretionarySerializer do
       end
       let(:updated_groceries) do
         Budget::DraftItem.new(
-          interval: interval,
-          budget_item_key: groceries.key,
-          category_id: expense.id,
-          amount: update_amount,
+          Forms::Budget::DraftChangeForm.new(
+            interval,
+            budget_item_key: groceries.key,
+            budget_category_key: expense.key,
+            amount: update_amount,
+          )
         )
       end
 
@@ -55,10 +57,12 @@ RSpec.describe Budget::Intervals::DraftDiscretionarySerializer do
       let(:item_key) { SecureRandom.hex(6) }
       let(:utilities) do
         Budget::DraftItem.new(
-          interval: interval,
-          budget_item_key: item_key,
-          category_id: util_category.id,
-          amount: -142_00,
+          Forms::Budget::DraftChangeForm.new(
+            interval,
+            budget_item_key: item_key,
+            budget_category_key: util_category.key,
+            amount: -142_00,
+          )
         )
       end
       let(:items) do

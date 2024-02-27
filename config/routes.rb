@@ -51,6 +51,8 @@ Rails.application.routes.draw do
             put "/", to: "update#call"
           end
         end
+
+        get "/draft/(:month)/(:year)", to: "draft#call", as: :draft
       end
 
       post "/events/(:month)/(:year)", to: "events/create#call", as: :items_events

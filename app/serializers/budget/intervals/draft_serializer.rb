@@ -5,7 +5,7 @@ module Budget
       attribute :items, on_render: :render
 
       def initialize(interval, changes:)
-        @changes = changes.map { |change| DraftItem.new(**change) }
+        @changes = changes.map { |change| DraftItem.new(change) }
         super(interval)
       end
 
@@ -26,13 +26,9 @@ module Budget
       end
 
       def all_items
-        interval.items.reduce(new_items) do |collection, item|
-          collection << (changes.find { |change| change.key == item.key } || item.decorated)
+        interval.items.map do |item|
+          changes.find { |change| change.key == item.key } || item.decorated
         end
-      end
-
-      def new_items
-        changes.select(&:new_record?)
       end
 
       class LocalItemSerializer < ApplicationSerializer
