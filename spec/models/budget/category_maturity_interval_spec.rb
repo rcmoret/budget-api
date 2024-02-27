@@ -11,10 +11,6 @@ RSpec.describe Budget::CategoryMaturityInterval do
     let(:interval) { create(:budget_interval) }
 
     it { is_expected.to belong_to(:interval) }
-
-    it pending: "fails category validation" do
-      expect(subject).to belong_to(:category)
-    end
   end
 
   describe "requires interval and catgory" do

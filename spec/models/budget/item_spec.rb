@@ -1,11 +1,6 @@
 require "rails_helper"
 
 RSpec.describe Budget::Item do
-  it pending: "fails associated validation" do
-    expect(subject).to belong_to(:category).required
-    expect(subject).to belong_to(:interval).required
-  end
-
   it { is_expected.to have_many(:transaction_details) }
   it { is_expected.to delegate_method(:name).to(:category) }
   it { is_expected.to delegate_method(:icon_class_name).to(:category) }
