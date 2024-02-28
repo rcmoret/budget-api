@@ -4,6 +4,10 @@ module API
 
     before_action :authenticate_token!
 
+    rescue_from ActionController::ParameterMissing do |exception|
+      render json: { error: exception }, status: :bad_request
+    end
+
     private
 
     execution_chain :token_auth,

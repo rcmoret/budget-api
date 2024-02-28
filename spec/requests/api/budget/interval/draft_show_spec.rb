@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe "GET /api/budget/interval/draft/:month/:year" do
   subject do
-    get api_budget_interval_draft_path(month, year), headers: headers, params: { changes: params }
+    get api_budget_interval_draft_path(month, year), headers: headers, params: params
   end
 
   context "when making a request with valid token" do
@@ -19,7 +19,8 @@ RSpec.describe "GET /api/budget/interval/draft/:month/:year" do
 
     context "when passing an invalid budget category key" do
       let(:budget_item_key)  { SecureRandom.hex(6) }
-      let(:params) do
+      let(:params) { { changes: changes } }
+      let(:changes) do
         [
           {
             budget_item_key: budget_item_key,
@@ -44,7 +45,8 @@ RSpec.describe "GET /api/budget/interval/draft/:month/:year" do
     end
 
     context "when passing an invalid amount" do
-      let(:params) do
+      let(:params) { { changes: changes } }
+      let(:changes) do
         [
           {
             budget_item_key: groceries.key,
@@ -68,9 +70,31 @@ RSpec.describe "GET /api/budget/interval/draft/:month/:year" do
       end
     end
 
+    context "when failing to property nest the params" do
+      let(:params) { { params: changes } }
+      let(:changes) do
+        [
+          {
+            budget_item_key: groceries.key,
+            budget_category_key: groc_category.key,
+            amount: 20.0,
+          },
+        ]
+      end
+
+      it "returns a 400, errors" do
+        subject
+        expect(response).to have_http_status :bad_request
+        expect(response.parsed_body).to eq(
+          "error" => "param is missing or the value is empty: changes",
+        )
+      end
+    end
+
     context "when passing valid changes" do
       let(:salary_key) { SecureRandom.hex(6) }
-      let(:params) do
+      let(:params) { { changes: changes } }
+      let(:changes) do
         [
           {
             budget_item_key: groceries.key,
