@@ -23,23 +23,6 @@ RSpec.describe Budget::Intervals::ItemSerializer do
       )
     end
     let(:transaction_detail) { transaction_entry.details.take }
-    let(:detail_serializer) do
-      instance_double(Budget::Intervals::TransactionDetailSerializer, render: {})
-    end
-    let(:event_serializer) { instance_double(Budget::Items::EventSerializer, render: {}) }
-
-    before do
-      create(:budget_item_event, :create_event, item_id: budget_item.id).then do |event|
-        allow(Budget::Items::EventSerializer)
-          .to receive(:new)
-          .with(event)
-          .and_return(event_serializer)
-      end
-      allow(Budget::Intervals::TransactionDetailSerializer)
-        .to receive(:new)
-        .with(transaction_detail)
-        .and_return(detail_serializer)
-    end
 
     context "when a non-accrual" do
       let(:category) { create(:category, icon: icon, user_group: user_group) }
@@ -54,8 +37,6 @@ RSpec.describe Budget::Intervals::ItemSerializer do
 
       # rubocop:disable RSpec/ExampleLength
       it "returns a hash of attributes" do
-        expect(event_serializer).to receive(:render).once
-        expect(detail_serializer).to receive(:render).once
         rendered = subject.render
         expect(rendered).to include(
           "amount" => budget_item.events.map(&:amount).sum,
@@ -91,8 +72,6 @@ RSpec.describe Budget::Intervals::ItemSerializer do
 
       # rubocop:disable RSpec/ExampleLength
       it "returns a hash of attributes" do
-        expect(event_serializer).to receive(:render).once
-        expect(detail_serializer).to receive(:render).once
         expect(subject.render).to include(
           "amount" => budget_item.events.map(&:amount).sum,
           "budgetCategoryKey" => category.key,

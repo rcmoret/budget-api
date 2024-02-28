@@ -19,10 +19,8 @@ module Budget
       attribute :is_expense, alias_of: :expense?
       attribute :is_monthly, alias_of: :monthly?
       attribute :is_per_diem_enabled, alias_of: :per_diem_enabled?
-      attribute :events, each_serializer: Items::EventSerializer
       attribute :maturity_month, conditional: :accrual?
       attribute :maturity_year, conditional: :accrual?
-      attribute :transaction_details, each_serializer: TransactionDetailSerializer
       attribute :transaction_detail_count
 
       delegate :name,

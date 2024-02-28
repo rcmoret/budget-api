@@ -125,15 +125,6 @@ RSpec.describe Budget::Intervals::ShowSerializer do
             "amount" => create_event.amount,
             "budgetCategoryKey" => category.key,
             "difference" => item.difference,
-            "events" => [
-              {
-                "amount" => create_event.amount,
-                "createdAt" => create_event.created_at.strftime("%FT%TZ"),
-                "data" => nil,
-                "key" => create_event.key,
-                "typeName" => create_event.type.name,
-              },
-            ],
             "iconClassName" => icon.class_name,
             "isAccrual" => category.accrual?,
             "isDeletable" => budget_item.deletable?,
@@ -147,17 +138,6 @@ RSpec.describe Budget::Intervals::ShowSerializer do
             "remaining" => item.remaining,
             "spent" => transaction_detail.amount,
             "transactionDetailCount" => 1,
-            "transactionDetails" => [
-              {
-                "accountName" => transaction_detail.entry.account.name,
-                "amount" => transaction_detail.amount,
-                "clearanceDate" => transaction_detail.entry.clearance_date.strftime("%F"),
-                "description" => transaction_detail.entry.description,
-                "key" => transaction_detail.key,
-                "transactionEntryKey" => transaction_detail.entry.key,
-                "updatedAt" => transaction_detail.updated_at.strftime("%FT%TZ"),
-              },
-            ],
           },
         ]
       )

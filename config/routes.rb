@@ -29,6 +29,8 @@ Rails.application.routes.draw do
         post "/", to: "create#call"
       end
 
+      get "/item/:item_key/details", as: :item_details, to: "items/details#call"
+
       scope "/category/:category_key", module: :categories, as: :category do
         put "/", to: "update#call"
         delete "/", to: "delete#call"

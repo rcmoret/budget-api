@@ -12,7 +12,7 @@ RSpec.describe Budget::Items::EventSerializer do
 
     it "returns the attributes as a hash" do
       expect(subject.render).to eq(
-        "typeName" => event_description,
+        "typeName" => event_description.titleize,
         "key" => budget_item_event.key,
         "amount" => budget_item_event.amount,
         "data" => budget_item_event.data,

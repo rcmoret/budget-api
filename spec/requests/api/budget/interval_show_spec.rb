@@ -84,26 +84,6 @@ RSpec.describe "GET /api/budget/:month/:year" do
               isExpense: category.expense?,
               isMonthly: category.monthly?,
               isPerDiemEnabled: category.per_diem_enabled?,
-              events: [
-                {
-                  key: event.key,
-                  amount: event.amount,
-                  data: nil,
-                  typeName: event.type.name,
-                  createdAt: event.created_at.strftime("%FT%TZ"),
-                },
-              ],
-              transactionDetails: [
-                {
-                  key: item_transaction_entry.details.first.key,
-                  accountName: account.name,
-                  amount: item_transaction_entry.details.first.amount,
-                  description: nil,
-                  transactionEntryKey: item_transaction_entry.key,
-                  clearanceDate: item_transaction_entry.clearance_date.strftime("%F"),
-                  updatedAt: item_transaction_entry.updated_at.strftime("%FT%TZ"),
-                },
-              ],
               transactionDetailCount: 1,
             },
           ],

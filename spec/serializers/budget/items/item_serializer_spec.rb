@@ -23,20 +23,4 @@ RSpec.describe Budget::Items::ItemSerializer do
       expect(subject.budget_category_key).to eq category.key
     end
   end
-
-  describe "#events" do
-    subject { described_class.new(budget_item) }
-
-    let(:budget_item) { instance_double(Budget::Item, events: events) }
-    let(:create_event) { instance_double(Budget::ItemEvent) }
-    let(:adjust_event) { instance_double(Budget::ItemEvent) }
-    let(:events) { [adjust_event, create_event] }
-
-    it "calls the event serializer" do
-      expect(Budget::Items::EventSerializer).to receive(:new).with(create_event)
-      expect(Budget::Items::EventSerializer).to receive(:new).with(adjust_event)
-
-      subject.events
-    end
-  end
 end

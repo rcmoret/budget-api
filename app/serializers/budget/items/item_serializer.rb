@@ -14,7 +14,6 @@ module Budget
       attribute :is_expense, alias_of: :expense?
       attribute :is_monthly, alias_of: :monthly?
       attribute :is_per_diem_enabled, alias_of: :per_diem_enabled?
-      attribute :events, each_serializer: EventSerializer
 
       delegate :accrual?,
                :icon_class_name,

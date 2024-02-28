@@ -55,15 +55,6 @@ RSpec.describe "POST /api/budget/events" do
             isExpense: category.expense?,
             isMonthly: category.monthly?,
             isPerDiemEnabled: category.per_diem_enabled?,
-            events: [
-              {
-                key: event_key,
-                amount: amount,
-                data: nil,
-                typeName: event_type,
-                createdAt: Time.current.strftime("%FT%TZ"),
-              },
-            ],
           },
         ],
       }
