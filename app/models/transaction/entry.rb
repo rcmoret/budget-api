@@ -33,7 +33,7 @@ module Transaction
     scope :cleared, -> { where.not(clearance_date: nil) }
     scope :pending, -> { where(clearance_date: nil) }
     scope :prior_to, lambda { |date, include_pending: false|
-      base_scope = cleared.where(arel_table[:clearance_date].lteq(date))
+      base_scope = cleared.where(arel_table[:clearance_date].lt(date))
       include_pending ? base_scope.or(pending) : base_scope
     }
     scope :in, ->(range) { where(clearance_date: range) }
