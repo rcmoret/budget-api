@@ -105,6 +105,37 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
     end
   end
 
+  context "when the params are not correctly nested" do
+    include_context "with valid token"
+
+    let(:params) do
+      {
+        "transaction_entry" => {
+          "description" => "Publix",
+          "clearance_date" => nil,
+          "key" => SecureRandom.hex(6),
+          "details_attributes" => [
+            {
+              "key" => SecureRandom.hex(6),
+              "amount" => 170_35,
+            },
+          ],
+        },
+      }
+    end
+    let(:account_key) { create(:account, user_group: user.group).key }
+    let(:month) { rand(1..12) }
+    let(:year) { Time.current.year }
+
+    it "responds with a 400, errors" do
+      subject
+      expect(response).to have_http_status :bad_request
+      expect(response.parsed_body).to eq(
+        "error" => "param is missing or the value is empty: transaction",
+      )
+    end
+  end
+
   context "when providing no details" do
     include_context "when user posts transaction with no details"
     include_context "with valid token"

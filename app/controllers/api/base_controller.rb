@@ -4,7 +4,7 @@ module API
 
     before_action :authenticate_token!
 
-    rescue_from ActionController::ParameterMissing do |exception|
+    rescue_from ActionController::ParameterMissing, KeyError do |exception|
       render json: { error: exception }, status: :bad_request
     end
 

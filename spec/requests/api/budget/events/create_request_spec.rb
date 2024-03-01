@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe "POST /api/budget/events" do
   subject do
     post(api_budget_items_events_path(month, year),
-         params: { events: events_params },
+         params: params,
          headers: headers)
   end
 
@@ -32,6 +32,7 @@ RSpec.describe "POST /api/budget/events" do
         },
       ]
     end
+    let(:params) { { events: events_params } }
     let(:expected_response) do
       {
         discretionary: {
@@ -97,6 +98,7 @@ RSpec.describe "POST /api/budget/events" do
         },
       ]
     end
+    let(:params) { { events: events_params } }
 
     it "does not create a new item" do
       expect { subject }
@@ -115,10 +117,37 @@ RSpec.describe "POST /api/budget/events" do
     end
   end
 
+  context "when the params are not correctly nested" do
+    include_context "with valid token"
+
+    let(:month)  { rand(1..12) }
+    let(:year) { Time.current.year }
+    let(:params) do
+      {
+        ev: [
+          {
+            key: SecureRandom.hex(6),
+            budget_item_key: SecureRandom.hex(6),
+            amount: rand(100),
+            budget_category_key: SecureRandom.hex(6),
+          },
+        ],
+      }
+    end
+
+    it "responds with a 400, errors" do
+      subject
+      expect(response).to have_http_status :bad_request
+      expect(response.parsed_body).to eq(
+        "error" => "param is missing or the value is empty: events",
+      )
+    end
+  end
+
   context "when passing an invalid month year combination" do
     include_context "with valid token"
 
-    let(:events_params) { [] }
+    let(:params) { { events: [] } }
 
     it_behaves_like "endpoint requires budget interval"
   end

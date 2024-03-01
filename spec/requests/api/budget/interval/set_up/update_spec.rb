@@ -71,6 +71,22 @@ RSpec.describe "PUT /api/budget/intervals/set_up/:month/:year" do
     it_behaves_like "endpoint requires budget interval"
   end
 
+  context "when the params are not correctly nested" do
+    include_context "with valid token"
+
+    let(:month) { rand(1..12) }
+    let(:year) { rand(2020..2035) }
+    let(:params) { { interval: {} } }
+
+    it "responds with a 400, errors" do
+      subject
+      expect(response).to have_http_status :bad_request
+      expect(response.parsed_body).to eq(
+        "error" => "param is missing or the value is empty: interval",
+      )
+    end
+  end
+
   context "when passing an invalid token" do
     let(:month) { rand(1..12) }
     let(:year) { rand(2020..2035) }

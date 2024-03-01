@@ -157,6 +157,31 @@ RSpec.describe "POST /api/budget/categories" do
     end
   end
 
+  context "when the params are not correctly nested" do
+    include_context "with valid token"
+    let(:params) do
+      {
+        key: SecureRandom.hex(6),
+        default_amount: 100_00,
+        is_accrual: false,
+        is_expense: true,
+        icon_id: rand(100),
+        is_per_diem_enabled: false,
+        is_monthly: false,
+        name: Faker::Lorem.word,
+        slug: Faker::Lorem.word.downcase,
+      }
+    end
+
+    it "responds with a 400, errors" do
+      subject
+      expect(response).to have_http_status :bad_request
+      expect(response.parsed_body).to eq(
+        "error" => "param is missing or the value is empty: budget_category",
+      )
+    end
+  end
+
   context "when passing an invalid token" do
     let(:params) { {} }
 

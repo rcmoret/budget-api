@@ -154,6 +154,21 @@ RSpec.describe "POST /api/accounts/transfers" do
     include_context "endpoint requires budget interval"
   end
 
+  context "when the params are empty" do
+    include_context "with valid token"
+    include_context "when user has budget interval"
+
+    let(:params) { { transfer: {} } }
+
+    it "responds with a 400, error message" do
+      subject
+      expect(response).to have_http_status :bad_request
+      expect(response.parsed_body).to eq(
+        "error" => "param is missing or the value is empty: transfer",
+      )
+    end
+  end
+
   describe "token authentication" do
     let(:account_key) { SecureRandom.hex(6) }
     let(:month) { rand(1..12) }

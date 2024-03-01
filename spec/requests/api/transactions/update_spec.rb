@@ -403,6 +403,26 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
     end
   end
 
+  context "when the params are not correctly nested" do
+    include_context "with valid token"
+
+    let(:account) { create(:account, user_group: user.group) }
+    let(:account_key) { account.key }
+    let(:transaction) { create(:transaction_entry, account: account) }
+    let(:transaction_key) { transaction.key }
+    let(:month) { rand(1..12) }
+    let(:year) { rand(2020..2039) }
+    let(:params) { { transaction: {} } }
+
+    it "responds with a 400, an error message" do
+      subject
+      expect(response).to have_http_status :bad_request
+      expect(response.parsed_body).to eq(
+        "error" => "param is missing or the value is empty: transaction",
+      )
+    end
+  end
+
   describe "token authentication" do
     let(:account_key) { SecureRandom.hex(6) }
     let(:transaction_key) { SecureRandom.hex(6) }

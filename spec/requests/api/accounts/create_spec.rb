@@ -60,6 +60,26 @@ RSpec.describe "POST /api/accounts" do
         expect(response).to have_http_status :unprocessable_entity
       end
     end
+
+    context "when the params are not nested correctly" do
+      let(:params) do
+        {
+          name: "Fourth County Bank",
+          slug: "checking",
+          priority: rand(100),
+          is_cash_flow: true,
+          key: "",
+        }
+      end
+
+      it "returns a 400, errors" do
+        subject
+        expect(response).to have_http_status :bad_request
+        expect(response.parsed_body).to eq(
+          "error" => "param is missing or the value is empty: account",
+        )
+      end
+    end
   end
 
   it_behaves_like "a token authenticated endpoint"

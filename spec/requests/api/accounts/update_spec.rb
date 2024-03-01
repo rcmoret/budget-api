@@ -78,6 +78,24 @@ RSpec.describe "PUT /api/accounts/:key" do
         expect(response).to have_http_status :unprocessable_entity
       end
     end
+
+    context "when the params are incorrectly nested" do
+      let(:user) { create(:user) }
+      let(:params) do
+        {
+          priority: nil,
+          isCashFlow: true,
+        }
+      end
+
+      it "returns a 400, errors" do
+        subject
+        expect(response).to have_http_status :bad_request
+        expect(response.parsed_body).to eq(
+          "error" => "param is missing or the value is empty: account",
+        )
+      end
+    end
   end
 
   context "when providing an invalid token" do

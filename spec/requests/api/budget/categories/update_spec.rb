@@ -51,6 +51,25 @@ RSpec.describe "PUT /api/budget/category/:category_key" do
     it_behaves_like "endpoint requires budget category"
   end
 
+  context "when the params are not correctly nested" do
+    include_context "with valid token"
+
+    let(:user) { create(:user) }
+    let(:category) { create(:category, :expense, user_group: user.group) }
+    let(:category_key) { category.key }
+    let(:params) do
+      { default_amount: 100_00, expense: false }
+    end
+
+    it "responds with a 400, errors" do
+      subject
+      expect(response).to have_http_status :bad_request
+      expect(response.parsed_body).to eq(
+        "error" => "param is missing or the value is empty: budget_category"
+      )
+    end
+  end
+
   context "when passing an invalid token" do
     let(:params) { {} }
     let(:category_key) { SecureRandom.hex(6) }
