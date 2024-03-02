@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Accounts::BudgetItemSerializer do
+RSpec.describe Accounts::Transactions::BudgetItemSerializer do
   describe "#render" do
     subject { described_class.new(item: budget_item.decorated, maturity_interval: date) }
 

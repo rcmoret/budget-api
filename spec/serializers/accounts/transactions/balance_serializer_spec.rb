@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Accounts::BalanceSerializer do
+RSpec.describe Accounts::Transactions::BalanceSerializer do
   describe "#key" do
     subject { described_class.new(account, interval: interval) }
 

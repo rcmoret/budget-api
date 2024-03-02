@@ -3,7 +3,7 @@
 module Budget
   module Intervals
     class DraftDiscretionarySerializer < ApplicationSerializer
-      include Mixins::AvailableCash
+      include SerializerMixins::AvailableCash
 
       attribute :amount
       attribute :over_under_budget

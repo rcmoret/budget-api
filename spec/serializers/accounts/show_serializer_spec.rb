@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe User::AccountSerializer do
+RSpec.describe Accounts::ShowSerializer do
   describe "delegated methods" do
     subject { described_class.new(account: account) }
 

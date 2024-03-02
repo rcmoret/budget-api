@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Accounts::BudgetSerializer do
+RSpec.describe Accounts::Transactions::BudgetSerializer do
   describe "delegated methods" do
     subject { described_class.new(interval) }
 

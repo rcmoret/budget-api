@@ -1,10 +1,10 @@
-module User
-  class AccountsSerializer < ApplicationSerializer
+module Accounts
+  class IndexSerializer < ApplicationSerializer
     attribute :accounts, on_render: :render
 
     def accounts
-      SerializableCollection.new(serializer: AccountSerializer) do
-        Account.belonging_to(user).map do |account|
+      SerializableCollection.new(serializer: ShowSerializer) do
+        user_accounts.map do |account|
           {
             account: account,
             balance: balances_by_account_id.find { |struct| struct.account_id == account.id }&.balance.to_i,
@@ -18,13 +18,14 @@ module User
     def balances_by_account_id
       @balances_by_account_id ||=
         Transaction::Detail
-        .belonging_to(user)
+        .joins(:entry)
+        .where(entry: { account: user_accounts })
         .group(:account_id)
         .sum(:amount)
         .map { |id, balance| AccountIdWithBalance.new(id, balance) }
     end
 
-    def user
+    def user_accounts
       __getobj__
     end
 

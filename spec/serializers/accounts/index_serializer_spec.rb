@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe User::AccountsSerializer do
+RSpec.describe Accounts::IndexSerializer do
   describe "#accounts" do
     let(:user) { create(:user) }
     let(:checking_account) { create(:account, user_group: user.group) }
@@ -14,16 +14,16 @@ RSpec.describe User::AccountsSerializer do
     end
 
     it "calls the user account serializer with each of the user group accounts" do
-      expect(User::AccountSerializer)
+      expect(Accounts::ShowSerializer)
         .to receive(:new)
         .with({ account: checking_account, balance: checking_account.balance })
-      expect(User::AccountSerializer)
+      expect(Accounts::ShowSerializer)
         .to receive(:new)
         .with({ account: savings_account, balance: savings_account.balance })
-      expect(User::AccountSerializer)
+      expect(Accounts::ShowSerializer)
         .to receive(:new)
         .with({ account: empty_account, balance: 0 })
-      described_class.new(user).accounts
+      described_class.new(user.group.accounts).accounts
     end
   end
 end

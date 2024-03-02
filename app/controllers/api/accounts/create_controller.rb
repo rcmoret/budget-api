@@ -31,7 +31,7 @@ module API
       def serializer
         IndividualSerializer.new(
           key: :account,
-          serializable: User::AccountSerializer.new(account: account),
+          serializable: ::Accounts::ShowSerializer.new(account: account),
         )
       end
 

@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Accounts::TransactionsIndexSerializer do
+RSpec.describe Accounts::Transactions::IndexSerializer do
   describe "delegated methods" do
     subject { described_class.new(account: account, interval: interval) }
 

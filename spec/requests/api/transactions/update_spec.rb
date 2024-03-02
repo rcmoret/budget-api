@@ -74,7 +74,6 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
         subject
         expect(response).to have_http_status :accepted
         body = response.parsed_body.deep_symbolize_keys
-        # binding.pry
         expect(body[:accounts]).to contain_exactly(
           { key: account.key, balance: 0, balancePriorTo: 0 },
           { key: savings_account.key, balance: transaction.total, balancePriorTo: 0 }
