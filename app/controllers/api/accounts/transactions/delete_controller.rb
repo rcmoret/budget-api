@@ -2,6 +2,8 @@ module API
   module Accounts
     module Transactions
       class DeleteController < BaseController
+        include HasAccount
+        include HasBudgetInterval
         include HasTransactionEntry
 
         def call

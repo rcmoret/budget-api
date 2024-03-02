@@ -2,6 +2,9 @@ module API
   module Accounts
     module Transactions
       class IndexController < BaseController
+        include HasAccount
+        include HasBudgetInterval
+
         def call
           render json: serializer.render, status: :ok
         end

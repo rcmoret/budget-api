@@ -2,6 +2,8 @@ module API
   module Accounts
     module Transactions
       class CreateController < BaseController
+        include HasAccount
+        include HasBudgetInterval
         include UsesTransactionEntryForm
 
         def call

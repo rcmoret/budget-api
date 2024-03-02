@@ -2,6 +2,8 @@ module API
   module Accounts
     module Transactions
       class UpdateController < BaseController
+        include HasAccount
+        include HasBudgetInterval
         include HasTransactionEntry
         include UsesTransactionEntryForm
 
