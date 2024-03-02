@@ -8,7 +8,7 @@ module API
       private
 
       def serializer
-        ::Accounts::IndexSerializer.new(api_user.group.accounts)
+        ::Accounts::IndexSerializer.new(api_user.accounts)
       end
     end
   end

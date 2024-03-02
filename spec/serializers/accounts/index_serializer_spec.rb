@@ -23,7 +23,7 @@ RSpec.describe Accounts::IndexSerializer do
       expect(Accounts::ShowSerializer)
         .to receive(:new)
         .with({ account: empty_account, balance: 0 })
-      described_class.new(user.group.accounts).accounts
+      described_class.new(user.accounts).accounts
     end
   end
 end
