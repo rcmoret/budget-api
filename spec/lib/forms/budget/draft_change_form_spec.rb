@@ -15,10 +15,9 @@ RSpec.describe Forms::Budget::DraftChangeForm do
 
   describe "amount validations" do
     let(:category) { create(:category, user_group: user_group) }
-    let(:item) { create(:budget_item, category: category, interval: interval) } 
+    let(:item) { create(:budget_item, category: category, interval: interval) }
     let(:budget_category_key) { category.key }
     let(:budget_item_key) { item.key }
-
 
     context "when passing an amount of `nil`" do
       let(:amount) { nil }

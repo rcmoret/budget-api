@@ -368,7 +368,7 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
     it "returns an unprocessable entity status, an error message" do
       subject
       expect(response).to have_http_status :unprocessable_entity
-      body = JSON.parse(response.body)
+      body = response.parsed_body
       expect(body["transaction"]["detailItems"])
         .to eq(["key" => ["must be unique"], "identifier" => detail_key])
     end

@@ -68,20 +68,20 @@ RSpec.describe API::Accounts::Transactions::BudgetSerializer do
   describe "#items" do
     subject { described_class.new(interval) }
 
-    let(:user) { FactoryBot.create(:user) }
-    let(:icon) { FactoryBot.create(:icon) }
+    let(:user) { create(:user) }
+    let(:icon) { create(:icon) }
     let(:category) do
-      FactoryBot.create(:category, :expense, :accrual, user_group: user.group, icon: icon)
+      create(:category, :expense, :accrual, user_group: user.group, icon: icon)
     end
-    let(:interval) { FactoryBot.create(:budget_interval, month: 12, year: 2024, user_group: user.group) }
+    let(:interval) { create(:budget_interval, month: 12, year: 2024, user_group: user.group) }
     let!(:budget_item) do
-      FactoryBot.create(:budget_item, :expense, category: category, interval: interval)
+      create(:budget_item, :expense, category: category, interval: interval)
     end
     let!(:create_event) do
-      FactoryBot.create(:budget_item_event, :create_event, item: budget_item, amount: rand(-100_00..-100))
+      create(:budget_item_event, :create_event, item: budget_item, amount: rand(-100_00..-100))
     end
 
-    before { FactoryBot.create(:maturity_interval, interval: interval.next, category: category) }
+    before { create(:maturity_interval, interval: interval.next, category: category) }
 
     it "returns the items" do
       item = budget_item.decorated
