@@ -33,13 +33,14 @@ module API
           def form_params
             params
               .require(:interval)
-              .permit(
-                events: Forms::Budget::EventParams::PERMITTED,
-              ).to_h.deep_symbolize_keys
+              .permit(events: Forms::Budget::EventParams::PERMITTED)
+              .to_h
+              .deep_symbolize_keys
           end
 
           def serializer
-            ::Budget::Intervals::ShowSerializer.new(api_user, interval)
+            API::Budget::Interval::ShowSerializer.new(api_user, interval)
+            # ShowSerializer.new(api_user, interval)
           end
         end
       end

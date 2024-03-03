@@ -16,7 +16,7 @@ module Transactions
     # rubocop:enable Lint/MissingSuper
 
     def accounts
-      SerializableCollection.new(serializer: Accounts::Transactions::BalanceSerializer, interval: interval) do
+      SerializableCollection.new(serializer: API::Accounts::Transactions::BalanceSerializer, interval: interval) do
         included_accounts
       end
     end

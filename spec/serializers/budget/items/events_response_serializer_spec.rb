@@ -11,7 +11,7 @@ RSpec.describe Budget::Items::EventsResponseSerializer do
     let(:budget_item_keys) { [] }
 
     it "calls the disretionary serializer" do
-      expect(Budget::Intervals::DiscretionarySerializer)
+      expect(API::Budget::Interval::DiscretionarySerializer)
         .to receive(:new)
         .with(interval)
 
@@ -28,7 +28,7 @@ RSpec.describe Budget::Items::EventsResponseSerializer do
     let(:budget_item2) { create(:budget_item, category: category2) }
     let(:budget_item3) { create(:budget_item, category: category3) }
 
-    let(:interval) { instance_double(Budget::Interval) }
+    let(:interval) { instance_double(API::Budget::Interval) }
     let(:budget_items) do
       [budget_item1, budget_item2, budget_item3]
     end

@@ -14,7 +14,7 @@ module API
           def serializer
             IndividualSerializer.new(
               key: :data,
-              serializable: ::Budget::Intervals::Finalize::CategoriesSerializer.new(interval),
+              serializable: CategoriesSerializer.new(interval),
             )
           end
         end

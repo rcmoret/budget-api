@@ -11,7 +11,8 @@ module Budget
       attribute :items, on_render: :render
 
       def discretionary
-        Intervals::DiscretionarySerializer.new(interval)
+        # Intervals::DiscretionarySerializer.new(interval)
+        API::Budget::Interval::DiscretionarySerializer.new(interval)
       end
 
       def items
