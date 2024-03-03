@@ -14,8 +14,7 @@ module API
         private
 
         def serializer
-          API::Budget::Interval::DraftSerializer.new(interval, changes: form.changes)
-          # DraftSerializer.new(interval, changes: form.changes)
+          DraftSerializer.new(interval, changes: form.changes)
         end
 
         def form

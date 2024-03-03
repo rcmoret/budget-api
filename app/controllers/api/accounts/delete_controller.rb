@@ -22,7 +22,7 @@ module API
       end
 
       def serializer
-        @serializer ||= ::Accounts::ShowSerializer.new(account: account)
+        @serializer ||= ShowSerializer.new(account: account)
       end
     end
   end

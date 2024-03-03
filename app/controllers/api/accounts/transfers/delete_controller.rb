@@ -17,7 +17,7 @@ module API
         private
 
         def serializer
-          @serializer ||= ::Transactions::ResponseSerializer.new(
+          @serializer ||= API::Transactions::ResponseSerializer.new(
             deleted_transaction_keys: transfer.transaction_keys,
             accounts: transfer.transaction_accounts,
             interval: interval,

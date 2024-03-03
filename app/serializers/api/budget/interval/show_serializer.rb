@@ -2,7 +2,7 @@ module API
   module Budget
     module Interval
       class ShowSerializer < ApplicationSerializer
-        include SerializerMixins::SharedInterval
+        include Mixins::SharedInterval
 
         attribute :categories, each_serializer: CategorySerializer, alias_of: :category_scope
         attributes :month, :year, :days_remaining, :total_days

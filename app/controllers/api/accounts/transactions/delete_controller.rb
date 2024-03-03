@@ -17,7 +17,7 @@ module API
         private
 
         def serializer
-          ::Transactions::ResponseSerializer.new(
+          API::Transactions::ResponseSerializer.new(
             accounts: [account],
             transactions: [],
             interval: interval,

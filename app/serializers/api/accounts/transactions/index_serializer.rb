@@ -4,7 +4,7 @@ module API
       class IndexSerializer < ApplicationSerializer
         attributes :key, :name, :slug, :priority, :balance, :balance_prior_to
         attribute :transactions, on_render: :render,
-                                 each_serializer: ::Transactions::EntrySerializer,
+                                 each_serializer: API::Transactions::EntrySerializer,
                                  alias_of: :account_transactions
         attribute :is_cash_flow, alias_of: :cash_flow?
         attribute :is_archived, alias_of: :deleted?

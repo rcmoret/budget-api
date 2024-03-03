@@ -3,8 +3,7 @@ module API
     module Interval
       module Finalize
         class AdjustEventSerializer < ApplicationSerializer
-          include ::Budget::Intervals::Events::SharedAdjustEvent
-          # include Events::SharedAdjustEvent
+          include Mixins::BudgetEvents::AdjustEvent
 
           def event_type
             ::Budget::EventTypes::ROLLOVER_ITEM_ADJUST

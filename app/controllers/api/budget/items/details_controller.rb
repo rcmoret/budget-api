@@ -19,7 +19,7 @@ module API
         end
 
         def serializer
-          ::Budget::Items::DetailsSerializer.new(item)
+          DetailsSerializer.new(item)
         end
 
         def render_not_found

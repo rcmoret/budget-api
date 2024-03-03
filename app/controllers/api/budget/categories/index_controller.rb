@@ -16,7 +16,7 @@ module API
         end
 
         def budget_categories
-          SerializableCollection.new(serializer: ::Budget::CategorySerializer) do
+          SerializableCollection.new(serializer: ShowSerializer) do
             ::Budget::Category
               .includes(maturity_intervals: :interval)
               .belonging_to(api_user)

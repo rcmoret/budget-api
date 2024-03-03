@@ -36,8 +36,7 @@ module API
           end
 
           def serializer
-            API::Budget::Interval::ShowSerializer.new(api_user, interval)
-            # ShowSerializer.new(api_user, interval)
+            ShowSerializer.new(api_user, interval)
           end
         end
       end

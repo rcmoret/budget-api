@@ -27,7 +27,7 @@ module API
           def serializer
             IndividualSerializer.new(
               key: :budget_category,
-              serializable: ::Budget::CategoryMaturityIntervalSerializer.new(maturity_interval),
+              serializable: MaturityIntervalSerializer.new(maturity_interval),
             )
           end
 

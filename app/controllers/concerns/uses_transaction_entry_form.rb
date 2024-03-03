@@ -21,7 +21,7 @@ module UsesTransactionEntryForm
   end
 
   def serializer
-    Transactions::ResponseSerializer.new(
+    API::Transactions::ResponseSerializer.new(
       accounts: accounts,
       transactions: [transaction_entry],
       interval: interval,

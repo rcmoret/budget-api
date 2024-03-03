@@ -23,7 +23,7 @@ module API
           in [:ok, success_body]
             [
               :ok,
-              ::Transactions::ResponseSerializer.new(
+              API::Transactions::ResponseSerializer.new(
                 accounts: success_body.values_at(:from_account, :to_account),
                 transactions: success_body.values_at(:from_transaction, :to_transaction),
                 interval: interval,

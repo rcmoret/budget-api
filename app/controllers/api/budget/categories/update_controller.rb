@@ -18,7 +18,7 @@ module API
         def serializer
           IndividualSerializer.new(
             key: :budget_category,
-            serializable: ::Budget::CategorySerializer.new(budget_category),
+            serializable: ShowSerializer.new(budget_category),
           )
         end
 

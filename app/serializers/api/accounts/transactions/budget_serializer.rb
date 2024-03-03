@@ -2,7 +2,7 @@ module API
   module Accounts
     module Transactions
       class BudgetSerializer < ApplicationSerializer
-        include SerializerMixins::SharedInterval
+        include Mixins::SharedInterval
 
         attribute :items, on_render: :render
         attributes :month, :year, :days_remaining, :total_days
