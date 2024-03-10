@@ -3,6 +3,7 @@ module User
     module Components
       module UserVerification
         extend ActiveSupport::Concern
+        INVALID_LOGIN_MESSAGE = "incorrect email or password".freeze
 
         included do
           define_link :verify_actor_is_target_user do |payload|
@@ -19,7 +20,7 @@ module User
                 :ok
               else
                 User::EventForm.new(actor: payload.fetch(:actor), event_type: :incorrect_password_attempt).call
-                [:error, { password: ["incorrect password"] }]
+                [:error, { password: [INVALID_LOGIN_MESSAGE] }]
               end
             end
           end
