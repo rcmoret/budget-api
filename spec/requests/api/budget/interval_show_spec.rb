@@ -33,26 +33,17 @@ RSpec.describe "GET /api/budget/:month/:year" do
     let(:expected) do
       {
         interval: {
-          categories: [
-            {
-              key: category.key,
-              slug: category.slug,
-              name: category.name,
-              defaultAmount: category.default_amount,
-              isAccrual: category.accrual?,
-              isExpense: category.expense,
-              isMonthly: category.monthly?,
-            },
-          ],
-          month: interval.month,
-          year: interval.year,
-          daysRemaining: 0,
-          firstDate: interval.first_date.strftime("%F"),
-          lastDate: interval.last_date.strftime("%F"),
-          totalDays: ((interval.last_date - interval.first_date).to_i + 1),
-          isClosedOut: false,
-          isCurrent: false,
-          isSetUp: false,
+          data: {
+            month: interval.month,
+            year: interval.year,
+            daysRemaining: 0,
+            firstDate: interval.first_date.strftime("%F"),
+            lastDate: interval.last_date.strftime("%F"),
+            totalDays: ((interval.last_date - interval.first_date).to_i + 1),
+            isClosedOut: false,
+            isCurrent: false,
+            isSetUp: false,
+          },
           discretionary: {
             amount: transaction_entry.total,
             overUnderBudget: budget_item.decorated.budget_impact,
