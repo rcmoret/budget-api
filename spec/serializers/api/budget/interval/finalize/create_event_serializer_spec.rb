@@ -14,8 +14,6 @@ RSpec.describe API::Budget::Interval::Finalize::CreateEventSerializer do
     it "does the following stuff" do
       expect(subject.month).to be interval.month
       expect(subject.year).to be interval.year
-      expect(subject.name).to eq category.name
-      expect(subject.budget_category_key).to eq category.key
       expect(subject.amount).to eq ""
       expect(subject.budgeted).to be budget_item.amount
       expect(subject.spent).to be budget_item.spent

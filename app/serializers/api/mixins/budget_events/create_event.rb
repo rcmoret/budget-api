@@ -13,8 +13,6 @@ module API
           attributes :month,
                      :year,
                      :name,
-                     :budget_category_key,
-                     :icon_class_name,
                      :amount,
                      :budgeted,
                      :spent,
@@ -22,10 +20,6 @@ module API
                      :event_key,
                      :event_type,
                      :data
-        end
-
-        def budget_category_key
-          category.key
         end
 
         def event_type

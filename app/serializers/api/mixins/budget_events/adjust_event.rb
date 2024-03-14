@@ -5,12 +5,10 @@ module API
         extend ActiveSupport::Concern
 
         included do
-          attributes :name,
-                     :amount,
+          attributes :amount,
                      :data,
                      :event_key,
                      :event_type,
-                     :icon_class_name,
                      :spent
           attribute :budgeted, alias_of: :amount
           attribute :budget_item_key, alias_of: :key
