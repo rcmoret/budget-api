@@ -56,6 +56,15 @@ RSpec.describe "POST /api/budget/events" do
             isExpense: category.expense?,
             isMonthly: category.monthly?,
             isPerDiemEnabled: category.per_diem_enabled?,
+            events: [
+              {
+                key: events_params.first[:key],
+                amount: events_params.first[:amount],
+                typeName: events_params.first[:event_type].titleize,
+                createdAt: Time.current.strftime("%FT%TZ"),
+                data: nil,
+              },
+            ],
           },
         ],
       }
@@ -107,6 +116,12 @@ RSpec.describe "POST /api/budget/events" do
           .not_to(change { Budget::Item.belonging_to(user).count })
         expect(response).to have_http_status :unprocessable_entity
         body = response.parsed_body
+        expect(body).to eq(
+          "eventsForm" => {
+            "formErrors" => ["No registered handler for #{event_type}"],
+            "events" => [],
+          }
+        )
       end
     end
 

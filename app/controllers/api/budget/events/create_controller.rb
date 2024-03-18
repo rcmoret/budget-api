@@ -32,8 +32,7 @@ module API
         end
 
         def serializer
-          Items::EventsResponseSerializer.new(
-            user: api_user,
+          ResponseSerializer.new(
             interval: interval,
             budget_item_keys: events_params.pluck(:budget_item_key)
           )

@@ -10,13 +10,13 @@ module API
         end
 
         def form_errors
-          fetch("event_type", [])
+          fetch(:event_type, [])
         end
 
         def events
           SerializableCollection.new do
             each_with_object([]) do |(key, value), arr|
-              arr << EventErrorSerializer.new(key, value) if key.starts_with?("event")
+              arr << EventErrorSerializer.new(key, value) if key.starts_with?("event.")
             end
           end
         end
