@@ -79,7 +79,6 @@ RSpec.describe "POST /api/budget/events" do
     let(:icon) { create(:icon) }
     let(:category) { create(:category, :expense, icon: icon, user_group: user.group) }
     let(:interval) { create(:budget_interval, :set_up, user_group: user.group) }
-    let(:event_type) { "item_create" }
     let(:month) { interval.month }
     let(:year) { interval.year }
     let(:amount) { rand(10_00..100_00) }
@@ -100,20 +99,39 @@ RSpec.describe "POST /api/budget/events" do
     end
     let(:params) { { events: events_params } }
 
-    it "does not create a new item" do
-      expect { subject }
-        .not_to(change { Budget::Item.belonging_to(user).count })
-      expect(response).to have_http_status :unprocessable_entity
-      body = response.parsed_body
-      expect(body).to eq(
-        "eventsForm" => {
-          "createItemForm.#{event_key}" => [
-            {
-              "amount" => "expense items must be less than or equal to 0",
-            },
-          ],
-        }
-      )
+    context "when the event type is not valid" do
+      let(:event_type) { "unsupported_create_event" }
+
+      it "does not create a new item" do
+        expect { subject }
+          .not_to(change { Budget::Item.belonging_to(user).count })
+        expect(response).to have_http_status :unprocessable_entity
+        body = response.parsed_body
+      end
+    end
+
+    context "when the amount is invalid" do
+      let(:event_type) { "item_create" }
+
+      it "does not create a new item" do
+        expect { subject }
+          .not_to(change { Budget::Item.belonging_to(user).count })
+        expect(response).to have_http_status :unprocessable_entity
+        body = response.parsed_body
+        expect(body).to eq(
+          "eventsForm" => {
+            "formErrors" => [],
+            "events" => [
+              {
+                "key" => event_key,
+                "errors" => {
+                  "amount" => ["expense items must be less than or equal to 0"],
+                },
+              },
+            ],
+          }
+        )
+      end
     end
   end
 

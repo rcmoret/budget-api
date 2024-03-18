@@ -19,9 +19,9 @@ module API
         end
 
         def error_serializer
-          ErrorsSerializer.new(
+          IndividualSerializer.new(
             key: :events_form,
-            model: form,
+            serializable: ErrorsSerializer.new(form.errors)
           )
         end
 
