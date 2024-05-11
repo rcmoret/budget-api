@@ -16,6 +16,7 @@ gem "rubocop", require: false
 gem "rubocop-rails", require: false
 gem "rubocop-rspec", require: false
 gem "tzinfo-data", platforms: %i[mingw mswin x64_mingw jruby]
+gem "vite_rails", "~> 3.0"
 
 group :development, :test do
   gem "pry"
