@@ -23,6 +23,7 @@ module.exports = {
     "no-underscore-dangle": 0,
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": ["error"],
+    "no-undef": "error",
     "no-shadow": "off",
     "@typescript-eslint/no-shadow": ["error"],
     "no-useless-constructor": "off",
@@ -95,4 +96,15 @@ module.exports = {
     "comma-dangle": "off",
     "arrow-body-style": ["error", "as-needed"],
   },
+  overrides: [
+    {
+      "files": [
+        "app/frontend/**/*.test.ts",
+        "app/frontend/**/*.test.tsx",
+      ],
+      "env": {
+        "jest": true,
+      },
+    },
+  ],
 };
