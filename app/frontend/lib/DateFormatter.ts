@@ -76,6 +76,7 @@ const MonthDictionary = (monthNumber: number): MonthObject => {
 type DateFormatString =
   "default" |
   "m/d/yy" |
+  "monthDay" |
   "monthYear" |
   "shortMonthYear"
 
@@ -92,6 +93,8 @@ const DateFormatter = ({ month, day, year, format }: DateFormatterProps): string
   switch (format) {
     case "m/d/yy":
       return `${month}/${day}/${year.toString().slice(-2)}`;
+    case "monthDay":
+      return `${monthObject.short} ${day}`;
     case "monthYear":
       return `${monthObject.long} ${year}`;
     case "shortMonthYear":

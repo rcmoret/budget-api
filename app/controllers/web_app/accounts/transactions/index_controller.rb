@@ -5,7 +5,7 @@ module WebApp
     module Transactions
       class IndexController < BaseController
         def call
-          render inertia: "accounts/index", props: page_props
+          render inertia: "accounts/show", props: page_props
         end
 
         private
