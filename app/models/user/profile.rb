@@ -1,9 +1,6 @@
 module User
   class Profile < ApplicationRecord
     include HasKeyIdentifier
-
-    self.table_name = :users
-
     has_secure_password
 
     belongs_to :user_group, class_name: "Group"
