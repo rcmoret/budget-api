@@ -20,6 +20,16 @@
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
       }
+      input {
+        border-color: black;
+        border-style: solid;
+        border-width: 1px;
+      }
+      input[type="submit"] {
+        padding: 0.5rem;
+        background-color: green;
+        color: white;
+      }
     </style>
 
     <%= vite_client_tag %>
@@ -28,13 +38,10 @@
   </head>
 
   <body>
-    <%= yield %>
-    <% if user_profile_signed_in? %>
-      <div class="bg-blue-800 p-2">
-        <div class="bg-gray-200 text-end p-2 rounded">
-          <%= button_to "Sign Out", destroy_user_profile_session_path, method: :delete, class: "underline" %>
-        </div>
+    <div class="w-1/2 p-4 bg-blue-800 rounded">
+      <div class="w-full p-2 bg-white rounded">
+        <%= yield %>
       </div>
-    <% end %>
+    </div>
   </body>
 </html>

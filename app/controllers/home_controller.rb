@@ -1,3 +1,8 @@
 class HomeController < ActionController::Base
-  def index; end
+  layout "application"
+  before_action :authenticate_user_profile!
+
+  def index
+    render inertia: "accounts/index", props: { accounts: [] }
+  end
 end

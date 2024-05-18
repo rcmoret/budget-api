@@ -16,7 +16,7 @@ module User
 
           define_link :verify_password do |payload|
             payload.fetch(:target_user).then do |user|
-              if user.authenticate(transient_data.fetch(:password))
+              if user.valid_password?(transient_data.fetch(:password))
                 :ok
               else
                 User::EventForm.new(actor: payload.fetch(:actor), event_type: :incorrect_password_attempt).call

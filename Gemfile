@@ -6,6 +6,7 @@ ruby "3.2.0"
 gem "bcrypt", "~> 3.1.7"
 gem "bootsnap", require: false
 gem "cuban_linx"
+gem "devise"
 gem "dotenv-rails"
 gem "inertia_rails", "~> 3.1"
 gem "jwt"

@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
   root "home#index"
+  devise_for :user_profiles, class_name: "User::Profile"
+
   namespace :api do
     namespace :accounts do
       get "/", to: "index#call"
@@ -64,6 +66,15 @@ Rails.application.routes.draw do
     namespace :tokens do
       post "/", to: "create#call"
       delete "/", to: "delete#call"
+    end
+  end
+
+  scope "/", module: :web_app do
+    namespace :accounts do
+      get "/", to: "index#call"
+      scope "/:slug/transactions", module: :transactions do
+        get "/(:month)/(:year)", to: "index#call"
+      end
     end
   end
 end
