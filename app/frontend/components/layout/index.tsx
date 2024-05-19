@@ -6,6 +6,11 @@ import { Row } from "@/components/common/Row";
 const Layout = ({ children }) => {
   const { namespace } = children.props.metadata;
 
+  if (children.type.name === "Home") {
+    return (
+      <Header namespace={namespace} />
+    );
+  }
   return (
     <>
       <Header namespace={namespace} />

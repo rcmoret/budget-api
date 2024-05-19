@@ -3,6 +3,16 @@ class HomeController < ActionController::Base
   before_action :authenticate_user_profile!
 
   def index
-    render inertia: "accounts/index", props: { accounts: [] }
+    render inertia: "home/index", props: props
+  end
+  
+  private
+
+  def props
+    {
+      metadata: {
+        namespace: "home",
+      },
+    }
   end
 end
