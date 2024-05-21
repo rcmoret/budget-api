@@ -3,7 +3,10 @@ interface MoneyFormatterOptions {
   decorate?: boolean;
 }
 
-const moneyFormatter = (number: number, opts?: MoneyFormatterOptions): string => {
+const moneyFormatter = (
+  number: number,
+  opts?: MoneyFormatterOptions,
+): string => {
   const options = {
     absolute: false,
     decorate: false,
@@ -12,7 +15,9 @@ const moneyFormatter = (number: number, opts?: MoneyFormatterOptions): string =>
 
   const num = options.absolute ? Math.abs(number) : number;
   if (options.decorate) {
-    return "$" + (num / 100.0).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+    return (
+      "$" + (num / 100.0).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+    );
   } else {
     return (num / 100.0).toFixed(2);
   }

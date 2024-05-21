@@ -74,11 +74,11 @@ const MonthDictionary = (monthNumber: number): MonthObject => {
 };
 
 type DateFormatString =
-  "default" |
-  "m/d/yy" |
-  "monthDay" |
-  "monthYear" |
-  "shortMonthYear"
+  | "default"
+  | "m/d/yy"
+  | "monthDay"
+  | "monthYear"
+  | "shortMonthYear";
 
 interface DateFormatterProps {
   month: number;
@@ -87,7 +87,12 @@ interface DateFormatterProps {
   format?: DateFormatString;
 }
 
-const DateFormatter = ({ month, day, year, format }: DateFormatterProps): string => {
+const DateFormatter = ({
+  month,
+  day,
+  year,
+  format,
+}: DateFormatterProps): string => {
   const monthObject = MonthDictionary(month);
 
   switch (format) {
@@ -134,44 +139,34 @@ interface MonthOptionsProps {
   includeNullOption: boolean;
 }
 
-const monthOptions = (suppliedOptions: MonthOptionsProps = {
-  includeNullOption: true,
-}): MonthOption[] => {
+const monthOptions = (
+  suppliedOptions: MonthOptionsProps = {
+    includeNullOption: true,
+  },
+): MonthOption[] => {
   const { includeNullOption, formatFn } = {
     ...monthOptionDefaults,
     ...suppliedOptions,
   };
-  const initialArray: MonthOption[] = includeNullOption ? [
-    {
-      value: null,
-      label: "",
-    },
-  ] : [];
+  const initialArray: MonthOption[] = includeNullOption
+    ? [
+        {
+          value: null,
+          label: "",
+        },
+      ]
+    : [];
 
-  return [
-    1,
-    2,
-    3,
-    4,
-    5,
-    6,
-    7,
-    8,
-    9,
-    10,
-    11,
-    12,
-  ].reduce((array, number) => (
-    [
+  return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].reduce(
+    (array, number) => [
       ...array,
       {
         label: formatFn(number),
         value: number,
       },
-    ]
-  ), initialArray);
+    ],
+    initialArray,
+  );
 };
 
-export {
-  DateFormatter, dateParse, monthOptions,
-};
+export { DateFormatter, dateParse, monthOptions };

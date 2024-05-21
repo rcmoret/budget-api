@@ -13,19 +13,19 @@ import {
 interface RowProps {
   children: React.ReactNode;
   styling: {
-    alignItems?: AlignItemsOption
+    alignItems?: AlignItemsOption;
     alternatingBgColor?: string;
     backgroundColor?: BgColorOption;
     border?: string;
     flexAlign?: FlexAlignOption;
     flexWrap?: FlexWrapOption | null;
-    fontSize?: FontSizeOption,
-    fontWeight?: FontWeightOption,
+    fontSize?: FontSizeOption;
+    fontWeight?: FontWeightOption;
     margin?: string;
     overflow?: OverflowOption;
     padding?: string;
     rounded?: "rounded" | null;
-  }
+  };
 }
 
 const Row = (suppliedProps: RowProps) => {
@@ -35,31 +35,29 @@ const Row = (suppliedProps: RowProps) => {
     width: "w-full",
     ...styling,
   };
-  const className = Object.values(styles).filter(val => val !== null && val !== "").join(" ");
+  const className = Object.values(styles)
+    .filter((val) => val !== null && val !== "")
+    .join(" ");
 
-  return (
-    <div className={className}>
-      {children}
-    </div>
-  );
+  return <div className={className}>{children}</div>;
 };
 
 interface StripedRowProps {
   children: React.ReactNode;
-  evenColor?: BgColorOption
+  evenColor?: BgColorOption;
   oddColor?: BgColorOption;
   styling: {
-    alignItems?: AlignItemsOption
+    alignItems?: AlignItemsOption;
     border?: string;
     flexAlign?: FlexAlignOption;
     flexWrap?: FlexWrapOption | null;
-    fontSize?: FontSizeOption,
-    fontWeight?: FontWeightOption,
+    fontSize?: FontSizeOption;
+    fontWeight?: FontWeightOption;
     margin?: string;
     overflow?: OverflowOption;
     padding?: string;
     rounded?: "rounded" | null;
-  }
+  };
 }
 
 const StripedRow = (props: StripedRowProps) => {
@@ -71,35 +69,31 @@ const StripedRow = (props: StripedRowProps) => {
     alternatingBgColor: `odd:bg-${oddColor} even:bg-${evenColor}`,
   };
 
-  return (
-    <Row styling={styling}>
-      {props.children}
-    </Row>
-  );
+  return <Row styling={styling}>{props.children}</Row>;
 };
 
 interface TitleRowProps {
   children: React.ReactNode;
   styling: {
-    alignItems: AlignItemsOption
+    alignItems: AlignItemsOption;
     backgroundColor?: BgColorOption;
     border?: string;
     flexAlign?: FlexAlignOption;
     flexWrap?: FlexWrapOption | null;
-    fontSize?: FontSizeOption,
-    fontWeight?: FontWeightOption,
+    fontSize?: FontSizeOption;
+    fontWeight?: FontWeightOption;
     margin?: string;
     overflow?: OverflowOption;
     padding?: string;
     rounded?: "rounded" | null;
-  }
+  };
 }
 
 interface TitleRowDefaultStyles {
   fontSize: FontSizeOption;
   fontWeight: FontWeightOption;
   margin: string;
-  padding: string
+  padding: string;
 }
 
 const TitleRow = (props: TitleRowProps) => {
@@ -114,13 +108,7 @@ const TitleRow = (props: TitleRowProps) => {
     ...props.styling,
   };
 
-  return (
-    <Row styling={styling}>
-      {props.children}
-    </Row>
-  );
+  return <Row styling={styling}>{props.children}</Row>;
 };
 
-export {
-  Row, StripedRow, TitleRow,
-};
+export { Row, StripedRow, TitleRow };

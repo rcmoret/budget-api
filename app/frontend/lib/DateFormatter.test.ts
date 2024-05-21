@@ -1,6 +1,4 @@
-import {
-  DateFormatter, dateParse, monthOptions,
-} from "./DateFormatter";
+import { DateFormatter, dateParse, monthOptions } from "./DateFormatter";
 
 it("returns a default date format eg Dec. 13, 2019", () => {
   const actual = DateFormatter({

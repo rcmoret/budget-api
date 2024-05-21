@@ -5,7 +5,9 @@ interface ModeledTransaction extends AccountTransaction {
   isPending: boolean;
 }
 
-const accountTransaction = (transaction: AccountTransaction): ModeledTransaction => {
+const accountTransaction = (
+  transaction: AccountTransaction,
+): ModeledTransaction => {
   const isCleared = !!transaction.clearanceDate;
 
   return {

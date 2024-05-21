@@ -9,9 +9,10 @@ import { TransactionShow } from "@/pages/accounts/transactions/show";
 interface ComponentProps {
   initialBalance: number;
   transactions: AccountTransaction[];
-  budget: { // AccountBudget soon
+  budget: {
+    // AccountBudget soon
     firstDate: string;
-  }
+  };
 }
 
 const Transactions = (props: ComponentProps) => {
@@ -25,7 +26,11 @@ const Transactions = (props: ComponentProps) => {
       {transactions.map((transaction) => {
         balance += transaction.amount;
         return (
-          <TransactionShow key={transaction.key} transaction={transaction} balance={balance} />
+          <TransactionShow
+            key={transaction.key}
+            transaction={transaction}
+            balance={balance}
+          />
         );
       })}
     </div>

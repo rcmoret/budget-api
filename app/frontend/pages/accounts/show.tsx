@@ -20,14 +20,17 @@ const AccountShowComponent = (props: ComponentProps) => {
 
   return (
     <>
-      <AccountTabs
-        accounts={accounts}
-        selectedAccount={selectedAccount}
-      />
+      <AccountTabs accounts={accounts} selectedAccount={selectedAccount} />
       <AccountBudgetSummary
         budget={selectedAccount.budget}
         baseUrl={baseUrl}
-        titleComponent={<BudgetSummaryTitle month={budget.month} year={budget.year} accountName={name} />}
+        titleComponent={
+          <BudgetSummaryTitle
+            month={budget.month}
+            year={budget.year}
+            accountName={name}
+          />
+        }
       >
         <MonthYearSelect
           baseUrl={baseUrl}
@@ -40,15 +43,15 @@ const AccountShowComponent = (props: ComponentProps) => {
         transactions={selectedAccount.transactions}
         budget={budget}
       />
-      <Row styling={{
-        margin: "p-2 mt-12",
-        backgroundColor: "bg-gradient-to-t from-blue-400 to-white",
-        flexAlign: "justify-end",
-        fontSize: "text-xl",
-      }}>
-        <div className="py-4 underline">
-          Manage Accounts
-        </div>
+      <Row
+        styling={{
+          margin: "p-2 mt-12",
+          backgroundColor: "bg-gradient-to-t from-blue-400 to-white",
+          flexAlign: "justify-end",
+          fontSize: "text-xl",
+        }}
+      >
+        <div className="py-4 underline">Manage Accounts</div>
       </Row>
     </>
   );
@@ -62,10 +65,7 @@ interface TitleProps {
 
 const BudgetSummaryTitle = (props: TitleProps) => (
   <span>
-    <span className="underline">
-      {props.accountName}
-    </span>
-    {" "}
+    <span className="underline">{props.accountName}</span>{" "}
     {DateFormatter({
       month: props.month,
       year: props.year,

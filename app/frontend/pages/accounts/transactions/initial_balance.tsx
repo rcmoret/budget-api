@@ -3,9 +3,12 @@ import React from "react";
 import { AmountSpan } from "@/components/common";
 import { dateParse } from "@/lib/DateFormatter";
 import { TransactionContainer } from "@/pages/accounts/transactions/container";
-import { CaretComponent, ClearanceDateComponent } from "@/pages/accounts/transactions/common";
+import {
+  CaretComponent,
+  ClearanceDateComponent,
+} from "@/pages/accounts/transactions/common";
 
-const InitialBalance = (props: { balance: number, initialDate: string, }) => {
+const InitialBalance = (props: { balance: number; initialDate: string }) => {
   const clearanceDate = dateParse(props.initialDate);
   const shortClearanceDate = dateParse(props.initialDate, {
     format: "m/d/yy",
@@ -28,7 +31,9 @@ const InitialBalance = (props: { balance: number, initialDate: string, }) => {
       }
       descriptionComponent="Balance"
       transactionAmountComponent={null}
-      balanceCompnent={<AmountSpan amount={props.balance} negativeColor="text-red-800" />}
+      balanceCompnent={
+        <AmountSpan amount={props.balance} negativeColor="text-red-800" />
+      }
     />
   );
 };

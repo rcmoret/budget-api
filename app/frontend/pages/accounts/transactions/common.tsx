@@ -14,12 +14,19 @@ const CaretComponent = (props: CaretComponentProps) => {
 
   return (
     <div className="w-[5%]">
-      {details.length > 1 ? <DetailToggle isDetailShown={isDetailShown} toggleFn={toggleFn} /> : ""}
+      {details.length > 1 ? (
+        <DetailToggle isDetailShown={isDetailShown} toggleFn={toggleFn} />
+      ) : (
+        ""
+      )}
     </div>
   );
 };
 
-const DetailToggle = (props: { isDetailShown: boolean, toggleFn: () => void }) => {
+const DetailToggle = (props: {
+  isDetailShown: boolean;
+  toggleFn: () => void;
+}) => {
   const { isDetailShown, toggleFn } = props;
   const iconName = isDetailShown ? "caret-down" : "caret-right";
 
@@ -30,14 +37,13 @@ const DetailToggle = (props: { isDetailShown: boolean, toggleFn: () => void }) =
   );
 };
 
-const ClearanceDateComponent = (props: { clearanceDate: string, shortClearanceDate: string }) => (
+const ClearanceDateComponent = (props: {
+  clearanceDate: string;
+  shortClearanceDate: string;
+}) => (
   <div className="w-2/12">
-    <span className="max-sm:hidden">
-      {props.clearanceDate}
-    </span>
-    <span className="sm:hidden">
-      {props.shortClearanceDate}
-    </span>
+    <span className="max-sm:hidden">{props.clearanceDate}</span>
+    <span className="sm:hidden">{props.shortClearanceDate}</span>
   </div>
 );
 

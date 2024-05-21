@@ -9,7 +9,7 @@ interface ButtonLinkProps {
     hoverBgColor?: string;
     hoverColor?: string;
     hoverBgOpacity?: string | null;
-  }
+  };
 }
 
 const ButtonStyleLink = (props: ButtonLinkProps) => {
@@ -24,7 +24,7 @@ const ButtonStyleLink = (props: ButtonLinkProps) => {
     ...props.styling,
   };
 
-  const classes = Object.values(styling).filter(val => val && val !== "");
+  const classes = Object.values(styling).filter((val) => val && val !== "");
 
   return (
     <InertiaLink href={props.href} className={classes.join(" ")}>

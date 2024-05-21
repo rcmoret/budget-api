@@ -12,17 +12,21 @@ export const Header = ({ namespace }: { namespace: string }) => {
   const selectedAccountPath = "";
 
   return (
-    <Row styling={{
-      backgroundColor: "bg-blue-900",
-      padding: "p-1",
-      margin: "mb-1",
-    }}>
-      <Cell styling={{
-        width: "w-6/12",
-        fontSize: "text-3xl",
-        textAlign: "text-center",
+    <Row
+      styling={{
+        backgroundColor: "bg-blue-900",
         padding: "p-1",
-      }}>
+        margin: "mb-1",
+      }}
+    >
+      <Cell
+        styling={{
+          width: "w-6/12",
+          fontSize: "text-3xl",
+          textAlign: "text-center",
+          padding: "p-1",
+        }}
+      >
         <div className="w-full">
           <InertiaLink href={`/accounts/${selectedAccountPath}`}>
             <div className={`w-full ${accountsBgColor} rounded pt-4 pb-4`}>
@@ -31,12 +35,14 @@ export const Header = ({ namespace }: { namespace: string }) => {
           </InertiaLink>
         </div>
       </Cell>
-      <Cell styling={{
-        width: "w-6/12",
-        fontSize: "text-3xl",
-        textAlign: "text-center",
-        padding: "p-1",
-      }}>
+      <Cell
+        styling={{
+          width: "w-6/12",
+          fontSize: "text-3xl",
+          textAlign: "text-center",
+          padding: "p-1",
+        }}
+      >
         <div className="w-full">
           <InertiaLink href={`/accounts/${selectedAccountPath}`}>
             <div className={`w-full ${budgetBgColor} rounded pt-4 pb-4`}>

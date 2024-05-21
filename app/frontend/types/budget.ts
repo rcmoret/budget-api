@@ -7,3 +7,15 @@ export interface AccountBudgetSummary {
   month: number;
   year: number;
 }
+
+export interface BudgetData extends AccountBudgetSummary {
+  isClosedOut: boolean;
+  isSetUp: boolean;
+}
+
+export interface DiscretionaryData {
+  amount: number;
+  overUnderBudget: number;
+  // transactionDetails:
+  transactionsTotal: number;
+}
