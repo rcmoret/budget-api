@@ -1,7 +1,14 @@
 module.exports = {
+  extends: [
+    "eslint:recommended",
+    "eslint-config-prettier",
+    "plugin:react/recommended",
+  ],
   parser: "@typescript-eslint/parser",
   plugins: ["@typescript-eslint", "eslint-plugin-react"],
   rules: {
+    "react/jsx-uses-vars": 1,
+    "react/jsx-uses-react": 1,
     "@typescript-eslint/naming-convention": "off",
     "@typescript-eslint/type-annotation-spacing": "off",
     "linebreak-style": ["error", "unix"],
@@ -98,12 +105,9 @@ module.exports = {
   },
   overrides: [
     {
-      "files": [
-        "app/frontend/**/*.test.ts",
-        "app/frontend/**/*.test.tsx",
-      ],
-      "env": {
-        "jest": true,
+      files: ["app/frontend/**/*.test.ts", "app/frontend/**/*.test.tsx"],
+      env: {
+        jest: true,
       },
     },
   ],
