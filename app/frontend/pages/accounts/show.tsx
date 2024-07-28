@@ -1,5 +1,3 @@
-import React from "react";
-
 import { AccountTabs } from "@/pages/accounts/tabs";
 import { BudgetSummary as AccountBudgetSummary } from "@/components/budget_summary";
 import { Transactions as AccountTransactions } from "@/pages/accounts/transactions";
@@ -64,14 +62,17 @@ interface TitleProps {
 }
 
 const BudgetSummaryTitle = (props: TitleProps) => (
-  <span>
-    <span className="underline">{props.accountName}</span>{" "}
-    {DateFormatter({
-      month: props.month,
-      year: props.year,
-      format: "monthYear",
-    })}
-  </span>
+  <div>
+    <div className="underline">{props.accountName}</div>
+    <span>
+      Transactions -{" "}
+      {DateFormatter({
+        month: props.month,
+        year: props.year,
+        format: "monthYear",
+      })}
+    </span>
+  </div>
 );
 
 export default AccountShowComponent;

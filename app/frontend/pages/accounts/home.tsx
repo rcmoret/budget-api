@@ -1,5 +1,3 @@
-import React from "react";
-
 import { AccountTabs } from "@/pages/accounts/tabs";
 import { AccountSummary } from "@/types/account";
 import { Row } from "@/components/common";

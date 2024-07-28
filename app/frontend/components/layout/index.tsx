@@ -1,5 +1,3 @@
-import React from "react";
-
 import { Header } from "@/components/layout/Header";
 import { Row } from "@/components/common/Row";
 

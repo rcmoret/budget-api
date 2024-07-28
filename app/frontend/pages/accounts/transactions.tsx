@@ -1,4 +1,3 @@
-import React from "react";
 import { accountTransaction as model } from "@/lib/models/transaction";
 import { byClearanceDate } from "@/lib/sort_functions";
 import { AccountTransaction } from "@/types/transaction";
@@ -10,7 +9,6 @@ interface ComponentProps {
   initialBalance: number;
   transactions: AccountTransaction[];
   budget: {
-    // AccountBudget soon
     firstDate: string;
   };
 }

@@ -76,5 +76,9 @@ Rails.application.routes.draw do
         get "/(:month)/(:year)", to: "index#call"
       end
     end
+
+    namespace :budget do
+      get "/(:month)/(:year)", to: "index#call"
+    end
   end
 end

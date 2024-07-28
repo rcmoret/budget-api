@@ -15,6 +15,8 @@ module Budget
     validates :year, presence: true, inclusion: (2000..2099)
     validates :month, uniqueness: { scope: %i[year user_group_id] }
 
+    before_create :do_callback
+
     scope :ordered, -> { order(year: :asc).order(month: :asc) }
 
     scope :prior_to, lambda { |date_hash|

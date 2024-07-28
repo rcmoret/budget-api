@@ -10,12 +10,6 @@ module WebApp
 
         private
 
-        def page_props
-          super.tap do |pp|
-            puts pp["selectedAccount"]["transactions"].first&.keys
-          end
-        end
-
         def props
           accounts_serializer.render.merge(
             selected_account: selected_account_serializer.render
@@ -41,9 +35,9 @@ module WebApp
 
         def interval
           @interval ||= if month.nil? || year.nil?
-                          Budget::Interval.belonging_to(current_user).current
+                          ::Budget::Interval.belonging_to(current_user).current
                         else
-                          Budget::Interval.fetch(current_user, key: { month: month, year: year })
+                          ::Budget::Interval.fetch(current_user, key: { month: month, year: year })
                         end
         end
 

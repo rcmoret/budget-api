@@ -3,9 +3,13 @@ class HomeController < ActionController::Base
   before_action :authenticate_user_profile!
 
   def index
-    render inertia: "home/index", props: props
+    @props = props
+    respond_to do |format|
+      format.json { render json: @props.to_json }
+      format.all { render }
+    end
   end
-  
+
   private
 
   def props

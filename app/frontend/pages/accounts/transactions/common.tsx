@@ -1,5 +1,3 @@
-import React from "react";
-
 import { AccountTransactionDetail } from "@/types/transaction";
 import { ActionAnchorTag, Icon } from "@/components/common";
 

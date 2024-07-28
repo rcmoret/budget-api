@@ -1,13 +1,17 @@
-import React from "react";
-
 import { InertiaLink } from "@inertiajs/inertia-react";
 
 import { Cell, Row } from "@/components/common";
 
 export const Header = ({ namespace }: { namespace: string }) => {
-  const bgColor = "bg-gradient-to-b from-gray-200 to-gray-100";
-  const selectedBgColor = "bg-gradient-to-b from-green-400 to-green-300";
+  const textColor = "text-gray-500";
+  const selectedTextColor = "text-black";
+  const bgColor = "bg-gradient-to-b from-gray-300 to-gray-100";
+  const selectedBgColor = "bg-gradient-to-b from-green-500 to-green-300";
   const accountsBgColor = namespace === "accounts" ? selectedBgColor : bgColor;
+  const accountsTextColor =
+    namespace === "accounts" ? selectedTextColor : textColor;
+  const budgetTextColor =
+    namespace === "budget" ? selectedTextColor : textColor;
   const budgetBgColor = namespace === "budget" ? selectedBgColor : bgColor;
   const selectedAccountPath = "";
 
@@ -30,7 +34,7 @@ export const Header = ({ namespace }: { namespace: string }) => {
         <div className="w-full">
           <InertiaLink href={`/accounts/${selectedAccountPath}`}>
             <div className={`w-full ${accountsBgColor} rounded pt-4 pb-4`}>
-              <h2>Accounts</h2>
+              <h2 className={accountsTextColor}>Accounts</h2>
             </div>
           </InertiaLink>
         </div>
@@ -44,9 +48,9 @@ export const Header = ({ namespace }: { namespace: string }) => {
         }}
       >
         <div className="w-full">
-          <InertiaLink href={`/accounts/${selectedAccountPath}`}>
+          <InertiaLink href="/budget">
             <div className={`w-full ${budgetBgColor} rounded pt-4 pb-4`}>
-              <h2>Budget</h2>
+              <h2 className={budgetTextColor}>Budget</h2>
             </div>
           </InertiaLink>
         </div>

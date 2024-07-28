@@ -1,5 +1,3 @@
-import React from "react";
-
 import { AmountSpan } from "@/components/common";
 import { dateParse } from "@/lib/DateFormatter";
 import { TransactionContainer } from "@/pages/accounts/transactions/container";
