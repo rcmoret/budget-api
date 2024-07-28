@@ -117,8 +117,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_18_151107) do
   end
 
   create_table "budget_item_events", force: :cascade do |t|
-    t.integer "budget_item_id", null: false
-    t.integer "budget_item_event_type_id", null: false
+    t.bigint "budget_item_id", null: false
+    t.bigint "budget_item_event_type_id", null: false
     t.integer "amount", null: false
     t.json "data"
     t.datetime "created_at", null: false

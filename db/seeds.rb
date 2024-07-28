@@ -1,7 +1,17 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
-#   Character.create(name: "Luke", movie: movies.first)
+ApplicationRecord.transaction do
+  %i[
+    user_group
+    user_profile
+    account
+    icon
+    budget_category
+    budget_interval
+  ].each do |filename|
+    path = Rails.root.join("db", "seeds", "#{filename}.rb").to_s
+
+    # rubocop:disable Rails/Output: Do not write to stdout
+    puts "[ Loading Seed path: #{path} ]"
+    # rubocop:enable Rails/Output: Do not write to stdout
+    load path
+  end
+end
