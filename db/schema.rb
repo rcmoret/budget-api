@@ -187,6 +187,24 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_18_151107) do
     t.index ["key"], name: "index_transfers_on_key", unique: true
   end
 
+  create_table "user_configuration_options", force: :cascade do |t|
+    t.string "description", limit: 200, null: false
+    t.string "default_value", limit: 1000, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["description"], name: "index_user_configuration_options_on_description", unique: true
+  end
+
+  create_table "user_configurations", force: :cascade do |t|
+    t.bigint "user_profile_id", null: false
+    t.bigint "user_configuration_option_id", null: false
+    t.string "value", limit: 1000, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_configuration_option_id"], name: "index_user_configurations_on_user_configuration_option_id"
+    t.index ["user_profile_id"], name: "index_user_configurations_on_user_profile_id"
+  end
+
   create_table "user_event_types", force: :cascade do |t|
     t.string "name", limit: 100, null: false
     t.datetime "created_at", null: false
@@ -251,6 +269,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_18_151107) do
   add_foreign_key "transaction_details", "budget_items"
   add_foreign_key "transaction_details", "transaction_entries"
   add_foreign_key "transaction_entries", "accounts"
+  add_foreign_key "user_configurations", "user_configuration_options"
+  add_foreign_key "user_configurations", "user_profiles"
   add_foreign_key "user_events", "user_event_types"
   add_foreign_key "user_events", "user_profiles", column: "actor_id"
   add_foreign_key "user_events", "user_profiles", column: "target_user_id"
