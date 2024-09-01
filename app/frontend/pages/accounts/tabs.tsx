@@ -1,7 +1,8 @@
 import { InertiaLink } from "@inertiajs/inertia-react";
 
 import { AccountShow, AccountSummary } from "@/types/account";
-import { AmountSpan, Row } from "@/components/common";
+import { Row } from "@/components/common/Row";
+import { AmountSpan } from "@/components/common/AmountSpan";
 import { byPriority } from "@/lib/sort_functions";
 
 interface AccountSummaryProps {

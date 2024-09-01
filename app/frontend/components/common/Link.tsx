@@ -37,6 +37,14 @@ interface ActionAnchorProps {
   children: React.ReactNode;
   className?: string;
   onClick: () => void;
+  title?: string;
+}
+
+interface ElementProps {
+  className: string;
+  onClick: (event: SyntheticEvent) => void;
+  title?: string;
+  href: "#";
 }
 
 const ActionAnchorTag = (props: ActionAnchorProps) => {
@@ -44,8 +52,16 @@ const ActionAnchorTag = (props: ActionAnchorProps) => {
     event.preventDefault();
     props.onClick();
   };
+
+  let elementProps: ElementProps = {
+    className: (props.className || ""),
+    onClick,
+    href: "#"
+  }
+  if (props.title) { elementProps = { ...elementProps, title: props.title } }
+
   return (
-    <a href="#" className={props.className || ""} onClick={onClick}>
+    <a {...elementProps}>
       {props.children}
     </a>
   );

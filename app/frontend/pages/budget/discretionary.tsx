@@ -1,5 +1,6 @@
 import { DiscretionaryData } from "@/types/budget";
-import { AmountSpan, Row } from "@/components/common";
+import { AmountSpan } from "@/components/common/AmountSpan";
+import { Row } from "@/components/common/Row";
 
 const Discretionary = (props: { data: DiscretionaryData }) => {
   const { amount, overUnderBudget, transactionsTotal } = props.data;

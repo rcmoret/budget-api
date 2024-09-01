@@ -36,6 +36,8 @@ export type FlexAlignOption =
   | "justify-evenly"
   | "justify-stretch";
 
+export type FlexDirectionOption = "flex-row" | "flex-col" | "flex-row-reverse" | "flex-col-reverse"
+
 export type FlexWrapOption = "flex-wrap" | "flex-wrap-reverse" | "flex-nowrap";
 
 export type FontSizeOption = "text-xl" | "text-3xl";

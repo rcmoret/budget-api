@@ -1,6 +1,6 @@
 import { AccountTabs } from "@/pages/accounts/tabs";
 import { AccountSummary } from "@/types/account";
-import { Row } from "@/components/common";
+import { Row } from "@/components/common/Row";
 
 const AccountsHome = ({ accounts }: { accounts: AccountSummary[] }) => (
   <>

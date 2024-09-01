@@ -3,6 +3,7 @@ import React from "react";
 import type {
   DisplayOption,
   FlexAlignOption,
+  FlexDirectionOption,
   FlexWrapOption,
   FontSizeOption,
   OverflowOption,
@@ -12,13 +13,16 @@ import type {
 interface ComponentProps {
   children: React.ReactNode;
   styling: {
+    bgColor?: string;
     display?: DisplayOption;
-    flexWrap?: FlexWrapOption;
     flexAlign?: FlexAlignOption;
+    flexDirection?: FlexDirectionOption;
+    flexWrap?: FlexWrapOption;
     fontSize?: FontSizeOption;
     margin?: string;
     overflow?: OverflowOption;
     padding?: string;
+    rounded?: "rounded";
     textAlign?: TextAlignOption;
     width?: string;
   };

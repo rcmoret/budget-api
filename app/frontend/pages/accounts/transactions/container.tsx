@@ -1,5 +1,6 @@
 import React from "react";
-import { Cell, StripedRow } from "@/components/common";
+import { StripedRow } from "@/components/common/Row";
+import { Cell } from "@/components/common/Cell";
 
 interface ContainerProps {
   keyComponent: React.ReactNode;

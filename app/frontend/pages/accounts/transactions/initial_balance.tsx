@@ -1,4 +1,4 @@
-import { AmountSpan } from "@/components/common";
+import { AmountSpan } from "@/components/common/AmountSpan";
 import { dateParse } from "@/lib/DateFormatter";
 import { TransactionContainer } from "@/pages/accounts/transactions/container";
 import {

@@ -1,5 +1,6 @@
 import { AccountTransactionDetail } from "@/types/transaction";
-import { ActionAnchorTag, Icon } from "@/components/common";
+import { ActionAnchorTag } from "@/components/common/Link";
+import { Icon } from "@/components/common/Icon";
 
 interface CaretComponentProps {
   details: AccountTransactionDetail[];

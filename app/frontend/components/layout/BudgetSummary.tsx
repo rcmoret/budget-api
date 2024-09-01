@@ -1,5 +1,6 @@
 import React from "react";
 
+import { MonthYearNav } from "@/components/layout/MonthYearNav";
 import { ButtonStyleLink } from "@/components/common/Link";
 import { Cell } from "@/components/common/Cell";
 import { Icon } from "@/components/common/Icon";
@@ -30,23 +31,23 @@ const BudgetSummary = (props: ComponentProps) => {
   const prevMonth =
     month === 1
       ? {
-          month: 12,
-          year: year - 1,
-        }
+        month: 12,
+        year: year - 1,
+      }
       : {
-          month: month - 1,
-          year,
-        };
+        month: month - 1,
+        year,
+      };
   const nextMonth =
     month === 12
       ? {
-          month: 1,
-          year: year + 1,
-        }
+        month: 1,
+        year: year + 1,
+      }
       : {
-          month: month + 1,
-          year,
-        };
+        month: month + 1,
+        year,
+      };
   const visitNextUrl = `${baseUrl}/${nextMonth.month}/${nextMonth.year}`;
   const visitPrevUrl = `${baseUrl}/${prevMonth.month}/${prevMonth.year}`;
 
@@ -54,15 +55,16 @@ const BudgetSummary = (props: ComponentProps) => {
     <Row
       styling={{
         flexWrap: "flex-wrap",
-        border: "border-b border-gray-800 border-solid",
         padding: "p-1",
       }}
     >
       <Cell
         styling={{
-          width: "w-full md:w-3/12",
+          width: "w-full",
+          padding: "p-1",
+          rounded: "rounded",
           flexWrap: "flex-wrap",
-          margin: "mb-2",
+          margin: "mb-2 mr-2",
         }}
       >
         <div className="text-xl">{props.titleComponent}</div>
@@ -111,4 +113,89 @@ const BudgetSummary = (props: ComponentProps) => {
   );
 };
 
-export { BudgetSummary };
+const BudgetSummaryTitleComponent = (props: {
+  month: number;
+  year: number;
+}) => (
+  <div className="w-full flex justify-between text-2xl underline">
+    Budget -{" "}
+    {DateFormatter({
+      ...props,
+      format: "monthYear",
+    })}
+  </div>
+);
+
+interface TitleProps {
+  accountName: string;
+  month: number;
+  year: number;
+}
+
+const AccountTransactionsSummaryTitleComponent = (props: TitleProps) => (
+  <div>
+    <div className="underline">{props.accountName}</div>
+    <span>
+      Transactions -{" "}
+      {DateFormatter({
+        month: props.month,
+        year: props.year,
+        format: "monthYear",
+      })}
+    </span>
+  </div>
+);
+
+type SummaryProps = {
+  data?: AccountBudgetSummary;
+  selectedAccount?: {
+    metadata: AccountBudgetSummary;
+    slug: string;
+    name: string;
+  }
+}
+
+const Summary = (props: SummaryProps) => {
+  if (!!props.data && !!props.selectedAccount?.metadata) {
+    return null
+  } else if (props.data) {
+    const baseUrl = "/budget"
+    const { month, year } = props.data
+
+    return (
+      <BudgetSummary
+        budget={props.data}
+        baseUrl={baseUrl}
+        titleComponent={<BudgetSummaryTitleComponent month={month} year={year} />}
+      >
+        <MonthYearNav
+          baseUrl={baseUrl}
+          month={month}
+          year={year}
+        />
+      </BudgetSummary>
+    )
+  } else if (props.selectedAccount) {
+    const { metadata, slug, name } = props.selectedAccount
+    const { month, year } = metadata
+    const baseUrl = `/accounts/${slug}/transactions`
+
+    return (
+      <BudgetSummary
+        budget={metadata}
+        baseUrl={baseUrl}
+        titleComponent={<AccountTransactionsSummaryTitleComponent accountName={name} month={month} year={year} />}
+      >
+        <MonthYearNav
+          baseUrl={baseUrl}
+          month={month}
+          year={year}
+        />
+      </BudgetSummary>
+    )
+  } else {
+    return null
+  }
+}
+
+export { Summary };

@@ -28,7 +28,7 @@ interface ComponentProps {
   year: number;
 }
 
-const MonthYearSelect = (props: ComponentProps) => {
+const MonthYearNav = (props: ComponentProps) => {
   const [state, updateState] = useState<ComponentState>({
     isFormShown: false,
     ...props,
@@ -119,4 +119,4 @@ const Form = (props: FormProps) => {
   );
 };
 
-export { MonthYearSelect };
+export { MonthYearNav };

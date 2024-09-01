@@ -1,31 +1,27 @@
 import { Header } from "@/components/layout/Header";
 import { Row } from "@/components/common/Row";
+import { Provider } from "@/components/layout/Provider";
 
-const Layout = ({ children }) => {
-  const { namespace } = children.props.metadata;
+const Layout = ({ children }: { children: any }) => {
 
-  if (children.type.name === "Home") {
-    return <Header namespace={namespace} />;
-  }
   return (
-    <>
-      <Header namespace={namespace} />
-      <div className="mb-1 h-5/6 rounded">
-        <div className="pt-2 pb-2 pr-3 pl-3 bg-blue-900 w-full rounded h-v90">
-          <Row
-            styling={{
-              alignItems: "items-start",
-              flexWrap: "flex-wrap",
-              backgroundColor: "bg-white",
-              padding: "pt-1 px-1 pb-2",
-              overflow: "overflow-visible",
-            }}
-          >
-            {children}
-          </Row>
-        </div>
+    <Provider>
+      <div class="bg-slate-400 w-11/12 mx-auto h-dvh">
+        <Header children={children} />
       </div>
-    </>
+      <div className="px-3 w-full sm:w-[98.5%] rounded bg-slate-100 mx-auto">
+        <Row
+          styling={{
+            alignItems: "items-start",
+            flexWrap: "flex-wrap",
+            padding: "pt-1 px-1 pb-2",
+            overflow: "overflow-visible",
+          }}
+        >
+          {children}
+        </Row>
+      </div>
+    </Provider>
   );
 };
 

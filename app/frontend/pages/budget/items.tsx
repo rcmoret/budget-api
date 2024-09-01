@@ -1,6 +1,8 @@
 import React from "react";
 
-import { Cell, Point, Row } from "@/components/common";
+import { Cell } from "@/components/common/Cell";
+import { Point } from "@/components/common/Symbol";
+import { Row } from "@/components/common/Row";
 import { Discretionary } from "@/pages/budget/discretionary";
 import { DiscretionaryData } from "@/types/budget";
 

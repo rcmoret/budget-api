@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 
-import { AmountSpan, Cell, Icon } from "@/components/common";
+import { AmountSpan } from "@/components/common/AmountSpan";
+import { Cell } from "@/components/common/Cell";
+import { Icon } from "@/components/common/Icon";
 import { dateParse } from "@/lib/DateFormatter";
 import { byAmount, byCategoryName } from "@/lib/sort_functions";
 import { TransactionContainer } from "@/pages/accounts/transactions/container";
