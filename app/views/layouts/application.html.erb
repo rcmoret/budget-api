@@ -14,7 +14,7 @@
       html { font-family: Questrial, Arial; }
       body {
         margin: 0;
-        padding: 2.5%;
+        padding: 0;
         background-color: #9CA3AF;
         background-image: url('/black-linen-2.png');
         -webkit-font-smoothing: antialiased;
@@ -28,13 +28,15 @@
   </head>
 
   <body>
-    <%= yield %>
-    <% if user_profile_signed_in? %>
-      <div class="bg-blue-800 p-2">
-        <div class="bg-gray-200 text-end p-2 rounded">
-          <%= button_to "Sign Out", destroy_user_profile_session_path, method: :delete, class: "underline" %>
+    <div>
+      <%= yield %>
+      <% if user_profile_signed_in? %>
+        <div class="bg-blue-800 p-2">
+          <div class="bg-gray-200 text-end p-2 rounded">
+            <%= button_to "Sign Out", destroy_user_profile_session_path, method: :delete, class: "underline" %>
+          </div>
         </div>
-      </div>
-    <% end %>
+      <% end %>
+    </div>
   </body>
 </html>

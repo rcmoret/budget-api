@@ -15,13 +15,10 @@ module WebApp
 
     def metadata
       {
-        user_key: current_user.key,
+        user_key: current_user_profile.key,
         namespace: namespace,
+        prev_selected_account_path: session[:selected_account_path].to_s,
       }
-    end
-
-    def current_user
-      User::Profile.first
     end
   end
 end

@@ -6,17 +6,11 @@ class HomeController < ActionController::Base
     @props = props
     respond_to do |format|
       format.json { render json: @props.to_json }
-      format.all { render }
+      format.all { redirect_to home_path }
     end
   end
 
   private
 
-  def props
-    {
-      metadata: {
-        namespace: "home",
-      },
-    }
-  end
+  def props = {}
 end

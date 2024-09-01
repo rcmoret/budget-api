@@ -70,6 +70,8 @@ Rails.application.routes.draw do
   end
 
   scope "/", module: :web_app do
+    get "/home", to: "home#call", as: :home
+
     namespace :accounts do
       get "/", to: "index#call"
       scope "/:slug/transactions", module: :transactions do

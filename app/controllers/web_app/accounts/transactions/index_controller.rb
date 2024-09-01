@@ -4,6 +4,8 @@ module WebApp
   module Accounts
     module Transactions
       class IndexController < BaseController
+        before_action :store_selected_account_path
+
         def call
           render inertia: "accounts/show", props: page_props
         end
@@ -18,7 +20,7 @@ module WebApp
 
         def accounts_serializer
           API::Accounts::IndexSerializer.new(
-            Account.belonging_to(current_user)
+            Account.belonging_to(current_user_profile)
           )
         end
 
@@ -30,14 +32,14 @@ module WebApp
         end
 
         def account
-          Account.belonging_to(current_user).by_slug(params[:slug])
+          @account ||= Account.belonging_to(current_user_profile).by_slug(params[:slug])
         end
 
         def interval
           @interval ||= if month.nil? || year.nil?
-                          ::Budget::Interval.belonging_to(current_user).current
+                          ::Budget::Interval.belonging_to(current_user_profile).current
                         else
-                          ::Budget::Interval.fetch(current_user, key: { month: month, year: year })
+                          ::Budget::Interval.fetch(current_user_profile, key: { month: month, year: year })
                         end
         end
 
@@ -51,6 +53,11 @@ module WebApp
 
         def namespace
           "accounts"
+        end
+
+        def store_selected_account_path
+          session[:selected_account_path] =
+            "/accounts/#{account.slug}/transactions/#{interval.month}/#{interval.year}"
         end
       end
     end

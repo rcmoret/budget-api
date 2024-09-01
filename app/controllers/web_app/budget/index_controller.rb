@@ -9,12 +9,8 @@ module WebApp
 
       private
 
-      def page_props
-        super.tap { |pp| puts pp; puts pp["discretionary"].keys }
-      end
-
       def props
-        API::Budget::Interval::ShowSerializer.new(current_user, interval).render
+        API::Budget::Interval::ShowSerializer.new(current_user_profile, interval).render
       end
 
       def namespace
@@ -23,9 +19,9 @@ module WebApp
 
       def interval
         @interval ||= if month.nil? || year.nil?
-                        ::Budget::Interval.belonging_to(current_user).current
+                        ::Budget::Interval.belonging_to(current_user_profile).current
                       else
-                        ::Budget::Interval.fetch(current_user, key: { month: month, year: year })
+                        ::Budget::Interval.fetch(current_user_profile, key: { month: month, year: year })
                       end
       end
 
