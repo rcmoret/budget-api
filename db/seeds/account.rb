@@ -33,6 +33,7 @@ User::Group.find_by!(name: "Initial User Group").then do |group|
       clearance_date: 1.day.ago,
       description: "Initial Balance",
       key: SecureRandom.hex(6),
+      budget_exclusion: true,
       details_attributes: [
         { amount: 2_800_00, key: SecureRandom.hex(6) },
       ]

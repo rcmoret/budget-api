@@ -202,6 +202,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_18_151107) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_configuration_option_id"], name: "index_user_configurations_on_user_configuration_option_id"
+    t.index ["user_profile_id", "user_configuration_option_id"], name: "unique_config_option_on_profile", unique: true
     t.index ["user_profile_id"], name: "index_user_configurations_on_user_profile_id"
   end
 
