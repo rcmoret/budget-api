@@ -13,7 +13,7 @@ export type BgColorOption =
   | "bg-blue-800"
   | "bg-blue-900"
   | "bg-white"
-  | "gray-200"
+  | "bg-slate-300"
   | "white";
 
 export type DisplayOption =
@@ -40,7 +40,7 @@ export type FlexDirectionOption = "flex-row" | "flex-col" | "flex-row-reverse" |
 
 export type FlexWrapOption = "flex-wrap" | "flex-wrap-reverse" | "flex-nowrap";
 
-export type FontSizeOption = "text-xl" | "text-3xl";
+export type FontSizeOption = "text-sm" | "text-xl" | "text-3xl";
 
 export type FontWeightOption = "font-semibold";
 

@@ -19,3 +19,9 @@ export interface DiscretionaryData {
   // transactionDetails:
   transactionsTotal: number;
 }
+
+export type SelectedAccount = {
+  metadata: AccountBudgetSummary;
+  slug: string;
+  name: string;
+}

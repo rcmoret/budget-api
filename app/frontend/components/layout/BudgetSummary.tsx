@@ -7,7 +7,7 @@ import { Icon } from "@/components/common/Icon";
 import { Point } from "@/components/common/Symbol";
 import { Row } from "@/components/common/Row";
 import { DateFormatter, dateParse } from "@/lib/DateFormatter";
-import { AccountBudgetSummary } from "@/types/budget";
+import { AccountBudgetSummary, SelectedAccount } from "@/types/budget";
 
 interface ComponentProps {
   budget: AccountBudgetSummary;
@@ -147,12 +147,8 @@ const AccountTransactionsSummaryTitleComponent = (props: TitleProps) => (
 );
 
 type SummaryProps = {
-  data?: AccountBudgetSummary;
-  selectedAccount?: {
-    metadata: AccountBudgetSummary;
-    slug: string;
-    name: string;
-  }
+  data: AccountBudgetSummary | undefined;
+  selectedAccount: SelectedAccount | undefined;
 }
 
 const Summary = (props: SummaryProps) => {
