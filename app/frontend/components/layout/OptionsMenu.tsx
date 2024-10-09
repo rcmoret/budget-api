@@ -4,6 +4,7 @@ import { Cell } from "@/components/common/Cell";
 import { Point } from "../common/Symbol";
 import { Row } from "@/components/common/Row";
 import { AppConfigContext } from "@/components/layout/Provider";
+import { InertiaLink } from "@inertiajs/inertia-react";
 
 const MenuItem = ({ children }: { children: React.ReactNode }) => (
   <div className="w-full leading-8">
@@ -57,9 +58,11 @@ const OptionsMenu = ({ namespace }: { namespace: string }) => {
       fontSize: "text-sm"
     }}>
       <Cell styling={{ width: "w-full md:w-3/12"}}>
-        <MenuItem>
-          Manage Budget Categories
-        </MenuItem>
+        <InertiaLink href="">
+          <MenuItem>
+            Manage Budget Categories
+          </MenuItem>
+        </InertiaLink>
         <MenuItem>
           Manage Accounts
         </MenuItem>

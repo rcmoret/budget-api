@@ -10,6 +10,7 @@ module WebApp
     def page_props
       props
         .deep_merge({ metadata: metadata })
+        .merge(errors.any? ? { errors: errors } : {})
         .deep_transform_keys { |key| key.to_s.camelize(:lower) }
     end
 
@@ -20,5 +21,7 @@ module WebApp
         prev_selected_account_path: session[:selected_account_path].to_s,
       }
     end
+
+    def errors = {}
   end
 end

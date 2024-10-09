@@ -19,7 +19,7 @@ const IndividualTab = ({ account, isSelected }: AccountSummaryProps) => {
 
   return (
     <div className={styles}>
-      <InertiaLink href={`/accounts/${account.slug}/transactions`}>
+      <InertiaLink href={`/account/${account.slug}/transactions`}>
         <div className="border-b border-black border-solid">{account.name}</div>
         <div className="text-right">
           <AmountSpan amount={account.balance} />

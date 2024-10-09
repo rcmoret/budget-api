@@ -6,10 +6,12 @@ const IconDictionary = {
   calendar: "fas fa-calendar",
   "caret-down": "fas fa-caret-down",
   "caret-right": "fas fa-caret-right",
+  "check-circle": "fas fa-check-circle",
   edit: "fa  fa-edit",
   gears: "fa fa-gears",
   "money-check": "fas fa-money-check",
   "sticky-note": "fas fa-sticky-note",
+  "times-circle": "fas fa-times-circle",
   trash: "fas fa-trash",
 };
 

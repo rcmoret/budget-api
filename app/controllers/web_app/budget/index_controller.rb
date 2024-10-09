@@ -3,6 +3,8 @@
 module WebApp
   module Budget
     class IndexController < BaseController
+      include Mixins::HasBudgetInterval
+
       def call
         render inertia: "budget/index", props: page_props
       end
@@ -17,21 +19,7 @@ module WebApp
         "budget"
       end
 
-      def interval
-        @interval ||= if month.nil? || year.nil?
-                        ::Budget::Interval.belonging_to(current_user_profile).current
-                      else
-                        ::Budget::Interval.fetch(current_user_profile, key: { month: month, year: year })
-                      end
-      end
-
-      def month
-        params[:month]
-      end
-
-      def year
-        params[:year]
-      end
+      def error_component = "budget/index"
     end
   end
 end

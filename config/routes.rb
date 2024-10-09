@@ -73,14 +73,19 @@ Rails.application.routes.draw do
     get "/home", to: "home#call", as: :home
 
     namespace :accounts do
-      get "/", to: "index#call"
-      scope "/:slug/transactions", module: :transactions do
-        get "/(:month)/(:year)", to: "index#call"
-      end
+      get "/", to: "index#call", as: :index
+    end
+
+    scope "account/:slug/transactions", module: :transactions, as: :transactions do
+      get "/(:month)/(:year)", to: "index#call", as: :index
     end
 
     namespace :budget do
-      get "/(:month)/(:year)", to: "index#call"
+      scope "/categories", module: :categories, as: :categories do
+        get "/", to: "index#call", as: :index
+      end
+      get "/(:month)/(:year)", to: "index#call", as: :index
+      put "/(:month)/(:year)", to: "update#call"
     end
   end
 end

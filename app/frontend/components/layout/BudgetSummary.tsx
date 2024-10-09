@@ -1,13 +1,137 @@
-import React from "react";
+import React, { useState } from "react";
+import { useForm } from "@inertiajs/inertia-react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { parseISO as parseIsoDate } from "date-fns";
 
-import { MonthYearNav } from "@/components/layout/MonthYearNav";
+import { AccountBudgetSummary, SelectedAccount } from "@/types/budget";
+import { ActionAnchorTag } from "@/components/common/Link";
 import { ButtonStyleLink } from "@/components/common/Link";
 import { Cell } from "@/components/common/Cell";
+import { DateFormatter, dateParse } from "@/lib/DateFormatter";
 import { Icon } from "@/components/common/Icon";
+import { MonthYearNav } from "@/components/layout/MonthYearNav";
 import { Point } from "@/components/common/Symbol";
 import { Row } from "@/components/common/Row";
-import { DateFormatter, dateParse } from "@/lib/DateFormatter";
-import { AccountBudgetSummary, SelectedAccount } from "@/types/budget";
+
+const DateDiv = ({ date }: { date: string}) => {
+  return (
+    <div>
+      {dateParse(date, { format: "monthDay" })}
+    </div>
+  )
+}
+
+type DateFormProps = {
+  firstDate: string;
+  lastDate: string;
+  month: number;
+  redirectSegments: string[];
+  toggleForm: () => void;
+  year: number;
+} 
+
+const DateForm = (props: DateFormProps) => {
+  const { month, year } = props
+
+  const { data, setData, put } = useForm({
+    "interval[start_date]": props.firstDate,
+    "interval[end_date]": props.lastDate
+  })
+  const queryParams =
+    props.redirectSegments
+    .map((segment) => [
+      "redirect[segments][]",
+      segment
+    ].map((str) => encodeURIComponent(str)).join("="))
+    .join("&")
+
+  const handleStartDateChange = (input: Date | null) => {
+    setData("interval[start_date]", (input?.toISOString() || ""))
+  }
+  const handleEndDateChange = (input: Date | null) => {
+    setData("interval[end_date]", (input?.toISOString() || ""))
+  }
+
+  const formUrl = (`/budget/${month}/${year}?${queryParams}`)
+  console.log({ formUrl })
+
+  const onSubmit = (ev) => {
+    ev.preventDefault()
+    put(formUrl, { onSuccess: () => props.toggleForm() })
+  }
+
+  return (
+    <form onSubmit={onSubmit}>
+      <div className="w-full flex flex-wrap gap-2 items-center py-2">
+        <div className="w-full">
+          <DatePicker
+            selected={parseIsoDate(data["interval[start_date]"])}
+            onChange={handleStartDateChange}
+          />
+        </div>
+        <div className="w-full">to</div>
+        <div className="w-full">
+          <DatePicker
+            selected={parseIsoDate(data["interval[end_date]"])}
+            onChange={handleEndDateChange}
+          />
+        </div>
+        <div className="flex justify-between flex-row md:w-4/12 w-6/12">
+          <div>
+            <button type="submit" >
+              <span className="text-green-700">
+                <Icon name="check-circle" />
+              </span>
+            </button>
+          </div>
+          <div>
+            <button
+            type="button"
+            onClick={props.toggleForm}
+            >
+              <span className="text-red-600">
+                <Icon name="times-circle" />
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  )
+}
+
+const DateComponent = ({ firstDate, lastDate, redirectSegments, month, year }:
+                       { firstDate: string, lastDate: string, redirectSegments: string[], month: number, year: number }) => {
+  const [showDateForm, setShowDateForm] = useState(false)
+  const toggleForm = () => setShowDateForm(!showDateForm)
+
+  if (!showDateForm) {
+    return (
+      <div className="w-full flex gap-2 items-center">
+        <DateDiv date={firstDate} />
+        <div>to</div>
+        <DateDiv date={lastDate} />
+        <ActionAnchorTag onClick={toggleForm}>
+          <span className="text-blue-600 text-xs">
+            <Icon name="edit" />
+          </span>
+        </ActionAnchorTag>
+      </div>
+    )
+  } else {
+    return (
+      <DateForm
+        firstDate={firstDate}
+        lastDate={lastDate}
+        month={month}
+        redirectSegments={redirectSegments}
+        toggleForm={toggleForm}
+        year={year}
+      />
+    )
+  }
+}
 
 interface ComponentProps {
   budget: AccountBudgetSummary;
@@ -50,6 +174,7 @@ const BudgetSummary = (props: ComponentProps) => {
       };
   const visitNextUrl = `${baseUrl}/${nextMonth.month}/${nextMonth.year}`;
   const visitPrevUrl = `${baseUrl}/${prevMonth.month}/${prevMonth.year}`;
+  const redirectSegments = [...baseUrl.split("/"), String(month), String(year)].filter((s) => s)
 
   return (
     <Row
@@ -68,15 +193,13 @@ const BudgetSummary = (props: ComponentProps) => {
         }}
       >
         <div className="text-xl">{props.titleComponent}</div>
-        <div className="w-full">
-          {dateParse(firstDate, {
-            format: "monthDay",
-          })}{" "}
-          to{" "}
-          {dateParse(lastDate, {
-            format: "monthDay",
-          })}
-        </div>
+        <DateComponent
+          firstDate={firstDate}
+          lastDate={lastDate}
+          redirectSegments={redirectSegments}
+          month={month}
+          year={year}
+        />
         {isCurrent && (
           <div className="w-full">
             <Point>Days Remaining: {daysRemaining}</Point>
@@ -174,7 +297,7 @@ const Summary = (props: SummaryProps) => {
   } else if (props.selectedAccount) {
     const { metadata, slug, name } = props.selectedAccount
     const { month, year } = metadata
-    const baseUrl = `/accounts/${slug}/transactions`
+    const baseUrl = `/account/${slug}/transactions`
 
     return (
       <BudgetSummary
