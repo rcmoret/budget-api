@@ -1,4 +1,5 @@
 import { ReactNode, createContext, useState } from "react";
+import { BudgetData } from "@/types/budget";
 
 type TAppConfig = {
   showConfigMenu: boolean;
@@ -9,6 +10,7 @@ type TAppConfig = {
     showAccruals: boolean;
     showClearedMonthly: boolean;
     showDeletedItems: boolean;
+    data: BudgetData;
     multiItemForm: {
       display: boolean;
       items: string[];
@@ -25,6 +27,17 @@ const initialConfig: TAppConfig = {
     showAccruals: false,
     showDeletedItems: false,
     showClearedMonthly: false,
+    data: {
+      isCurrent: false,
+      totalDays: 0,
+      firstDate: "2000-01-01",
+      lastDate: "2099-12-31",
+      daysRemaining: 0,
+      month: 1,
+      year: 2000,
+      isClosedOut: false,
+      isSetUp: false
+    },
     multiItemForm: {
       display: false,
       items: [],

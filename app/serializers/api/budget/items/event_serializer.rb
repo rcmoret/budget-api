@@ -6,7 +6,10 @@ module API
                    :amount,
                    :data
         attribute :created_at, on_render: proc { |datestring| datestring.strftime("%FT%TZ") }
-        attribute :type_name, on_render: proc { |name| name.titleize }
+        attribute :comparison_date,
+                  alias_of: :created_at,
+                  on_render: proc { |datestring| datestring.strftime("%FT%TZ") }
+        attribute :type_name, on_render: :titleize
       end
     end
   end

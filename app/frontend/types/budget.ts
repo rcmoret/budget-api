@@ -1,3 +1,5 @@
+import { IconName } from "@/components/common/Icon";
+
 export interface AccountBudgetSummary {
   isCurrent: boolean;
   totalDays: number;
@@ -25,3 +27,44 @@ export type SelectedAccount = {
   slug: string;
   name: string;
 }
+
+export type BudgetItemTransaction = {
+  key: string;
+  accountName: string;
+  amount: number;
+  description: string;
+  comparisonDate: string;
+  clearanceDate: null | string;
+}
+
+export type BudgetItemEvent = {
+  key: string;
+  amount: number;
+  data: string | null;
+  createdAt: string;
+  comparisonDate: string;
+  typeName: string;
+}
+
+export type BudgetItem = {
+  key: string,
+  name: string,
+  amount: number,
+  budgetCategoryKey: string,
+  difference: number,
+  iconClassName: IconName,
+  isAccrual: boolean,
+  isDeletable: boolean,
+  isDeleted: boolean,
+  isExpense: boolean,
+  isMonthly: boolean,
+  isPerDiemEnabled: boolean,
+  maturityMonth?: number
+  maturityYear?: number
+  remaining: number,
+  spent: number,
+  transactionDetails: Array<BudgetItemTransaction>,
+  events: Array<BudgetItemEvent>
+}
+
+export type BudgetItemDetail = BudgetItemEvent | BudgetItemTransaction

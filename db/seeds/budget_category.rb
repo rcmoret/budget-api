@@ -54,8 +54,8 @@ User::Group.find_by!(name: "Initial User Group").then do |group|
     name: "Groceries",
     slug: "groceries",
     user_group: group,
-    monthly: true,
-    expense: false,
+    monthly: false,
+    expense: true,
     icon: Icon.find_by!(name: "Shopping Cart")
   )
 
@@ -71,8 +71,8 @@ User::Group.find_by!(name: "Initial User Group").then do |group|
     name: "Gas",
     slug: "gas",
     user_group: group,
-    monthly: true,
-    expense: false,
+    monthly: false,
+    expense: true,
     icon: Icon.find_by!(name: "Gas Pump")
   )
 
@@ -81,6 +81,38 @@ User::Group.find_by!(name: "Initial User Group").then do |group|
       default_amount: 0,
       key: SecureRandom.hex(6),
       accrual: false,
+    )
+  end
+
+  misc_income = Budget::Category.find_or_initialize_by(
+    name: "Misc. Income",
+    slug: "misc-income",
+    user_group: group,
+    monthly: false,
+    expense: false,
+  )
+
+  if misc_income.new_record?
+    misc_income.update(
+      default_amount: 0,
+      key: SecureRandom.hex(6),
+      accrual: false
+    )
+  end
+
+  car_insurance = Budget::Category.find_or_initialize_by(
+    name: "Car Insurance",
+    slug: "car-ins",
+    user_group: group,
+    monthly: true,
+    expense: true,
+  )
+
+  if car_insurance.new_record?
+    car_insurance.update(
+      default_amount: 0,
+      key: SecureRandom.hex(6),
+      accrual: true
     )
   end
 end

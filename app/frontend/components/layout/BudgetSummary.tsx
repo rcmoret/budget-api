@@ -54,7 +54,6 @@ const DateForm = (props: DateFormProps) => {
   }
 
   const formUrl = (`/budget/${month}/${year}?${queryParams}`)
-  console.log({ formUrl })
 
   const onSubmit = (ev) => {
     ev.preventDefault()

@@ -12,7 +12,7 @@ import {
 
 interface RowProps {
   children: React.ReactNode;
-  styling: {
+  styling?: {
     alignItems?: AlignItemsOption;
     alternatingBgColor?: string;
     backgroundColor?: BgColorOption;

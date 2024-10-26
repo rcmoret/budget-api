@@ -40,7 +40,7 @@ export type FlexDirectionOption = "flex-row" | "flex-col" | "flex-row-reverse" |
 
 export type FlexWrapOption = "flex-wrap" | "flex-wrap-reverse" | "flex-nowrap";
 
-export type FontSizeOption = "text-sm" | "text-xl" | "text-3xl";
+export type FontSizeOption = "text-xs" | "text-sm" | "text-xl" | "text-3xl";
 
 export type FontWeightOption = "font-semibold";
 
