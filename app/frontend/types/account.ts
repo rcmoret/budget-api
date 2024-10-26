@@ -32,4 +32,7 @@ export interface AccountShow {
   budget: AccountBudgetSummary;
   transactions: AccountTransaction[];
   balancePriorTo: number;
+  metadata: {
+    firstDate: string;
+  }
 }

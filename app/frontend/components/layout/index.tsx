@@ -6,7 +6,7 @@ import { Row } from "@/components/common/Row";
 const Layout = ({ children }: { children: any }) => {
   return (
     <Provider>
-      <div class="bg-slate-400 w-11/12 mx-auto h-dvh">
+      <div className="bg-slate-400 w-11/12 mx-auto h-dvh">
         <Header
           data={children.props.data}
           metadata={children.props.metadata}

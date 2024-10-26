@@ -6,6 +6,7 @@ ApplicationRecord.transaction do
     icon
     budget_category
     budget_interval
+    account_transaction
   ].each do |filename|
     path = Rails.root.join("db", "seeds", "#{filename}.rb").to_s
 

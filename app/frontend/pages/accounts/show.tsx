@@ -1,6 +1,7 @@
 import { AccountTabs } from "@/pages/accounts/tabs";
 
 import { AccountSummary, AccountShow } from "@/types/account";
+import { Transactions } from "./transactions";
 
 interface ComponentProps {
   accounts: AccountSummary[];
@@ -8,10 +9,18 @@ interface ComponentProps {
 }
 
 const AccountShowComponent = (props: ComponentProps) => {
+  console.log({ props })
   const { accounts, selectedAccount } = props;
 
   return (
-    <AccountTabs accounts={accounts} selectedAccount={selectedAccount} />
+    <>
+      <AccountTabs accounts={accounts} selectedAccount={selectedAccount} />
+      <Transactions
+        initialBalance={selectedAccount.balancePriorTo}
+        budget={selectedAccount.metadata}
+        transactions={selectedAccount.transactions}
+      />
+    </>
   );
 };
 

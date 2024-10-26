@@ -52,7 +52,7 @@ const Header = ({ metadata, data, selectedAccount }: HeaderProps) => {
           width: "w-full sm:w-6/12"
         }}
       >
-        <Cell styling={{width: "lg:w-4/12 w-2/12", textAlign: "text-right", padding: "pr-4 py-4"}}>
+        <Cell styling={{ width: "lg:w-4/12 w-2/12", textAlign: "text-right", padding: "pr-4 py-4" }}>
           <ActionAnchorTag title="Configurations" onClick={toggleConfigMenu}>
             <Icon name="bars" />
           </ActionAnchorTag>

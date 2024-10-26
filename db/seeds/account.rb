@@ -10,7 +10,7 @@ User::Group.find_by!(name: "Initial User Group").then do |group|
 
   if regular_account.transactions.none?
     regular_account.transactions.create!(
-      clearance_date: 1.day.ago,
+      clearance_date: 40.days.ago,
       description: "Initial Balance",
       key: SecureRandom.hex(6),
       details_attributes: [
@@ -30,7 +30,7 @@ User::Group.find_by!(name: "Initial User Group").then do |group|
 
   if savings_account.transactions.none?
     savings_account.transactions.create!(
-      clearance_date: 1.day.ago,
+      clearance_date: 45.days.ago,
       description: "Initial Balance",
       key: SecureRandom.hex(6),
       budget_exclusion: true,

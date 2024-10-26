@@ -18,8 +18,9 @@ Layout/LineLength:
 
 Metrics/BlockLength:
   Max: 10
-  AllowedMethods:
+  IgnoredMethods:
     - included
+    - class_methods
   Exclude:
     - app/models/user/event_handlers/**/*
     - config/environments/*
