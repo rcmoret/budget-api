@@ -9,8 +9,9 @@ import { AmountSpan } from "@/components/common/AmountSpan";
 import { Point } from "@/components/common/Symbol";
 import { AppConfigContext } from "@/components/layout/Provider";
 
-import { sortDetails } from "@/lib/models/budget-items"
+import { clearedItems, sortDetails } from "@/lib/models/budget-items"
 import { dateParse } from "@/lib/DateFormatter";
+import { parseDate } from "react-datepicker/dist/date_utils";
 
 type DetailProps = {
   item: BudgetItem;
@@ -59,8 +60,58 @@ const DetailLineItem = ({ lineItemProps }: { lineItemProps: LineItemProps }) => 
   if (isEvent(lineItemProps.detail)) {
     return <EventLineItem lineItemProps={lineItemProps} />
   } else {
-    return null
+    return <TransactionDetailLineItem lineItemProps={lineItemProps} />
   }
+}
+const TransactionDetailLineItem = (props: { lineItemProps: LineItemProps }) => {
+  const { detail } = props.lineItemProps
+  const transactionDetail = detail as BudgetItemTransaction
+
+  const dateString = transactionDetail.clearanceDate ? 
+    dateParse(transactionDetail.clearanceDate) :
+    "pending"
+
+  return (
+    <Row styling={{
+      flexWrap: "flex-wrap",
+      flexAlign: "justify-between",
+      padding: "px-8",
+      fontSize: "text-xs",
+      border: "border-t border-gray-500 border-solid"
+    }}>
+      <Row>
+        <Cell styling={{ width: "w-6/12" }}>
+          <div>{dateString}</div>
+          <div>{transactionDetail.accountName}</div>
+        </Cell>
+        <Cell styling={{ width: "w-6/12", textAlign: "text-right" }}>
+          <AmountSpan amount={transactionDetail.amount} />
+        </Cell>
+      </Row>
+      <Row>
+        <Cell styling={{ width: "w-6/12" }}>
+          <Row styling={{ flexWrap: "flex-wrap", flexAlign: "justify-between" }}>
+            <Cell styling={{ width: "w-6/12" }}>
+              Budgeted
+            </Cell>
+            <Cell styling={{ width: "w-6/12", textAlign: "text-right", padding: "pr-8" }}>
+              <AmountSpan amount={props.lineItemProps.budgeted} />
+            </Cell>
+          </Row>
+        </Cell>
+        <Cell styling={{ width: "w-6/12" }}>
+          <Row styling={{ flexWrap: "flex-wrap", flexAlign: "justify-between" }}>
+            <Cell styling={{ width: "w-6/12", padding: "pl-8" }}>
+              Remaining
+            </Cell>
+            <Cell styling={{ width: "w-6/12", textAlign: "text-right" }}>
+              <AmountSpan amount={props.lineItemProps.remaining} />
+            </Cell>
+          </Row>
+        </Cell>
+      </Row>
+    </Row>
+  )
 }
 
 const EventLineItem = (props: { lineItemProps: LineItemProps }) => {
@@ -107,7 +158,12 @@ const EventLineItem = (props: { lineItemProps: LineItemProps }) => {
 
 const ItemDetails = ({ item, showDetails }: DetailProps) => {
   const { key, events, isExpense, transactionDetails } = item
-  const details: Array<BudgetItemEvent | BudgetItemTransaction> = [...events, ...transactionDetails].sort(sortDetails)
+  let details: Array<BudgetItemEvent | BudgetItemTransaction> = []
+  if (clearedItems(item)) {
+    details = events.sort(sortDetails)
+  } else {
+    details = [...events, ...transactionDetails].sort(sortDetails)
+  }
 
   if (!showDetails) { return null }
 
@@ -126,27 +182,8 @@ const ItemDetails = ({ item, showDetails }: DetailProps) => {
   )
 }
 
-const MonthlyDetail = ({ item, showDetails }: DetailProps) => {
-  const { key } = item
-  if (!showDetails) { return null }
-
-  return (
-    <>
-      <Row styling={{ flexWrap: "flex-wrap", border: "border-t border-b border-gray-500 border-solid"}}>
-        <div className="w-8/12">
-          <strong>Budget Item Details</strong>
-        </div>
-        <div className="w-4/12 text-right">
-          <strong>Key: {key}</strong>
-        </div>
-      </Row>
-      <ItemDetails item={item} showDetails={showDetails} />
-    </>
-  )
-}
-
-const ItemContainer = (props: { detailComponent: DetailComponent, children?: React.ReactNode, item: BudgetItem }) => {
-  const { children, detailComponent, item } = props
+const ItemContainer = (props: { children?: React.ReactNode, item: BudgetItem }) => {
+  const { children, item } = props
   const [showDetails, updateShowDetails] = useState<boolean>(false)
 
   const toggleDetails = () => updateShowDetails(!showDetails)
@@ -159,7 +196,7 @@ const ItemContainer = (props: { detailComponent: DetailComponent, children?: Rea
         toggleDetails={toggleDetails}
       />
       {children}
-      {!!detailComponent && detailComponent({ item, showDetails })}
+      <ItemDetails item={item} showDetails={showDetails} />
     </StripedRow>
   )
 }
@@ -228,21 +265,64 @@ const NameRow = (props: NameRowProps) => {
   )
 }
 
-const ClearedMonthItem = (props: { item: BudgetItem }) => {
+const ClearedMonthItem = ({ item }: { item: BudgetItem }) => {
+  const transactionDetail = item.transactionDetails[0]
+
+  if (!transactionDetail) { return }
+
+  const dateString = transactionDetail.clearanceDate ? 
+    dateParse(transactionDetail.clearanceDate) :
+    "pending"
+
+  const difference = transactionDetail.amount - item.amount
+
   return (
-    <ItemContainer item={props.item} detailComponent={MonthlyDetail} />
+    <ItemContainer item={item}>
+      <Row styling={{
+        flexAlign: "justify-between",
+        fontSize: "text-sm",
+        padding: "px-8 pb-2",
+        border: "border-b gray-600 border-solid"
+      }}>
+        <Cell styling={{ width: "w-6/12" }}>
+          <div>{dateString}</div>
+          <div>{transactionDetail.accountName}</div>
+        </Cell>
+        <div>
+          <AmountSpan amount={transactionDetail.amount} />
+        </div>
+      </Row>
+      <Row styling={{
+        flexAlign: "justify-between",
+        fontSize: "text-sm",
+        padding: "px-8 pt-2",
+      }}>
+        <Cell styling={{ width: "w-6/12" }}>
+          Difference
+        </Cell>
+        <Cell styling={{ width: "w-6/12", textAlign: "text-right" }}>
+          <AmountSpan
+            amount={difference}
+            absolute={true}
+            color="text-green-800"
+            negativeColor="text-red-700"
+            zeroColor="text-black"
+          />
+        </Cell>
+      </Row>
+    </ItemContainer>
   )
 }
 
 const PendingMonthItem = (props: { item: BudgetItem }) => {
   return (
-    <ItemContainer item={props.item} detailComponent={ItemDetails} />
+    <ItemContainer item={props.item} />
   )
 }
 
 const DayToDayItem = ({ item }: { item: BudgetItem }) => {
   return (
-    <ItemContainer item={item} detailComponent={ItemDetails}>
+    <ItemContainer item={item}>
       <Row styling={{ padding: "p-2", flexAlign: "justify-between" }}>
         <Cell styling={{ width: "w-6/12" }}>
           Spent/Deposited

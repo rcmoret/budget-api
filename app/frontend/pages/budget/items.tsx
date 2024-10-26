@@ -67,20 +67,14 @@ const ClearedMonthlyItemsSection = (props: { title: string, items: ItemCollectio
     return null
   }
   return (
-  <Cell
-    styling={{
-      width: "w-full md:w-1/2",
-      padding: "px-2",
-    }}
-  >
-    <div className="w-full text-2xl p-2">{title}</div>
-    <HiddenCount {...hidden} />
-    {collection.map((item) => {
-      return (
-        <ClearedMonthItem key={item.key} item={item} />
-      )
-    })}
-  </Cell>
+    <Section title={title}>
+      <HiddenCount {...hidden} />
+      {collection.map((item) => {
+        return (
+          <ClearedMonthItem key={item.key} item={item} />
+        )
+      })}
+    </Section>
   )
 }
 const DayToDayItemsSection = ({ title, items }: { title: string, items: ItemCollection }) => {
@@ -110,7 +104,7 @@ const ClearedMonthlyItemsSections = ({ clearedMonthlyExpenseItems, clearedMonthl
   }
 
   return (
-    <Row>
+    <Row styling={{ flexWrap: "flex-wrap" }}>
       <div className="w-full text-2xl p-2">Cleared Monthly Items</div>
       <ClearedMonthlyItemsSection title="Revenues" items={clearedMonthlyRevenueItems} />
       <ClearedMonthlyItemsSection title="Expenses" items={clearedMonthlyExpenseItems} />

@@ -28,15 +28,15 @@
   </head>
 
   <body>
-    <div>
+    <div class="w-full overflow-y-scroll">
       <%= yield %>
-      <% if user_profile_signed_in? %>
-        <div class="bg-blue-800 p-2">
-          <div class="bg-gray-200 text-end p-2 rounded">
-            <%= button_to "Sign Out", destroy_user_profile_session_path, method: :delete, class: "underline" %>
-          </div>
-        </div>
-      <% end %>
     </div>
+    <% if user_profile_signed_in? %>
+      <div class="bg-blue-800 p-2">
+        <div class="bg-gray-200 text-end p-2 rounded">
+          <%= button_to "Sign Out", destroy_user_profile_session_path, method: :delete, class: "underline" %>
+        </div>
+      </div>
+    <% end %>
   </body>
 </html>
