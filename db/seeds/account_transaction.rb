@@ -10,6 +10,11 @@ User::Group.find_by!(name: "Initial User Group").then do |group|
       amount: -25_25,
       description: "7-11",
     },
+    {
+      slug: :gas,
+      amount: -25_25,
+      description: "7-11",
+    },
   ]
 
   checking_account = Account.belonging_to(group).by_slug!(:checking)
@@ -35,4 +40,23 @@ User::Group.find_by!(name: "Initial User Group").then do |group|
       ]
     )
   end
+  category = Budget::Category.belonging_to(group).by_slug!("groceries")
+  item = Budget::Item.find_by!(category: category, interval: interval)
+  Transaction::Entry.create!(
+    key: SecureRandom.hex(6),
+    account: checking_account,
+    clearance_date: today,
+    description: "Costco",
+    details_attributes: [
+      {
+        key: SecureRandom.hex(6),
+        budget_item: item,
+        amount: -22_00,
+      },
+      {
+        key: SecureRandom.hex(6),
+        amount: -10_44,
+      },
+    ]
+  )
 end
