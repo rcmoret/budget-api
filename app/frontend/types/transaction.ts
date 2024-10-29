@@ -11,6 +11,7 @@ export interface AccountTransactionDetail {
 export interface AccountTransaction {
   key: string;
   accountKey: string;
+  accountSlug: string;
   amount: number;
   checkNumber: null | string;
   clearanceDate: string | null;

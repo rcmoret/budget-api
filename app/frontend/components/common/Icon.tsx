@@ -7,6 +7,7 @@ const IconDictionary = {
   "caret-down": "fas fa-caret-down",
   "caret-right": "fas fa-caret-right",
   "check-circle": "fas fa-check-circle",
+  "plus-circle": "fas fa-plus-circle",
   edit: "fa  fa-edit",
   gears: "fa fa-gears",
   "money-check": "fas fa-money-check",

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+import { ActionAnchorTag } from "@/components/common/Link";
 import { AmountSpan } from "@/components/common/AmountSpan";
 import { Cell } from "@/components/common/Cell";
 import { Icon } from "@/components/common/Icon";
@@ -16,10 +17,11 @@ import { AccountTransactionDetail } from "@/types/transaction";
 const TransactionShow = (props: {
   transaction: ModeledTransaction;
   balance: number;
+  showFormFn: (key: string) => void;
 }) => {
   const [isDetailShown, updateDetailVisibility] = useState<boolean>(false);
   const toggleDetailView = () => updateDetailVisibility(!isDetailShown);
-  const { transaction } = props;
+  const { transaction, showFormFn } = props;
   const {
     key,
     isBudgetExclusion,
@@ -59,6 +61,7 @@ const TransactionShow = (props: {
   if (notes) {
     noteLines = notes.replace(/^!!!\s/, "").split("<br>");
   }
+  const toggleForm = () => showFormFn(key)
 
   return (
     <TransactionContainer
@@ -96,7 +99,7 @@ const TransactionShow = (props: {
           flexWrap: "flex-wrap",
         }}
       >
-        {!!description && details.length > 1 && (
+        {!!description && details.length > 0 && !isDetailShown && (
           <BudgetItemsDescription details={details} />
         )}
         {isBudgetExclusion && (
@@ -130,9 +133,11 @@ const TransactionShow = (props: {
           <div className="mr-2">
             <Icon name="trash" />
           </div>
-          <div className="mr-2">
-            <Icon name="edit" />
-          </div>
+          <ActionAnchorTag onClick={toggleForm}>
+            <div className="mr-2">
+              <Icon name="edit" />
+            </div>
+          </ActionAnchorTag>
         </div>
       </Cell>
     </TransactionContainer>
@@ -202,16 +207,4 @@ const Notes = (props: { noteLines: string[]; notesNeedAttn: boolean }) => {
   );
 };
 
-const LinkContainer = (props: { children: React.ReactNode }) => (
-  <Cell
-    styling={{
-      width: "w-full md:w-1/7",
-      flexAlign: "justify-start",
-    }}
-  >
-    <div className="w-full max-sm:justify-between ml-4 flex flex-row-reverse">
-      {props.children}
-    </div>
-  </Cell>
-);
 export { TransactionShow };

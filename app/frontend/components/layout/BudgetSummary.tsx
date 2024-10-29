@@ -13,6 +13,7 @@ import { Icon } from "@/components/common/Icon";
 import { MonthYearNav } from "@/components/layout/MonthYearNav";
 import { Point } from "@/components/common/Symbol";
 import { Row } from "@/components/common/Row";
+import { buildQueryParmas } from "@/lib/redirect_params";
 
 const DateDiv = ({ date }: { date: string}) => {
   return (
@@ -34,23 +35,22 @@ type DateFormProps = {
 const DateForm = (props: DateFormProps) => {
   const { month, year } = props
 
-  const { data, setData, put } = useForm({
-    "interval[start_date]": props.firstDate,
-    "interval[end_date]": props.lastDate
+  const { processing, transform, data, setData, put } = useForm({
+    startDate: props.firstDate,
+    endDate: props.lastDate
   })
-  const queryParams =
-    props.redirectSegments
-    .map((segment) => [
-      "redirect[segments][]",
-      segment
-    ].map((str) => encodeURIComponent(str)).join("="))
-    .join("&")
+
+  transform((data) => {
+    return { interval: data }
+  })
+
+  const queryParams = buildQueryParmas(props.redirectSegments)
 
   const handleStartDateChange = (input: Date | null) => {
-    setData("interval[start_date]", (input?.toISOString() || ""))
+    setData("startDate", (input?.toISOString() || ""))
   }
   const handleEndDateChange = (input: Date | null) => {
-    setData("interval[end_date]", (input?.toISOString() || ""))
+    setData("endDate", (input?.toISOString() || ""))
   }
 
   const formUrl = (`/budget/${month}/${year}?${queryParams}`)
@@ -65,14 +65,14 @@ const DateForm = (props: DateFormProps) => {
       <div className="w-full flex flex-wrap gap-2 items-center py-2">
         <div className="w-full">
           <DatePicker
-            selected={parseIsoDate(data["interval[start_date]"])}
+            selected={parseIsoDate(data.startDate)}
             onChange={handleStartDateChange}
           />
         </div>
         <div className="w-full">to</div>
         <div className="w-full">
           <DatePicker
-            selected={parseIsoDate(data["interval[end_date]"])}
+            selected={parseIsoDate(data.endDate)}
             onChange={handleEndDateChange}
           />
         </div>
@@ -86,8 +86,9 @@ const DateForm = (props: DateFormProps) => {
           </div>
           <div>
             <button
-            type="button"
-            onClick={props.toggleForm}
+              type="button"
+              onClick={props.toggleForm}
+              disabled={processing}
             >
               <span className="text-red-600">
                 <Icon name="times-circle" />

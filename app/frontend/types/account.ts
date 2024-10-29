@@ -1,4 +1,4 @@
-import { AccountBudgetSummary } from "@/types/budget";
+import { AccountBudgetSummary, BudgetItem } from "@/types/budget";
 import { AccountTransaction } from "@/types/transaction";
 
 export interface AccountSummary {
@@ -33,6 +33,13 @@ export interface AccountShow {
   transactions: AccountTransaction[];
   balancePriorTo: number;
   metadata: {
+    daysRemaining: number;
     firstDate: string;
+    isCurrent: boolean;
+    items: Array<BudgetItem>
+    lastDate: string;
+    month: number;
+    totalDays: number;
+    year: number;
   }
 }

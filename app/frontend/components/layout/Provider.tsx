@@ -1,10 +1,11 @@
-import { ReactNode, createContext, useState } from "react";
+import { Dispatch, ReactNode, SetStateAction, createContext, useState } from "react";
 import { BudgetData } from "@/types/budget";
 
 type TAppConfig = {
   showConfigMenu: boolean;
   account: {
     includeArchived: boolean;
+    slug: string;
   };
   budget: {
     showAccruals: boolean;
@@ -22,6 +23,7 @@ const initialConfig: TAppConfig = {
   showConfigMenu: false,
   account: {
     includeArchived: false,
+    slug: "",
   },
   budget: {
     showAccruals: false,
@@ -36,7 +38,8 @@ const initialConfig: TAppConfig = {
       month: 1,
       year: 2000,
       isClosedOut: false,
-      isSetUp: false
+      isSetUp: false,
+      items: []
     },
     multiItemForm: {
       display: false,
@@ -45,7 +48,11 @@ const initialConfig: TAppConfig = {
   },
 }
 
-const AppConfigContext = createContext({
+type TConfigContext = {
+  appConfig: TAppConfig;
+}
+
+const AppConfigContext = createContext<TConfigContext>({
   appConfig: initialConfig,
   setAppConfig: (props: TAppConfig): TAppConfig => { return props },
 })

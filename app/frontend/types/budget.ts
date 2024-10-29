@@ -13,6 +13,7 @@ export interface AccountBudgetSummary {
 export interface BudgetData extends AccountBudgetSummary {
   isClosedOut: boolean;
   isSetUp: boolean;
+  items: Array<BudgetItem>;
 }
 
 export interface DiscretionaryData {

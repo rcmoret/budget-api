@@ -76,8 +76,9 @@ Rails.application.routes.draw do
       get "/", to: "index#call", as: :index
     end
 
-    scope "account/:slug/transactions", module: :transactions, as: :transactions do
-      get "/(:month)/(:year)", to: "index#call", as: :index
+    scope "account/:slug", module: :transactions, as: :transactions do
+      get "/transactions/(:month)/(:year)", to: "index#call", as: :index
+      put "/transaction/:key/(:month)/(:year)", to: "update#call", as: :update
     end
 
     namespace :budget do

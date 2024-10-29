@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 
-import { BudgetItem, BudgetItemDetail, BudgetItemEvent, BudgetItemTransaction } from "@/types/budget";
+import { BudgetItem, BudgetItemEvent, BudgetItemTransaction } from "@/types/budget";
 import { Row, StripedRow } from "@/components/common/Row";
 import { Cell } from "@/components/common/Cell";
 import { Icon } from "@/components/common/Icon";
@@ -11,7 +11,6 @@ import { AppConfigContext } from "@/components/layout/Provider";
 
 import { clearedItems, sortDetails } from "@/lib/models/budget-items"
 import { dateParse } from "@/lib/DateFormatter";
-import { parseDate } from "react-datepicker/dist/date_utils";
 
 type DetailProps = {
   item: BudgetItem;
