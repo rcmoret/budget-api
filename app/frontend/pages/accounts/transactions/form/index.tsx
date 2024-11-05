@@ -5,12 +5,13 @@ import DatePicker from "react-datepicker";
 import { parseISO as parseIsoDate } from "date-fns";
 import { AppConfigContext } from "@/components/layout/Provider";
 import { Icon } from "@/components/common/Icon";
-import { buildQueryParmas } from "@/lib/redirect_params"
+import { buildQueryParams } from "@/lib/redirect_params"
 import { Label } from "@/pages/accounts/transactions/form/Shared";
 import { BudgetItemsComponent } from "@/pages/accounts/transactions/form/LineItems";
 import { ActionAnchorTag } from "@/components/common/Link";
 import { generateKeyIdentifier } from "@/lib/KeyIdentifier";
 import { inputAmount, TInputAmount } from "@/components/common/AmountInput";
+import { UrlBuilder, CategoryShowProps } from "@/lib/UrlBuilder";
 
 type InputProps = {
   name: string;
@@ -174,7 +175,7 @@ const TransactionForm = (props: {
 
   const formDetails = data.details.filter((detail) => !detail._destroy)
 
-  const queryParams = buildQueryParmas([
+  const queryParams = buildQueryParams([
     "account",
     accountSlug,
     "transactions",
@@ -182,7 +183,12 @@ const TransactionForm = (props: {
     appConfig.budget.data.year,
   ])
 
-  const formUrl = `/account/${accountSlug}/transaction/${key}?${queryParams}`
+  const formUrl = UrlBuilder({
+    name: "TransactionShow",
+    accountSlug,
+    key,
+    queryParams
+  })
 
   const onSubmit = (ev) => {
     ev.preventDefault()

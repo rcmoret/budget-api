@@ -13,7 +13,8 @@ import { Icon } from "@/components/common/Icon";
 import { MonthYearNav } from "@/components/layout/MonthYearNav";
 import { Point } from "@/components/common/Symbol";
 import { Row } from "@/components/common/Row";
-import { buildQueryParmas } from "@/lib/redirect_params";
+import { buildQueryParams } from "@/lib/redirect_params";
+import { UrlBuilder, CategoryShowProps } from "@/lib/UrlBuilder";
 
 const DateDiv = ({ date }: { date: string}) => {
   return (
@@ -44,7 +45,7 @@ const DateForm = (props: DateFormProps) => {
     return { interval: data }
   })
 
-  const queryParams = buildQueryParmas(props.redirectSegments)
+  const queryParams = buildQueryParams(props.redirectSegments)
 
   const handleStartDateChange = (input: Date | null) => {
     setData("startDate", (input?.toISOString() || ""))
@@ -53,7 +54,12 @@ const DateForm = (props: DateFormProps) => {
     setData("endDate", (input?.toISOString() || ""))
   }
 
-  const formUrl = (`/budget/${month}/${year}?${queryParams}`)
+  const formUrl = UrlBuilder({
+    name: "BudgetShow",
+    month,
+    year,
+    queryParams
+  })
 
   const onSubmit = (ev) => {
     ev.preventDefault()
@@ -137,11 +143,12 @@ interface ComponentProps {
   budget: AccountBudgetSummary;
   baseUrl: string;
   children: React.ReactNode;
+  redirectSegments: string[];
   titleComponent: React.ReactNode;
 }
 
 const BudgetSummary = (props: ComponentProps) => {
-  const { budget, baseUrl } = props;
+  const { budget, baseUrl, redirectSegments } = props;
   const {
     daysRemaining,
     firstDate,
@@ -174,7 +181,6 @@ const BudgetSummary = (props: ComponentProps) => {
       };
   const visitNextUrl = `${baseUrl}/${nextMonth.month}/${nextMonth.year}`;
   const visitPrevUrl = `${baseUrl}/${prevMonth.month}/${prevMonth.year}`;
-  const redirectSegments = [...baseUrl.split("/"), String(month), String(year)].filter((s) => s)
 
   return (
     <Row
@@ -284,6 +290,7 @@ const Summary = (props: SummaryProps) => {
     return (
       <BudgetSummary
         budget={props.data}
+        redirectSegments={["budget", String(month), String(year)]}
         baseUrl={baseUrl}
         titleComponent={<BudgetSummaryTitleComponent month={month} year={year} />}
       >
@@ -303,6 +310,7 @@ const Summary = (props: SummaryProps) => {
       <BudgetSummary
         budget={metadata}
         baseUrl={baseUrl}
+        redirectSegments={["budget", String(month), String(year)]}
         titleComponent={<AccountTransactionsSummaryTitleComponent accountName={name} month={month} year={year} />}
       >
         <MonthYearNav

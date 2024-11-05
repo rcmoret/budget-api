@@ -1,4 +1,4 @@
-const buildQueryParmas = (segments: Array<string | number>) => {
+const buildQueryParams = (segments: Array<string | number>) => {
   return segments.map((segment) => {
     return [
       "redirect[segments][]",
@@ -7,4 +7,4 @@ const buildQueryParmas = (segments: Array<string | number>) => {
   }).join("&")
 }
 
-export { buildQueryParmas }
+export { buildQueryParams }
