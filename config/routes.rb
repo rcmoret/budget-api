@@ -85,6 +85,9 @@ Rails.application.routes.draw do
       scope "/categories", module: :categories, as: :categories do
         get "/", to: "index#call", as: :index
       end
+      scope "/category/:key", module: :categories, as: :category do
+        put "/", to: "update#call"
+      end
       get "/(:month)/(:year)", to: "index#call", as: :index
       put "/(:month)/(:year)", to: "update#call"
     end

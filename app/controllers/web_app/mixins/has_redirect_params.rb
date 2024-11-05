@@ -6,10 +6,20 @@ module WebApp
       InvalidPathError = Class.new(StandardError)
 
       # rubocop:disable Metrics/MethodLength
+      # rubocop:disable Metrics/PerceivedComplexity
+      # rubocop:disable Metrics/CyclomaticComplexity
+      # rubocop:disable Metrics/AbcSize
       def redirect_path
         case redirect_params
-        in ["budget", *rest]
-          resolve_budget_path(*rest)
+        in ["budget", "categories"]
+          budget_categories_index_path
+        in ["budget"]
+          budget_index_path
+        in ["budget", month, year, *rest]
+          raise InvalidPathError unless (1..12).cover?(month.to_i)
+          raise InvalidPathError unless year =~ /\A\d{4}\z/
+
+          resolve_budget_path(month, year, *rest)
         in ["accounts", *]
           accounts_index_path
         in ["account", *rest]
@@ -21,18 +31,14 @@ module WebApp
         Rails.logger.error(e)
         home_path
       end
+      # rubocop:enable Metrics/PerceivedComplexity
+      # rubocop:enable Metrics/CyclomaticComplexity
+      # rubocop:enable Metrics/AbcSize
 
-      def resolve_budget_path(*args)
+      def resolve_budget_path(month, year, *args)
         case args
-        in [month, year, *]
-          raise InvalidPathError unless (1..12).cover?(month.to_i)
-          raise InvalidPathError unless year =~ /\A\d{4}\z/
-
-          budget_index_path(month, year)
-        in ["categories"]
-          budget_categories_index_path
-        in [*]
-          budget_index_path
+        in ["set-up", *]
+          budget_set_up_form_path(month, year)
         end
       rescue InvalidPathError
         budget_index_path
@@ -63,6 +69,10 @@ module WebApp
         transactions_index_path(slug)
       end
       # rubocop:enable Metrics/MethodLength
+
+      def redirect_params
+        params.require(:redirect).permit(segments: [])[:segments]
+      end
     end
   end
 end

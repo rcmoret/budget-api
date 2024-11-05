@@ -26,10 +26,6 @@ module WebApp
           .permit(:start_date, :end_date)
       end
 
-      def redirect_params
-        params.require(:redirect).permit(segments: [])[:segments]
-      end
-
       def namespace = "budget"
     end
   end
