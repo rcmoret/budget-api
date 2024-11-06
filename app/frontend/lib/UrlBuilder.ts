@@ -5,6 +5,13 @@ type BudgetItemEventsProps = {
   queryParams?: string;
 }
 
+type BudgetSetUpProps = {
+  name: "BudgetSetUp";
+  month: number | string;
+  year: number | string;
+  queryParams?: string;
+}
+
 type BudgetShowProps = {
   name: "BudgetShow";
   month: number | string;
@@ -27,6 +34,7 @@ type TransactionShowProps = {
 
 type UrlBuilderProps =
   | BudgetItemEventsProps
+  | BudgetSetUpProps
   | BudgetShowProps
   | CategoryShowProps
   | TransactionShowProps
@@ -44,6 +52,8 @@ const UrlBuilder = (props: UrlBuilderProps) => {
   switch (name) {
     case "BudgetItemEvents":
       return appendQueryParams(`/budget/events/${props.month}/${props.year}`);
+    case "BudgetSetUp":
+      return appendQueryParams(`/budget/${props.month}/${props.year}/set-up`);
     case "BudgetShow":
       return appendQueryParams(`/budget/${props.month}/${props.year}`);
     case "CategoryShow":

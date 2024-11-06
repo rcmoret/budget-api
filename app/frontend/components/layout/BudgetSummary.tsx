@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
+import { PageData } from "@/components/layout/Header";
 import { useForm } from "@inertiajs/inertia-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -14,9 +15,9 @@ import { MonthYearNav } from "@/components/layout/MonthYearNav";
 import { Point } from "@/components/common/Symbol";
 import { Row } from "@/components/common/Row";
 import { buildQueryParams } from "@/lib/redirect_params";
-import { UrlBuilder, CategoryShowProps } from "@/lib/UrlBuilder";
+import { UrlBuilder } from "@/lib/UrlBuilder";
 
-const DateDiv = ({ date }: { date: string}) => {
+const DateDiv = ({ date }: { date: string }) => {
   return (
     <div>
       {dateParse(date, { format: "monthDay" })}
@@ -31,7 +32,7 @@ type DateFormProps = {
   redirectSegments: string[];
   toggleForm: () => void;
   year: number;
-} 
+}
 
 const DateForm = (props: DateFormProps) => {
   const { month, year } = props
@@ -41,6 +42,7 @@ const DateForm = (props: DateFormProps) => {
     endDate: props.lastDate
   })
 
+  // @ts-ignore
   transform((data) => {
     return { interval: data }
   })
@@ -61,7 +63,7 @@ const DateForm = (props: DateFormProps) => {
     queryParams
   })
 
-  const onSubmit = (ev) => {
+  const onSubmit = (ev: React.FormEvent<HTMLFormElement>) => {
     ev.preventDefault()
     put(formUrl, { onSuccess: () => props.toggleForm() })
   }
@@ -108,7 +110,7 @@ const DateForm = (props: DateFormProps) => {
 }
 
 const DateComponent = ({ firstDate, lastDate, redirectSegments, month, year }:
-                       { firstDate: string, lastDate: string, redirectSegments: string[], month: number, year: number }) => {
+  { firstDate: string, lastDate: string, redirectSegments: string[], month: number, year: number }) => {
   const [showDateForm, setShowDateForm] = useState(false)
   const toggleForm = () => setShowDateForm(!showDateForm)
 
@@ -242,6 +244,21 @@ const BudgetSummary = (props: ComponentProps) => {
   );
 };
 
+const BudgetSetUpTitleComponent = (props: {
+  month: number;
+  year: number;
+}) => {
+  return (
+    <div className="w-full flex justify-between text-2xl underline">
+      Planning: {" "}
+      {DateFormatter({
+        ...props,
+        format: "monthYear",
+      })}
+    </div>
+  )
+};
+
 const BudgetSummaryTitleComponent = (props: {
   month: number;
   year: number;
@@ -278,11 +295,34 @@ const AccountTransactionsSummaryTitleComponent = (props: TitleProps) => (
 type SummaryProps = {
   data: AccountBudgetSummary | undefined;
   selectedAccount: SelectedAccount | undefined;
+  metadata: {
+    namespace: string;
+    prevSelectedAccountPath: string | undefined;
+    page?: PageData;
+  };
 }
 
 const Summary = (props: SummaryProps) => {
-  if (!!props.data && !!props.selectedAccount?.metadata) {
+  if (!!props.data && !!props.selectedAccount?.metadata && !!props.metadata.page) {
     return null
+  } else if (props.metadata.page?.name === "budget/set-up" && props.data) {
+    const baseUrl = "/budget"
+    const { month, year } = props.metadata.page
+    return (
+      <BudgetSummary
+        budget={props.data}
+        baseUrl={baseUrl}
+        redirectSegments={["budget", String(month), String(year), "set-up"]}
+        titleComponent={<BudgetSetUpTitleComponent month={Number(month)} year={Number(year)} />}
+      >
+        <MonthYearNav
+          baseUrl={baseUrl}
+          month={month}
+          year={year}
+        />
+      </BudgetSummary>
+    )
+
   } else if (props.data) {
     const baseUrl = "/budget"
     const { month, year } = props.data

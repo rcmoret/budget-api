@@ -69,3 +69,14 @@ export type BudgetItem = {
 }
 
 export type BudgetItemDetail = BudgetItemEvent | BudgetItemTransaction
+
+export type BudgetCategory = {
+  key: string;
+  name: string;
+  slug: string;
+  defaultAmount?: number;
+  isAccrual: boolean;
+  isExpense: boolean;
+  isMonthly: boolean;
+  iconClassName: IconName;
+}

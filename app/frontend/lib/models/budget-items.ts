@@ -1,4 +1,5 @@
 import { BudgetItem, BudgetItemDetail } from "@/types/budget";
+import { SetUpCategory } from "@/lib/hooks/useSetUpEventsForm";
 
 const accrualFilter = (props: { item: BudgetItem, showAccruals: boolean, month: number, year: number }) => {
   const { isAccrual, maturityMonth, maturityYear } = props.item
@@ -11,10 +12,11 @@ const accrualFilter = (props: { item: BudgetItem, showAccruals: boolean, month: 
   return maturityMonth === month && maturityYear === year
 }
 const clearedItems = (item: BudgetItem) => item.isMonthly && !!item.transactionDetails.length
-const dayToDayItems = (item: BudgetItem) => !item.isMonthly
+const dayToDayItems = (item: BudgetItem | SetUpCategory) => !item.isMonthly
+const expenseItems = (item: BudgetItem | SetUpCategory) => item.isExpense
+const monthlyItems = (item: BudgetItem | SetUpCategory) => item.isMonthly
 const pendingItems = (item: BudgetItem) => item.isMonthly && !item.transactionDetails.length
-const revenueItems = (item: BudgetItem) => !item.isExpense
-const expenseItems = (item: BudgetItem) => item.isExpense
+const revenueItems = (item: BudgetItem | SetUpCategory) => !item.isExpense
 
 const sortByAbsAmount = (item1: BudgetItem, item2: BudgetItem) => {
   if (item1.amount === item2.amount) {
@@ -41,6 +43,7 @@ export {
   clearedItems,
   dayToDayItems,
   expenseItems,
+  monthlyItems,
   pendingItems,
   revenueItems,
   sortByName,

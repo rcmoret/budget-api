@@ -8,10 +8,23 @@ import { ActionAnchorTag } from "@/components/common/Link";
 import { AppConfigContext } from "@/components/layout/Provider";
 import { AccountBudgetSummary, SelectedAccount } from "@/types/budget";
 
+type BudgetIndexPageData = {
+  name: "budget/index";
+}
+
+type BudgetSetUpPageData = {
+  name: "budget/set-up";
+  month: number;
+  year: number;
+}
+
+export type PageData = BudgetIndexPageData | BudgetSetUpPageData
+
 type HeaderProps = {
   metadata: {
     namespace: string;
     prevSelectedAccountPath: string | undefined;
+    page?: PageData;
   };
   data: AccountBudgetSummary | undefined;
   selectedAccount: SelectedAccount | undefined;
@@ -58,7 +71,7 @@ const Header = ({ metadata, data, selectedAccount }: HeaderProps) => {
           </ActionAnchorTag>
         </Cell>
         <Cell styling={{width: "lg:w-8/12 w-full"}}>
-          <Summary data={data} selectedAccount={selectedAccount} />
+          <Summary metadata={metadata} data={data} selectedAccount={selectedAccount} />
         </Cell>
       </Cell>
     </Row>

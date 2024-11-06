@@ -101,6 +101,7 @@ const TransactionForm = (props: {
     details,
   })
 
+  // @ts-ignore
   transform((data) => {
     const { details, ...transaction } = data
     return {
@@ -190,7 +191,7 @@ const TransactionForm = (props: {
     queryParams
   })
 
-  const onSubmit = (ev) => {
+  const onSubmit = (ev: React.FormEvent<HTMLFormElement>) => {
     ev.preventDefault()
     put(formUrl, { onSuccess: () => props.closeForm() })
   }

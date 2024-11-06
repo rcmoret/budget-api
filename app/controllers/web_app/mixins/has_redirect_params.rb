@@ -39,6 +39,8 @@ module WebApp
         case args
         in ["set-up", *]
           budget_set_up_form_path(month, year)
+        in []
+          budget_index_path(month, year)
         end
       rescue InvalidPathError
         budget_index_path

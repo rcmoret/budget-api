@@ -19,6 +19,14 @@ module WebApp
         "budget"
       end
 
+      def metadata
+        {
+          page: {
+            name: "budget/index",
+          },
+        }
+      end
+
       def error_component = "budget/index"
     end
   end

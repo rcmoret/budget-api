@@ -1,4 +1,4 @@
-import { Dispatch, ReactNode, SetStateAction, createContext, useState } from "react";
+import { ReactNode, createContext, useState } from "react";
 import { BudgetData } from "@/types/budget";
 
 type TAppConfig = {
@@ -50,6 +50,7 @@ const initialConfig: TAppConfig = {
 
 type TConfigContext = {
   appConfig: TAppConfig;
+  setAppConfig: (props: TAppConfig) => void;
 }
 
 const AppConfigContext = createContext<TConfigContext>({

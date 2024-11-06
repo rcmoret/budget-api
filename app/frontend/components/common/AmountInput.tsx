@@ -27,7 +27,7 @@ const AmountInput = (props: AmountInputProps) => {
   }
 
   const classes = props.classes || []
-  const className = [`text-${textAlign}`, ...classes].join(" ")
+  const className = [`rounded text-${textAlign}`, ...classes].join(" ")
 
   return (
     <input
@@ -47,14 +47,19 @@ type InputAmountProps = {
 }
 
 export type TInputAmount = {
+  cents?: number;
+  display?: string;
+}
+
+type TInputAmountReturn = {
   cents: number;
   display: string;
 }
 
-const inputAmount = (props: InputAmountProps): TInputAmount => {
+const inputAmount = (props: InputAmountProps): TInputAmountReturn => {
   const { cents, display } = props
 
-  if (!!display) {
+  if (display === "" || !!display) {
     return {
       cents: decimalToInt(display),
       display: display

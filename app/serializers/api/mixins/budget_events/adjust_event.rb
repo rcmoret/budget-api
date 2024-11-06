@@ -5,26 +5,30 @@ module API
         extend ActiveSupport::Concern
 
         included do
-          attributes :amount,
+          attribute :amount, alias_of: :budgeted
+          attributes :budget_item_key,
+                     :budgeted,
                      :data,
-                     :event_key,
                      :event_type,
                      :spent
-          attribute :budgeted, alias_of: :amount
-          attribute :budget_item_key, alias_of: :key
+          attribute :key, alias_of: :event_key
         end
 
-        def event_type
-          raise NotImplementedError
-        end
+        def event_type = raise NotImplementedError
+
+        def budgeted = item.amount
+
+        def data = {}
 
         def event_key
           @event_key ||= SecureRandom.hex(6)
         end
 
-        def data
-          {}
-        end
+        def budget_item_key = item.key
+
+        private
+
+        def item = __getobj__
       end
     end
   end

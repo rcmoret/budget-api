@@ -9,7 +9,7 @@ module Fetchable
     end
 
     def fetch!(user_or_group, key:)
-      belonging_to(user_or_group).by_key(key).tap do |result|
+      fetch(user_or_group, key: key).tap do |result|
         raise ActiveRecord::RecordNotFound if result.nil?
       end
     end

@@ -28,7 +28,7 @@ const decimalToInt = (amount: string): number => {
   const dollars = stringArray[0];
   const cents = stringArray[1];
 
-  if (cents.length == 0 && dollars === "-") {
+  if (amount === "" || (cents.length == 0 && dollars === "-")) {
     return 0;
   } else if (cents.length == 0) {
     return parseInt(amount) * 100;
@@ -37,7 +37,7 @@ const decimalToInt = (amount: string): number => {
   } else if (cents.length == 1) {
     return parseInt(`${dollars}${cents}0`);
   } else {
-    throw new Error(`malformatted number string: ${amount}`);
+    return Number(amount)
   }
 };
 

@@ -82,14 +82,18 @@ Rails.application.routes.draw do
     end
 
     namespace :budget do
-      scope "/categories", module: :categories, as: :categories do
+      get "/", to: "index#call", as: :home
+
+      put "/category/:key", as: :catepgory, to: "categories/update#call"
+
+      post "/events/(:month)/(:year)", to: "events#call", as: :events
+
+      scope "/:month/:year" do
         get "/", to: "index#call", as: :index
-      end
-      scope "/category/:key", module: :categories, as: :category do
         put "/", to: "update#call"
+        get "/set-up", to: "set_up/form#call", as: :set_up_form
+        post "/set-up", to: "set_up/create#call"
       end
-      get "/(:month)/(:year)", to: "index#call", as: :index
-      put "/(:month)/(:year)", to: "update#call"
     end
   end
 end

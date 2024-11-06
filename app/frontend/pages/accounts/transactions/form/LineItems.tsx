@@ -105,7 +105,7 @@ const Total = ({ details, addDetail }: { details: Array<TFormDetail>, addDetail:
   if (details.length === 1) { return }
 
   const total = details.reduce((sum, detail) => {
-    return detail.amount.cents + sum
+    return Number(detail.amount.cents) + sum
   }, 0)
 
   return (

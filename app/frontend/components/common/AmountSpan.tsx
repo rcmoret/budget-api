@@ -1,5 +1,3 @@
-import React from "react";
-
 import { moneyFormatter } from "@/lib/MoneyFormatter";
 import { TextColor } from "@/types/component_classes";
 

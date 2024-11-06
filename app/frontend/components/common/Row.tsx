@@ -1,13 +1,14 @@
 import React from "react";
 
 import {
+  AlignItemsOption,
   BgColorOption,
+  FlexAlignOption,
+  FlexDirectionOption,
+  FlexWrapOption,
   FontSizeOption,
   FontWeightOption,
-  FlexAlignOption,
-  FlexWrapOption,
   OverflowOption,
-  AlignItemsOption,
 } from "types/component_classes";
 
 interface RowProps {
@@ -18,6 +19,7 @@ interface RowProps {
     backgroundColor?: BgColorOption;
     border?: string;
     flexAlign?: FlexAlignOption;
+    flexDirection?: FlexDirectionOption;
     flexWrap?: FlexWrapOption | null;
     fontSize?: FontSizeOption;
     fontWeight?: FontWeightOption;
@@ -50,6 +52,7 @@ interface StripedRowProps {
     alignItems?: AlignItemsOption;
     border?: string;
     flexAlign?: FlexAlignOption;
+    flexDirection?: FlexDirectionOption;
     flexWrap?: FlexWrapOption | null;
     fontSize?: FontSizeOption;
     fontWeight?: FontWeightOption;
@@ -61,12 +64,12 @@ interface StripedRowProps {
 }
 
 const StripedRow = (props: StripedRowProps) => {
-  const evenColor = props.evenColor || "white";
-  const oddColor = props.oddColor || "gray-200";
+  const evenColor = props.evenColor || "bg-white";
+  const oddColor = props.oddColor || "bg-gray-200";
 
   const styling = {
     ...props.styling,
-    alternatingBgColor: `odd:bg-${oddColor} even:bg-${evenColor}`,
+    alternatingBgColor: `odd:${oddColor} even:${evenColor}`,
   };
 
   return <Row styling={styling}>{props.children}</Row>;
