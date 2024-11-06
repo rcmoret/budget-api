@@ -15,8 +15,13 @@ module WebApp
         API::Budget::Interval::ShowSerializer.new(current_user_profile, interval).render
       end
 
-      def namespace
-        "budget"
+      def metadata
+        {
+          namespace: "budget",
+          page: {
+            name: "budget/index",
+          },
+        }
       end
 
       def metadata

@@ -5,6 +5,7 @@ import { Point } from "../common/Symbol";
 import { Row } from "@/components/common/Row";
 import { AppConfigContext } from "@/components/layout/Provider";
 import { InertiaLink } from "@inertiajs/inertia-react";
+import { DateFormatter } from "@/lib/DateFormatter";
 
 const MenuItem = ({ children }: { children: React.ReactNode }) => (
   <div className="w-full leading-8">
@@ -26,10 +27,25 @@ const OptionalMenuItem = ({ isVisible, onClick, copy }: { isVisible: boolean; on
   )
 }
 
+const SetUpLink = ({ month, year, isSetUp }: { month: number, year: number, isSetUp: boolean }) => {
+  if (!!isSetUp) { return }
+
+  return (
+    <InertiaLink href={`/budget/${month}/${year}/set-up`}>
+      <MenuItem>
+        Set up {DateFormatter({ month, year, format: "monthYear" })}
+      </MenuItem>
+    </InertiaLink>
+
+  )
+}
+
 const OptionsMenu = ({ namespace }: { namespace: string }) => {
   const { appConfig, setAppConfig } = useContext(AppConfigContext);
 
   if (!appConfig.showConfigMenu) return null
+
+  const { isSetUp, month, year } = appConfig.budget.data
 
   const toggleAccruals = () => setAppConfig({
     ...appConfig,
@@ -90,6 +106,9 @@ const OptionsMenu = ({ namespace }: { namespace: string }) => {
           onClick={toggleMultiItemForm}
           copy={appConfig.budget.multiItemForm.display ? "Hide Multi-Item Form" : "Show Multi-Item Form"}
         />
+      </Cell>
+      <Cell styling={{ width: "w-full md:w-3/12"}}>
+        <SetUpLink month={month} year={year} isSetUp={isSetUp} />
       </Cell>
     </Row>
   )
