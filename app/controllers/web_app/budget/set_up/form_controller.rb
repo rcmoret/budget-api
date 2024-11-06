@@ -18,10 +18,9 @@ module WebApp
           API::Budget::Interval::SetUp::CategoriesSerializer.new(interval).render
         end
 
-        def namespace = "budget"
-
         def metadata
           {
+            namespace: "budget",
             page: {
               name: "budget/set-up",
               month: month,
