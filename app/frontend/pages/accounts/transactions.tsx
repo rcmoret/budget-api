@@ -6,9 +6,6 @@ import { InitialBalance } from "@/pages/accounts/transactions/initial_balance";
 import { TransactionForm } from "@/pages/accounts/transactions/form";
 import { TransactionShow } from "@/pages/accounts/transactions/show";
 import { useState } from "react";
-import { StripedRow } from "@/components/common/Row";
-import { Cell } from "@/components/common/Cell";
-import { Button } from "@/components/common/Button";
 import { AddNewComponent } from "./transactions/AddNew";
 
 interface ComponentProps {
