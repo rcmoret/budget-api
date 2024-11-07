@@ -14,10 +14,12 @@ module Budget
 
     delegate :month, :year, to: :interval
 
+    accepts_nested_attributes_for :interval, reject_if: proc { true }
+
     private
 
     def category_accrual?
-      return if category.accrual?
+      return false if category.accrual?
 
       errors.add(:budget_category, "must be an accrual")
     end

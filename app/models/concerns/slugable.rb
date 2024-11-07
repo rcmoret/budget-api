@@ -19,5 +19,9 @@ module Slugable
     def by_slug(slug)
       find_by(arel_table[:slug].lower.eq(slug.to_s.strip.downcase))
     end
+
+    def by_slug!(slug)
+      find_by!(arel_table[:slug].lower.eq(slug.to_s.strip.downcase))
+    end
   end
 end

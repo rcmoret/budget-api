@@ -17,12 +17,14 @@ module Budget
       private
 
       def event
-        @event ||= Budget::ItemEvent.new(user: current_user,
-                                         item: budget_item,
-                                         type: budget_item_event_type,
-                                         data: data,
-                                         key: key,
-                                         amount: event_amount,)
+        @event ||= Budget::ItemEvent.new(
+          user: current_user,
+          item: budget_item,
+          type: budget_item_event_type,
+          data: data,
+          key: key,
+          amount: event_amount,
+        )
       end
 
       def budget_item

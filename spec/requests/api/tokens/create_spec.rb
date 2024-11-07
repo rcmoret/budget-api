@@ -38,10 +38,22 @@ RSpec.describe "POST /api/tokens" do
         { user: { email: email, password: incorrect_password } }
       end
 
-      it "an error message, unprocessable entity status" do
+      it "an error message, not found status" do
         subject
-        expect(response.parsed_body).to eq("password" => ["incorrect password"])
-        expect(response).to have_http_status :unauthorized
+        expect(response.parsed_body).to eq("password" => ["incorrect email or password"])
+        expect(response).to have_http_status :not_found
+      end
+    end
+
+    context "when user is not found" do
+      let(:params) do
+        { user: { email: Faker::Internet.email, password: Faker::Internet.password } }
+      end
+
+      it "an error message, not found status" do
+        subject
+        expect(response.parsed_body).to eq("password" => ["incorrect email or password"])
+        expect(response).to have_http_status :not_found
       end
     end
 

@@ -35,19 +35,15 @@ class Account < ApplicationRecord
     transactions.any? ? archive! : delete
   end
 
-  def to_s
-    name
-  end
+  def to_s = name
 
-  def balance
-    details.total
-  end
+  def balance = details.total
+
+  def to_param = slug
 
   private
 
-  def active?
-    archived_at.nil?
-  end
+  def active? = archived_at.nil?
 
   def archive!
     update(archived_at: Time.current)

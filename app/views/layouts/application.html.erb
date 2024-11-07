@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Budget App</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <link rel="shortcut icon" href="/favicon.png">
+
+    <link rel="stylesheet" media="screen" href="https://fonts.googleapis.com/css?family=Questrial">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://kit.fontawesome.com/50bb231d0e.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      html { font-family: Questrial, Arial; }
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #9CA3AF;
+        background-image: url('/black-linen-2.png');
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+    </style>
+
+    <%= vite_client_tag %>
+    <%= vite_react_refresh_tag %>
+    <%= vite_javascript_tag "application.tsx" %>
+  </head>
+
+  <body>
+    <div class="w-full overflow-y-scroll">
+      <%= yield %>
+    </div>
+    <% if user_profile_signed_in? %>
+      <div class="bg-blue-800 p-2">
+        <div class="bg-gray-200 text-end p-2 rounded">
+          <%= button_to "Sign Out", destroy_user_profile_session_path, method: :delete, class: "underline" %>
+        </div>
+      </div>
+    <% end %>
+  </body>
+</html>

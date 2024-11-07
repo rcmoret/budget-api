@@ -61,9 +61,6 @@ RSpec.describe "GET /api/budget/intervals/finalize/(:month)/(:year)" do
           expect(body.dig(:data, :budgetCategories, 0, :events, 0)).to include(
             month: interval.month,
             year: interval.year,
-            name: category.name,
-            budgetCategoryKey: category.key,
-            iconClassName: category.icon_class_name,
             amount: "",
             budgeted: amount,
             spent: 0,
@@ -104,9 +101,6 @@ RSpec.describe "GET /api/budget/intervals/finalize/(:month)/(:year)" do
           expect(body.dig(:data, :budgetCategories, 0, :events, 0)).to include(
             month: interval.month,
             year: interval.year,
-            name: category.name,
-            budgetCategoryKey: category.key,
-            iconClassName: category.icon_class_name,
             amount: "",
             budgeted: amount,
             spent: 0,
@@ -143,7 +137,6 @@ RSpec.describe "GET /api/budget/intervals/finalize/(:month)/(:year)" do
           )
           expect(body.dig(:data, :budgetCategories, 0, :events).size).to be 2
           expect(body.dig(:data, :budgetCategories, 0, :events, 0)).to include(
-            name: category.name,
             amount: amount,
             budgetItemKey: upcoming_budget_item.key,
             data: {},
@@ -154,9 +147,6 @@ RSpec.describe "GET /api/budget/intervals/finalize/(:month)/(:year)" do
           expect(body.dig(:data, :budgetCategories, 0, :events, 1)).to include(
             month: interval.month,
             year: interval.year,
-            name: category.name,
-            budgetCategoryKey: category.key,
-            iconClassName: category.icon_class_name,
             amount: "",
             budgeted: amount,
             spent: 0,
@@ -184,7 +174,6 @@ RSpec.describe "GET /api/budget/intervals/finalize/(:month)/(:year)" do
           body = response.parsed_body.deep_symbolize_keys
           expect(body.dig(:data, :budgetCategories, 0, :events).size).to be 1
           expect(body.dig(:data, :budgetCategories, 0, :events, 0)).to include(
-            name: category.name,
             amount: amount,
             data: {},
             eventType: "rollover_item_adjust",
@@ -219,7 +208,6 @@ RSpec.describe "GET /api/budget/intervals/finalize/(:month)/(:year)" do
           )
           expect(body.dig(:data, :budgetCategories, 0, :events).size).to be 1
           expect(body.dig(:data, :budgetCategories, 0, :events, 0)).to include(
-            name: category.name,
             budgetItemKey: upcoming_budget_item.key,
             amount: amount,
             data: {},

@@ -18,15 +18,23 @@ Layout/LineLength:
 
 Metrics/BlockLength:
   Max: 10
-  AllowedMethods:
+  IgnoredMethods:
     - included
+    - class_methods
   Exclude:
     - app/models/user/event_handlers/**/*
     - config/environments/*
     - config/initializers/*
     - config/routes.rb
+    - db/seeds/*.rb
+    - db/seeds.rb
     - spec/*_helper.rb
     - spec/requests/**/*
+
+Metrics/MethodLength:
+  Max: 10
+  Exclude:
+    - app/models/user/session/data.rb
 
 Style/Documentation:
   Enabled: false
@@ -99,3 +107,6 @@ RSpec/MultipleMemoizedHelpers:
 
 RSpec/MessageSpies:
   EnforcedStyle: receive
+
+Rails/ApplicationController:
+  Enabled: false

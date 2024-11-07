@@ -124,7 +124,7 @@ RSpec.describe User::EventHandlers::NewAuthTokenRequested do
 
       expect(Auth::Token::JWT).not_to receive(:encode)
       expect(Auth::Token::Context).not_to receive(:new)
-      expect(subject.call).to eq([:error, { password: ["incorrect password"] }])
+      expect(subject.call).to eq([:error, { password: ["incorrect email or password"] }])
     end
 
     it "records an event" do

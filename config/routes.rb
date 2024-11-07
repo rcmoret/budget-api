@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
   root "home#index"
+  devise_for :user_profiles, class_name: "User::Profile"
+
   namespace :api do
     namespace :accounts do
       get "/", to: "index#call"
@@ -64,6 +66,34 @@ Rails.application.routes.draw do
     namespace :tokens do
       post "/", to: "create#call"
       delete "/", to: "delete#call"
+    end
+  end
+
+  scope "/", module: :web_app do
+    get "/home", to: "home#call", as: :home
+
+    namespace :accounts do
+      get "/", to: "index#call", as: :index
+    end
+
+    scope "account/:slug", module: :transactions, as: :transactions do
+      get "/transactions/(:month)/(:year)", to: "index#call", as: :index
+      put "/transaction/:key/(:month)/(:year)", to: "update#call", as: :update
+    end
+
+    namespace :budget do
+      get "/", to: "index#call", as: :home
+
+      put "/category/:key", as: :catepgory, to: "categories/update#call"
+
+      post "/events/(:month)/(:year)", to: "events#call", as: :events
+
+      scope "/:month/:year" do
+        get "/", to: "index#call", as: :index
+        put "/", to: "update#call"
+        get "/set-up", to: "set_up/form#call", as: :set_up_form
+        post "/set-up", to: "set_up/create#call"
+      end
     end
   end
 end
