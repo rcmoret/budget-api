@@ -78,6 +78,7 @@ Rails.application.routes.draw do
 
     scope "account/:slug", module: :transactions, as: :transactions do
       get "/transactions/(:month)/(:year)", to: "index#call", as: :index
+      post "/transaction", to: "create#call"
       put "/transaction/:key/(:month)/(:year)", to: "update#call", as: :update
     end
 
