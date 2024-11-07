@@ -6,6 +6,10 @@ import { InitialBalance } from "@/pages/accounts/transactions/initial_balance";
 import { TransactionForm } from "@/pages/accounts/transactions/form";
 import { TransactionShow } from "@/pages/accounts/transactions/show";
 import { useState } from "react";
+import { StripedRow } from "@/components/common/Row";
+import { Cell } from "@/components/common/Cell";
+import { Button } from "@/components/common/Button";
+import { AddNewComponent } from "./transactions/AddNew";
 
 interface ComponentProps {
   initialBalance: number;
@@ -22,6 +26,7 @@ const Transactions = (props: ComponentProps) => {
 
   const [showFormKey, setShowFormKey] = useState<string | null>(null)
   const closeForm = () => setShowFormKey(null)
+  const showNewForm = () => setShowFormKey("__new__")
 
   return (
     <div className="w-full flex flex-col-reverse">
@@ -45,6 +50,11 @@ const Transactions = (props: ComponentProps) => {
           )
         }
       })}
+      <AddNewComponent
+        isFormShown={showFormKey === "__new__"}
+        closeForm={close}
+        openForm={showNewForm}
+      />
     </div>
   );
 };

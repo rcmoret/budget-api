@@ -11,7 +11,7 @@ import { BudgetItemsComponent } from "@/pages/accounts/transactions/form/LineIte
 import { ActionAnchorTag } from "@/components/common/Link";
 import { generateKeyIdentifier } from "@/lib/KeyIdentifier";
 import { inputAmount, TInputAmount } from "@/components/common/AmountInput";
-import { UrlBuilder, CategoryShowProps } from "@/lib/UrlBuilder";
+import { UrlBuilder } from "@/lib/UrlBuilder";
 
 type InputProps = {
   name: string;
@@ -19,10 +19,14 @@ type InputProps = {
 }
 
 const ClearanceDateComponent = (props: {
-  clearanceDate: string,
+  clearanceDate: string | null,
   updateFormData: (props: InputProps) => void
 }) => {
-  const { clearanceDate, updateFormData } = props
+  const { updateFormData } = props
+  const clearanceDate = !!props.clearanceDate ?
+    parseIsoDate(props.clearanceDate) :
+    null
+
 
   const onChange = (input: Date | null) => {
     updateFormData({
@@ -35,7 +39,7 @@ const ClearanceDateComponent = (props: {
     <div className="mr-4">
       <Label label="Clearance Date" />
       <DatePicker
-        selected={parseIsoDate(clearanceDate)}
+        selected={clearanceDate}
         onChange={onChange}
       />
     </div>
@@ -206,7 +210,7 @@ const TransactionForm = (props: {
           </ActionAnchorTag>
         </div>
         <ClearanceDateComponent
-          clearanceDate={String(data.clearanceDate)}
+          clearanceDate={clearanceDate}
           updateFormData={updateFormData}
         />
         <DescriptionComponent
