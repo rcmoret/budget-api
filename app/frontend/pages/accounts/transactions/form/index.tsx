@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useForm } from "@inertiajs/inertia-react";
 import { ModeledTransaction } from "@/lib/models/transaction";
 import DatePicker from "react-datepicker";
@@ -12,10 +12,12 @@ import { ActionAnchorTag } from "@/components/common/Link";
 import { generateKeyIdentifier } from "@/lib/KeyIdentifier";
 import { inputAmount, TInputAmount } from "@/components/common/AmountInput";
 import { UrlBuilder } from "@/lib/UrlBuilder";
+import { Button } from "@/components/common/Button";
+import Select, { SingleValue } from "react-select";
 
 type InputProps = {
   name: string;
-  value: string | number;
+  value: string | number | boolean;
 }
 
 const ClearanceDateComponent = (props: {
@@ -27,11 +29,10 @@ const ClearanceDateComponent = (props: {
     parseIsoDate(props.clearanceDate) :
     null
 
-
   const onChange = (input: Date | null) => {
     updateFormData({
-      name: "transaction[clearanceDate]",
-      value: (input?.toISOString() || "")
+      name: "clearanceDate",
+      value: (input?.toISOString().split("T")[0] || "")
     })
   }
 
@@ -63,11 +64,144 @@ const DescriptionComponent = (props: {
       </Label>
       <input
         value={props.description}
-        name="transaction[description]"
+        name="description"
         onChange={onChange}
         style={{ width: "90%" }}
       />
     </div>
+  )
+}
+
+const CheckNumberComponent = (props: {
+  updateFormData: (props: InputProps) => void;
+  checkNumber: string | null 
+}) => {
+  const { checkNumber, updateFormData } = props
+  const [showInput, setShowInput] = useState<boolean>(!!checkNumber)
+  const toggleInput = () => setShowInput(!showInput)
+  const onChange = (
+    ev: React.ChangeEvent & { target: HTMLInputElement },
+  ) => updateFormData({ name: ev.target.name, value: ev.target.value })
+
+  if (showInput) {
+    return (
+      <div>
+        <Button type="button" onClick={toggleInput}>
+          <Icon name="money-check" />
+        </Button>
+        {" "}
+        Check Number
+        <div>
+          <input
+            value={checkNumber || ""}
+            name="checkNumber"
+            onChange={onChange}
+          />
+        </div>
+      </div>
+    )
+  } else {
+    return (
+      <div>
+        <Button type="button" onClick={toggleInput}>
+          <Icon name="money-check" />
+        </Button>
+      </div>
+    )
+  }
+}
+
+const NotesComponent = (props: {
+  updateFormData: (props: InputProps) => void;
+  notes: string | null 
+}) => {
+  const { notes, updateFormData } = props
+  const [showInput, setShowInput] = useState<boolean>(!!notes)
+  const toggleInput = () => setShowInput(!showInput)
+  const onChange = (
+    ev: React.ChangeEvent & { target: HTMLTextAreaElement },
+  ) => updateFormData({ name: ev.target.name, value: ev.target.value })
+
+  // TODO: add a popover
+  // to explain <br>
+  // and !!!
+  if (showInput) {
+    return (
+      <div>
+        <Button type="button" onClick={toggleInput}>
+          <Icon name="sticky-note" />
+        </Button>
+        {" "}
+        Notes
+        <div>
+          <textarea
+            value={notes || ""}
+            name="notes"
+            onChange={onChange}
+            className="border border-gray-400 border-solid rounded w-full"
+          />
+        </div>
+      </div>
+    )
+  } else {
+    return (
+      <div>
+        <Button type="button" onClick={toggleInput}>
+          <Icon name="sticky-note" />
+        </Button>
+      </div>
+    )
+  }
+}
+
+const BudgetExclusionComponent = (props: {
+  updateFormData: (props: InputProps) => void;
+  isBudgetExclusion: boolean;
+}) => {
+  const { isBudgetExclusion, updateFormData } = props
+  const { appConfig } = useContext(AppConfigContext)
+  const { isCashFlow } = appConfig.account
+  const onChange = () => {
+    updateFormData({ name: "isBudgetExclusion", value: !isBudgetExclusion })
+  }
+
+  if (isCashFlow) {
+    return null
+  }
+
+  return (
+    <div>
+      <div>Budget Exclusion?</div>
+      <input
+        type="checkbox"
+        onChange={onChange}
+        checked={isBudgetExclusion}
+      />
+    </div>
+  )
+}
+
+const AccountSelectComponent = (props: {
+  accountKey: string;
+  updateFormData: (props: InputProps) => void;
+}) => {
+  const { appConfig } = useContext(AppConfigContext)
+  const options = appConfig.accounts.map((account) => {
+    return { label: account.name, value: account.key }
+  })
+
+  const value = options.find((option) => option.value === props.accountKey) || ""
+  const onChange = (ev: SingleValue<{ label: string; value: string; }>) => {
+    props.updateFormData({ name: "accountKey", value: (ev?.value || "") })
+  }
+
+  return (
+    <Select
+      options={options}
+      value={value}
+      // @ts-ignore
+      onChange={onChange}
+    />
   )
 }
 
@@ -80,16 +214,22 @@ export type TFormDetail = {
 
 const TransactionForm = (props: {
   transaction: ModeledTransaction;
+  isNew?: boolean;
   closeForm: () => void;
 }) => {
   const { appConfig } = useContext(AppConfigContext)
   const { transaction, closeForm } = props;
   const {
     key,
+    accountKey,
     accountSlug,
+    checkNumber,
     clearanceDate,
     description,
+    isBudgetExclusion,
+    notes,
   } = transaction
+  const isNew = !!props.isNew
 
   const details: Array<TFormDetail> = transaction.details.map((detail) => {
     return {
@@ -100,9 +240,13 @@ const TransactionForm = (props: {
     }
   })
   const { data, setData, transform, processing, put } = useForm({
+    accountKey,
+    checkNumber,
     clearanceDate,
     description,
     details,
+    isBudgetExclusion,
+    notes,
   })
 
   // @ts-ignore
@@ -152,7 +296,7 @@ const TransactionForm = (props: {
 
   const updateDetailItem = (props: {
     index: number,
-    value: string
+    value: string | null
   }) => {
     const { value } = props
 
@@ -199,10 +343,9 @@ const TransactionForm = (props: {
     ev.preventDefault()
     put(formUrl, { onSuccess: () => props.closeForm() })
   }
-
   return (
     <form onSubmit={onSubmit}>
-      <div className="w-full flex flex-row">
+      <div className="w-full flex flex-row gap-2">
         <div className="hidden">{key}</div>
         <div className="mr-4">
           <ActionAnchorTag onClick={closeForm}>
@@ -210,7 +353,7 @@ const TransactionForm = (props: {
           </ActionAnchorTag>
         </div>
         <ClearanceDateComponent
-          clearanceDate={clearanceDate}
+          clearanceDate={data.clearanceDate}
           updateFormData={updateFormData}
         />
         <DescriptionComponent
@@ -224,6 +367,25 @@ const TransactionForm = (props: {
           updateDetailAmount={updateDetailAmount}
           updateDetailItem={updateDetailItem}
         />
+        <div className="flex flex-col w-2/12">
+          <CheckNumberComponent
+            checkNumber={data.checkNumber}
+            updateFormData={updateFormData}
+          />
+          <NotesComponent
+            notes={data.notes}
+            updateFormData={updateFormData}
+          />
+          <BudgetExclusionComponent
+            isBudgetExclusion={data.isBudgetExclusion}
+            updateFormData={updateFormData}
+          />
+          {!isNew &&
+            <AccountSelectComponent
+              updateFormData={updateFormData}
+              accountKey={data.accountKey}
+            />}
+        </div>
         <div className="text-right">
           <button disabled={processing} type="submit" >
             <span className="text-green-700">

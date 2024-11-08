@@ -29,6 +29,7 @@ export interface AccountShow {
   balance: number;
   priority: number;
   isArchived: boolean;
+  isCashFlow: boolean;
   budget: AccountBudgetSummary;
   transactions: AccountTransaction[];
   balancePriorTo: number;

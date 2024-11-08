@@ -337,7 +337,6 @@ const EventComponent = (props: EventComponentProps) => {
   const { key } = event
   const label = isCreate(event) ? "Create New Item" : "Adjust Existing Item"
   const updateEvent = (amount: string) => props.updateEvent(key, inputAmount({ display: amount }))
-  if (isAdjust(event)) { console.log({ event }) }
   const removeEvent = () => {
     if (isAdjust(event)) {
       props.removeItem(key)

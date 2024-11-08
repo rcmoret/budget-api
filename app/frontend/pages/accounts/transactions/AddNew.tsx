@@ -4,10 +4,11 @@ import { Cell } from "@/components/common/Cell";
 import { Button } from "@/components/common/Button";
 import { TransactionForm } from "@/pages/accounts/transactions/form";
 import { generateKeyIdentifier } from "@/lib/KeyIdentifier";
+import { useContext } from "react";
+import { AppConfigContext } from "@/components/layout/Provider";
 
 type ComponentProps = {
-  accountKey: string;
-  accountSlug: string;
+  isCashFlow?: boolean;
   isFormShown: boolean;
   closeForm: () => void;
   openForm: () => void;
@@ -15,12 +16,13 @@ type ComponentProps = {
 
 const AddNewComponent = (props: ComponentProps) => {
   const {
-    accountKey,
-    accountSlug,
     isFormShown,
     closeForm,
     openForm
   } = props
+
+  const { appConfig } = useContext(AppConfigContext)
+  const { isCashFlow, key: accountKey, slug: accountSlug } = appConfig.account
 
   if (isFormShown) {
     const transaction: ModeledTransaction = {
@@ -40,7 +42,7 @@ const AddNewComponent = (props: ComponentProps) => {
           iconClassName: null
         }
       ],
-      isBudgetExclusion: false,
+      isBudgetExclusion: !isCashFlow,
       isCleared: false,
       isPending: false,
       notes: "",
@@ -51,6 +53,7 @@ const AddNewComponent = (props: ComponentProps) => {
       <TransactionForm
         transaction={transaction}
         closeForm={closeForm}
+        isNew={true}
       />
     )
 

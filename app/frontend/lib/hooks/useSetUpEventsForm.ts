@@ -103,8 +103,6 @@ const useSetUpEventsForm = (props: HookProps) => {
         if (category.key !== categoryKey) { return category }
 
         const events = category.events.filter((event) => event.key !== eventKey)
-        console.log("remove EVENT")
-        console.log({events})
         return {
           ...category,
           events

@@ -63,7 +63,7 @@ const LineItemComponent = (props: {
     return { label: item.name, value: item.key }
   })
 
-  const handleSelectChange = ({ value }: { value: string, label: string }) => {
+  const handleSelectChange = ({ value }: { value: string | null, label: string }) => {
     props.updateDetailItem({ index, value: value })
   }
 
@@ -71,7 +71,7 @@ const LineItemComponent = (props: {
     props.updateDetailAmount({ index, value: inputAmount({ display: amt }) })
   }
 
-  const value = options.find((item) => item.value === budgetItemKey) || null
+  const value = options.find((item) => item.value === budgetItemKey) || ""
 
   return (
     <div className="w-full flex flex-row justify-between">

@@ -3,8 +3,14 @@ import { BudgetData } from "@/types/budget";
 
 type TAppConfig = {
   showConfigMenu: boolean;
+  accounts: Array<{
+    key: string;
+    name: string;
+  }>;
   account: {
+    isCashFlow: boolean;
     includeArchived: boolean;
+    key: string;
     slug: string;
   };
   budget: {
@@ -22,9 +28,12 @@ type TAppConfig = {
 const initialConfig: TAppConfig = {
   showConfigMenu: false,
   account: {
+    isCashFlow: false,
     includeArchived: false,
+    key: "",
     slug: "",
   },
+  accounts: [],
   budget: {
     showAccruals: false,
     showDeletedItems: false,
