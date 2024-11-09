@@ -232,9 +232,9 @@ const useSetUpEventsForm = (props: HookProps) => {
   }
 
   // @ts-ignore
-  transform((data) => {
+  transform(() => {
     return {
-      events: data.events.filter(isChanged).map((event) => {
+      events: events.filter(isChanged).map((event) => {
         return {
           ...event,
           amount: event.amount.cents,

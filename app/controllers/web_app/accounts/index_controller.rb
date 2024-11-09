@@ -11,7 +11,7 @@ module WebApp
 
       def props
         API::Accounts::IndexSerializer.new(
-          Account.belonging_to(current_user_profile)
+          Account.active.belonging_to(current_user_profile)
         ).render
       end
 

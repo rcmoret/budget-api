@@ -43,7 +43,7 @@ const DateForm = (props: DateFormProps) => {
   })
 
   // @ts-ignore
-  transform((data) => {
+  transform(() => {
     return { interval: data }
   })
 

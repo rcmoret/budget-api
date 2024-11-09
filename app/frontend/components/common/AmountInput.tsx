@@ -75,5 +75,4 @@ const inputAmount = (props: InputAmountProps): TInputAmountReturn => {
 
 }
 
-
 export { AmountInput, inputAmount }

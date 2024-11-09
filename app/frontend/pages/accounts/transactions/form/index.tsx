@@ -250,7 +250,7 @@ const TransactionForm = (props: {
   })
 
   // @ts-ignore
-  transform((data) => {
+  transform(() => {
     const { details, ...transaction } = data
     return {
       transaction: {

@@ -3,7 +3,7 @@ import { InertiaLink } from "@inertiajs/inertia-react";
 import { AccountShow, AccountSummary } from "@/types/account";
 import { Row } from "@/components/common/Row";
 import { AmountSpan } from "@/components/common/AmountSpan";
-import { byPriority } from "@/lib/sort_functions";
+import { sortByPriority } from "@/lib/models/account";
 
 interface AccountSummaryProps {
   account: AccountSummary;
@@ -37,7 +37,7 @@ interface PropType {
 const AccountTabs = (props: PropType) => {
   const accounts = props.accounts
     .filter((account) => !account.isArchived)
-    .sort(byPriority);
+    .sort(sortByPriority);
 
   return (
     <Row

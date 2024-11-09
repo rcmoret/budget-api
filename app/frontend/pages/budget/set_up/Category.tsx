@@ -24,7 +24,7 @@ const AccrualFormComponent = (props: {
   const { put, processing, transform } = useForm({ month, year })
 
   // @ts-ignore
-  transform((data) => ({ category: { maturityIntervals: [data] } }))
+  transform(() => ({ category: { maturityIntervals: [data] } }))
 
   const onSubmit = (ev: React.MouseEvent) => {
     ev.preventDefault()
@@ -215,7 +215,7 @@ const EditForm = (props: {
   const { month, year } = appConfig.budget.data
 
   // @ts-ignore
-  transform((data) => ({ category: { defaultAmount: data.defaultAmount.cents } }))
+  transform(() => ({ category: { defaultAmount: data.defaultAmount.cents } }))
 
   const formUrl = UrlBuilder({
     name: "CategoryShow",

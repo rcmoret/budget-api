@@ -15,8 +15,10 @@ export type BgColorOption =
   | "bg-blue-900"
   | "bg-gray-300"
   | "bg-gray-400"
-  | "bg-indigo-200"
+  | "bg-green-700"
+  | "bg-green-800"
   | "bg-indigo-100"
+  | "bg-indigo-200"
   | "bg-white"
   | "bg-slate-300"
   | "white";

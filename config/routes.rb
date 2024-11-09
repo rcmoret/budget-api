@@ -74,7 +74,11 @@ Rails.application.routes.draw do
 
     namespace :accounts do
       get "/", to: "index#call", as: :index
+      post "/", to: "create#call"
+      get "/manage", to: "manage#call", as: :manage
     end
+
+    put "/account/:key", to: "accounts/update#call", as: :account_update
 
     scope "account/:slug", module: :transactions, as: :transactions do
       get "/transactions/(:month)/(:year)", to: "index#call", as: :index

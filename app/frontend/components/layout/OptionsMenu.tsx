@@ -6,6 +6,7 @@ import { Row } from "@/components/common/Row";
 import { AppConfigContext } from "@/components/layout/Provider";
 import { InertiaLink } from "@inertiajs/inertia-react";
 import { DateFormatter } from "@/lib/DateFormatter";
+import { UrlBuilder } from "@/lib/UrlBuilder";
 
 const MenuItem = ({ children }: { children: React.ReactNode }) => (
   <div className="w-full leading-8">
@@ -79,9 +80,11 @@ const OptionsMenu = ({ namespace }: { namespace: string }) => {
             Manage Budget Categories
           </MenuItem>
         </InertiaLink>
-        <MenuItem>
-          Manage Accounts
-        </MenuItem>
+        <InertiaLink href="/accounts/manage">
+          <MenuItem>
+            Manage Accounts
+          </MenuItem>
+        </InertiaLink>
       </Cell>
       <Cell styling={{ width: "w-full md:w-3/12"}}>
         <ActionAnchorTag onClick={toggleAccruals}>

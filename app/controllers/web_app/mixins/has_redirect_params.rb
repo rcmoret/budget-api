@@ -20,6 +20,8 @@ module WebApp
           raise InvalidPathError unless year =~ /\A\d{4}\z/
 
           resolve_budget_path(month, year, *rest)
+        in ["accounts", "manage"]
+          accounts_manage_path
         in ["accounts", *]
           accounts_index_path
         in ["account", *rest]

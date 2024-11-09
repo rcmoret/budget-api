@@ -1,9 +1,5 @@
-import { AccountSummary } from "@/types/account";
 import { AccountTransactionDetail } from "@/types/transaction";
 import { ModeledTransaction as Transaction } from "@/lib/models/transaction";
-
-const byPriority = (account1: AccountSummary, account2: AccountSummary) =>
-  account2.priority - account1.priority;
 
 const byClearanceDate = (
   transaction1: Transaction,
@@ -49,4 +45,4 @@ const byAmount = (
   }
 };
 
-export { byAmount, byCategoryName, byClearanceDate, byPriority };
+export { byAmount, byCategoryName, byClearanceDate };
