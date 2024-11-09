@@ -12,10 +12,7 @@ module User
     validates :value, presence: true
     # this has a unique index on it. ACAB and it doesn't respect scope
     # or know how th find that index
-    # rubocop:disable Rails/UniqueValidationWithoutIndex
     validates :user_configuration_option_id, uniqueness: { scope: :user_profile_id }
-    # rubocop:enable Rails/UniqueValidationWithoutIndex
-
     delegate :timezone_config?, to: :option
   end
 end
