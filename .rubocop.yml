@@ -2,6 +2,7 @@ AllCops:
   NewCops: enable
   TargetRubyVersion: 3.2.0
   Exclude:
+    - "config/routes/**/*"
     - "db/schema.rb"
     - "db/migrate/*.rb"
     - "node_modules/**/*"
@@ -26,6 +27,7 @@ Metrics/BlockLength:
     - config/environments/*
     - config/initializers/*
     - config/routes.rb
+    - config/routes/**/*
     - db/seeds/*.rb
     - db/seeds.rb
     - spec/*_helper.rb
