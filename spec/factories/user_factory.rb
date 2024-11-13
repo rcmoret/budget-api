@@ -1,7 +1,8 @@
 FactoryBot.define do
   factory :user, class: "User::Profile" do
     sequence(:email) { |n| "user-#{n}@example.com" }
-    encrypted_password { "try-h@cK-th!$" }
+    password { Faker::Internet.password }
+    password_confirmation { password }
     key { SecureRandom.hex(6) }
     association :user_group
   end

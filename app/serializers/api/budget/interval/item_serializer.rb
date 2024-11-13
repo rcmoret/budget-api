@@ -17,12 +17,18 @@ module API
                    :icon_class_name
         attribute :is_accrual, alias_of: :accrual?
         attribute :is_deletable, alias_of: :deletable?
+        attribute :is_deleted, alias_of: :deleted?
         attribute :is_expense, alias_of: :expense?
         attribute :is_monthly, alias_of: :monthly?
         attribute :is_per_diem_enabled, alias_of: :per_diem_enabled?
         attribute :maturity_month, conditional: :accrual?
         attribute :maturity_year, conditional: :accrual?
-        attribute :transaction_detail_count
+        attribute :transaction_details,
+                  each_serializer: Items::TransactionDetailSerializer,
+                  on_render: :render
+        attribute :events,
+                  each_serializer: Items::EventSerializer,
+                  on_render: :render
 
         delegate :name,
                  :accrual?,
@@ -34,10 +40,6 @@ module API
 
         def budget_category_key
           category.key
-        end
-
-        def transaction_detail_count
-          transaction_details.size
         end
 
         def maturity_month

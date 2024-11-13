@@ -1,5 +1,5 @@
 module API
-  class BaseController < ApplicationController
+  class BaseController < ActionController::API
     include CubanLinx::CallChain
 
     before_action :authenticate_token!

@@ -13,6 +13,7 @@ module API
           attributes :key,
                      :name,
                      :slug,
+                     :default_amount,
                      :icon_class_name
           attribute :is_accrual, alias_of: :accrual?
           attribute :is_expense, alias_of: :expense?
@@ -38,9 +39,7 @@ module API
 
           private
 
-          def category
-            __getobj__
-          end
+          def category = __getobj__
 
           def existing_item_events
             @existing_item_events ||= target_items.map do |item|

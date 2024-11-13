@@ -5,9 +5,12 @@ module API
         class CategoriesSerializer < ApplicationSerializer
           attribute :first_date, on_render: proc { |timestamp| timestamp.strftime("%F") }
           attribute :last_date, on_render: proc { |timestamp| timestamp.strftime("%F") }
-          attribute :budget_categories, on_render: :render
+          attribute :categories, on_render: :render
+          attribute :month
+          attribute :year
+          attribute :data, on_render: :render
 
-          def budget_categories
+          def categories
             SerializableCollection.new do
               category_scope.map do |category|
                 CategorySerializer.new(
@@ -20,9 +23,13 @@ module API
             end
           end
 
+          def data
+            DataSerializer.new(interval)
+          end
+
           private
 
-          delegate :user_group, to: :interval
+          delegate :user_group, :month, :year, to: :interval
 
           def category_scope
             ::Budget::Category

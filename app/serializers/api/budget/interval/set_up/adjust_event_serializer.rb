@@ -5,9 +5,7 @@ module API
         class AdjustEventSerializer < ApplicationSerializer
           include Mixins::BudgetEvents::AdjustEvent
 
-          def event_type
-            ::Budget::EventTypes::SETUP_ITEM_ADJUST
-          end
+          def event_type = ::Budget::EventTypes::SETUP_ITEM_ADJUST
         end
       end
     end

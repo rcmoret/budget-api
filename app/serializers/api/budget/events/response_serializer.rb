@@ -1,10 +1,9 @@
 module API
   module Budget
-    module Items
-      class EventsResponseSerializer < ApplicationSerializer
-        def initialize(user:, interval:, budget_item_keys:)
+    module Events
+      class ResponseSerializer < ApplicationSerializer
+        def initialize(interval:, budget_item_keys:)
           super(interval)
-          @user = user
           @budget_item_keys = budget_item_keys
         end
 
@@ -16,10 +15,10 @@ module API
         end
 
         def items
-          SerializableCollection.new(serializer: ItemSerializer) do
+          SerializableCollection.new(serializer: Items::ItemSerializer) do
             ::Budget::Item
               .includes(transaction_details: { entry: :account }, events: :type, category: :icon)
-              .fetch_collection(user, keys: budget_item_keys)
+              .fetch_collection(interval.user_group, keys: budget_item_keys)
               .map(&:decorated)
           end
         end
@@ -30,7 +29,7 @@ module API
           __getobj__
         end
 
-        attr_reader :user, :budget_item_keys
+        attr_reader :budget_item_keys
       end
     end
   end

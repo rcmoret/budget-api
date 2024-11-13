@@ -44,8 +44,11 @@ module Forms
       end
 
       def promote_errors(model)
-        model.errors.each do |error|
-          errors.add("#{model}.#{model.key}", { error.attribute => error.message })
+        model_errors = model.errors.each_with_object(Hash.new { |h, k| h[k] = [] }) do |error, memo|
+          memo[error.attribute] << error.message
+        end
+        model_errors.each_pair do |key, value|
+          errors.add("event.#{model.key}", { key => value })
         end
       end
 

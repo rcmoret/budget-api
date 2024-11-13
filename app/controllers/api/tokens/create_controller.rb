@@ -9,7 +9,7 @@ module API
         in [:ok, token_payload]
           render json: token_payload, status: :created
         in [:error, errors]
-          render json: errors, status: :unauthorized
+          render json: errors, status: :not_found
         end
       end
 
@@ -35,7 +35,7 @@ module API
       def user_lookup!
         return if user.present?
 
-        render json: { email: ["user profile not found by email: #{user_params[:email]}"] },
+        render json: { password: [::User::EventHandlers::Components::UserVerification::INVALID_LOGIN_MESSAGE] },
                status: :not_found
       end
     end

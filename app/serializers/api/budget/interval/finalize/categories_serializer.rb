@@ -10,7 +10,9 @@ module API
           def budget_categories
             SerializableCollection.new do
               categories.filter_map do |category|
-                category_serializer(category) if reviewable_items_for(category).any?
+                next if reviewable_items_for(category).none?
+
+                category_serializer(category)
               end
             end
           end

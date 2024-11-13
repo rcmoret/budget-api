@@ -19,9 +19,9 @@ module API
         end
 
         def error_serializer
-          ErrorsSerializer.new(
+          IndividualSerializer.new(
             key: :events_form,
-            model: form,
+            serializable: ErrorsSerializer.new(form.errors)
           )
         end
 
@@ -32,8 +32,7 @@ module API
         end
 
         def serializer
-          Items::EventsResponseSerializer.new(
-            user: api_user,
+          ResponseSerializer.new(
             interval: interval,
             budget_item_keys: events_params.pluck(:budget_item_key)
           )

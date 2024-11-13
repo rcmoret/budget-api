@@ -105,9 +105,6 @@ RSpec.describe "GET /api/budget/intervals/set_up/:month/:year" do
       expect(body.dig(:data, :budgetCategories, 0, :events, 0)).to include(
         month: upcoming_interval.month,
         year: upcoming_interval.year,
-        name: accrual_category.name,
-        budgetCategoryKey: accrual_category.key,
-        iconClassName: accrual_category.icon_class_name,
         amount: "",
         budgeted: accrual_item.amount,
         spent: accrual_item.spent,
@@ -121,8 +118,6 @@ RSpec.describe "GET /api/budget/intervals/set_up/:month/:year" do
         budgeted: day_to_day_upcoming_item.amount,
         data: {},
         eventType: "setup_item_adjust",
-        iconClassName: day_to_day_category.icon_class_name,
-        name: day_to_day_category.name,
         spent: day_to_day_upcoming_item.spent
       )
       expect(body.dig(:data, :budgetCategories, 2, :events).size).to be 2

@@ -60,7 +60,7 @@ class ApplicationSerializer < SimpleDelegator
         name: name,
         method_name: method_name,
         conditional: options.fetch(:conditional) { proc { true } },
-        on_render: options.fetch(:on_render, :render_self),
+        on_render: options.fetch(:on_render, :itself),
       }
     end
   end
@@ -81,8 +81,6 @@ class ApplicationSerializer < SimpleDelegator
 
   def handle_render(on_render, value, camelize)
     case on_render
-    in :render_self
-      value
     in :render
       value.render(camelize: camelize)
     in Symbol

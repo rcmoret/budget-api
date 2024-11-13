@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_01_224135) do
+ActiveRecord::Schema[7.0].define(version: 2024_04_27_162220) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -117,8 +117,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_01_224135) do
   end
 
   create_table "budget_item_events", force: :cascade do |t|
-    t.integer "budget_item_id", null: false
-    t.integer "budget_item_event_type_id", null: false
+    t.bigint "budget_item_id", null: false
+    t.bigint "budget_item_event_type_id", null: false
     t.integer "amount", null: false
     t.json "data"
     t.datetime "created_at", null: false
@@ -187,6 +187,25 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_01_224135) do
     t.index ["key"], name: "index_transfers_on_key", unique: true
   end
 
+  create_table "user_configuration_options", force: :cascade do |t|
+    t.string "description", limit: 200, null: false
+    t.string "default_value", limit: 1000, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["description"], name: "index_user_configuration_options_on_description", unique: true
+  end
+
+  create_table "user_configurations", force: :cascade do |t|
+    t.bigint "user_profile_id", null: false
+    t.bigint "user_configuration_option_id", null: false
+    t.string "value", limit: 1000, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_configuration_option_id"], name: "index_user_configurations_on_user_configuration_option_id"
+    t.index ["user_profile_id", "user_configuration_option_id"], name: "unique_config_option_on_profile", unique: true
+    t.index ["user_profile_id"], name: "index_user_configurations_on_user_profile_id"
+  end
+
   create_table "user_event_types", force: :cascade do |t|
     t.string "name", limit: 100, null: false
     t.datetime "created_at", null: false
@@ -218,7 +237,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_01_224135) do
     t.index ["primary_email"], name: "index_user_groups_on_primary_email", unique: true
   end
 
-  create_table "users", force: :cascade do |t|
+  create_table "user_profiles", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
@@ -228,16 +247,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_01_224135) do
     t.datetime "updated_at", null: false
     t.bigint "user_group_id", null: false
     t.string "key", limit: 12, null: false
-    t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["key"], name: "index_users_on_key", unique: true
-    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
-    t.index ["user_group_id"], name: "index_users_on_user_group_id"
+    t.index ["email"], name: "index_user_profiles_on_email", unique: true
+    t.index ["key"], name: "index_user_profiles_on_key", unique: true
+    t.index ["reset_password_token"], name: "index_user_profiles_on_reset_password_token", unique: true
+    t.index ["user_group_id"], name: "index_user_profiles_on_user_group_id"
   end
 
   add_foreign_key "accounts", "user_groups"
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "auth_token_contexts", "users"
+  add_foreign_key "auth_token_contexts", "user_profiles", column: "user_id"
   add_foreign_key "budget_categories", "icons"
   add_foreign_key "budget_categories", "user_groups"
   add_foreign_key "budget_category_maturity_intervals", "budget_categories"
@@ -245,14 +264,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_01_224135) do
   add_foreign_key "budget_intervals", "user_groups"
   add_foreign_key "budget_item_events", "budget_item_event_types"
   add_foreign_key "budget_item_events", "budget_items"
-  add_foreign_key "budget_item_events", "users"
+  add_foreign_key "budget_item_events", "user_profiles", column: "user_id"
   add_foreign_key "budget_items", "budget_categories"
   add_foreign_key "budget_items", "budget_intervals"
   add_foreign_key "transaction_details", "budget_items"
   add_foreign_key "transaction_details", "transaction_entries"
   add_foreign_key "transaction_entries", "accounts"
+  add_foreign_key "user_configurations", "user_configuration_options"
+  add_foreign_key "user_configurations", "user_profiles"
   add_foreign_key "user_events", "user_event_types"
-  add_foreign_key "user_events", "users", column: "actor_id"
-  add_foreign_key "user_events", "users", column: "target_user_id"
-  add_foreign_key "users", "user_groups"
+  add_foreign_key "user_events", "user_profiles", column: "actor_id"
+  add_foreign_key "user_events", "user_profiles", column: "target_user_id"
+  add_foreign_key "user_profiles", "user_groups"
 end

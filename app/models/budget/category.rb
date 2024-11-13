@@ -50,7 +50,8 @@ module Budget
     alias_attribute :is_expense, :expense
     alias_attribute :is_monthly, :monthly
     alias_attribute :per_diem_enabled?, :is_per_diem_enabled
-    delegate :class_name, :name, to: :icon, prefix: true, allow_nil: true
+    accepts_nested_attributes_for :maturity_intervals, allow_destroy: true
+    delegate :key, :class_name, :name, to: :icon, prefix: true, allow_nil: true
 
     def revenue?
       !expense?

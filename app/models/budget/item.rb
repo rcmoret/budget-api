@@ -56,6 +56,8 @@ module Budget
       transaction_details.none?
     end
 
+    def deleted? = deleted_at.present?
+
     def amount
       events.sum(&:amount)
     end

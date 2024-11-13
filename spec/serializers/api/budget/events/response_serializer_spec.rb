@@ -1,8 +1,8 @@
 require "rails_helper"
 
-RSpec.describe API::Budget::Items::EventsResponseSerializer do
+RSpec.describe API::Budget::Events::ResponseSerializer do
   subject do
-    described_class.new(user: user, interval: interval, budget_item_keys: budget_item_keys)
+    described_class.new(interval: interval, budget_item_keys: budget_item_keys)
   end
 
   describe "#discretionary" do
@@ -28,7 +28,7 @@ RSpec.describe API::Budget::Items::EventsResponseSerializer do
     let(:budget_item2) { create(:budget_item, category: category2) }
     let(:budget_item3) { create(:budget_item, category: category3) }
 
-    let(:interval) { instance_double(API::Budget::Interval) }
+    let(:interval) { create(:budget_interval, user_group: user.group) }
     let(:budget_items) do
       [budget_item1, budget_item2, budget_item3]
     end

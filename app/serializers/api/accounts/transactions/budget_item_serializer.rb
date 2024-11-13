@@ -18,6 +18,7 @@ module API
         attribute :is_deletable, alias_of: :deletable?
         attribute :is_expense, alias_of: :expense?
         attribute :is_monthly, alias_of: :monthly?
+        attribute :transaction_details, each_serializer: Budget::Items::TransactionDetailSerializer
 
         delegate :name,
                  :accrual?,
