@@ -16,17 +16,20 @@ module Forms
       private
 
       def formatted_params
-        if maturity_interval_data?
-          params.merge(maturity_intervals_attributes: maturity_intervals_attributes)
-        else
-          params
+        params.tap do |parameters|
+          parameters.merge!(maturity_intervals_attributes: maturity_intervals_attributes) if maturity_interval_data?
+          parameters.merge!(icon_id: icon_id) if icon_id.present?
         end
       end
 
       def maturity_intervals_attributes
-        params.delete(:maturity_intervals).filter_map do |attributes|
+        @maturity_intervals_attributes ||= params.delete(:maturity_intervals).filter_map do |attributes|
           handle_maturity_interval(attributes)
         end
+      end
+
+      def icon_id
+        @icon_id ||= Icon.by_key(params.delete(:icon_key))&.id
       end
 
       def handle_maturity_interval(attributes)

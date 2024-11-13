@@ -3,9 +3,8 @@
 module WebApp
   module Budget
     module Categories
-      class UpdateController < BaseController
+      class CreateController < BaseController
         include Mixins::HasRedirectParams
-        before_action :redirect_to_budget_index, if: -> { category.nil? }
 
         def call
           if form.save
@@ -21,31 +20,28 @@ module WebApp
           @form ||= Forms::Budget::CategoryForm.new(
             current_user_profile,
             category,
-            update_params
+            create_params
           )
         end
 
         def category
-          @category ||= ::Budget::Category.fetch(
-            current_user_profile,
-            key: params.fetch(:key)
-          )
+          @category ||= ::Budget::Category.belonging_to(current_user_profile).new
         end
 
-        def redirect_to_budget_index = redirect_to budget_index_path
-
         # rubocop:disable Metrics/MethodLength
-        def update_params
+        def create_params
           params
             .require(:category)
             .permit(
+              :key,
               :name,
               :slug,
               :accrual,
-              :archived_at,
               :default_amount,
+              :expense,
               :icon_key,
               :is_per_diem_enabled,
+              :monthly,
               maturity_intervals: %i[month year _destroy]
             )
         end

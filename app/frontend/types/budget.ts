@@ -74,9 +74,17 @@ export type BudgetCategory = {
   key: string;
   name: string;
   slug: string;
+  archivedAt: string | null;
   defaultAmount?: number;
+  iconClassName: IconName;
+  iconKey: string;
   isAccrual: boolean;
+  isArchived: boolean;
   isExpense: boolean;
   isMonthly: boolean;
-  iconClassName: IconName;
+  isPerDiemEnabled: boolean;
+  maturityIntervals?: Array<{
+    month: number;
+    year: number;
+  }>
 }
