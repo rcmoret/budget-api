@@ -235,11 +235,17 @@ const TransactionForm = (props: {
     return {
       key: detail.key,
       budgetItemKey: detail.budgetItemKey,
-      amount: inputAmount({ cents: detail.amount }),
+      amount: inputAmount({
+        ...(detail.amount === 0 ?
+             { display: "" } :
+             { cents: detail.amount })
+
+      }),
       _destroy: false
     }
   })
-  const { data, setData, transform, processing, put } = useForm({
+  const { data, setData, transform, processing, post, put } = useForm({
+    key,
     accountKey,
     checkNumber,
     clearanceDate,
@@ -251,10 +257,12 @@ const TransactionForm = (props: {
 
   // @ts-ignore
   transform(() => {
-    const { details, ...transaction } = data
+    const { key, details, accountKey, ...transaction } = data
+    debugger
     return {
       transaction: {
         ...transaction,
+        ...(isNew ? { key } : { accountKey }),
         detailsAttributes: details.map((detail) => {
           if (!detail._destroy) {
             return { key: detail.key, budgetItemKey: detail.budgetItemKey, amount: detail.amount.cents }
@@ -332,17 +340,34 @@ const TransactionForm = (props: {
     appConfig.budget.data.year,
   ])
 
-  const formUrl = UrlBuilder({
-    name: "TransactionShow",
-    accountSlug,
-    key,
-    queryParams
-  })
+  const postCreate = () => {
+    const formUrl = UrlBuilder({
+      name: "TransactionIndex",
+      accountSlug,
+      queryParams
+    })
+    post(formUrl, { onSuccess: () => props.closeForm() })
+  }
+
+  const putUpdate = () => {
+    const formUrl = UrlBuilder({
+      name: "TransactionShow",
+      accountSlug,
+      key,
+      queryParams
+    })
+    put(formUrl, { onSuccess: () => props.closeForm() })
+  }
 
   const onSubmit = (ev: React.FormEvent<HTMLFormElement>) => {
     ev.preventDefault()
-    put(formUrl, { onSuccess: () => props.closeForm() })
+    if (isNew) {
+      postCreate()
+    } else {
+      putUpdate()
+    }
   }
+
   return (
     <form onSubmit={onSubmit}>
       <div className="w-full flex flex-row gap-2">
@@ -357,7 +382,7 @@ const TransactionForm = (props: {
           updateFormData={updateFormData}
         />
         <DescriptionComponent
-          description={String(data.description)}
+          description={data.description || ""}
           updateFormData={updateFormData}
         />
         <BudgetItemsComponent

@@ -41,6 +41,12 @@ export type CategoryShowProps = {
   queryParams?: string;
 }
 
+type TransactionIndexProps = {
+  name: "TransactionIndex";
+  accountSlug: string;
+  queryParams?: string;
+}
+
 type TransactionShowProps = {
   name: "TransactionShow";
   accountSlug: string;
@@ -56,6 +62,7 @@ type UrlBuilderProps =
   | BudgetShowProps
   | CategoryIndexProps
   | CategoryShowProps
+  | TransactionIndexProps
   | TransactionShowProps
 
 const UrlBuilder = (props: UrlBuilderProps) => {
@@ -83,6 +90,8 @@ const UrlBuilder = (props: UrlBuilderProps) => {
       return appendQueryParams("/budget/categories");
     case "CategoryShow":
       return appendQueryParams(`/budget/category/${props.key}`);
+    case "TransactionIndex":
+      return appendQueryParams(`/account/${props.accountSlug}/transaction`);
     case "TransactionShow":
       return appendQueryParams(`/account/${props.accountSlug}/transaction/${props.key}`);
   }
