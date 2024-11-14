@@ -21,15 +21,13 @@ const AccountForm = (props: {
   transform(() => {
     const { isCashFlow, ...updateProps } = data
 
-    const payload = {
+    return {
       account: {
         ...updateProps,
         cashFlow: isCashFlow,
         ...(isNew ? { key: account.key } : {})
       }
     }
-    console.log({ payload })
-    return payload
   })
 
   const onChange = (ev: React.ChangeEvent & { target: HTMLInputElement }) => {

@@ -122,10 +122,8 @@ const CardWrapper = (props: {
 
 const ArchiveComponent = ({ category }: { category: BudgetCategory }) => {
   if (!category.isArchived) { return null }
-  const { processing, put, transform } = useForm({})
-
-  transform(() => {
-    return { category: { archivedAt: null } }
+  const { processing, put } = useForm({
+    category: { archivedAt: null }
   })
 
   const formUrl = UrlBuilder({
@@ -157,10 +155,8 @@ const ArchiveComponent = ({ category }: { category: BudgetCategory }) => {
 }
 
 const ArchiveButton = ({ category }: { category: BudgetCategory }) => {
-  const { processing, put, transform } = useForm({})
-
-  transform(() => {
-    return { category: { archivedAt: new Date () } }
+  const { processing, put, transform } = useForm({
+    category: { archivedAt: new Date () }
   })
 
   const formUrl = UrlBuilder({

@@ -11,7 +11,9 @@ import { buildQueryParams } from "@/lib/redirect_params";
 const ArchivedAtComponent = ({ account }: { account: AccountManage; }) => {
   if (!account.isArchived) { return null }
 
-  const { put, processing, transform } = useForm({})
+  const { put, processing } = useForm({
+    account: { archivedAt: null }
+  })
 
   const onSubmit = () => {
     const formUrl = UrlBuilder({
@@ -20,10 +22,6 @@ const ArchivedAtComponent = ({ account }: { account: AccountManage; }) => {
     })
     put(formUrl)
   }
-
-  transform(() => {
-    return { account: { archivedAt: null } }
-  })
 
   return (
     <>
@@ -47,7 +45,9 @@ const ArchivedAtComponent = ({ account }: { account: AccountManage; }) => {
 }
 
 const ArchiveButton = (props: { account: AccountManage }) => {
-  const { put, processing, transform } = useForm({})
+  const { put, processing } = useForm({
+    category: { archivedAt: new Date() }
+  })
 
   const onSubmit = () => {
     const formUrl = UrlBuilder({
@@ -57,9 +57,6 @@ const ArchiveButton = (props: { account: AccountManage }) => {
     put(formUrl)
   }
 
-  transform(() => {
-    return { account: { archivedAt: new Date() } }
-  })
 
   return (
     <form>
