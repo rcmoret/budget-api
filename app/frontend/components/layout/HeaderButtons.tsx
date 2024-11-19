@@ -1,4 +1,4 @@
-import { InertiaLink } from "@inertiajs/inertia-react";
+import { Link as InertiaLink } from "@inertiajs/react";
 
 import { Cell } from "@/components/common/Cell";
 // import { Row } from "@/components/common/Row";

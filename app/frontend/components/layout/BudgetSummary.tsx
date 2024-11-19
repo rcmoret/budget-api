@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { PageData } from "@/components/layout/Header";
-import { useForm } from "@inertiajs/inertia-react";
+import { useForm } from "@inertiajs/react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { parseISO as parseIsoDate } from "date-fns";
@@ -305,6 +305,23 @@ type SummaryProps = {
 const Summary = (props: SummaryProps) => {
   if (!!props.data && !!props.selectedAccount?.metadata && !!props.metadata.page) {
     return null
+  } else if (props.metadata.page?.name === "budget/finalize" && props.data) {
+    const baseUrl = "/budget"
+    const { month, year } = props.metadata.page
+    return (
+      <BudgetSummary
+        budget={props.data}
+        baseUrl={baseUrl}
+        redirectSegments={["budget", String(month), String(year), "finalize"]}
+        titleComponent={<BudgetSetUpTitleComponent month={Number(month)} year={Number(year)} />}
+      >
+        <MonthYearNav
+          baseUrl={baseUrl}
+          month={month}
+          year={year}
+        />
+      </BudgetSummary>
+    )
   } else if (props.metadata.page?.name === "budget/set-up" && props.data) {
     const baseUrl = "/budget"
     const { month, year } = props.metadata.page

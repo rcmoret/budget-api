@@ -1,5 +1,5 @@
 import { EventProps, useEventForm, isAdjust, isCreate, isDelete } from "@/lib/hooks/useEventsForm";
-import { BudgetCategory } from "@/types/budget";
+import { BudgetCategory, TEvent } from "@/types/budget";
 import { useEffect, useState } from "react";
 import { generateKeyIdentifier } from "../KeyIdentifier";
 import { inputAmount, TInputAmount } from "@/components/common/AmountInput";
@@ -7,18 +7,6 @@ import { inputAmount, TInputAmount } from "@/components/common/AmountInput";
 const ADJUST_EVENT = "setup_item_adjust"
 const CREATE_EVENT = "setup_item_create"
 const DELETE_EVENT = "setup_item_delete"
-
-interface TEvent {
-  key: string;
-  budgeted: number;
-  data?: any;
-  eventType: "setup_item_create" | "setup_item_adjust" | "setup_item_delete";
-  spent: number;
-  budgetItemKey?: string;
-  budgetCategoryKey?: string;
-  month?: number;
-  year?: number;
-}
 
 export interface SetUpEvent extends TEvent {
   amount: TInputAmount;

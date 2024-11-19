@@ -4,9 +4,8 @@ import { Cell } from "@/components/common/Cell";
 import { Point } from "../common/Symbol";
 import { Row } from "@/components/common/Row";
 import { AppConfigContext } from "@/components/layout/Provider";
-import { InertiaLink } from "@inertiajs/inertia-react";
+import { Link as InertiaLink } from "@inertiajs/react";
 import { DateFormatter } from "@/lib/DateFormatter";
-import { UrlBuilder } from "@/lib/UrlBuilder";
 
 const MenuItem = ({ children }: { children: React.ReactNode }) => (
   <div className="w-full leading-8">
@@ -60,10 +59,6 @@ const OptionsMenu = ({ namespace }: { namespace: string }) => {
     ...appConfig,
     budget: { ...appConfig.budget, showDeletedItems: !appConfig.budget.showDeletedItems }
   })
-  const toggleMultiItemForm = () => setAppConfig({
-    ...appConfig,
-    budget: { ...appConfig.budget, multiItemForm: { ...appConfig.budget.multiItemForm, display: !appConfig.budget.multiItemForm.display } }
-  })
   const isBudget = namespace === "budget"
 
   return (
@@ -75,7 +70,7 @@ const OptionsMenu = ({ namespace }: { namespace: string }) => {
       fontSize: "text-sm"
     }}>
       <Cell styling={{ width: "w-full md:w-3/12"}}>
-        <InertiaLink href="">
+        <InertiaLink href="/budget/categories">
           <MenuItem>
             Manage Budget Categories
           </MenuItem>
@@ -101,13 +96,6 @@ const OptionsMenu = ({ namespace }: { namespace: string }) => {
           isVisible={isBudget}
           onClick={toggleDeletedItems}
           copy={appConfig.budget.showDeletedItems ? "Hide Deleted Items" : "Show Deleted Items"}
-        />
-      </Cell>
-      <Cell styling={{ width: "w-full md:w-3/12"}}>
-        <OptionalMenuItem
-          isVisible={isBudget}
-          onClick={toggleMultiItemForm}
-          copy={appConfig.budget.multiItemForm.display ? "Hide Multi-Item Form" : "Show Multi-Item Form"}
         />
       </Cell>
       <Cell styling={{ width: "w-full md:w-3/12"}}>

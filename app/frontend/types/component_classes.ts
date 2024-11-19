@@ -61,6 +61,13 @@ export type FontSizeOption = "text-xs" | "text-sm" | "text-xl" | "text-3xl";
 
 export type FontWeightOption = "font-semibold";
 
+export type GapOption =
+  | "gap-0"
+  | "gap-1"
+  | "gap-2"
+  | "gap-3"
+  | "gap-4"
+
 export type OverflowOption =
   | "overflow-auto"
   | "overflow-hidden"

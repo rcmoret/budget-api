@@ -9,6 +9,13 @@ type AccountIndexProps = {
   queryParams?: string;
 }
 
+type BudgetEditProps ={
+  name: "BudgetEdit",
+  month: number | string;
+  year: number | string;
+  queryParams?: string;
+}
+
 type BudgetItemEventsProps = {
   name: "BudgetItemEvents";
   month: number | string;
@@ -57,6 +64,7 @@ type TransactionShowProps = {
 type UrlBuilderProps =
   | AccountIndexProps
   | AccountShowProps
+  | BudgetEditProps
   | BudgetItemEventsProps
   | BudgetSetUpProps
   | BudgetShowProps
@@ -80,6 +88,8 @@ const UrlBuilder = (props: UrlBuilderProps) => {
       return appendQueryParams("/accounts");
     case "AccountShow":
       return appendQueryParams(`/account/${props.key}`);
+    case "BudgetEdit":
+      return appendQueryParams(`/budget/${props.month}/${props.year}`);
     case "BudgetItemEvents":
       return appendQueryParams(`/budget/events/${props.month}/${props.year}`);
     case "BudgetSetUp":

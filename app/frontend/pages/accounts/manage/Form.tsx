@@ -1,6 +1,6 @@
 import { AccountManage } from "@/types/account";
 import { Button, SubmitButton } from "@/components/common/Button";
-import { useForm } from "@inertiajs/inertia-react";
+import { useForm } from "@inertiajs/react";
 import { UrlBuilder } from "@/lib/UrlBuilder";
 import { buildQueryParams } from "@/lib/redirect_params";
 import { Icon } from "@/components/common/Icon";

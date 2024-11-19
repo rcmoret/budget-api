@@ -8,6 +8,7 @@ import {
   FlexWrapOption,
   FontSizeOption,
   FontWeightOption,
+  GapOption,
   OverflowOption,
 } from "types/component_classes";
 
@@ -23,6 +24,7 @@ interface RowProps {
     flexWrap?: FlexWrapOption | null;
     fontSize?: FontSizeOption;
     fontWeight?: FontWeightOption;
+    gap?: GapOption;
     margin?: string;
     overflow?: OverflowOption;
     padding?: string;

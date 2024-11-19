@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Select from "react-select";
-import { InertiaLink } from "@inertiajs/inertia-react";
+import { Link as InertiaLink } from "@inertiajs/react";
 
 import { ActionAnchorTag } from "@/components/common/Link";
 import { Icon } from "@/components/common/Icon";

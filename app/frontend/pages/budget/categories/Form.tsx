@@ -1,6 +1,6 @@
 import { UrlBuilder } from "@/lib/UrlBuilder";
 import { BudgetCategory } from "@/types/budget"
-import { useForm } from "@inertiajs/inertia-react";
+import { useForm } from "@inertiajs/react";
 import { buildQueryParams } from "@/lib/redirect_params"
 import { AmountInput, inputAmount } from "@/components/common/AmountInput";
 import { Button, SubmitButton } from "@/components/common/Button";

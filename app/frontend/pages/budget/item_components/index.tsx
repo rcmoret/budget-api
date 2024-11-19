@@ -1,16 +1,23 @@
 import React, { useContext, useState } from "react";
 
-import { BudgetItem, BudgetItemEvent, BudgetItemTransaction } from "@/types/budget";
+import { BudgetItem, TBudgetItem, BudgetItemEvent, BudgetItemTransaction } from "@/types/budget";
 import { Row, StripedRow } from "@/components/common/Row";
 import { Cell } from "@/components/common/Cell";
 import { Icon } from "@/components/common/Icon";
 import { ActionAnchorTag } from "@/components/common/Link";
+import { Button, SubmitButton } from "@/components/common/Button";
 import { AmountSpan } from "@/components/common/AmountSpan";
 import { Point } from "@/components/common/Symbol";
 import { AppConfigContext } from "@/components/layout/Provider";
 
 import { clearedItems, sortDetails } from "@/lib/models/budget-items"
 import { dateParse } from "@/lib/DateFormatter";
+import { useEventForm } from "@/lib/hooks/useEventsForm";
+import { generateKeyIdentifier } from "@/lib/KeyIdentifier";
+import { UrlBuilder } from "@/lib/UrlBuilder";
+import { buildQueryParams } from "@/lib/redirect_params";
+import { inputAmount, AmountInput } from "@/components/common/AmountInput";
+import { TChangeForm, DraftChange } from "@/lib/hooks/useDraftEvents";
 
 type DetailProps = {
   item: BudgetItem;
@@ -181,11 +188,22 @@ const ItemDetails = ({ item, showDetails }: DetailProps) => {
   )
 }
 
-const ItemContainer = (props: { children?: React.ReactNode, item: BudgetItem }) => {
-  const { children, item } = props
+const ItemContainer = (props: {
+  children?: React.ReactNode;
+  item: TBudgetItem;
+  form: TChangeForm;
+}) => {
+  const { children, item, form } = props
   const [showDetails, updateShowDetails] = useState<boolean>(false)
-
   const toggleDetails = () => updateShowDetails(!showDetails)
+
+  const openForm = () => form.addChange({
+    budgetItemKey: item.key,
+    budgetCategoryKey: item.budgetCategoryKey,
+    amount: inputAmount({ display: "" })
+  })
+
+  const closeForm = () => form.removeChange(item.key)
 
   return (
     <StripedRow styling={{ flexWrap: "flex-wrap"}}>
@@ -195,8 +213,127 @@ const ItemContainer = (props: { children?: React.ReactNode, item: BudgetItem }) 
         toggleDetails={toggleDetails}
       />
       {children}
+      {item.isAccrual && <AccrualRow item={item} />}
+      <ActionableIcons
+        item={item}
+        openForm={openForm}
+        closeForm={closeForm}
+        postEvents={form.post}
+        changes={form.changes}
+        processing={form.processing}
+      />
       <ItemDetails item={item} showDetails={showDetails} />
     </StripedRow>
+  )
+}
+
+const DeleteButton = ({ item }: { item: BudgetItem }) => {
+  const { appConfig } = useContext(AppConfigContext)
+  const { month, year } = appConfig.budget.data
+
+  const { post, processing } = useEventForm({
+    events: [
+      {
+        key: generateKeyIdentifier(),
+        eventType: "item_delete",
+        budgetItemKey: item.key,
+        amount: { cents: 0, display: "" },
+      }
+    ],
+    month,
+    year
+  })
+
+  const onSubmit = () => {
+    const formUrl = UrlBuilder({
+      name: "BudgetItemEvents",
+      month,
+      year,
+      queryParams: buildQueryParams(["budget", month, year])
+    })
+    post(formUrl)
+  }
+
+  if (!item.isDeletable) {
+    return null
+  }
+
+  return (
+    <form onSubmit={onSubmit}>
+      <SubmitButton
+        isEnabled={!processing}
+        onSubmit={onSubmit}
+        styling={{ color: "text-blue-400" }}
+      >
+        <Icon name="trash" />
+      </SubmitButton>
+    </form>
+  )
+}
+
+const EditButton = ({ onClick }: { onClick: () => void }) => {
+  return (
+    <Button
+      type="button"
+      onClick={onClick}
+      styling={{ color: "text-blue-400" }}
+    >
+      <Icon name="edit" />
+    </Button>
+  )
+}
+
+const CloseFormButton = ({ onClick }: { onClick: () => void }) => {
+  return (
+    <Button
+      type="button"
+      onClick={onClick}
+      styling={{ color: "text-blue-400" }}
+    >
+      <Icon name="times-circle" />
+    </Button>
+  )
+}
+
+const EditSubmitButton = (props: {
+  postEvents: () => void;
+  processing: boolean;
+}) => {
+  return (
+    <SubmitButton isEnabled={!props.processing}  onSubmit={props.postEvents} styling={{ color: "text-blue-400" }}>
+      <Icon name="check-circle" />
+    </SubmitButton>
+  )
+}
+
+type ActionableIconsProps = {
+  item: TBudgetItem;
+  openForm: () => void;
+  closeForm: () => void;
+  postEvents: () => void;
+  processing: boolean;
+  changes: DraftChange[];
+}
+
+const ActionableIcons = (props: ActionableIconsProps) => {
+  const { item, openForm, closeForm, postEvents, processing } = props
+
+  // Lets come back and work on the delete button
+
+  const isSubmittable = !!item.draftItem && props.changes.length === 1
+
+  return (
+    <Row styling={{
+      padding: "p-2",
+      flexAlign: "justify-end",
+      alignItems: "items-center",
+      gap: "gap-2"
+    }}>
+      {!!item.draftItem ? <CloseFormButton onClick={closeForm} /> : <EditButton onClick={openForm} />}
+      {isSubmittable && <EditSubmitButton postEvents={postEvents} processing={processing} />}
+
+      <DeleteButton item={item} />
+    </Row>
   )
 }
 
@@ -231,15 +368,16 @@ const AccrualRow = ({ item }: { item: BudgetItem }) => {
 }
 
 type NameRowProps = {
-  item: BudgetItem;
+  item: TBudgetItem;
   showDetails: boolean;
   toggleDetails: () => void;
 }
 
 const NameRow = (props: NameRowProps) => {
   const { item, showDetails, toggleDetails } = props
-  const { name, iconClassName, amount, isAccrual } = item
+  const { name, iconClassName, amount } = item
   const caretIcon = showDetails ? "caret-down" : "caret-right"
+  const absolute = !item.draftItem
 
   return (
     <>
@@ -256,15 +394,14 @@ const NameRow = (props: NameRowProps) => {
           <Icon name={iconClassName} />
         </Cell>
         <Cell styling={{ textAlign: "text-right", width: "w-4/12" }}>
-          <AmountSpan amount={amount} absolute={true} />
+          <AmountSpan amount={amount} absolute={absolute} />
         </Cell>
       </Row>
-      {isAccrual && <AccrualRow item={item} />}
     </>
   )
 }
 
-const ClearedMonthItem = ({ item }: { item: BudgetItem }) => {
+const ClearedMonthItem = ({ item, form }: { item: BudgetItem, form: TChangeForm }) => {
   const transactionDetail = item.transactionDetails[0]
 
   if (!transactionDetail) { return }
@@ -276,7 +413,7 @@ const ClearedMonthItem = ({ item }: { item: BudgetItem }) => {
   const difference = transactionDetail.amount - item.amount
 
   return (
-    <ItemContainer item={item}>
+    <ItemContainer item={item} form={form}>
       <Row styling={{
         flexAlign: "justify-between",
         fontSize: "text-sm",
@@ -313,15 +450,114 @@ const ClearedMonthItem = ({ item }: { item: BudgetItem }) => {
   )
 }
 
-const PendingMonthItem = (props: { item: BudgetItem }) => {
+const PendingMonthItem = (props: { item: TBudgetItem, form: TChangeForm }) => {
+  const { item, form } = props
+
+  if (!item.draftItem || !item.change) {
+    return (
+      <ItemContainer item={item} form={form} />
+    )
+  } else {
+    const { change, draftItem } = item
+    const onChange = (amount: string) => {
+      form.updateChange(item.key, amount)
+    }
+
+    return (
+      <ItemContainer
+        item={item}
+        form={form}
+      >
+        <Row styling={{ padding: "p-2", flexWrap: "flex-wrap", flexAlign: "justify-between" }}>
+          <Cell styling={{ width: "w-6/12" }}>
+            Adjustment
+          </Cell>
+          <Cell styling={{ width: "w-6/12", textAlign: "text-right"  }}>
+            <AmountInput
+              name={`item-form-${item.key}`}
+              amount={change.amount}
+              onChange={onChange}
+              classes={["border", "border-gray-500"]}
+            />
+          </Cell>
+          <Cell styling={{ width: "w-6/12" }}>
+            Updated Amount
+          </Cell>
+          <Cell styling={{ width: "w-3/12", textAlign: "text-right"  }}>
+            <AmountSpan amount={draftItem.amount} />
+          </Cell>
+        </Row>
+      </ItemContainer>
+    )
+  }
+}
+
+const DayToDayItemForm = ({ item, form }: { form: TChangeForm; item: TBudgetItem }) => {
+  if (!item.draftItem || !item.change) { return null }
+
+  const { change, draftItem } = item
+
+  const onChange = (amount: string) => {
+    form.updateChange(item.key, amount)
+  }
+
   return (
-    <ItemContainer item={props.item} />
+    <Row styling={{ padding: "p-2", flexWrap: "flex-wrap", flexAlign: "justify-between" }}>
+      <Cell styling={{ width: "w-6/12" }}>
+        Adjustment
+      </Cell>
+      <Cell styling={{ width: "w-6/12", textAlign: "text-right"  }}>
+        <AmountInput
+          name={`item-form-${item.key}`}
+          amount={change.amount}
+          onChange={onChange}
+          classes={["border", "border-gray-500"]}
+        />
+      </Cell>
+      <Cell styling={{ width: "w-6/12" }}>
+        Previous/Updated Amount
+      </Cell>
+      <Cell styling={{ width: "w-3/12", textAlign: "text-right"  }}>
+        <AmountSpan amount={item.amount} />
+      </Cell>
+      <Cell styling={{ width: "w-3/12", textAlign: "text-right"  }}>
+        <AmountSpan amount={draftItem.amount} />
+      </Cell>
+      <Cell styling={{ width: "w-6/12" }}>
+        Spent/Deposited
+      </Cell>
+      <Cell styling={{ textAlign: "text-right", width: "w-3/12" }}>
+        <AmountSpan amount={item.spent} absolute={true} />
+      </Cell>
+      <Cell styling={{ textAlign: "text-right", width: "w-3/12" }}>
+        <AmountSpan amount={item.spent} absolute={true} />
+      </Cell>
+      <Cell styling={{ width: "w-6/12" }}>
+        Remaining/Difference
+      </Cell>
+      <Cell styling={{ textAlign: "text-right", width: "w-3/12" }}>
+        <AmountSpan amount={item.remaining} absolute={true} />
+      </Cell>
+      <Cell styling={{ textAlign: "text-right", width: "w-3/12" }}>
+        <AmountSpan amount={draftItem.remaining} absolute={true} />
+      </Cell>
+    </Row>
   )
 }
 
-const DayToDayItem = ({ item }: { item: BudgetItem }) => {
+const DayToDayItem = (props: { form: TChangeForm; item: TBudgetItem }) => {
+  const { item, form } = props
+
+  if (!!item.draftItem) {
+    return (
+      <ItemContainer item={item} form={form}>
+        <DayToDayItemForm {...props} />
+      </ItemContainer>
+    )
+  }
+
   return (
-    <ItemContainer item={item}>
+    <ItemContainer item={item} form={form}>
       <Row styling={{ padding: "p-2", flexAlign: "justify-between" }}>
         <Cell styling={{ width: "w-6/12" }}>
           Spent/Deposited

@@ -1,4 +1,4 @@
-import { useForm } from "@inertiajs/inertia-react";
+import { useForm } from "@inertiajs/react";
 import { SetUpEvent } from "./useSetUpEventsForm";
 import { TInputAmount } from "@/components/common/AmountInput";
 import { inputAmount } from "@/components/common/AmountInput";
@@ -42,8 +42,8 @@ export type CreateEventProps = {
   amount: TInputAmount;
   budgetCategoryKey: string;
   budgetItemKey: string;
-  month: number;
-  year: number;
+  month: string | number;
+  year: string | number;
   data?: any;
 }
 

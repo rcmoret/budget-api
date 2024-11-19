@@ -3,7 +3,7 @@ import { AccountManage } from "@/types/account";
 import { Button } from "@/components/common/Button";
 import { AccountForm } from "@/pages/accounts/manage/Form";
 import { Icon } from "@/components/common/Icon";
-import { useForm } from "@inertiajs/inertia-react";
+import { useForm } from "@inertiajs/react";
 import { SubmitButton } from "@/components/common/Button";
 import { UrlBuilder } from "@/lib/UrlBuilder";
 import { buildQueryParams } from "@/lib/redirect_params";

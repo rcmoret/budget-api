@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { useForm } from "@inertiajs/inertia-react";
+import { useForm } from "@inertiajs/react";
 import { ModeledTransaction } from "@/lib/models/transaction";
 import DatePicker from "react-datepicker";
 import { parseISO as parseIsoDate } from "date-fns";

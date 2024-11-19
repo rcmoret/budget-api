@@ -1,5 +1,5 @@
 import React, { SyntheticEvent } from "react";
-import { InertiaLink } from "@inertiajs/inertia-react";
+import { Link as InertiaLink } from "@inertiajs/react";
 
 interface ButtonLinkProps {
   href: string;

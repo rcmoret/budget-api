@@ -35,11 +35,21 @@ module API
         class LocalItemSerializer < ApplicationSerializer
           attributes :key,
                      :budget_category_key,
+                     :budget_category_name,
+                     :icon_class_name,
                      :name,
                      :amount,
                      :difference,
                      :remaining,
                      :spent
+          attribute :is_new_item, alias_of: :new_record?
+          attribute :is_monthly, alias_of: :monthly?
+
+          delegate :icon_class_name, to: :category
+
+          def budget_category_name
+            category.name
+          end
 
           def budget_category_key
             category.key

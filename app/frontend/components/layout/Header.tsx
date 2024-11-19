@@ -12,13 +12,19 @@ type BudgetIndexPageData = {
   name: "budget/index";
 }
 
+export type BudgetFinalizePageData = {
+  name: "budget/finalize";
+  month: number;
+  year: number;
+}
+
 type BudgetSetUpPageData = {
   name: "budget/set-up";
   month: number;
   year: number;
 }
 
-export type PageData = BudgetIndexPageData | BudgetSetUpPageData
+export type PageData = BudgetIndexPageData | BudgetFinalizePageData | BudgetSetUpPageData
 
 type HeaderProps = {
   metadata: {
