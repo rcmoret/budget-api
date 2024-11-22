@@ -143,11 +143,17 @@ const BudgetComponent = (props: ComponentProps) => {
         <Section title="Discretionary">
           <Discretionary data={discretionary} />
         </Section>
+        <div className="w-full h-0.5 my-2 px-4">
+          <div className="bg-gray-300 h-full w-full"></div>
+        </div>
         <DayToDayItemsSection
           title="Revenues"
           items={dayToDayRevenueItems}
           form={form}
         />
+        <div className="w-full h-0.5 my-2 px-4">
+          <div className="bg-gray-300 h-full w-full"></div>
+        </div>
         <DayToDayItemsSection
           title="Expenses"
           items={dayToDayExpenseItems}
@@ -168,6 +174,9 @@ const BudgetComponent = (props: ComponentProps) => {
           items={pendingMonthlyRevenueItems}
           form={form}
         />
+        <div className="w-full h-0.5 my-2 px-4">
+          <div className="bg-gray-300 h-full w-full"></div>
+        </div>
         <PendingMonthlyItemsSection
           title="Expenses"
           items={pendingMonthlyExpenseItems}

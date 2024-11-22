@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import Select from "react-select";
 import { Link as InertiaLink } from "@inertiajs/react";
 
-import { ActionAnchorTag } from "@/components/common/Link";
 import { Icon } from "@/components/common/Icon";
+import { Button } from "@/components/common/Button";
 import { Row } from "@/components/common/Row";
 import { DateFormatter, monthOptions } from "@/lib/DateFormatter";
 
@@ -46,9 +46,15 @@ const MonthYearSelect = (props: ComponentProps) => {
 
   return (
     <div className="my-2">
-      <ActionAnchorTag onClick={toggleForm} className="text-blue-700">
+      <Button
+        type="button"
+        onClick={toggleForm}
+        styling={{
+          color: "text-blue-700"
+        }}
+      >
         <Icon name="calendar" />
-      </ActionAnchorTag>
+      </Button>
       {isFormShown && (
         <Form baseUrl={baseUrl} month={month} update={update} year={year} />
       )}

@@ -31,7 +31,7 @@ const Discretionary = (props: { data: DiscretionaryData }) => {
           <AmountSpan
             amount={transactionsTotal}
             color="text-green-800"
-            negativeColor="text-red-700"
+            negativeColor="text-red-400"
             zeroColor="text-black"
           />
         </div>
@@ -47,7 +47,7 @@ const Discretionary = (props: { data: DiscretionaryData }) => {
           <AmountSpan
             amount={overUnderBudget}
             color="text-green-800"
-            negativeColor="text-red-700"
+            negativeColor="text-red-400"
             zeroColor="text-black"
           />
         </div>
@@ -63,7 +63,7 @@ const Discretionary = (props: { data: DiscretionaryData }) => {
           <AmountSpan
             amount={amount}
             color="text-green-800"
-            negativeColor="text-red-700"
+            negativeColor="text-red-400"
             zeroColor="text-black"
           />
         </div>

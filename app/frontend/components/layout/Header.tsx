@@ -4,8 +4,8 @@ import { Row } from "@/components/common/Row";
 import { Cell } from "@/components/common/Cell";
 import { Summary } from "@/components/layout/BudgetSummary";
 import { Icon } from "@/components/common/Icon";
-import { ActionAnchorTag } from "@/components/common/Link";
 import { AppConfigContext } from "@/components/layout/Provider";
+import { Button } from "@/components/common/Button";
 import { AccountBudgetSummary, SelectedAccount } from "@/types/budget";
 
 type BudgetIndexPageData = {
@@ -49,10 +49,13 @@ const Header = ({ metadata, data, selectedAccount }: HeaderProps) => {
   })
 
   return (
-    <Row styling={{ backgroundColor: "bg-white", flexAlign: "justify-between", flexWrap: "flex-wrap"}}>
+    <Row styling={{
+      backgroundColor: "bg-gradient-to-l from-gray-50 to-gray-200",
+      flexAlign: "justify-between",
+      flexWrap: "flex-wrap"
+    }}>
       <Cell
         styling={{
-          bgColor: "bg-gradient-to-l from-slate-200 to-slate-400",
           padding: "p-1",
           width: "w-full sm:w-6/12"
         }}
@@ -63,7 +66,6 @@ const Header = ({ metadata, data, selectedAccount }: HeaderProps) => {
       </Cell>
       <Cell
         styling={{
-          bgColor: "sm:bg-gradient-to-r from-slate-200 to-slate-400 bg-gradient-to-l",
           display: "flex",
           flexAlign: "justify-end",
           flexDirection: "flex-row-reverse",
@@ -72,9 +74,13 @@ const Header = ({ metadata, data, selectedAccount }: HeaderProps) => {
         }}
       >
         <Cell styling={{ width: "lg:w-4/12 w-2/12", textAlign: "text-right", padding: "pr-4 py-4" }}>
-          <ActionAnchorTag title="Configurations" onClick={toggleConfigMenu}>
+          <Button
+            type="button"
+            title="Configurations"
+            onClick={toggleConfigMenu}
+        >
             <Icon name="bars" />
-          </ActionAnchorTag>
+          </Button>
         </Cell>
         <Cell styling={{width: "lg:w-8/12 w-full"}}>
           <Summary metadata={metadata} data={data} selectedAccount={selectedAccount} />

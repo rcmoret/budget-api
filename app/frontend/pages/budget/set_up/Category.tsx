@@ -50,7 +50,7 @@ const AccrualFormComponent = (props: {
         isEnabled={!processing}
         onSubmit={onSubmit}
         styling={{
-          color: "text-blue-400"
+          color: "text-blue-300"
         }}
       >
         Mark as Maturing in {DateFormatter({ month, year, format: "monthYear" })}
@@ -303,7 +303,7 @@ const EditableSuggestion = (props: EditableSuggestionProps) => {
         type="button"
         onClick={toggleForm}
       >
-        <span className="text-blue-400">
+        <span className="text-blue-300">
           <Icon name="edit" />
         </span>
       </Button>

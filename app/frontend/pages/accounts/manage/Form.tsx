@@ -80,7 +80,7 @@ const AccountForm = (props: {
               <Button
                 type="button"
                 onClick={closeForm}
-                styling={{ color: "text-blue-400" }}
+                styling={{ color: "text-blue-300" }}
                 >
                 <Icon name="times-circle" />
               </Button>
@@ -139,7 +139,7 @@ const AccountForm = (props: {
             onSubmit={onSumbit}
             styling={{
               rounded: "rounded",
-              backgroundColor: "bg-green-700",
+              backgroundColor: "bg-green-666",
               color: "text-white",
               padding: "px-4 py-1"
             }}
@@ -177,7 +177,7 @@ const NewButton = (props: { openForm: () => void }) => {
     <Button
       type="button"
       onClick={props.openForm}
-      styling={{ color: "text-blue-400" }}
+      styling={{ color: "text-blue-300" }}
     >
       <Icon name="plus-circle" />
     </Button>

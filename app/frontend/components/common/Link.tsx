@@ -1,4 +1,4 @@
-import React, { SyntheticEvent } from "react";
+import React from "react";
 import { Link as InertiaLink } from "@inertiajs/react";
 
 interface ButtonLinkProps {
@@ -15,10 +15,10 @@ interface ButtonLinkProps {
 const ButtonStyleLink = (props: ButtonLinkProps) => {
   const styling = {
     color: "text-white",
-    hoverBgColor: "hover:bg-blue-800",
+    hoverBgColor: "hover:bg-orange-900",
     hoverBgOpacity: null,
     hoverColor: "hover:text-white",
-    bgColor: "bg-blue-600",
+    bgColor: "bg-orange-800",
     padding: "p-2",
     rounded: "rounded",
     ...props.styling,
@@ -33,38 +33,4 @@ const ButtonStyleLink = (props: ButtonLinkProps) => {
   );
 };
 
-interface ActionAnchorProps {
-  children: React.ReactNode;
-  className?: string;
-  onClick: () => void;
-  title?: string;
-}
-
-interface ElementProps {
-  className: string;
-  onClick: (event: SyntheticEvent) => void;
-  title?: string;
-  href: "#";
-}
-
-const ActionAnchorTag = (props: ActionAnchorProps) => {
-  const onClick = (event: SyntheticEvent) => {
-    event.preventDefault();
-    props.onClick();
-  };
-
-  let elementProps: ElementProps = {
-    className: (props.className || ""),
-    onClick,
-    href: "#"
-  }
-  if (props.title) { elementProps = { ...elementProps, title: props.title } }
-
-  return (
-    <a {...elementProps}>
-      {props.children}
-    </a>
-  );
-};
-
-export { ActionAnchorTag, ButtonStyleLink };
+export { ButtonStyleLink };

@@ -1,14 +1,17 @@
 import React from "react";
 
 import type {
+  FontSizeOption,
+  TextAlignOption,
+} from "types/components/text-classes";
+
+import type {
   DisplayOption,
   FlexAlignOption,
   FlexDirectionOption,
   FlexWrapOption,
-  FontSizeOption,
   OverflowOption,
-  TextAlignOption,
-} from "types/component_classes";
+} from "types/components/display-classes";
 
 interface ComponentProps {
   children: React.ReactNode;

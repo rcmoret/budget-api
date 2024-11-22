@@ -8,12 +8,13 @@ import { Icon } from "@/components/common/Icon";
 import { buildQueryParams } from "@/lib/redirect_params"
 import { Label } from "@/pages/accounts/transactions/form/Shared";
 import { BudgetItemsComponent } from "@/pages/accounts/transactions/form/LineItems";
-import { ActionAnchorTag } from "@/components/common/Link";
 import { generateKeyIdentifier } from "@/lib/KeyIdentifier";
 import { inputAmount, TInputAmount } from "@/components/common/AmountInput";
 import { UrlBuilder } from "@/lib/UrlBuilder";
 import { Button } from "@/components/common/Button";
 import Select, { SingleValue } from "react-select";
+import { StripedRow } from "@/components/common/Row"
+import { useToggle } from "@/lib/hooks/useToogle";
 
 type InputProps = {
   name: string;
@@ -42,6 +43,7 @@ const ClearanceDateComponent = (props: {
       <DatePicker
         selected={clearanceDate}
         onChange={onChange}
+        className="border border-gray-300 h-input-lg"
       />
     </div>
   )
@@ -67,6 +69,7 @@ const DescriptionComponent = (props: {
         name="description"
         onChange={onChange}
         style={{ width: "90%" }}
+        className="border border-gray-300 h-input-lg"
       />
     </div>
   )
@@ -77,8 +80,8 @@ const CheckNumberComponent = (props: {
   checkNumber: string | null 
 }) => {
   const { checkNumber, updateFormData } = props
-  const [showInput, setShowInput] = useState<boolean>(!!checkNumber)
-  const toggleInput = () => setShowInput(!showInput)
+  const [showInput, toggleInput] = useToggle(!!checkNumber)
+
   const onChange = (
     ev: React.ChangeEvent & { target: HTMLInputElement },
   ) => updateFormData({ name: ev.target.name, value: ev.target.value })
@@ -87,7 +90,9 @@ const CheckNumberComponent = (props: {
     return (
       <div>
         <Button type="button" onClick={toggleInput}>
-          <Icon name="money-check" />
+          <span className="text-gray-600">
+            <Icon name="money-check" />
+          </span>
         </Button>
         {" "}
         Check Number
@@ -96,6 +101,7 @@ const CheckNumberComponent = (props: {
             value={checkNumber || ""}
             name="checkNumber"
             onChange={onChange}
+            className="h-input-lg"
           />
         </div>
       </div>
@@ -104,7 +110,9 @@ const CheckNumberComponent = (props: {
     return (
       <div>
         <Button type="button" onClick={toggleInput}>
-          <Icon name="money-check" />
+          <span className="text-gray-600">
+            <Icon name="money-check" />
+          </span>
         </Button>
       </div>
     )
@@ -129,7 +137,9 @@ const NotesComponent = (props: {
     return (
       <div>
         <Button type="button" onClick={toggleInput}>
-          <Icon name="sticky-note" />
+          <span className="text-gray-600">
+            <Icon name="sticky-note" />
+          </span>
         </Button>
         {" "}
         Notes
@@ -147,7 +157,9 @@ const NotesComponent = (props: {
     return (
       <div>
         <Button type="button" onClick={toggleInput}>
-          <Icon name="sticky-note" />
+          <span className="text-gray-600">
+            <Icon name="sticky-note" />
+          </span>
         </Button>
       </div>
     )
@@ -258,7 +270,6 @@ const TransactionForm = (props: {
   // @ts-ignore
   transform(() => {
     const { key, details, accountKey, ...transaction } = data
-    debugger
     return {
       transaction: {
         ...transaction,
@@ -369,57 +380,72 @@ const TransactionForm = (props: {
   }
 
   return (
-    <form onSubmit={onSubmit}>
-      <div className="w-full flex flex-row gap-2">
-        <div className="hidden">{key}</div>
-        <div className="mr-4">
-          <ActionAnchorTag onClick={closeForm}>
-            <Icon name="times-circle" />
-          </ActionAnchorTag>
-        </div>
-        <ClearanceDateComponent
-          clearanceDate={data.clearanceDate}
-          updateFormData={updateFormData}
-        />
-        <DescriptionComponent
-          description={data.description || ""}
-          updateFormData={updateFormData}
-        />
-        <BudgetItemsComponent
-          details={formDetails}
-          addDetail={addDetail}
-          removeDetail={removeDetail}
-          updateDetailAmount={updateDetailAmount}
-          updateDetailItem={updateDetailItem}
-        />
-        <div className="flex flex-col w-2/12">
-          <CheckNumberComponent
-            checkNumber={data.checkNumber}
+    <StripedRow
+      oddColor="odd:bg-sky-50"
+      evenColor="even:bg-gray-100"
+      styling={{
+        padding: "px-2 py-1"
+      }}
+    >
+      <form onSubmit={onSubmit} className="w-full">
+        <div className="w-full rounded flex flex-row px-2 py-1 gap-2 border border-gray-300">
+          <div className="hidden">{key}</div>
+          <div className="mr-4">
+            <Button type="button" onClick={closeForm}>
+              <span className="text-gray-600">
+                <Icon name="times-circle" />
+              </span>
+            </Button>
+          </div>
+          <ClearanceDateComponent
+            clearanceDate={data.clearanceDate}
             updateFormData={updateFormData}
           />
-          <NotesComponent
-            notes={data.notes}
+          <DescriptionComponent
+            description={data.description || ""}
             updateFormData={updateFormData}
           />
-          <BudgetExclusionComponent
-            isBudgetExclusion={data.isBudgetExclusion}
-            updateFormData={updateFormData}
+          <BudgetItemsComponent
+            details={formDetails}
+            addDetail={addDetail}
+            removeDetail={removeDetail}
+            updateDetailAmount={updateDetailAmount}
+            updateDetailItem={updateDetailItem}
           />
-          {!isNew &&
-            <AccountSelectComponent
+          <div className="flex flex-col w-2/12 gap-2">
+            <CheckNumberComponent
+              checkNumber={data.checkNumber}
               updateFormData={updateFormData}
-              accountKey={data.accountKey}
-            />}
+            />
+            <NotesComponent
+              notes={data.notes}
+              updateFormData={updateFormData}
+            />
+            <BudgetExclusionComponent
+              isBudgetExclusion={data.isBudgetExclusion}
+              updateFormData={updateFormData}
+            />
+            {!isNew &&
+              <AccountSelectComponent
+                updateFormData={updateFormData}
+                accountKey={data.accountKey}
+              />}
+          </div>
+          <div className="text-right grow self-end text-lg">
+            <div>
+              <button disabled={processing} type="submit" >
+                <div className="bg-green-600 text-white rounded px-2 py-1 flex flex-row gap-2">
+                  {isNew ? "Create" : "Update"}
+                  <div className="text-chartreuse-300">
+                    <Icon name="check-circle" />
+                  </div>
+                </div>
+              </button>
+            </div>
+          </div>
         </div>
-        <div className="text-right">
-          <button disabled={processing} type="submit" >
-            <span className="text-green-700">
-              <Icon name="check-circle" />
-            </span>
-          </button>
-        </div>
-      </div>
-    </form>
+      </form>
+    </StripedRow>
   )
 };
 

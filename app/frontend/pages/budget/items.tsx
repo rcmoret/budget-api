@@ -22,7 +22,8 @@ const CategorySelect = (props: {
 }) => {
   const [selectedKey, setSelectedKey] = useState<string>("")
 
-  const options = props.categories.map((category) => {
+  const categories = props.categories.sort((c1, c2) => c1.name.toLowerCase() < c2.name.toLowerCase() ? -1 : 1)
+  const options = categories.map((category) => {
     return { label: category.name, value: category.key }
   })
   const value = options.find((option) => option.value === selectedKey) || { label: "", value: "" }
@@ -167,19 +168,24 @@ const ClearedMonthlyItemsSections = (props: {
   }
 
   return (
-    <Row styling={{ flexWrap: "flex-wrap" }}>
-      <div className="w-full text-2xl p-2">Cleared Monthly Items</div>
-      <ClearedMonthlyItemsSection
-        title="Revenues"
-        items={clearedMonthlyRevenueItems}
-        form={form}
-      />
-      <ClearedMonthlyItemsSection
-        title="Expenses"
-        items={clearedMonthlyExpenseItems}
-        form={form}
-      />
-    </Row>
+    <>
+      <div className="w-full h-0.5 my-2 px-4">
+        <div className="bg-gray-300 h-full w-full"></div>
+      </div>
+      <Row styling={{ flexWrap: "flex-wrap" }}>
+        <div className="w-full text-2xl p-2">Cleared Monthly Items</div>
+        <ClearedMonthlyItemsSection
+          title="Revenues"
+          items={clearedMonthlyRevenueItems}
+          form={form}
+        />
+        <ClearedMonthlyItemsSection
+          title="Expenses"
+          items={clearedMonthlyExpenseItems}
+          form={form}
+        />
+      </Row>
+    </>
   )
 }
 
@@ -281,8 +287,8 @@ const Column = (props: ColumnProps) => {
         <div className="text-2xl">
           {props.title}
         </div>
-        <div>
-          <Button type="button" onClick={toggleSelect} styling={{ color: "text-blue-400"}}>
+        <div className="text-lg">
+          <Button type="button" onClick={toggleSelect} styling={{ color: "text-[#0b8bd5]"}}>
             <Icon name={isSelectShown ? "times-circle" : "plus-circle"} />
           </Button>
         </div>
@@ -306,11 +312,12 @@ const Section = (props: { title: string; children: React.ReactNode }) => (
   <Row
     styling={{
       flexWrap: "flex-wrap",
+      padding: "px-2"
     }}
   >
     <Row
       styling={{
-        backgroundColor: "bg-gradient-to-r from-green-300 to-green-600",
+        backgroundColor: "bg-gradient-to-l from-chartreuse-200 to-green-100",
         margin: "mb-1",
         fontWeight: "font-semibold",
         fontSize: "text-xl",

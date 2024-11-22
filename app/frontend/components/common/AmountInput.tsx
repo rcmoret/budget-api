@@ -6,6 +6,7 @@ type AmountInputProps = {
   onChange: (a: string) => void;
   disabled?: boolean;
   style?: {
+    height?: string;
     width?: string;
   }
   classes?: Array<string>;

@@ -4,6 +4,8 @@ import { useContext } from "react";
 import { AmountSpan } from "@/components/common/AmountSpan";
 import { DraftChange, MergedItem } from "@/lib/hooks/useDraftEvents";
 import { SubmitButton } from "@/components/common/Button";
+import { StripedRow } from "@/components/common/Row";
+import { Icon } from "@/components/common/Icon";
 
 const LineItem = (props: {
   item: DraftItem;
@@ -20,12 +22,12 @@ const LineItem = (props: {
   }) || null
 
   return (
-    <div className="w-full flex flex-row justify-between">
+    <StripedRow oddColor="odd:bg-cyan-50" evenColor="even:bg-cyan-100" styling={{ rounded: "rounded", padding: "p-2", flexAlign: "justify-between" }}>
       <div className="w-2/12">
         {item.name}
       </div>
       <div className="w-2/12 text-right">
-        {!!existingItem && <AmountSpan amount={existingItem.amount} />}
+        {!!existingItem ? <AmountSpan amount={existingItem.amount} /> : <span>-</span>}
       </div>
       <div className="w-2/12 text-right">
         {!!change && <AmountSpan amount={change.amount.cents || 0} />}
@@ -34,12 +36,12 @@ const LineItem = (props: {
         <AmountSpan amount={item.amount} />
       </div>
       <div className="w-2/12 text-right">
-        {!!existingItem && <AmountSpan amount={existingItem.spent} />}
+        {!!existingItem ? <AmountSpan amount={existingItem.spent} /> : <span>-</span>}
       </div>
       <div className="w-2/12 text-right">
         <AmountSpan amount={item.remaining} absolute={true} />
       </div>
-    </div>
+    </StripedRow>
   )
 }
 
@@ -56,7 +58,9 @@ type ComponentProps = {
 const AdjustForm = (props: ComponentProps) => {
   const { appConfig } = useContext(AppConfigContext)
   const { discretionary } = appConfig.budget
-  const items  = [ ...props.adjustItems, ...props.newDraftItems ]
+  const items  = [ ...props.adjustItems, ...props.newDraftItems ].sort((i1, i2) => {
+    return i1.name.toLowerCase() < i2.name.toLowerCase() ? -1 : 1
+  })
 
   const { discretionary: updatedDiscretionary }  = props
 
@@ -68,14 +72,11 @@ const AdjustForm = (props: ComponentProps) => {
   const originalRemaining = discretionary.amount
   const bottomLineChange = updatedRemaining - originalRemaining
 
-  console.log({ updatedDiscretionary })
-  console.log({ discretionary })
-
   return (
-    <div className="w-full px-4 py-2 bg-[#DEEDEB] rounded-lg">
+    <div className="w-full px-4 py-2 bg-cyan-50 rounded-lg">
       <div className="text-xl border-b border-[#056155] pb-2 w-full">Budget Updates</div>
-      <div className="w-full flex flex-col gap-2 px-6 mb-4 border-b border-[#056155]">
-        <div className="w-full flex flex-row justify-between text-gray-800 text-sm">
+      <div className="w-full flex flex-col mb-4 border-b border-[#056155]">
+        <div className="w-full flex flex-row px-2 justify-between text-gray-800 text-sm">
           <div className="w-2/12">
             Item
           </div>
@@ -148,7 +149,7 @@ const AdjustForm = (props: ComponentProps) => {
               <AmountSpan
                 amount={discretionary.overUnderBudget}
                 color="text-green-800"
-                negativeColor="text-red-700"
+                negativeColor="text-red-400"
                 zeroColor="text-black"
              />
             </div>
@@ -156,7 +157,7 @@ const AdjustForm = (props: ComponentProps) => {
               <AmountSpan
                 amount={updatedDiscretionary.overUnderBudget}
                 color="text-green-800"
-                negativeColor="text-red-700"
+                negativeColor="text-red-400"
                 zeroColor="text-black"
               />
             </div>
@@ -180,7 +181,7 @@ const AdjustForm = (props: ComponentProps) => {
               <AmountSpan
                 amount={bottomLineChange}
                 color="text-green-800"
-                negativeColor="text-red-700"
+                negativeColor="text-red-400"
                 zeroColor="text-black"
               />
             </div>
@@ -189,10 +190,13 @@ const AdjustForm = (props: ComponentProps) => {
         <div className="w-4/12 flex flex-row justify-end">
           <SubmitButton
             onSubmit={props.postEvents}
-            styling={{ color: "text-white", backgroundColor: "bg-green-700", rounded: "rounded", padding: "px-4 py-2" }}
+            styling={{ color: "text-white", backgroundColor: "bg-green-600", rounded: "rounded", padding: "px-4 py-2", display: "flex", gap: "gap-2" }}
             isEnabled={!props.processing}
           >
             Submit Updates
+            <div className="text-chartreuse-300">
+              <Icon name="check-circle" />
+            </div>
           </SubmitButton>
         </div>
       </div>

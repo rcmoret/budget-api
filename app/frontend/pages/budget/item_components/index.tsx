@@ -4,7 +4,6 @@ import { BudgetItem, TBudgetItem, BudgetItemEvent, BudgetItemTransaction } from 
 import { Row, StripedRow } from "@/components/common/Row";
 import { Cell } from "@/components/common/Cell";
 import { Icon } from "@/components/common/Icon";
-import { ActionAnchorTag } from "@/components/common/Link";
 import { Button, SubmitButton } from "@/components/common/Button";
 import { AmountSpan } from "@/components/common/AmountSpan";
 import { Point } from "@/components/common/Symbol";
@@ -206,7 +205,16 @@ const ItemContainer = (props: {
   const closeForm = () => form.removeChange(item.key)
 
   return (
-    <StripedRow styling={{ flexWrap: "flex-wrap"}}>
+    <StripedRow
+      oddColor="odd:bg-sky-50"
+      evenColor="even:bg-gray-100"
+      styling={{
+        flexWrap: "flex-wrap",
+        color: "text-gray-800",
+        gap: "gap-px",
+        rounded: "rounded"
+      }}
+    >
       <NameRow
         item={item}
         showDetails={showDetails}
@@ -263,7 +271,7 @@ const DeleteButton = ({ item }: { item: BudgetItem }) => {
       <SubmitButton
         isEnabled={!processing}
         onSubmit={onSubmit}
-        styling={{ color: "text-blue-400" }}
+        styling={{ color: "text-blue-300" }}
       >
         <Icon name="trash" />
       </SubmitButton>
@@ -276,7 +284,7 @@ const EditButton = ({ onClick }: { onClick: () => void }) => {
     <Button
       type="button"
       onClick={onClick}
-      styling={{ color: "text-blue-400" }}
+      styling={{ color: "text-blue-300" }}
     >
       <Icon name="edit" />
     </Button>
@@ -288,7 +296,7 @@ const CloseFormButton = ({ onClick }: { onClick: () => void }) => {
     <Button
       type="button"
       onClick={onClick}
-      styling={{ color: "text-blue-400" }}
+      styling={{ color: "text-blue-300" }}
     >
       <Icon name="times-circle" />
     </Button>
@@ -300,7 +308,7 @@ const EditSubmitButton = (props: {
   processing: boolean;
 }) => {
   return (
-    <SubmitButton isEnabled={!props.processing}  onSubmit={props.postEvents} styling={{ color: "text-blue-400" }}>
+    <SubmitButton isEnabled={!props.processing}  onSubmit={props.postEvents} styling={{ color: "text-blue-300" }}>
       <Icon name="check-circle" />
     </SubmitButton>
   )
@@ -383,18 +391,25 @@ const NameRow = (props: NameRowProps) => {
     <>
       <Row styling={{ padding: "p-2", flexAlign: "justify-between" }}>
         <Cell styling={{ width: "w-6/12" }}>
-          <ActionAnchorTag onClick={toggleDetails} className="text-blue-800">
-            <span className="text-sm">
+          <Button 
+            type="button"
+            onClick={toggleDetails}
+            styling={{
+              fontWeight: "font-semibold",
+              color: "text-gray-800"
+            }}
+          >
+            <span className="text-blue-300 text-sm">
               <Icon name={caretIcon} />
             </span>
             {" "}
             {name}
-          </ActionAnchorTag>
+          </Button>
           {" "}
           <Icon name={iconClassName} />
         </Cell>
         <Cell styling={{ textAlign: "text-right", width: "w-4/12" }}>
-          <AmountSpan amount={amount} absolute={absolute} />
+          <AmountSpan color="text-gray-800" amount={amount} absolute={absolute} />
         </Cell>
       </Row>
     </>
@@ -418,14 +433,14 @@ const ClearedMonthItem = ({ item, form }: { item: BudgetItem, form: TChangeForm 
         flexAlign: "justify-between",
         fontSize: "text-sm",
         padding: "px-8 pb-2",
-        border: "border-b gray-600 border-solid"
+        border: "border-b gray-800 border-solid"
       }}>
         <Cell styling={{ width: "w-6/12" }}>
           <div>{dateString}</div>
           <div>{transactionDetail.accountName}</div>
         </Cell>
         <div>
-          <AmountSpan amount={transactionDetail.amount} />
+          <AmountSpan color="text-gray-800" amount={transactionDetail.amount} />
         </div>
       </Row>
       <Row styling={{
@@ -440,8 +455,8 @@ const ClearedMonthItem = ({ item, form }: { item: BudgetItem, form: TChangeForm 
           <AmountSpan
             amount={difference}
             absolute={true}
-            color="text-green-800"
-            negativeColor="text-red-700"
+            color="text-gray-800"
+            negativeColor="text-red-400"
             zeroColor="text-black"
           />
         </Cell>
@@ -484,7 +499,7 @@ const PendingMonthItem = (props: { item: TBudgetItem, form: TChangeForm }) => {
             Updated Amount
           </Cell>
           <Cell styling={{ width: "w-3/12", textAlign: "text-right"  }}>
-            <AmountSpan amount={draftItem.amount} />
+            <AmountSpan color="text-gray-500" amount={draftItem.amount} />
           </Cell>
         </Row>
       </ItemContainer>
@@ -518,28 +533,28 @@ const DayToDayItemForm = ({ item, form }: { form: TChangeForm; item: TBudgetItem
         Previous/Updated Amount
       </Cell>
       <Cell styling={{ width: "w-3/12", textAlign: "text-right"  }}>
-        <AmountSpan amount={item.amount} />
+        <AmountSpan color="text-gray-800" amount={item.amount} />
       </Cell>
       <Cell styling={{ width: "w-3/12", textAlign: "text-right"  }}>
-        <AmountSpan amount={draftItem.amount} />
+        <AmountSpan color="text-gray-800" amount={draftItem.amount} />
       </Cell>
       <Cell styling={{ width: "w-6/12" }}>
         Spent/Deposited
       </Cell>
       <Cell styling={{ textAlign: "text-right", width: "w-3/12" }}>
-        <AmountSpan amount={item.spent} absolute={true} />
+        <AmountSpan color="text-gray-800" amount={item.spent} absolute={true} />
       </Cell>
       <Cell styling={{ textAlign: "text-right", width: "w-3/12" }}>
-        <AmountSpan amount={item.spent} absolute={true} />
+        <AmountSpan color="text-gray-800" amount={item.spent} absolute={true} />
       </Cell>
       <Cell styling={{ width: "w-6/12" }}>
         Remaining/Difference
       </Cell>
       <Cell styling={{ textAlign: "text-right", width: "w-3/12" }}>
-        <AmountSpan amount={item.remaining} absolute={true} />
+        <AmountSpan color="text-gray-800" amount={item.remaining} absolute={true} />
       </Cell>
       <Cell styling={{ textAlign: "text-right", width: "w-3/12" }}>
-        <AmountSpan amount={draftItem.remaining} absolute={true} />
+        <AmountSpan color="text-gray-800" amount={draftItem.remaining} absolute={true} />
       </Cell>
     </Row>
   )

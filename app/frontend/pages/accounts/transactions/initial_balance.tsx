@@ -30,7 +30,7 @@ const InitialBalance = (props: { balance: number; initialDate: string }) => {
       descriptionComponent="Balance"
       transactionAmountComponent={null}
       balanceCompnent={
-        <AmountSpan amount={props.balance} negativeColor="text-red-800" />
+        <AmountSpan amount={props.balance} negativeColor="text-red-400" />
       }
     />
   );

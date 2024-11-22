@@ -62,7 +62,7 @@ const ArchiveButton = (props: { account: AccountManage }) => {
     <form>
       <SubmitButton
         onSubmit={onSubmit}
-        styling={{ color: "text-red-700" }}
+        styling={{ color: "text-red-400" }}
         isEnabled={!processing}
       >
         <Icon name="trash" />
@@ -85,7 +85,7 @@ const AccountCard = (props: {
           {account.name}
         </Point>
       </div>
-      <div className="w-5/12 text-right text-blue-400">
+      <div className="w-5/12 text-right text-blue-300">
         <Button
           type="button"
           onClick={showForm}
