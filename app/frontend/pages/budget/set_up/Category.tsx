@@ -8,11 +8,12 @@ import { Icon } from "@/components/common/Icon";
 import { useContext } from "react";
 import { AppConfigContext } from "@/components/layout/Provider";
 import { DateFormatter } from "@/lib/DateFormatter";
-import { useForm } from "@inertiajs/inertia-react";
+import { useForm } from "@inertiajs/react";
 import { SubmitButton } from "@/components/common/Button";
 import { buildQueryParams } from "@/lib/redirect_params"
 import { useState } from "react";
 import { UrlBuilder } from "@/lib/UrlBuilder";
+import { useToggle } from "@/lib/hooks/useToogle";
 
 const AccrualFormComponent = (props: {
   category: SetUpCategory,
@@ -49,7 +50,7 @@ const AccrualFormComponent = (props: {
         isEnabled={!processing}
         onSubmit={onSubmit}
         styling={{
-          color: "text-blue-400"
+          color: "text-blue-300"
         }}
       >
         Mark as Maturing in {DateFormatter({ month, year, format: "monthYear" })}
@@ -288,9 +289,7 @@ const EditableSuggestion = (props: EditableSuggestionProps) => {
     updateCategory
   } = props
 
-  const [showForm, setShowForm] = useState<boolean>(false)
-
-  const toggleForm = () => setShowForm(!showForm)
+  const [showForm, toggleForm] = useToggle()
 
   if (!showForm) {
     return (
@@ -304,7 +303,7 @@ const EditableSuggestion = (props: EditableSuggestionProps) => {
         type="button"
         onClick={toggleForm}
       >
-        <span className="text-blue-400">
+        <span className="text-blue-300">
           <Icon name="edit" />
         </span>
       </Button>

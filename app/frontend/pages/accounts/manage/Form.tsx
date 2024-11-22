@@ -1,6 +1,6 @@
 import { AccountManage } from "@/types/account";
 import { Button, SubmitButton } from "@/components/common/Button";
-import { useForm } from "@inertiajs/inertia-react";
+import { useForm } from "@inertiajs/react";
 import { UrlBuilder } from "@/lib/UrlBuilder";
 import { buildQueryParams } from "@/lib/redirect_params";
 import { Icon } from "@/components/common/Icon";
@@ -21,15 +21,13 @@ const AccountForm = (props: {
   transform(() => {
     const { isCashFlow, ...updateProps } = data
 
-    const payload = {
+    return {
       account: {
         ...updateProps,
         cashFlow: isCashFlow,
         ...(isNew ? { key: account.key } : {})
       }
     }
-    console.log({ payload })
-    return payload
   })
 
   const onChange = (ev: React.ChangeEvent & { target: HTMLInputElement }) => {
@@ -82,7 +80,7 @@ const AccountForm = (props: {
               <Button
                 type="button"
                 onClick={closeForm}
-                styling={{ color: "text-blue-400" }}
+                styling={{ color: "text-blue-300" }}
                 >
                 <Icon name="times-circle" />
               </Button>
@@ -141,7 +139,7 @@ const AccountForm = (props: {
             onSubmit={onSumbit}
             styling={{
               rounded: "rounded",
-              backgroundColor: "bg-green-700",
+              backgroundColor: "bg-green-666",
               color: "text-white",
               padding: "px-4 py-1"
             }}
@@ -179,7 +177,7 @@ const NewButton = (props: { openForm: () => void }) => {
     <Button
       type="button"
       onClick={props.openForm}
-      styling={{ color: "text-blue-400" }}
+      styling={{ color: "text-blue-300" }}
     >
       <Icon name="plus-circle" />
     </Button>

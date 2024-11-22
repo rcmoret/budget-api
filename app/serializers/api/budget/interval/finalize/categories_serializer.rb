@@ -5,16 +5,26 @@ module API
         class CategoriesSerializer < ApplicationSerializer
           attribute :first_date, on_render: proc { |timestamp| timestamp.strftime("%F") }
           attribute :last_date, on_render: proc { |timestamp| timestamp.strftime("%F") }
-          attribute :budget_categories, on_render: :render
+          attribute :categories, on_render: :render
+          attribute :data, on_render: :render
+          attribute :target, on_render: :render
 
-          def budget_categories
+          def categories
             SerializableCollection.new do
-              categories.filter_map do |category|
+              budget_items.reduce(Set.new) { |set, item| set << item.category }.filter_map do |category|
                 next if reviewable_items_for(category).none?
 
                 category_serializer(category)
               end
             end
+          end
+
+          def data
+            DataSerializer.new(base_interval)
+          end
+
+          def target
+            DataSerializer.new(target_interval)
           end
 
           private
@@ -28,12 +38,8 @@ module API
             )
           end
 
-          def categories
-            @categories ||= budget_items.reduce(Set.new) { |set, item| set << item.category }
-          end
-
           def base_interval
-            @base_interval ||= target_interval.prev
+            __getobj__
           end
 
           def budget_items
@@ -61,7 +67,7 @@ module API
           end
 
           def target_interval
-            __getobj__
+            base_interval.next
           end
         end
       end

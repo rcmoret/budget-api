@@ -9,6 +9,13 @@ type AccountIndexProps = {
   queryParams?: string;
 }
 
+type BudgetEditProps ={
+  name: "BudgetEdit",
+  month: number | string;
+  year: number | string;
+  queryParams?: string;
+}
+
 type BudgetItemEventsProps = {
   name: "BudgetItemEvents";
   month: number | string;
@@ -41,6 +48,12 @@ export type CategoryShowProps = {
   queryParams?: string;
 }
 
+type TransactionIndexProps = {
+  name: "TransactionIndex";
+  accountSlug: string;
+  queryParams?: string;
+}
+
 type TransactionShowProps = {
   name: "TransactionShow";
   accountSlug: string;
@@ -51,11 +64,13 @@ type TransactionShowProps = {
 type UrlBuilderProps =
   | AccountIndexProps
   | AccountShowProps
+  | BudgetEditProps
   | BudgetItemEventsProps
   | BudgetSetUpProps
   | BudgetShowProps
   | CategoryIndexProps
   | CategoryShowProps
+  | TransactionIndexProps
   | TransactionShowProps
 
 const UrlBuilder = (props: UrlBuilderProps) => {
@@ -73,6 +88,8 @@ const UrlBuilder = (props: UrlBuilderProps) => {
       return appendQueryParams("/accounts");
     case "AccountShow":
       return appendQueryParams(`/account/${props.key}`);
+    case "BudgetEdit":
+      return appendQueryParams(`/budget/${props.month}/${props.year}`);
     case "BudgetItemEvents":
       return appendQueryParams(`/budget/events/${props.month}/${props.year}`);
     case "BudgetSetUp":
@@ -83,6 +100,8 @@ const UrlBuilder = (props: UrlBuilderProps) => {
       return appendQueryParams("/budget/categories");
     case "CategoryShow":
       return appendQueryParams(`/budget/category/${props.key}`);
+    case "TransactionIndex":
+      return appendQueryParams(`/account/${props.accountSlug}/transaction`);
     case "TransactionShow":
       return appendQueryParams(`/account/${props.accountSlug}/transaction/${props.key}`);
   }

@@ -49,7 +49,7 @@ const Transactions = (props: ComponentProps) => {
       })}
       <AddNewComponent
         isFormShown={showFormKey === "__new__"}
-        closeForm={close}
+        closeForm={closeForm}
         openForm={showNewForm}
       />
     </div>

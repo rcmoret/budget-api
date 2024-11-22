@@ -8,6 +8,10 @@ module API
           end
           private_constant :MaturityIntervalSerializer
 
+          ReviewItemSerializer = Class.new(ApplicationSerializer) do
+            attributes :key, :remaining
+          end
+
           def initialize(category, interval:, reviewable_items: [], target_items: [])
             super(category)
             @reviewable_items = reviewable_items
@@ -24,6 +28,7 @@ module API
           attribute :is_monthly, alias_of: :monthly?
           attribute :upcoming_maturity_intervals, conditional: :accrual?, on_render: :render
           attribute :events, on_render: :render
+          attribute :items, on_render: :render
 
           def upcoming_maturity_intervals
             SerializableCollection.new(serializer: MaturityIntervalSerializer) do
@@ -38,6 +43,12 @@ module API
               reviewable_items: reviewable_items,
               target_items: target_items,
             ).events
+          end
+
+          def items
+            SerializableCollection.new(serializer: ReviewItemSerializer) do
+              reviewable_items
+            end
           end
 
           private

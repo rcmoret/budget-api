@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
-import { ActionAnchorTag } from "@/components/common/Link";
 import { AmountSpan } from "@/components/common/AmountSpan";
+import { Button } from "@/components/common/Button";
 import { Cell } from "@/components/common/Cell";
 import { Icon } from "@/components/common/Icon";
 import { dateParse } from "@/lib/DateFormatter";
@@ -88,7 +88,7 @@ const TransactionShow = (props: {
         )
       }
       balanceCompnent={
-        <AmountSpan amount={props.balance} negativeColor="text-red-700" />
+        <AmountSpan amount={props.balance} negativeColor="text-red-400" />
       }
     >
       <Cell
@@ -133,11 +133,11 @@ const TransactionShow = (props: {
           <div className="mr-2">
             <Icon name="trash" />
           </div>
-          <ActionAnchorTag onClick={toggleForm}>
+          <Button type="button" onClick={toggleForm}>
             <div className="mr-2">
               <Icon name="edit" />
             </div>
-          </ActionAnchorTag>
+          </Button>
         </div>
       </Cell>
     </TransactionContainer>

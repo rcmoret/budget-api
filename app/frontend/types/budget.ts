@@ -1,4 +1,5 @@
 import { IconName } from "@/components/common/Icon";
+import { DraftChange } from "@/lib/hooks/useDraftEventsForm";
 
 export interface AccountBudgetSummary {
   isCurrent: boolean;
@@ -87,4 +88,41 @@ export type BudgetCategory = {
     month: number;
     year: number;
   }>
+}
+
+export interface TEvent {
+  key: string;
+  budgeted: number;
+  data?: any;
+  eventType: "setup_item_create" | "setup_item_adjust" | "setup_item_delete";
+  spent: number;
+  budgetItemKey?: string;
+  budgetCategoryKey?: string;
+  month?: number;
+  year?: number;
+}
+
+export interface TBudgetItem extends BudgetItem {
+  draftItem?: {
+    key: string;
+    name: string;
+    amount: number;
+    budgetCategoryKey: string;
+    budgetCategoryName: string;
+    difference: number;
+    isNewItem: boolean;
+    remaining: number;
+    spent: number
+  };
+  change?: DraftChange;
+}
+
+export type SelectBudgetCategry ={
+  key: string;
+  name: string;
+  slug: string;
+  defaultAmount: number;
+  isAccrual: boolean;
+  isExpense: boolean;
+  isMonthly: boolean;
 }

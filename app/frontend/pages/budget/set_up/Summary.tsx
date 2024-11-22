@@ -15,7 +15,7 @@ const AmountComponent = (props: { amount: number }) => {
         amount={props.amount}
         zeroColor="text-black"
         color="text-green-800"
-        negativeColor="text-red-700"
+        negativeColor="text-red-400"
       />
     </div>
   )

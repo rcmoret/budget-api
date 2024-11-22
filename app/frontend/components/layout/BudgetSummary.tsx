@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 import { PageData } from "@/components/layout/Header";
-import { useForm } from "@inertiajs/inertia-react";
+import { useForm } from "@inertiajs/react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { parseISO as parseIsoDate } from "date-fns";
 
 import { AccountBudgetSummary, SelectedAccount } from "@/types/budget";
-import { ActionAnchorTag } from "@/components/common/Link";
 import { ButtonStyleLink } from "@/components/common/Link";
+import { Button } from "@/components/common/Button";
 import { Cell } from "@/components/common/Cell";
 import { DateFormatter, dateParse } from "@/lib/DateFormatter";
 import { Icon } from "@/components/common/Icon";
@@ -16,6 +16,7 @@ import { Point } from "@/components/common/Symbol";
 import { Row } from "@/components/common/Row";
 import { buildQueryParams } from "@/lib/redirect_params";
 import { UrlBuilder } from "@/lib/UrlBuilder";
+import { useToggle } from "@/lib/hooks/useToogle";
 
 const DateDiv = ({ date }: { date: string }) => {
   return (
@@ -98,7 +99,7 @@ const DateForm = (props: DateFormProps) => {
               onClick={props.toggleForm}
               disabled={processing}
             >
-              <span className="text-red-600">
+              <span className="text-red-400">
                 <Icon name="times-circle" />
               </span>
             </button>
@@ -111,8 +112,7 @@ const DateForm = (props: DateFormProps) => {
 
 const DateComponent = ({ firstDate, lastDate, redirectSegments, month, year }:
   { firstDate: string, lastDate: string, redirectSegments: string[], month: number, year: number }) => {
-  const [showDateForm, setShowDateForm] = useState(false)
-  const toggleForm = () => setShowDateForm(!showDateForm)
+  const [showDateForm, toggleForm] = useToggle(false)
 
   if (!showDateForm) {
     return (
@@ -120,11 +120,11 @@ const DateComponent = ({ firstDate, lastDate, redirectSegments, month, year }:
         <DateDiv date={firstDate} />
         <div>to</div>
         <DateDiv date={lastDate} />
-        <ActionAnchorTag onClick={toggleForm}>
-          <span className="text-blue-600 text-xs">
+        <Button type="button" onClick={toggleForm}>
+          <span className="text-blue-300 text-xs">
             <Icon name="edit" />
           </span>
-        </ActionAnchorTag>
+        </Button>
       </div>
     )
   } else {
@@ -222,7 +222,9 @@ const BudgetSummary = (props: ComponentProps) => {
           }}
         >
           <ButtonStyleLink href={visitPrevUrl}>
-            <Icon name="angle-double-left" />{" "}
+            <span className="text-orange-600">
+              <Icon name="angle-double-left" />{" "}
+            </span>
             {DateFormatter({
               month: prevMonth.month,
               year: prevMonth.year,
@@ -235,7 +237,9 @@ const BudgetSummary = (props: ComponentProps) => {
               year: nextMonth.year,
               format: "shortMonthYear",
             })}{" "}
-            <Icon name="angle-double-right" />
+            <span className="text-orange-600">
+              <Icon name="angle-double-right" />
+            </span>
           </ButtonStyleLink>
         </Row>
         {props.children}
@@ -305,6 +309,23 @@ type SummaryProps = {
 const Summary = (props: SummaryProps) => {
   if (!!props.data && !!props.selectedAccount?.metadata && !!props.metadata.page) {
     return null
+  } else if (props.metadata.page?.name === "budget/finalize" && props.data) {
+    const baseUrl = "/budget"
+    const { month, year } = props.metadata.page
+    return (
+      <BudgetSummary
+        budget={props.data}
+        baseUrl={baseUrl}
+        redirectSegments={["budget", String(month), String(year), "finalize"]}
+        titleComponent={<BudgetSetUpTitleComponent month={Number(month)} year={Number(year)} />}
+      >
+        <MonthYearNav
+          baseUrl={baseUrl}
+          month={month}
+          year={year}
+        />
+      </BudgetSummary>
+    )
   } else if (props.metadata.page?.name === "budget/set-up" && props.data) {
     const baseUrl = "/budget"
     const { month, year } = props.metadata.page

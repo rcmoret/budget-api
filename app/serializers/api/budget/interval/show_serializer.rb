@@ -5,6 +5,7 @@ module API
         attribute :discretionary, on_render: :render
         attribute :items, on_render: :render, each_serializer: ItemSerializer, alias_of: :item_objects
         attribute :data, on_render: :render
+        attribute :categories, on_render: :render
 
         def initialize(user_or_group, interval)
           @user_or_group = user_or_group
@@ -17,6 +18,12 @@ module API
 
         def discretionary
           DiscretionarySerializer.new(interval)
+        end
+
+        def categories
+          SerializableCollection.new(serializer: CategorySerializer) do
+            ::Budget::Category.belonging_to(user_or_group)
+          end
         end
 
         def item_objects

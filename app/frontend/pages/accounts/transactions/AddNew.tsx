@@ -64,7 +64,6 @@ const AddNewComponent = (props: ComponentProps) => {
           flexAlign: "justify-start",
           flexWrap: "flex-wrap",
           padding: "p-2",
-          margin: "mt-1",
         }}
       >
         <div className="flex w-full sm:w-6/12">
@@ -80,7 +79,7 @@ const AddNewComponent = (props: ComponentProps) => {
             <Button
               type="button"
               onClick={openForm}
-              styling={{ color: "text-blue-400", fontWeight: "font-semibold" }}
+              styling={{ color: "text-blue-300", fontWeight: "font-semibold" }}
             >
               Add new
             </Button>

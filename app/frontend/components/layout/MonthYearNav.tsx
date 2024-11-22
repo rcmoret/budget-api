@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import Select from "react-select";
-import { InertiaLink } from "@inertiajs/inertia-react";
+import { Link as InertiaLink } from "@inertiajs/react";
 
-import { ActionAnchorTag } from "@/components/common/Link";
 import { Icon } from "@/components/common/Icon";
+import { Button } from "@/components/common/Button";
 import { Row } from "@/components/common/Row";
 import { DateFormatter, monthOptions } from "@/lib/DateFormatter";
 
@@ -46,9 +46,13 @@ const MonthYearNav = (props: ComponentProps) => {
 
   return (
     <div className="my-2">
-      <ActionAnchorTag onClick={toggleForm} className="text-blue-700">
+      <Button
+        type="button"
+        onClick={toggleForm}
+        styling={{ color: "text-blue-300" }}
+      >
         <Icon name="calendar" />
-      </ActionAnchorTag>
+      </Button>
       {isFormShown && (
         <Form baseUrl={baseUrl} month={month} update={update} year={year} />
       )}
@@ -105,7 +109,7 @@ const Form = (props: FormProps) => {
           value={year}
         />
       </div>
-      <InertiaLink className="text-blue-700" href={href}>
+      <InertiaLink className="text-blue-300" href={href}>
         Jump to{" "}
         {DateFormatter({
           month,

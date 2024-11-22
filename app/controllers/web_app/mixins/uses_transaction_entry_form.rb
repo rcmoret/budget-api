@@ -10,6 +10,7 @@ module WebApp
       include Mixins::HasAccount
 
       BASE_TRANSACTION_ENTRY_PERMITTED_PARAMS = %i[
+        key
         is_budget_exclusion
         check_number
         clearance_date

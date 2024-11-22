@@ -1,7 +1,6 @@
 import { AccountTransactionDetail } from "@/types/transaction";
-import { ActionAnchorTag } from "@/components/common/Link";
+import { Button } from "@/components/common/Button";
 import { Icon } from "@/components/common/Icon";
-import { Cell } from "@/components/common/Cell";
 
 interface CaretComponentProps {
   details: AccountTransactionDetail[];
@@ -31,9 +30,9 @@ const DetailToggle = (props: {
   const iconName = isDetailShown ? "caret-down" : "caret-right";
 
   return (
-    <ActionAnchorTag onClick={toggleFn}>
+    <Button type="button" onClick={toggleFn}>
       <Icon name={iconName} />
-    </ActionAnchorTag>
+    </Button>
   );
 };
 

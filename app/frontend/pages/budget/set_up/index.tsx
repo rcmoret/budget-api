@@ -2,7 +2,6 @@ import { useContext, useEffect, useState } from "react";
 import { useSetUpEventsForm, ResponseSetUpCategory, SetUpCategory } from "@/lib/hooks/useSetUpEventsForm";
 import { dayToDayItems, expenseItems, monthlyItems, revenueItems } from "@/lib/models/budget-items";
 import { isCreate, isDelete } from "@/lib/hooks/useEventsForm";
-import { ActionAnchorTag } from "@/components/common/Link";
 import { AmountInput, inputAmount, TInputAmount } from "@/components/common/AmountInput";
 import Select, { SingleValue } from "react-select";
 import { Button, SubmitButton } from "@/components/common/Button";
@@ -30,11 +29,10 @@ const TabBubble = ({ incompleteCount }: { incompleteCount: number }) => {
     "min-w-[32px]",
     "place-items-center",
     "rounded-full",
-    "py-1",
-    "px-1",
+    "p-1",
     "text-xs",
     "bg-gray-400",
-    "text-gray-800"
+    "text-gray-0"
   ].join(" ")
 
   return (
@@ -69,14 +67,14 @@ const GroupTabComponent = ({ title, isSelected, incompleteCount, onClick }: Grou
   } else {
     return (
       <div className="w-3/12">
-        <ActionAnchorTag onClick={onClick}>
-          <div className={className}>
+        <div className={`w-full ${className}`}>
+          <Button type="button" onClick={onClick}>
             <div className="gray-700 text-lg">
               {title}
             </div>
             <TabBubble incompleteCount={incompleteCount} />
-          </div>
-        </ActionAnchorTag>
+          </Button>
+        </div>
       </div>
     )
   }
@@ -306,7 +304,7 @@ const SetUpComponent = (props: ComponentProps) => {
             <div>
               <SubmitButton
                 styling={{
-                  backgroundColor: "bg-blue-400",
+                  backgroundColor: "bg-blue-300",
                   color: "text-white",
                   border: "border border-blue-500",
                   rounded: "rounded"

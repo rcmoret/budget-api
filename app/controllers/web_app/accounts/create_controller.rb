@@ -9,7 +9,6 @@ module WebApp
         if account.save
           redirect_to redirect_path
         else
-          binding.pry
           redirect_to accounts_manage_path
         end
       end

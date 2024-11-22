@@ -2,23 +2,21 @@
 
 module WebApp
   module Transactions
-    class UpdateController < BaseController
+    class CreateController < BaseController
       include Mixins::UsesTransactionEntryForm
 
       private
 
       def transaction
-        # build
-        # @transaction ||= account.transactions.by_key(params[:key])
-      end
-
-      def transaction_details_permitted_params
-        BASE_TRANSACTION_DETAIL_PARAMS
+        @transaction ||= account.transactions.build
       end
 
       def permitted_parameters
-        BASE_TRANSACTION_ENTRY_PERMITTED_PARAMS.dup +
-          [:key, { details_attributes: transaction_details_permitted_params }]
+        [
+          :key,
+          *BASE_TRANSACTION_ENTRY_PERMITTED_PARAMS,
+          { details_attributes: BASE_TRANSACTION_DETAIL_PARAMS },
+        ]
       end
 
       def namespace = "accounts"

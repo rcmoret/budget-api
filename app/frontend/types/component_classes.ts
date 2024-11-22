@@ -13,6 +13,8 @@ export type BgColorOption =
   | "bg-blue-400"
   | "bg-blue-800"
   | "bg-blue-900"
+  | "bg-gray-100"
+  | "bg-gray-200"
   | "bg-gray-300"
   | "bg-gray-400"
   | "bg-green-700"
@@ -20,7 +22,8 @@ export type BgColorOption =
   | "bg-indigo-100"
   | "bg-indigo-200"
   | "bg-white"
-  | "bg-slate-300"
+  | "bg-yellow-100"
+  | "bg-yellow-200"
   | "white";
 
 export type CursorOptions =
@@ -61,6 +64,13 @@ export type FontSizeOption = "text-xs" | "text-sm" | "text-xl" | "text-3xl";
 
 export type FontWeightOption = "font-semibold";
 
+export type GapOption =
+  | "gap-0"
+  | "gap-1"
+  | "gap-2"
+  | "gap-3"
+  | "gap-4"
+
 export type OverflowOption =
   | "overflow-auto"
   | "overflow-hidden"
@@ -70,6 +80,22 @@ export type OverflowOption =
   | "overflow-x-auto"
   | "overflow-y-auto"
   | "overflow-x-hidden";
+
+export type StripedRowColors =
+  | "odd:bg-gray-50"
+  | "odd:bg-gray-100"
+  | "odd:bg-gray-200"
+  | "odd:bg-gray-400"
+  | "odd:bg-white"
+  | "odd:bg-cyan-100"
+  | "odd:bg-cyan-200"
+  | "even:bg-gray-50"
+  | "even:bg-gray-100"
+  | "even:bg-gray-200"
+  | "even:bg-gray-400"
+  | "even:bg-cyan-100"
+  | "even:bg-cyan-200"
+  | "even:bg-white"
 
 export type TextAlignOption =
   | "text-left"

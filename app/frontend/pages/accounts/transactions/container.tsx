@@ -15,11 +15,12 @@ interface ContainerProps {
 const TransactionContainer = (props: ContainerProps) => {
   return (
     <StripedRow
+      oddColor="odd:bg-sky-50"
+      evenColor="even:bg-gray-100"
       styling={{
         flexAlign: "justify-start",
         flexWrap: "flex-wrap",
         padding: "p-2",
-        margin: "mt-1",
       }}
     >
       {props.keyComponent}

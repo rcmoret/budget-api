@@ -3,7 +3,7 @@ import { AccountManage } from "@/types/account";
 import { Button } from "@/components/common/Button";
 import { AccountForm } from "@/pages/accounts/manage/Form";
 import { Icon } from "@/components/common/Icon";
-import { useForm } from "@inertiajs/inertia-react";
+import { useForm } from "@inertiajs/react";
 import { SubmitButton } from "@/components/common/Button";
 import { UrlBuilder } from "@/lib/UrlBuilder";
 import { buildQueryParams } from "@/lib/redirect_params";
@@ -11,7 +11,9 @@ import { buildQueryParams } from "@/lib/redirect_params";
 const ArchivedAtComponent = ({ account }: { account: AccountManage; }) => {
   if (!account.isArchived) { return null }
 
-  const { put, processing, transform } = useForm({})
+  const { put, processing } = useForm({
+    account: { archivedAt: null }
+  })
 
   const onSubmit = () => {
     const formUrl = UrlBuilder({
@@ -20,10 +22,6 @@ const ArchivedAtComponent = ({ account }: { account: AccountManage; }) => {
     })
     put(formUrl)
   }
-
-  transform(() => {
-    return { account: { archivedAt: null } }
-  })
 
   return (
     <>
@@ -47,7 +45,9 @@ const ArchivedAtComponent = ({ account }: { account: AccountManage; }) => {
 }
 
 const ArchiveButton = (props: { account: AccountManage }) => {
-  const { put, processing, transform } = useForm({})
+  const { put, processing } = useForm({
+    category: { archivedAt: new Date() }
+  })
 
   const onSubmit = () => {
     const formUrl = UrlBuilder({
@@ -57,15 +57,12 @@ const ArchiveButton = (props: { account: AccountManage }) => {
     put(formUrl)
   }
 
-  transform(() => {
-    return { account: { archivedAt: new Date() } }
-  })
 
   return (
     <form>
       <SubmitButton
         onSubmit={onSubmit}
-        styling={{ color: "text-red-700" }}
+        styling={{ color: "text-red-400" }}
         isEnabled={!processing}
       >
         <Icon name="trash" />
@@ -88,7 +85,7 @@ const AccountCard = (props: {
           {account.name}
         </Point>
       </div>
-      <div className="w-5/12 text-right text-blue-400">
+      <div className="w-5/12 text-right text-blue-300">
         <Button
           type="button"
           onClick={showForm}

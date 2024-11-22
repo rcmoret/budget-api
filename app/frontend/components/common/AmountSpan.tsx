@@ -1,5 +1,5 @@
 import { moneyFormatter } from "@/lib/MoneyFormatter";
-import { TextColor } from "@/types/component_classes";
+import { TextColor } from "@/types/components/text-classes";
 
 interface ComponentProps {
   absolute?: boolean;

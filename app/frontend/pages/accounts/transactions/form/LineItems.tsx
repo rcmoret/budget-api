@@ -9,8 +9,8 @@ import {
   accrualFilter,
   sortByName,
 } from "@/lib/models/budget-items"
-import { ActionAnchorTag } from "@/components/common/Link";
 import { AmountInput, inputAmount, TInputAmount } from "@/components/common/AmountInput";
+import { Button } from "@/components/common/Button";
 
 type RemoveButtonProps = {
   detailKey: string,
@@ -19,16 +19,20 @@ type RemoveButtonProps = {
 
 const RemoveButton = (props: RemoveButtonProps) => {
   return (
-    <ActionAnchorTag onClick={() => props.removeDetail(props.detailKey)}>
-      <Icon name="times-circle" />
-    </ActionAnchorTag>
+    <Button type="button" onClick={() => props.removeDetail(props.detailKey)}>
+      <span className="text-gray-600">
+        <Icon name="times-circle" />
+      </span>
+    </Button>
   )
 }
 const AddButton = (props: { addDetail: () => void }) => {
   return (
-    <ActionAnchorTag onClick={props.addDetail}>
-      <Icon name="plus-circle" />
-    </ActionAnchorTag>
+    <Button type="button" onClick={props.addDetail}>
+      <span className="text-gray-600">
+        <Icon name="plus-circle" />
+      </span>
+    </Button>
   )
 }
 
@@ -87,6 +91,7 @@ const LineItemComponent = (props: {
       <AmountInput
         name="detailAmountDecimal"
         style={{ width: "100%" }}
+        classes={["border border-gray-300 h-input-lg px-1"]}
         onChange={handleAmountChange}
         amount={amount}
       />
@@ -136,7 +141,7 @@ const BudgetItemsComponent = (props: {
   const { details, addDetail, removeDetail, updateDetailItem, updateDetailAmount } = props
 
   return (
-    <div className="flex flex-col w-[450px]">
+    <div className="flex flex-col w-[450px] mr-8">
       <div className="flex flex-row w-full justify-between">
         <Label label="Budget Category" classes={["w-6/12"]} />
         <Label label="Line Items Amount" classes={["w-5/12 pl-2"]} />
