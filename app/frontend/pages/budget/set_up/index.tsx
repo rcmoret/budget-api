@@ -169,7 +169,7 @@ const AddItemComponent = (props: {
             <div className="p-2">
               Add Item
               {" "}
-              <span className={isButtonEnabled ? "text-sky-200" : "text-gray-500"}>
+              <span className={`text-xs ${isButtonEnabled ? "text-sky-200" : "text-gray-500"}`}>
                 <Icon name="plus" />
               </span>
             </div>

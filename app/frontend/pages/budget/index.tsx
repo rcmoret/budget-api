@@ -139,6 +139,8 @@ const BudgetComponent = (props: ComponentProps) => {
         updateChange={form.updateChange}
         changes={form.changes}
         removeChange={form.removeChange}
+        postEvent={form.post}
+        processing={form.processing}
       >
         <Section title="Discretionary">
           <Discretionary data={discretionary} />
@@ -168,6 +170,8 @@ const BudgetComponent = (props: ComponentProps) => {
         changes={form.changes}
         newItems={form.newItems.filter((i) => i.isMonthly)}
         removeChange={form.removeChange}
+        postEvent={form.post}
+        processing={form.processing}
       >
         <PendingMonthlyItemsSection
           title="Revenues"

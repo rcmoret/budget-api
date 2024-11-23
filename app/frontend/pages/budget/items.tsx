@@ -10,7 +10,7 @@ import { SelectBudgetCategry } from "@/types/budget"
 
 import { AppConfigContext } from "@/components/layout/Provider";
 import { Icon } from "@/components/common/Icon";
-import { Button } from "@/components/common/Button";
+import { Button, SubmitButton } from "@/components/common/Button";
 import Select from "react-select";
 import { generateKeyIdentifier } from "@/lib/KeyIdentifier";
 import { inputAmount, AmountInput } from "@/components/common/AmountInput";
@@ -48,7 +48,9 @@ const CategorySelect = (props: {
       </div>
       <div className="text-right">
         <Button type="button" onClick={addChange}>
-          <Icon name="plus-circle" />
+          <div className="text-blue-300 text-lg">
+            <Icon name="plus-circle" />
+          </div>
         </Button>
       </div>
     </div>
@@ -189,19 +191,39 @@ const ClearedMonthlyItemsSections = (props: {
   )
 }
 
+const NewItemSubmitButton = (props: {
+  item: DraftItem;
+  onSubmit: () => void;
+  processing: boolean;
+}) => {
+  return (
+    <SubmitButton
+      onSubmit={props.onSubmit}
+      isEnabled={!props.processing}
+      styling={{}}
+    >
+      <span className="text-green-600 text-lg">
+        <Icon name="plus-circle" />
+      </span>
+    </SubmitButton>
+  )
+}
+
 const NewItem = (props: {
   item: DraftItem
   updateChange: (k: string, a: string) => void;
   changes: DraftChange[];
   removeChange: (k: string) => void;
+  postEvent: () => void;
+  processing: boolean;
 }) => {
-  const { item, updateChange } = props
+  const { item, changes, updateChange, postEvent } = props
 
   const onChange = (amount: string) => {
     updateChange(item.key, amount)
   }
 
-  const change = props.changes.find((c) => {
+  const change = changes.find((c) => {
     return c.budgetItemKey === item.key
   })
 
@@ -219,12 +241,19 @@ const NewItem = (props: {
             name={`new-item-${item.key}`}
             onChange={onChange}
             amount={amount}
+            classes={["border border-gray-300"]}
           />
         </div>
+        {changes.length === 1 && <NewItemSubmitButton
+          item={item}
+          onSubmit={postEvent}
+          processing={props.processing}
+        />}
         <div>
           <Button
             type="button"
             onClick={removeChange}
+            styling={{ color: "text-gray-600", fontSize: "text-lg" }}
             >
             <Icon name="times-circle" />
           </Button>
@@ -239,8 +268,10 @@ const NewItems = (props: {
   updateChange: (k: string, a: string) => void;
   changes: DraftChange[];
   removeChange: (k: string) => void;
+  postEvent: () => void;
+  processing: boolean;
 }) => {
-  const { items, updateChange, changes, removeChange } = props
+  const { items, updateChange, changes, removeChange, postEvent } = props
 
   if (!items.length) { return null }
 
@@ -255,6 +286,8 @@ const NewItems = (props: {
             updateChange={updateChange}
             changes={changes}
             removeChange={removeChange}
+            postEvent={postEvent}
+            processing={props.processing}
           />
         )
       })}
@@ -271,6 +304,8 @@ interface ColumnProps {
   updateChange: (k: string, a: string) => void;
   changes: DraftChange[];
   removeChange: (k: string) => void;
+  postEvent: () => void;
+  processing: boolean;
 }
 
 const Column = (props: ColumnProps) => {
@@ -288,7 +323,7 @@ const Column = (props: ColumnProps) => {
           {props.title}
         </div>
         <div className="text-lg">
-          <Button type="button" onClick={toggleSelect} styling={{ color: "text-[#0b8bd5]"}}>
+          <Button type="button" onClick={toggleSelect} styling={{ color: "text-blue-300"}}>
             <Icon name={isSelectShown ? "times-circle" : "plus-circle"} />
           </Button>
         </div>
@@ -302,6 +337,8 @@ const Column = (props: ColumnProps) => {
         changes={props.changes}
         updateChange={props.updateChange}
         removeChange={props.removeChange}
+        postEvent={props.postEvent}
+        processing={props.processing}
       />
       {props.children}
     </Cell>
