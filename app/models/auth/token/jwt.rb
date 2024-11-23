@@ -12,7 +12,7 @@ module Auth
 
       ISSUER = ENV.fetch("APP_URL", nil)
       SIGNATURE_ALGORITHM = "RS256".freeze
-      SIGNATURE_PRIVATE_KEY = OpenSSL::PKey::RSA.new(ENV.fetch("JWT_SECRET_KEY", nil))
+      SIGNATURE_PRIVATE_KEY = OpenSSL::PKey::RSA.new(2048)
       SIGNATURE_PUBLIC_KEY = SIGNATURE_PRIVATE_KEY.public_key
 
       def encode(payload: {}, exp: 4.days.from_now)
