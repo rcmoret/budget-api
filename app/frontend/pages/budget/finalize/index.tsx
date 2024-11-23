@@ -23,7 +23,6 @@ type IndexComponentProps = {
 
 const BudgetFinalizeIndex = (props: IndexComponentProps) => {
   const { categories, data: base, target } = props
-  console.log({ props })
 
   return (
     <div className="w-full flex flex-row flex-wrap">

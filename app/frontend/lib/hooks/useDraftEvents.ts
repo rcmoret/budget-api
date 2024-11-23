@@ -118,7 +118,6 @@ const useDraftEvents = (props: HookProps) => {
   }
 
   const updateChange = (key: string, amount: string) => {
-    console.log({ key, amount })
     setChanges(
       changes.map((change) => {
         if (change.budgetItemKey === key) {

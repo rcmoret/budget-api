@@ -79,7 +79,6 @@ const StripedRow = (props: StripedRowProps) => {
   const evenColor = props.evenColor || "even:bg-white";
   const oddColor = props.oddColor || "odd:bg-gray-50";
 
-  console.log([ oddColor, evenColor])
   const styling = {
     ...props.styling,
     alternatingBgColor: [oddColor, evenColor].join(" ")

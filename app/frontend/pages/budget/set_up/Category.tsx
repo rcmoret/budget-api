@@ -353,7 +353,7 @@ const EventComponent = (props: EventComponentProps) => {
   }
 
   const borderTop = eventCount > 1 && index > 0 ? "border-t-2 border-gray-300" : "border-none"
-  const border = !!event.amount.cents ? borderTop : "border-2 border-violet-200"
+  const border = String(event.amount.cents) === "" ? "border-2 border-violet-200" : borderTop
 
   return (
     <Row styling={{
