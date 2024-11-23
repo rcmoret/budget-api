@@ -35,6 +35,7 @@ type StylingProps = {
   overflow?: OverflowOption;
   padding?: string;
   rounded?: "rounded" | null;
+  width?: string;
 }
 
 type DisabledButtonProps = {
@@ -110,7 +111,10 @@ const Button = (props: ButtonProps) => {
 
   if (isDisabled) {
     return (
-      <DisabledButton styling={{...props.disabledStyling}}>
+      <DisabledButton styling={{
+        ...props.styling,
+        ...props.disabledStyling
+      }}>
         {children}
       </DisabledButton>
     )

@@ -22,10 +22,16 @@ const AccrualFormComponent = (props: {
   const { category, updateCategory  } = props
   const { appConfig } = useContext(AppConfigContext)
   const { month, year } = appConfig.budget.data
-  const { put, processing, transform } = useForm({ month, year })
-
-  // @ts-ignore
-  transform(() => ({ category: { maturityIntervals: [data] } }))
+  const { put, processing } = useForm({
+    category: {
+      maturityIntervals: [
+        {
+          month,
+          year
+        }
+      ]
+    }
+  })
 
   const onSubmit = (ev: React.MouseEvent) => {
     ev.preventDefault()
@@ -329,10 +335,12 @@ type EventComponentProps = {
   removeItem: (key: string) => void;
   updateCategory: (category: SetUpCategory) => void;
   updateEvent: (key: string, amount: TInputAmount) => void;
+  eventCount: number;
+  index: number;
 }
 
 const EventComponent = (props: EventComponentProps) => {
-  const { category, event, updateCategory } = props
+  const { category, event, updateCategory, eventCount, index } = props
   const { key } = event
   const label = isCreate(event) ? "Create New Item" : "Adjust Existing Item"
   const updateEvent = (amount: string) => props.updateEvent(key, inputAmount({ display: amount }))
@@ -344,13 +352,18 @@ const EventComponent = (props: EventComponentProps) => {
     }
   }
 
+  const borderTop = eventCount > 1 && index > 0 ? "border-t-2 border-gray-300" : "border-none"
+  const border = !!event.amount.cents ? borderTop : "border-2 border-violet-200"
+
   return (
     <Row styling={{
       flexDirection: "flex-row",
       flexWrap: "flex-wrap",
       flexAlign: "justify-between",
-      border: "border-b border-gray-600",
-      padding: "py-4"
+      rounded: "rounded",
+      border,
+      margin: "mb-4",
+      padding: "p-2"
     }}>
       <div className="hidden">{key}</div>
       <div className="w-3/12">{label}</div>
@@ -389,7 +402,7 @@ type ComponentProps = {
 const CategoryComponent = (props: ComponentProps) => {
   const { category } = props
   const updateCategory = (category: SetUpCategory) => props.updateCategory({ key: category.key, category })
-  const removeEvent = (key: string) => props.removeItem({ categoryKey: category.key, eventKey: key })
+  const removeEvent = (key: string) => props.removeEvent({ categoryKey: category.key, eventKey: key })
   const removeItem = (key: string) => props.removeItem({ categoryKey: category.key, eventKey: key })
   const updateEvent = (eventKey: string, amount: TInputAmount) => props.updateEvent({
     categoryKey: category.key,
@@ -401,14 +414,19 @@ const CategoryComponent = (props: ComponentProps) => {
 
   return (
     <StripedRow
-      evenColor="bg-indigo-100"
-      styling={{ flexDirection: "flex-col", padding: "p-2" }}
+      oddColor="odd:bg-sky-50"
+      evenColor="even:bg-gray-100"
+      styling={{
+        rounded: "rounded",
+        flexDirection: "flex-col",
+        padding: "p-2",
+      }}
     >
       <div className="text-lg">
         {category.name}
         {category.isAccrual && <AccrualComponent category={category} updateCategory={updateCategory} />}
       </div>
-      {events.map((event) => {
+      {events.map((event, index) => {
         return (
           <EventComponent
             category={category}
@@ -417,6 +435,8 @@ const CategoryComponent = (props: ComponentProps) => {
             updateEvent={updateEvent}
             removeEvent={removeEvent}
             removeItem={removeItem}
+            eventCount={events.length}
+            index={index}
           />
         )
       })}

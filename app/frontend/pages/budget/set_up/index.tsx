@@ -9,6 +9,7 @@ import { SummaryComponent } from "@/pages/budget/set_up/Summary";
 import { CategoryComponent } from "@/pages/budget/set_up/Category";
 import { AppConfigContext } from "@/components/layout/Provider";
 import { Point } from "@/components/common/Symbol";
+import { Icon } from "@/components/common/Icon";
 import { UrlBuilder } from "@/lib/UrlBuilder";
 import { buildQueryParams } from "@/lib/redirect_params";
 
@@ -51,30 +52,33 @@ const GroupTabComponent = ({ title, isSelected, incompleteCount, onClick }: Grou
     "p-2",
     "border",
     "rounded-lg",
+    "text-lg",
     isSelected ? "border-blue-300" : "border-gray-400",
     isSelected ? "" : "bg-gray-300"
   ].join(" ")
 
   if (isSelected) {
     return (
-      <div className={`${className} w-3/12`}>
-        <div className="text-lg">
-          {title}s
+      <div className={` w-3/12`}>
+        <div className={className}>
+          <div>
+            {title}s
+          </div>
+          <TabBubble incompleteCount={incompleteCount} />
         </div>
-        <TabBubble incompleteCount={incompleteCount} />
       </div>
     )
   } else {
     return (
       <div className="w-3/12">
-        <div className={`w-full ${className}`}>
-          <Button type="button" onClick={onClick}>
-            <div className="gray-700 text-lg">
+        <Button type="button" onClick={onClick} styling={{ width: "w-full" }}>
+          <div className={`w-full ${className}`}>
+            <div className="gray-700">
               {title}
             </div>
             <TabBubble incompleteCount={incompleteCount} />
-          </Button>
-        </div>
+          </div>
+        </Button>
       </div>
     )
   }
@@ -142,7 +146,7 @@ const AddItemComponent = (props: {
               name="set-up-create-event"
               amount={amount}
               onChange={handleAmountChange}
-              classes={["h-9"]}
+              classes={["h-input-lg", "border", "border-gray-300"]}
             />
           </div>
         </div>
@@ -152,19 +156,22 @@ const AddItemComponent = (props: {
             onClick={addItem}
             isDisabled={!isButtonEnabled}
             styling={{
+              fontWeight: "font-semibold",
               backgroundColor: "bg-blue-300",
               color: "text-white",
               rounded: "rounded",
-              
             }}
             disabledStyling={{ 
-              backgroundColor: "bg-gray-300",
-              color: "text-white",
-              rounded: "rounded",
+              backgroundColor: "bg-gray-400",
+              border: "border border-gray-500",
               cursor: "cursor-not-allowed"
             }}>
             <div className="p-2">
               Add Item
+              {" "}
+              <span className={isButtonEnabled ? "text-sky-200" : "text-gray-500"}>
+                <Icon name="plus" />
+              </span>
             </div>
           </Button>
         </div>
@@ -262,8 +269,8 @@ const SetUpComponent = (props: ComponentProps) => {
   })
 
   return (
-    <div className="w-full flex flex-row flex-wrap">
-      <div className="flex flex-row flex-wrap gap-2 w-full mb-6">
+    <div className="w-full flex flex-row flex-wrap px-2">
+      <div className="flex flex-row flex-wrap gap-2 w-full my-4">
         {Object.entries(categoryMap).map(([key, data]) => {
           return (
             <GroupTabComponent
@@ -278,7 +285,7 @@ const SetUpComponent = (props: ComponentProps) => {
       </div>
       <div className="flex flex-col gap-4 w-full">
         <div className="w-full flex flex-wrap flex-row gap-4">
-          <div className="w-8/12 flex flex-col gap-2 border-t border-gray-500">
+          <div className="w-8/12 flex flex-col gap-2">
             {currentCategories.collection.filter(withItems).map((category) => {
               return (
                 <CategoryComponent
@@ -292,7 +299,7 @@ const SetUpComponent = (props: ComponentProps) => {
               )
             })}
           </div>
-          <div className="w-3/12 flex flex-col">
+          <div className="w-3/12 flex flex-col gap-4">
             <div>
               <SummaryComponent
                 revenueCategories={revenueCategories}
@@ -301,12 +308,13 @@ const SetUpComponent = (props: ComponentProps) => {
                 totalBudgeted={totalBudgeted}
               />
             </div>
-            <div>
+            <div className="self-end">
               <SubmitButton
                 styling={{
-                  backgroundColor: "bg-blue-300",
+                  backgroundColor: "bg-green-600",
                   color: "text-white",
-                  border: "border border-blue-500",
+                  fontWeight: "font-semibold",
+                  border: "border border-chartreuse-300",
                   rounded: "rounded"
                 }}
                 disabledStyling={{
@@ -317,8 +325,13 @@ const SetUpComponent = (props: ComponentProps) => {
                 isEnabled={isSubmittable}
                 onSubmit={onSubmit}
               >
-                <div className="px-1 py-2">
-                  Create Budget
+                <div className="flex flex-row px-1 py-2 gap-2">
+                  <div>
+                    Create Budget
+                  </div>
+                  <div className={isSubmittable ? "text-chartreuse-300" : "text-gray-500"}>
+                    <Icon name="check-circle" />
+                  </div>
                 </div>
               </SubmitButton>
             </div>
