@@ -25,7 +25,7 @@ module Budget
       validates :budget_item_key, presence: true, length: { is: 12 }
 
       def initialize(current_user, params)
-        super(current_user, params)
+        super
         @amount = params[:amount]
         @month = params[:month].to_i
         @year = params[:year].to_i

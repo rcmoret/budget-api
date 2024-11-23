@@ -33,6 +33,10 @@ Metrics/BlockLength:
     - spec/*_helper.rb
     - spec/requests/**/*
 
+Lint/Debugger:
+  Exclude:
+    - db/seeds/*.rb
+
 Metrics/MethodLength:
   Max: 10
   Exclude:
@@ -109,6 +113,9 @@ RSpec/MultipleMemoizedHelpers:
 
 RSpec/MessageSpies:
   EnforcedStyle: receive
+
+RSpec/IndexedLet:
+  Enabled: false
 
 Rails/ApplicationController:
   Enabled: false

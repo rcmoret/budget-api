@@ -9,7 +9,7 @@ module API
         in [false, true]
           render json: { account: serializer.render }, status: :accepted
         in [false, false]
-          render json: NullObjectSerializer.new.render, status: :no_content
+          head :no_content
         else
           render json: account.errors.to_hash, status: :unprocessable_entity
         end

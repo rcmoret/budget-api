@@ -24,7 +24,7 @@ module Budget
                 if: :revenue?
 
       def initialize(current_user, params)
-        super(current_user, params)
+        super
         @amount = params[:amount]
       end
 
