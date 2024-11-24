@@ -56,7 +56,7 @@ module API
           end
 
           def base_items_for(category)
-            base_items.select { |item| item.category == category }
+            base_items.select { |item| !item.deleted? && item.category == category }
           end
 
           def target_items
