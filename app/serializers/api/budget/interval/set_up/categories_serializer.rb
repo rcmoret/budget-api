@@ -64,7 +64,7 @@ module API
           end
 
           def target_items_for(category)
-            target_items.select { |item| item.category == category }
+            target_items.select { |item| !item.deleted? && item.category == category }
           end
 
           def interval
