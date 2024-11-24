@@ -24,6 +24,23 @@ RSpec.describe Budget::Events::CreateItemForm do
     end
   end
 
+  describe "category validation" do
+    let(:user) { create(:user) }
+    let(:category) { create(:category, :expense, :weekly, user_group: user.user_group) }
+    let(:interval) { create(:budget_interval, user_group: user.user_group) }
+
+    before { create(:budget_item, interval: interval, category: category) }
+
+    context "when a valid event" do
+      it "is a valid form object" do
+        params = params_for(category: category, interval: interval)
+        form = described_class.new(user, params)
+        expect(form.save).to be false
+        expect(form.errors[:budget_category_id]).to include "has already been taken"
+      end
+    end
+  end
+
   describe "amount validation" do
     let(:user) { create(:user) }
     let(:category) { create(:category, :expense, user_group: user.user_group) }

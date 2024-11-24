@@ -23,7 +23,29 @@ RSpec.describe "GET /api/budget/intervals/finalize/(:month)/(:year)" do
           data: {
             firstDate: interval.first_date.strftime("%F"),
             lastDate: interval.last_date.strftime("%F"),
-            budgetCategories: [],
+            categories: [],
+            data: {
+              daysRemaining: [(interval.last_date.to_date - Time.current.to_date + 1).to_i.abs, 1].max,
+              firstDate: interval.first_date.strftime("%F"),
+              lastDate: interval.last_date.strftime("%F"),
+              isClosedOut: interval.closed_out?,
+              isCurrent: interval.current?,
+              isSetUp: interval.set_up?,
+              month: interval.month,
+              year: interval.year,
+              totalDays: (interval.last_date.to_date - interval.first_date.to_date).to_i + 1,
+            },
+            target: {
+              daysRemaining: (interval.next.last_date.to_date - interval.next.first_date.to_date).to_i + 1,
+              firstDate: interval.next.first_date.strftime("%F"),
+              lastDate: interval.next.last_date.strftime("%F"),
+              isClosedOut: interval.next.closed_out?,
+              isCurrent: interval.next.current?,
+              isSetUp: interval.next.set_up?,
+              month: interval.next.month,
+              year: interval.next.year,
+              totalDays: (interval.next.last_date.to_date - interval.next.first_date.to_date).to_i + 1,
+            },
           }
         )
       end
@@ -48,8 +70,8 @@ RSpec.describe "GET /api/budget/intervals/finalize/(:month)/(:year)" do
             firstDate: interval.first_date.strftime("%F"),
             lastDate: interval.last_date.strftime("%F"),
           )
-          expect(body.dig(:data, :budgetCategories, 0, :events).size).to be 1
-          expect(body.dig(:data, :budgetCategories, 0)).to include(
+          expect(body.dig(:data, :categories, 0, :events).size).to be 1
+          expect(body.dig(:data, :categories, 0)).to include(
             key: category.key,
             name: category.name,
             slug: category.slug,
@@ -58,7 +80,7 @@ RSpec.describe "GET /api/budget/intervals/finalize/(:month)/(:year)" do
             isExpense: category.expense?,
             isMonthly: category.monthly?
           )
-          expect(body.dig(:data, :budgetCategories, 0, :events, 0)).to include(
+          expect(body.dig(:data, :categories, 0, :events, 0)).to include(
             month: interval.month,
             year: interval.year,
             amount: "",
@@ -88,8 +110,8 @@ RSpec.describe "GET /api/budget/intervals/finalize/(:month)/(:year)" do
             firstDate: interval.first_date.strftime("%F"),
             lastDate: interval.last_date.strftime("%F"),
           )
-          expect(body.dig(:data, :budgetCategories, 0, :events).size).to be 1
-          expect(body.dig(:data, :budgetCategories, 0)).to include(
+          expect(body.dig(:data, :categories, 0, :events).size).to be 1
+          expect(body.dig(:data, :categories, 0)).to include(
             key: category.key,
             name: category.name,
             slug: category.slug,
@@ -98,7 +120,7 @@ RSpec.describe "GET /api/budget/intervals/finalize/(:month)/(:year)" do
             isExpense: category.expense?,
             isMonthly: category.monthly?
           )
-          expect(body.dig(:data, :budgetCategories, 0, :events, 0)).to include(
+          expect(body.dig(:data, :categories, 0, :events, 0)).to include(
             month: interval.month,
             year: interval.year,
             amount: "",
@@ -135,8 +157,8 @@ RSpec.describe "GET /api/budget/intervals/finalize/(:month)/(:year)" do
             firstDate: interval.first_date.strftime("%F"),
             lastDate: interval.last_date.strftime("%F"),
           )
-          expect(body.dig(:data, :budgetCategories, 0, :events).size).to be 2
-          expect(body.dig(:data, :budgetCategories, 0, :events, 0)).to include(
+          expect(body.dig(:data, :categories, 0, :events).size).to be 2
+          expect(body.dig(:data, :categories, 0, :events, 0)).to include(
             amount: amount,
             budgetItemKey: upcoming_budget_item.key,
             data: {},
@@ -144,7 +166,7 @@ RSpec.describe "GET /api/budget/intervals/finalize/(:month)/(:year)" do
             spent: 0,
             budgeted: amount
           )
-          expect(body.dig(:data, :budgetCategories, 0, :events, 1)).to include(
+          expect(body.dig(:data, :categories, 0, :events, 1)).to include(
             month: interval.month,
             year: interval.year,
             amount: "",
@@ -172,8 +194,8 @@ RSpec.describe "GET /api/budget/intervals/finalize/(:month)/(:year)" do
 
         it "returns an :ok status and data - including an adjust event" do
           body = response.parsed_body.deep_symbolize_keys
-          expect(body.dig(:data, :budgetCategories, 0, :events).size).to be 1
-          expect(body.dig(:data, :budgetCategories, 0, :events, 0)).to include(
+          expect(body.dig(:data, :categories, 0, :events).size).to be 1
+          expect(body.dig(:data, :categories, 0, :events, 0)).to include(
             amount: amount,
             data: {},
             eventType: "rollover_item_adjust",
@@ -206,8 +228,8 @@ RSpec.describe "GET /api/budget/intervals/finalize/(:month)/(:year)" do
             firstDate: interval.first_date.strftime("%F"),
             lastDate: interval.last_date.strftime("%F"),
           )
-          expect(body.dig(:data, :budgetCategories, 0, :events).size).to be 1
-          expect(body.dig(:data, :budgetCategories, 0, :events, 0)).to include(
+          expect(body.dig(:data, :categories, 0, :events).size).to be 1
+          expect(body.dig(:data, :categories, 0, :events, 0)).to include(
             budgetItemKey: upcoming_budget_item.key,
             amount: amount,
             data: {},
@@ -234,7 +256,7 @@ RSpec.describe "GET /api/budget/intervals/finalize/(:month)/(:year)" do
         data: {
           firstDate: interval.first_date.strftime("%F"),
           lastDate: interval.last_date.strftime("%F"),
-          budgetCategories: [],
+          categories: [],
         }
       )
     end

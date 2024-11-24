@@ -100,6 +100,7 @@ RSpec.describe API::Accounts::Transactions::BudgetSerializer do
             "maturityYear" => 2025,
             "name" => category.name,
             "remaining" => create_event.amount,
+            "transactionDetails" => [],
           },
         ]
       )

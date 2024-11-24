@@ -33,6 +33,7 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
             {
               key: params.fetch("transaction").fetch("key"),
               accountKey: account_key,
+              accountSlug: account.slug,
               amount: amount,
               clearanceDate: params.fetch("transaction").fetch("clearance_date"),
               description: params.fetch("transaction").fetch("description"),
@@ -76,6 +77,7 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
             {
               key: params.fetch("transaction").fetch("key"),
               accountKey: account_key,
+              accountSlug: account.slug,
               amount: total,
               clearanceDate: params.fetch("transaction").fetch("clearance_date"),
               description: params.fetch("transaction").fetch("description"),
@@ -235,6 +237,7 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
               {
                 key: params.fetch("transaction").fetch("key"),
                 accountKey: account_key,
+                accountSlug: account.slug,
                 amount: amount,
                 clearanceDate: params.fetch("transaction").fetch("clearance_date"),
                 description: params.fetch("transaction").fetch("description"),
@@ -283,6 +286,7 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
             {
               key: params.fetch("transaction").fetch("key"),
               accountKey: account_key,
+              accountSlug: account.slug,
               amount: amount,
               clearanceDate: params.fetch("transaction").fetch("clearance_date").strftime("%F"),
               description: params.fetch("transaction").fetch("description"),

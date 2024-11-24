@@ -14,13 +14,14 @@ RSpec.describe "GET /api/budget/:month/:year" do
     let!(:transaction_entry) do
       create(:transaction_entry, :discretionary, clearance_date: interval.first_date, account: account)
     end
+    let(:detail_key) { SecureRandom.hex(6) }
     let!(:item_transaction_entry) do
       create(
         :transaction_entry,
         account: account,
         details_attributes: [
           {
-            key: SecureRandom.hex(6),
+            key: detail_key,
             amount: rand(-100_00..100_00),
             budget_item: budget_item,
           },
@@ -60,6 +61,17 @@ RSpec.describe "GET /api/budget/:month/:year" do
             ],
             transactionsTotal: transaction_entry.total,
           },
+          categories: [
+            {
+              key: budget_item.category.key,
+              slug: budget_item.category.slug,
+              name: budget_item.category.name,
+              defaultAmount: budget_item.category.default_amount,
+              isAccrual: budget_item.category.accrual?,
+              isExpense: budget_item.category.expense?,
+              isMonthly: budget_item.category.monthly?,
+            },
+          ],
           items: [
             {
               key: budget_item.key,
@@ -72,10 +84,30 @@ RSpec.describe "GET /api/budget/:month/:year" do
               iconClassName: nil,
               isAccrual: category.accrual,
               isDeletable: false,
+              isDeleted: false,
               isExpense: category.expense?,
               isMonthly: category.monthly?,
               isPerDiemEnabled: category.per_diem_enabled?,
-              transactionDetailCount: 1,
+              events: [
+                {
+                  key: event.key,
+                  amount: event.amount,
+                  comparisonDate: event.created_at.strftime("%FT%TZ"),
+                  createdAt: event.created_at.strftime("%FT%TZ"),
+                  typeName: event.type_name.titleize,
+                  data: nil,
+                },
+              ],
+              transactionDetails: [
+                {
+                  key: detail_key,
+                  accountName: account.name,
+                  amount: item_transaction_entry.total,
+                  description: nil,
+                  clearanceDate: item_transaction_entry.clearance_date.strftime("%F"),
+                  comparisonDate: item_transaction_entry.clearance_date.strftime("%FT%TZ"),
+                },
+              ],
             },
           ],
         },

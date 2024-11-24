@@ -47,7 +47,7 @@ RSpec.describe API::Budget::Interval::SetUp::CategoriesSerializer do
           .to receive(:new)
           .with(category, interval: target_interval, base_items: [], target_items: [budget_item.decorated])
 
-        subject.budget_categories
+        subject.categories
       end
     end
 
@@ -72,7 +72,7 @@ RSpec.describe API::Budget::Interval::SetUp::CategoriesSerializer do
           .to receive(:new)
           .with(category, interval: target_interval, base_items: [budget_item.decorated], target_items: [])
 
-        subject.budget_categories
+        subject.categories
       end
     end
 
@@ -110,7 +110,7 @@ RSpec.describe API::Budget::Interval::SetUp::CategoriesSerializer do
                 base_items: [base_interval_item.decorated],
                 target_items: [target_interval_item.decorated])
 
-        subject.budget_categories
+        subject.categories
       end
     end
 
@@ -122,7 +122,7 @@ RSpec.describe API::Budget::Interval::SetUp::CategoriesSerializer do
           .to receive(:new)
           .with(category, interval: target_interval, base_items: [], target_items: [])
 
-        subject.budget_categories
+        subject.categories
       end
     end
   end

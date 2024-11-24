@@ -21,8 +21,8 @@ RSpec.describe API::Budget::Interval::Finalize::CategoriesSerializer do
     end
   end
 
-  describe "#budget_categories" do
-    subject { described_class.new(interval).budget_categories }
+  describe "#categories" do
+    subject { described_class.new(interval).categories }
 
     let(:rendered) { subject.render }
 

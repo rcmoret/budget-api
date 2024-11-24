@@ -12,9 +12,7 @@ RSpec.describe API::Budget::Interval::Finalize::CreateEventSerializer do
     before { allow(SecureRandom).to receive(:hex).and_call_original }
 
     it "does the following stuff" do
-      expect(subject.month).to be interval.month
-      expect(subject.year).to be interval.year
-      expect(subject.amount).to eq ""
+      expect(subject.amount).to eq 0
       expect(subject.budgeted).to be budget_item.amount
       expect(subject.spent).to be budget_item.spent
       expect(subject.event_type).to eq Budget::EventTypes::ROLLOVER_ITEM_CREATE

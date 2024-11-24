@@ -16,7 +16,7 @@ RSpec.describe API::Budget::Items::ItemSerializer do
       expect(subject.remaining).to eq budget_item.remaining
       expect(subject.spent).to eq budget_item.spent
       expect(subject.is_accrual).to eq category.accrual?
-      expect(subject.is_deletable).to eq budget_item.deletable?
+      expect(subject.is_deleted).to eq budget_item.deleted?
       expect(subject.is_monthly).to eq budget_item.monthly?
       expect(subject.is_per_diem_enabled).to eq category.per_diem_enabled?
       expect(subject.icon_class_name).to eq category.icon_class_name

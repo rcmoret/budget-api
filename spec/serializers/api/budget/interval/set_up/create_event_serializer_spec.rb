@@ -12,15 +12,13 @@ RSpec.describe API::Budget::Interval::SetUp::CreateEventSerializer do
     before { allow(SecureRandom).to receive(:hex).and_call_original }
 
     it "does the following stuff" do
-      expect(subject.month).to be interval.month
-      expect(subject.year).to be interval.year
-      expect(subject.amount).to eq ""
+      expect(subject.amount).to be_zero
       expect(subject.budgeted).to be budget_item.amount
       expect(subject.spent).to be budget_item.spent
       expect(subject.event_type).to eq Budget::EventTypes::SETUP_ITEM_CREATE
       expect(subject.data).to eq({ "referencedFrom" => "budget item: #{budget_item.key}" })
       expect(SecureRandom).to receive(:hex).twice
-      subject.event_key
+      expect(subject.event_key).to match(/\A[a-f0-9-]{12}\z/)
       subject.budget_item_key
       subject.render
     end

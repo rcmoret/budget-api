@@ -56,7 +56,11 @@ RSpec.describe API::Budget::Interval::DraftSerializer do
             {
               "name" => "Groceries",
               "key" => groceries.key,
+              "budgetCategoryName" => expense.name,
               "budgetCategoryKey" => expense.key,
+              "iconClassName" => expense.icon_class_name,
+              "isMonthly" => expense.monthly,
+              "isNewItem" => false,
               "amount" => -415_00,
               "difference" => 35_00,
               "remaining" => 0,
@@ -87,7 +91,11 @@ RSpec.describe API::Budget::Interval::DraftSerializer do
             {
               "name" => "Utilities",
               "key" => item_key,
+              "budgetCategoryName" => util_category.name,
               "budgetCategoryKey" => util_category.key,
+              "iconClassName" => util_category.icon_class_name,
+              "isMonthly" => util_category.monthly,
+              "isNewItem" => true,
               "amount" => -142_00,
               "difference" => -142_00,
               "remaining" => -142_00,

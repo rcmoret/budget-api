@@ -16,7 +16,8 @@ RSpec.describe API::Budget::Items::EventSerializer do
         "key" => budget_item_event.key,
         "amount" => budget_item_event.amount,
         "data" => budget_item_event.data,
-        "createdAt" => budget_item_event.created_at.strftime("%FT%TZ")
+        "createdAt" => budget_item_event.created_at.strftime("%FT%TZ"),
+        "comparisonDate" => budget_item_event.created_at.strftime("%FT%TZ")
       )
     end
   end

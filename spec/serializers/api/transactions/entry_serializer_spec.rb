@@ -34,6 +34,7 @@ RSpec.describe API::Transactions::EntrySerializer do
         expect(subject.render).to eq(
           "key" => entry_key,
           "accountKey" => account.key,
+          "accountSlug" => account.slug,
           "amount" => detail_amount,
           "clearanceDate" => interval.first_date.strftime("%F"),
           "checkNumber" => check_number.to_s,

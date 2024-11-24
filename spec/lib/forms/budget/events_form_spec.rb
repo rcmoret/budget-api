@@ -96,7 +96,7 @@ RSpec.describe Forms::Budget::EventsForm do
       it "calls surfaces the form object errors" do
         form = described_class.new(user, params)
         form.save
-        expect(form.errors["event.#{event_key}"]).to include(category: ["can't be blank"])
+        expect(form.errors[event_key]).to include(category: ["can't be blank"])
       end
     end
   end

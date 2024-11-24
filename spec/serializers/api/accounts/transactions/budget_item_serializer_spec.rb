@@ -27,6 +27,7 @@ RSpec.describe API::Accounts::Transactions::BudgetItemSerializer do
         "isExpense" => category.expense?,
         "isMonthly" => category.monthly?,
         "remaining" => decorated.remaining,
+        "transactionDetails" => [],
       )
     end
   end

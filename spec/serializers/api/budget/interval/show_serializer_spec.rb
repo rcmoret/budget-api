@@ -43,6 +43,7 @@ RSpec.describe API::Budget::Interval::ShowSerializer do
 
     it "returns the items" do
       item = budget_item.decorated
+      account = transaction_detail.account
 
       expect(subject.items.render).to eq(
         [
@@ -62,7 +63,27 @@ RSpec.describe API::Budget::Interval::ShowSerializer do
             "name" => category.name,
             "remaining" => item.remaining,
             "spent" => transaction_detail.amount,
-            "transactionDetailCount" => 1,
+            "isDeleted" => false,
+            "events" => [
+              {
+                "key" => create_event.key,
+                "amount" => create_event.amount,
+                "comparisonDate" => create_event.created_at.strftime("%FT%TZ"),
+                "createdAt" => create_event.created_at.strftime("%FT%TZ"),
+                "data" => nil,
+                "typeName" => create_event.type_name.titleize,
+              },
+            ],
+            "transactionDetails" => [
+              {
+                "key" => transaction_detail.key,
+                "accountName" => account.name,
+                "amount" => transaction_detail.amount,
+                "description" => nil,
+                "clearanceDate" => transaction_detail.entry.clearance_date.strftime("%F"),
+                "comparisonDate" => transaction_detail.entry.clearance_date.strftime("%FT%TZ"),
+              },
+            ],
           },
         ]
       )

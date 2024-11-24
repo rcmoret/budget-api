@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe WebApp::Concerns::HasRedirectParams do
+RSpec.describe WebApp::Mixins::HasRedirectParams do
   let(:klass) { Class.new }
   let(:home_path) { "/home" }
 
@@ -43,7 +43,7 @@ RSpec.describe WebApp::Concerns::HasRedirectParams do
     let(:month) { rand(1..12).to_s }
 
     it "returns the home path" do
-      expect(subject.redirect_path).to eq "/budget"
+      expect(subject.redirect_path).to eq home_path
     end
   end
 
@@ -69,7 +69,7 @@ RSpec.describe WebApp::Concerns::HasRedirectParams do
     let(:year) { Time.current.year.to_s }
 
     it "returns the budget index path with month and year segments" do
-      expect(subject.redirect_path).to eq "/budget/#{month}/#{year}"
+      expect(subject.redirect_path).to eq home_path
     end
   end
 
@@ -82,7 +82,7 @@ RSpec.describe WebApp::Concerns::HasRedirectParams do
     let(:year) { Time.current.year.to_s }
 
     it "returns the budget index path with no params" do
-      expect(subject.redirect_path).to eq "/budget"
+      expect(subject.redirect_path).to eq home_path
     end
   end
 

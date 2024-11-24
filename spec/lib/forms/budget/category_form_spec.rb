@@ -36,7 +36,7 @@ describe Forms::Budget::CategoryForm do
           accrual: true,
           default_amount: 0,
           slug: "new-category",
-          maturity_intervals_attributes: [
+          maturity_intervals: [
             { month: 1, year: (Time.current.year + 1) },
             { month: 5, year: (Time.current.year + 1) },
           ]
@@ -99,7 +99,7 @@ describe Forms::Budget::CategoryForm do
         let(:interval) { create(:budget_interval, user_group: user.group) }
         let(:params) do
           category_params(
-            maturity_intervals_attributes: [
+            maturity_intervals: [
               month: interval.next.month,
               year: interval.next.year,
             ]
@@ -127,7 +127,7 @@ describe Forms::Budget::CategoryForm do
         let(:interval) { create(:budget_interval, user_group: user.group) }
         let(:params) do
           category_params(
-            maturity_intervals_attributes: [
+            maturity_intervals: [
               month: interval.month,
               year: interval.year,
               _destroy: true,
@@ -160,7 +160,7 @@ describe Forms::Budget::CategoryForm do
         :accrual,
         :default_amount,
         :is_per_diem_enabled,
-        maturity_intervals_attributes: %i[month year _destroy]
+        maturity_intervals: %i[month year _destroy]
       )
   end
 end

@@ -85,6 +85,7 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
               key: transaction.key,
               amount: transaction.total,
               accountKey: savings_account.key,
+              accountSlug: savings_account.slug,
               clearanceDate: params.fetch("transaction").fetch("clearance_date")&.strftime("%F"),
               description: transaction.description,
               checkNumber: transaction.check_number,
