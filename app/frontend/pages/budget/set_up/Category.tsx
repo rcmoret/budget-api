@@ -362,7 +362,6 @@ const EventComponent = (props: EventComponentProps) => {
   const { category, event, updateCategory, eventCount, index } = props
   const { key } = event
   const errors = { ...emptyError, ...(event.errors || {}) }
-  if (event.errors) { console.log(errors) }
   const label = isCreate(event) ? "New Item" : "Adjust Item"
   const updateEvent = (amount: string) => props.updateEvent(key, inputAmount({ display: amount }))
   const removeEvent = () => {
@@ -376,7 +375,6 @@ const EventComponent = (props: EventComponentProps) => {
   const borderTop = eventCount > 1 && index > 0 ? "border-t-2 border-gray-300" : "border-none"
   const border = event.amount.display === "" ? "border-2 border-violet-200" : borderTop
 
-  console.log({ errors })
   return (
     <Row styling={{
       flexDirection: "flex-row",

@@ -173,7 +173,6 @@ const useSetUpEventsForm = (props: HookProps) => {
   }
 
   const addErrors = (errorCollection: TEventError[]) => {
-    console.log("form errors", errorCollection)
     setCategories(
       categories.map((category) => {
         return {
@@ -181,6 +180,7 @@ const useSetUpEventsForm = (props: HookProps) => {
           events: category.events.map((event) => {
             const errors = errorCollection.find((err) => err.key === event.key) || null
             if (!!errors) {
+              console.log("form errors", category.name, errors)
               return { ...event, errors }
             } else {
               return event
