@@ -10,8 +10,9 @@ namespace :budget do
 
   post "/events/(:month)/(:year)", to: "events#call", as: :events
 
+  get "(/:month)(/:year)", to: "index#call", as: :index
+
   scope "/:month/:year" do
-    get "/", to: "index#call", as: :index
     put "/", to: "update#call"
     post "/", to: "edit#call"
     get "/edit", to: "edit#call"

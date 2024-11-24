@@ -11,11 +11,23 @@ module WebApp
         if form.save
           redirect_to redirect_path
         else
-          redirect_to budget_index_path
+          render inertia: error_component, props: page_props
         end
       end
 
       private
+
+      def props
+        API::Budget::Interval::SetUp::CategoriesSerializer.new(interval).render.merge(
+          errors: form_errors
+        )
+      end
+
+      def form_errors
+        form.errors.to_hash.reduce([]) do |arr, (key, vals)|
+          arr << { key: key }.merge(vals.reduce(:merge))
+        end
+      end
 
       def form
         @form ||= Forms::Budget::EventsForm.new(current_user_profile, events: events_params)

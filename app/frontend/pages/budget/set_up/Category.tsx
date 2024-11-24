@@ -3,7 +3,7 @@ import { Button } from "@/components/common/Button";
 import { SetUpCategory, SetUpEvent } from "@/lib/hooks/useSetUpEventsForm";
 import { AmountInput, inputAmount, TInputAmount } from "@/components/common/AmountInput";
 import { AmountSpan } from "@/components/common/AmountSpan";
-import { isAdjust, isCreate, isDelete } from "@/lib/hooks/useEventsForm";
+import { emptyError, isAdjust, isCreate, isDelete, TEventError } from "@/lib/hooks/useEventsForm";
 import { Icon } from "@/components/common/Icon";
 import { useContext } from "react";
 import { AppConfigContext } from "@/components/layout/Provider";
@@ -14,6 +14,7 @@ import { buildQueryParams } from "@/lib/redirect_params"
 import { useState } from "react";
 import { UrlBuilder } from "@/lib/UrlBuilder";
 import { useToggle } from "@/lib/hooks/useToogle";
+import { Point } from "@/components/common/Symbol";
 
 const AccrualFormComponent = (props: {
   category: SetUpCategory,
@@ -328,6 +329,24 @@ const EditableSuggestion = (props: EditableSuggestionProps) => {
   }
 }
 
+const ErrorComponent = ({ messages }: { messages: string [] }) => {
+  if (!messages.length) { return null }
+
+  return (
+    <Row styling={{ color: "text-red-400", fontSize: "text-sm" }}>
+      {messages.map((message) => {
+        return(
+          <Point>
+            <span className="italic">
+              {message}
+            </span>
+          </Point>
+        )
+      })}
+    </Row>
+  )
+}
+
 type EventComponentProps = {
   category: SetUpCategory;
   event: SetUpEvent;
@@ -342,7 +361,9 @@ type EventComponentProps = {
 const EventComponent = (props: EventComponentProps) => {
   const { category, event, updateCategory, eventCount, index } = props
   const { key } = event
-  const label = isCreate(event) ? "Create New Item" : "Adjust Existing Item"
+  const errors = { ...emptyError, ...(event.errors || {}) }
+  if (event.errors) { console.log(errors) }
+  const label = isCreate(event) ? "New Item" : "Adjust Item"
   const updateEvent = (amount: string) => props.updateEvent(key, inputAmount({ display: amount }))
   const removeEvent = () => {
     if (isAdjust(event)) {
@@ -353,8 +374,9 @@ const EventComponent = (props: EventComponentProps) => {
   }
 
   const borderTop = eventCount > 1 && index > 0 ? "border-t-2 border-gray-300" : "border-none"
-  const border = String(event.amount.cents) === "" ? "border-2 border-violet-200" : borderTop
+  const border = event.amount.display === "" ? "border-2 border-violet-200" : borderTop
 
+  console.log({ errors })
   return (
     <Row styling={{
       flexDirection: "flex-row",
@@ -366,7 +388,10 @@ const EventComponent = (props: EventComponentProps) => {
       padding: "p-2"
     }}>
       <div className="hidden">{key}</div>
-      <div className="w-3/12">{label}</div>
+      <div className="w-3/12">
+        <div>{label}</div>
+        <ErrorComponent messages={errors.budgetItem} />
+      </div>
       <div className="w-4/12 flex flex-row flex-wrap">
       <Suggestions
         category={category}
@@ -377,11 +402,16 @@ const EventComponent = (props: EventComponentProps) => {
       </div>
       <div className="w-4/12">
         <div className="w-full flex flex-row justify-end pr-1 gap-2">
-          <AmountInput
-            name={`event-${key}`}
-            amount={event.amount}
-            onChange={updateEvent}
-          />
+          <div className="flex-col gap-2 flex w-[165px]">
+            <div className="text-right">
+              <AmountInput
+                name={`event-${key}`}
+                amount={event.amount}
+                onChange={updateEvent}
+              />
+            </div>
+            <ErrorComponent messages={errors.amount} />
+          </div>
           <Button styling={{ color: "text-gray-500" }} type="button" onClick={removeEvent}>
             <Icon name="times-circle" />
           </Button>

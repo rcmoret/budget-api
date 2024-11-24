@@ -12,6 +12,7 @@ import { Point } from "@/components/common/Symbol";
 import { Icon } from "@/components/common/Icon";
 import { UrlBuilder } from "@/lib/UrlBuilder";
 import { buildQueryParams } from "@/lib/redirect_params";
+import { usePage } from '@inertiajs/react'
 
 type TabName = "revenues" | "monthlyExpenses" | "dayToDayExpense"
 
@@ -184,6 +185,13 @@ type ComponentProps = {
   categories: Array<ResponseSetUpCategory>;
   month: number;
   year: number;
+  errors?: Array<{
+    [key:string]: {
+      amount?: string[];
+      category?: string[];
+      budgetItem?: string[];
+    }
+  }>
 }
 
 const SetUpComponent = (props: ComponentProps) => {

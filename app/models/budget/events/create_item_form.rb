@@ -23,6 +23,7 @@ module Budget
                 },
                 if: :revenue?
       validates :budget_item_key, presence: true, length: { is: 12 }
+      validate :new_item
 
       def initialize(current_user, params)
         super
@@ -96,6 +97,12 @@ module Budget
         return false if category.nil?
 
         category.revenue?
+      end
+
+      def new_item
+        return unless Budget::Item.exists?(interval: interval, category: category)
+
+        errors.add(:budget_item, "already exists")
       end
 
       def budget_item_event_type

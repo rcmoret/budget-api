@@ -48,7 +48,7 @@ module Forms
           memo[error.attribute] << error.message
         end
         model_errors.each_pair do |key, value|
-          errors.add("event.#{model.key}", { key => value })
+          errors.add(model.key, { key => value })
         end
       end
 

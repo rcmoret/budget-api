@@ -1,4 +1,4 @@
-import { EventProps, useEventForm, isAdjust, isCreate, isDelete } from "@/lib/hooks/useEventsForm";
+import { EventProps, useEventForm, isAdjust, isCreate, isDelete, TEventError, emptyError } from "@/lib/hooks/useEventsForm";
 import { BudgetCategory, TEvent } from "@/types/budget";
 import { useEffect, useState } from "react";
 import { generateKeyIdentifier } from "../KeyIdentifier";
@@ -10,6 +10,7 @@ const DELETE_EVENT = "setup_item_delete"
 
 export interface SetUpEvent extends TEvent {
   amount: TInputAmount;
+  errors?: TEventError;
 }
 
 interface ResponseEvent extends TEvent {
@@ -41,7 +42,11 @@ type HookProps = {
   year: number;
 }
 
-const mapCategories = (categories: Array<ResponseSetUpCategory>): Array<SetUpCategory> => {
+const mapCategories = (props: {
+  categories: Array<ResponseSetUpCategory>
+}) => {
+  const { categories } = props
+
   const handle = (event: ResponseEvent): SetUpEvent => {
     const amount = event.amount ? inputAmount({ cents: event.amount }) : inputAmount({ display: "" })
     return { ...event, amount }
@@ -55,7 +60,10 @@ const mapCategories = (categories: Array<ResponseSetUpCategory>): Array<SetUpCat
 }
 
 const useSetUpEventsForm = (props: HookProps) => {
-  const [categories, setCategories] = useState<SetUpCategory[]>(mapCategories(props.categories))
+  const [categories, setCategories] = useState<SetUpCategory[]>(mapCategories({
+      categories: props.categories,
+  }))
+
   const { month, year } = props
 
   const addCreateEvent = ({ key, amount }: { key: string, amount: TInputAmount }) => setCategories(
@@ -164,6 +172,25 @@ const useSetUpEventsForm = (props: HookProps) => {
     )
   }
 
+  const addErrors = (errorCollection: TEventError[]) => {
+    console.log("form errors", errorCollection)
+    setCategories(
+      categories.map((category) => {
+        return {
+          ...category,
+          events: category.events.map((event) => {
+            const errors = errorCollection.find((err) => err.key === event.key) || null
+            if (!!errors) {
+              return { ...event, errors }
+            } else {
+              return event
+            }
+          })
+        }
+      })
+    )
+  }
+
   const eventModel = (event: SetUpEvent): EventProps => {
     const { amount, data, key } = event
 
@@ -200,11 +227,19 @@ const useSetUpEventsForm = (props: HookProps) => {
 
   const formEvents = categories.flatMap((category) => category.events)
 
-  const { processing, events, post, setEventsData, transform } = useEventForm({
+  const { processing, events, post: _post, setEventsData, transform } = useEventForm({
     month,
     year,
     events: formEvents.map(eventModel)
   })
+
+
+  const post = (url: string) => {
+    _post(url, {
+    // @ts-ignore
+      onError: (errors) => { addErrors(errors) }
+    })
+  }
 
   const isChanged = (event: EventProps) => {
     if (isCreate(event)) {

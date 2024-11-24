@@ -66,6 +66,13 @@ export type DeleteEventProps = {
 
 export type EventProps = AdjustEventProps | CreateEventProps | DeleteEventProps 
 
+export type TEventError = {
+  key: string;
+  amount?: string[];
+  category?: string[];
+  budgetItem?: string[];
+}
+
 type EventFormProps = {
   events: Array<EventProps>;
   month: number;
@@ -112,10 +119,17 @@ const useEventForm = (props: EventFormProps) => {
   }
 }
 
+const emptyError = {
+  amount: [],
+  budgetItem: [],
+  category: [],
+}
+
 export {
   useEventForm,
   // ADJUST_EVENTS,
   isAdjust,
   isCreate,
   isDelete,
+  emptyError
 }
