@@ -100,7 +100,7 @@ module Budget
       end
 
       def new_item
-        return unless Budget::Item.exists?(interval: interval, category: category)
+        return unless Budget::Item.exists?(interval: interval, category: category, key: budget_item_key)
 
         errors.add(:budget_item, "already exists")
       end
