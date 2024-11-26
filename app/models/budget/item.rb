@@ -82,6 +82,16 @@ module Budget
 
     private
 
+    def item_type
+      if monthly?
+        "MonthlyItem"
+      elsif expense?
+        "DayToDayExpenseItem"
+      else
+        "DayToDayRevenueItem"
+      end
+    end
+
     def decorator_class
       if monthly?
         Presenters::Budget::MonthlyItemPresenter

@@ -25,11 +25,25 @@ const Transactions = (props: ComponentProps) => {
   const closeForm = () => setShowFormKey(null)
   const showNewForm = () => setShowFormKey("__new__")
 
+  const sorted = transactions.reduce((acc, txn) => {
+    balance = balance + txn.amount
+    return [
+      {
+        ...txn,
+        balance
+      },
+      ...acc
+    ]
+  }, [])
+
   return (
-    <div className="w-full flex flex-col-reverse">
-      <InitialBalance balance={balance} initialDate={budget.firstDate} />
-      {transactions.map((transaction) => {
-        balance += transaction.amount;
+    <div className="w-full flex flex-col">
+      <AddNewComponent
+        isFormShown={showFormKey === "__new__"}
+        closeForm={closeForm}
+        openForm={showNewForm}
+      />
+      {sorted.map((transaction) => {
         if (showFormKey === transaction.key) {
           return (
             <TransactionForm
@@ -41,17 +55,13 @@ const Transactions = (props: ComponentProps) => {
           return (
             <TransactionShow
               transaction={transaction}
-              balance={balance}
+              balance={transaction.balance}
               showFormFn={setShowFormKey}
             />
           )
         }
       })}
-      <AddNewComponent
-        isFormShown={showFormKey === "__new__"}
-        closeForm={closeForm}
-        openForm={showNewForm}
-      />
+      <InitialBalance balance={props.initialBalance} initialDate={budget.firstDate} />
     </div>
   );
 };

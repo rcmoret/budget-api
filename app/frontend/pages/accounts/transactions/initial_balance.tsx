@@ -25,6 +25,7 @@ const InitialBalance = (props: { balance: number; initialDate: string }) => {
         <ClearanceDateComponent
           clearanceDate={clearanceDate}
           shortClearanceDate={shortClearanceDate}
+          toggleForm={() => null}
         />
       }
       descriptionComponent="Balance"

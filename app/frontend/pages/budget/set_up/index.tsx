@@ -32,9 +32,10 @@ const TabBubble = ({ incompleteCount }: { incompleteCount: number }) => {
     "place-items-center",
     "rounded-full",
     "p-1",
-    "text-xs",
+    "text-sm",
     "bg-gray-400",
-    "text-gray-0"
+    "text-white",
+    "font-extrabold"
   ].join(" ")
 
   return (
@@ -54,8 +55,8 @@ const GroupTabComponent = ({ title, isSelected, incompleteCount, onClick }: Grou
     "border",
     "rounded-lg",
     "text-lg",
-    isSelected ? "border-blue-300" : "border-gray-400",
-    isSelected ? "" : "bg-gray-300"
+    isSelected ? "border-blue-300" : "border-gray-300",
+    isSelected ? "" : "bg-gray-100"
   ].join(" ")
 
   if (isSelected) {

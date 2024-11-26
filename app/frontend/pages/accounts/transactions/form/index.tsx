@@ -43,7 +43,7 @@ const ClearanceDateComponent = (props: {
       <DatePicker
         selected={clearanceDate}
         onChange={onChange}
-        className="border border-gray-300 h-input-lg"
+        className="border border-gray-300 h-input-lg rounded px-1"
       />
     </div>
   )
@@ -69,7 +69,7 @@ const DescriptionComponent = (props: {
         name="description"
         onChange={onChange}
         style={{ width: "90%" }}
-        className="border border-gray-300 h-input-lg"
+        className="border border-gray-300 h-input-lg px-1 rounded"
       />
     </div>
   )
@@ -101,7 +101,7 @@ const CheckNumberComponent = (props: {
             value={checkNumber || ""}
             name="checkNumber"
             onChange={onChange}
-            className="h-input-lg"
+            className="h-input-lg px-1 border border-gray-300 rounded"
           />
         </div>
       </div>
@@ -124,8 +124,8 @@ const NotesComponent = (props: {
   notes: string | null 
 }) => {
   const { notes, updateFormData } = props
-  const [showInput, setShowInput] = useState<boolean>(!!notes)
-  const toggleInput = () => setShowInput(!showInput)
+  const [showInput, toggleInput] = useToggle(!!notes)
+
   const onChange = (
     ev: React.ChangeEvent & { target: HTMLTextAreaElement },
   ) => updateFormData({ name: ev.target.name, value: ev.target.value })
@@ -148,7 +148,7 @@ const NotesComponent = (props: {
             value={notes || ""}
             name="notes"
             onChange={onChange}
-            className="border border-gray-400 border-solid rounded w-full"
+            className="border border-gray-300 border-solid rounded w-full px-1"
           />
         </div>
       </div>
@@ -382,7 +382,7 @@ const TransactionForm = (props: {
   return (
     <StripedRow
       oddColor="odd:bg-sky-50"
-      evenColor="even:bg-gray-100"
+      evenColor="even:bg-white"
       styling={{
         padding: "px-2 py-1"
       }}

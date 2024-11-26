@@ -25,7 +25,7 @@ module WebApp
 
       def form_errors
         form.errors.to_hash.reduce([]) do |arr, (key, vals)|
-          arr << { key: key }.merge(vals.reduce(:merge))
+          arr << vals.reduce(key: key, &:merge)
         end
       end
 

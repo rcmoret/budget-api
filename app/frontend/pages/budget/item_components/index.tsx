@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 
 import { BudgetItem, TBudgetItem, BudgetItemEvent, BudgetItemTransaction } from "@/types/budget";
 import { Row, StripedRow } from "@/components/common/Row";
@@ -17,6 +17,7 @@ import { UrlBuilder } from "@/lib/UrlBuilder";
 import { buildQueryParams } from "@/lib/redirect_params";
 import { inputAmount, AmountInput } from "@/components/common/AmountInput";
 import { TChangeForm, DraftChange } from "@/lib/hooks/useDraftEvents";
+import { useToggle } from "@/lib/hooks/useToogle";
 
 type DetailProps = {
   item: BudgetItem;
@@ -193,8 +194,7 @@ const ItemContainer = (props: {
   form: TChangeForm;
 }) => {
   const { children, item, form } = props
-  const [showDetails, updateShowDetails] = useState<boolean>(false)
-  const toggleDetails = () => updateShowDetails(!showDetails)
+  const [showDetails, toggleDetails] = useToggle(false)
 
   const openForm = () => form.addChange({
     budgetItemKey: item.key,
@@ -206,8 +206,8 @@ const ItemContainer = (props: {
 
   return (
     <StripedRow
-      oddColor="odd:bg-sky-50"
-      evenColor="even:bg-gray-100"
+      oddColor="odd:bg-white"
+      evenColor="even:bg-sky-50"
       styling={{
         flexWrap: "flex-wrap",
         color: "text-gray-800",

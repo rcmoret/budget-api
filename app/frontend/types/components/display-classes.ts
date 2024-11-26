@@ -40,21 +40,23 @@ export type OverflowOption =
   | "overflow-x-hidden"
 
 type OddBgColorOption =
-  | "odd:bg-gray-50"
+  | "odd:bg-cyan-100"
+  | "odd:bg-cyan-200"
   | "odd:bg-gray-100"
   | "odd:bg-gray-200"
   | "odd:bg-gray-400"
+  | "odd:bg-gray-50"
+  | "odd:bg-sky-50"
   | "odd:bg-white"
-  | "odd:bg-cyan-100"
-  | "odd:bg-cyan-200"
 
 type EvenBgColorOption =
-  | "even:bg-gray-50"
+  | "even:bg-cyan-100"
+  | "even:bg-cyan-200"
   | "even:bg-gray-100"
   | "even:bg-gray-200"
   | "even:bg-gray-400"
-  | "even:bg-cyan-100"
-  | "even:bg-cyan-200"
+  | "even:bg-gray-50"
+  | "even:bg-sky-50"
   | "even:bg-white"
 
 export type StripedRowColorOption = OddBgColorOption | EvenBgColorOption

@@ -24,4 +24,12 @@ const Icon = ({ name }: { name: IconName }) => {
   return <span className={className} />;
 };
 
-export { Icon, IconName };
+const GreenCheck = () => {
+  return (
+    <div className="p-1 text-xs bg-green-600 text-chartreuse-300 rounded">
+      <Icon name="check-circle" />
+    </div>
+  )
+}
+
+export { Icon, IconName, GreenCheck };

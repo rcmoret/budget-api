@@ -2,6 +2,7 @@ import { MouseEventHandler } from "react";
 
 import {
   CursorOptions,
+  TextAlignOption,
 } from "types/component_classes";
 
 import type {
@@ -35,6 +36,7 @@ type StylingProps = {
   overflow?: OverflowOption;
   padding?: string;
   rounded?: "rounded" | null;
+  textAlign?: TextAlignOption;
   width?: string;
 }
 

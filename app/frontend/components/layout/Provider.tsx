@@ -1,5 +1,5 @@
 import { ReactNode, createContext, useState } from "react";
-import { BudgetData, DiscretionaryData } from "@/types/budget";
+import { BudgetData, BudgetItem, DiscretionaryData } from "@/types/budget";
 
 type TAppConfig = {
   showConfigMenu: boolean;

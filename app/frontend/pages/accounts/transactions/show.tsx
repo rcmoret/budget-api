@@ -1,26 +1,27 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { AmountSpan } from "@/components/common/AmountSpan";
 import { Button } from "@/components/common/Button";
 import { Cell } from "@/components/common/Cell";
 import { Icon } from "@/components/common/Icon";
 import { dateParse } from "@/lib/DateFormatter";
-import { byAmount, byCategoryName } from "@/lib/sort_functions";
 import { TransactionContainer } from "@/pages/accounts/transactions/container";
 import {
   CaretComponent,
   ClearanceDateComponent,
+  DescriptionComponent,
+  BudgetItemAmounts,
+  BudgetItemsDescription
 } from "@/pages/accounts/transactions/common";
 import { ModeledTransaction } from "@/lib/models/transaction";
-import { AccountTransactionDetail } from "@/types/transaction";
+import { useToggle } from "@/lib/hooks/useToogle";
 
 const TransactionShow = (props: {
   transaction: ModeledTransaction;
   balance: number;
   showFormFn: (key: string) => void;
 }) => {
-  const [isDetailShown, updateDetailVisibility] = useState<boolean>(false);
-  const toggleDetailView = () => updateDetailVisibility(!isDetailShown);
+  const [isDetailShown, toggleDetailView] = useToggle(false);
   const { transaction, showFormFn } = props;
   const {
     key,
@@ -40,21 +41,6 @@ const TransactionShow = (props: {
     : dateParse(String(transaction.clearanceDate), {
         format: "m/d/yy",
       });
-  let descriptionComponent: string | React.ReactNode = description || "";
-  if (details.length > 1 && isDetailShown) {
-    descriptionComponent = (
-      <>
-        <div className="w-full">
-          {description || <BudgetItemsDescription details={details} />}
-        </div>
-        <BudgetItemList details={details} />
-      </>
-    );
-  } else if (description === null) {
-    descriptionComponent = <BudgetItemsDescription details={details} />;
-  } else {
-    descriptionComponent = <span>{description}</span>;
-  }
 
   let noteLines: string[] = [];
   const notesNeedAttn = !!notes?.startsWith("!!!");
@@ -77,14 +63,25 @@ const TransactionShow = (props: {
         <ClearanceDateComponent
           clearanceDate={clearanceDate}
           shortClearanceDate={shortClearanceDate}
+          toggleForm={toggleForm}
         />
       }
-      descriptionComponent={descriptionComponent}
+      descriptionComponent={<DescriptionComponent
+        transaction={transaction}
+        isDetailShown={isDetailShown}
+        toggleForm={toggleForm}
+      />}
       transactionAmountComponent={
         isDetailShown ? (
-          <BudgetItemAmounts details={details} amount={transaction.amount} />
+          <BudgetItemAmounts
+            details={details}
+            amount={transaction.amount}
+            toggleForm={toggleForm}
+            />
         ) : (
-          <AmountSpan amount={transaction.amount} />
+          <Button type="button" onClick={toggleForm}>
+            <AmountSpan amount={transaction.amount} />
+          </Button>
         )
       }
       balanceCompnent={
@@ -100,7 +97,9 @@ const TransactionShow = (props: {
         }}
       >
         {!!description && details.length > 0 && !isDetailShown && (
-          <BudgetItemsDescription details={details} />
+          <div className="ml-4">
+            <BudgetItemsDescription details={details} />
+          </div>
         )}
         {isBudgetExclusion && (
           <div className="ml-4 md:max-w-2/12 max-md:w-full italic">
@@ -143,48 +142,6 @@ const TransactionShow = (props: {
     </TransactionContainer>
   );
 };
-
-const BudgetItemsDescription = (props: {
-  details: AccountTransactionDetail[];
-}) => {
-  const details = props.details
-    .filter((detail: AccountTransactionDetail) => detail.budgetCategoryName)
-    .sort(byCategoryName);
-
-  return (
-    <div className="ml-4">
-      {details.map((detail: AccountTransactionDetail, n: number) => (
-        <span key={detail.key}>
-          {n > 0 && "; "}
-          {detail.budgetCategoryName}{" "}
-          {detail.iconClassName && <Icon name={detail.iconClassName} />}
-        </span>
-      ))}
-    </div>
-  );
-};
-
-const BudgetItemList = (props: { details: AccountTransactionDetail[] }) =>
-  props.details.sort(byAmount).map((detail) => (
-    <div key={detail.key} className="w-full text-sm">
-      {detail.budgetCategoryName || "Petty Cash"}{" "}
-      {detail.iconClassName && <Icon name={detail.iconClassName} />}
-    </div>
-  ));
-
-const BudgetItemAmounts = (props: {
-  details: AccountTransactionDetail[];
-  amount: number;
-}) => (
-  <div className="w-full">
-    <AmountSpan amount={props.amount} />
-    {props.details.sort(byAmount).map((detail) => (
-      <div key={detail.key} className="w-full text-sm">
-        <AmountSpan amount={detail.amount} />
-      </div>
-    ))}
-  </div>
-);
 
 const Notes = (props: { noteLines: string[]; notesNeedAttn: boolean }) => {
   const className = [

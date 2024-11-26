@@ -1,6 +1,9 @@
 import { AccountTransactionDetail } from "@/types/transaction";
+import { ModeledTransaction } from "@/lib/models/transaction";
 import { Button } from "@/components/common/Button";
 import { Icon } from "@/components/common/Icon";
+import { byAmount, byCategoryName } from "@/lib/sort_functions";
+import { AmountSpan } from "@/components/common/AmountSpan";
 
 interface CaretComponentProps {
   details: AccountTransactionDetail[];
@@ -39,11 +42,100 @@ const DetailToggle = (props: {
 const ClearanceDateComponent = (props: {
   clearanceDate: string;
   shortClearanceDate: string;
+  toggleForm: () => void;
+}) => {
+  return (
+    <div className="w-2/12">
+      <Button
+        type="button"
+        onClick={props.toggleForm}
+        styling={{ width: "w-full", textAlign: "text-left" }}
+      >
+        <span className="max-sm:hidden">{props.clearanceDate}</span>
+        <span className="sm:hidden">{props.shortClearanceDate}</span>
+      </Button>
+    </div>
+  )
+}
+
+const BudgetItemsDescription = (props: {
+  details: AccountTransactionDetail[];
+}) => {
+  const details = props.details
+    .filter((detail: AccountTransactionDetail) => detail.budgetCategoryName)
+    .sort(byCategoryName);
+
+  return (
+    <>
+      {details.map((detail: AccountTransactionDetail, n: number) => (
+        <span key={detail.key}>
+          {n > 0 && "; "}
+          {detail.budgetCategoryName}{" "}
+          {detail.iconClassName && <Icon name={detail.iconClassName} />}
+        </span>
+      ))}
+    </>
+  );
+};
+
+const BudgetItemList = (props: { details: AccountTransactionDetail[] }) => {
+  return (
+    props.details.sort(byAmount).map((detail) => (
+      <div key={detail.key} className="w-full text-sm">
+        {detail.budgetCategoryName || "Petty Cash"}{" "}
+        {detail.iconClassName && <Icon name={detail.iconClassName} />}
+      </div>
+    )
+  ))
+}
+
+const BudgetItemAmounts = (props: {
+  details: AccountTransactionDetail[];
+  amount: number;
+  toggleForm: () => void;
 }) => (
-  <div className="w-2/12">
-    <span className="max-sm:hidden">{props.clearanceDate}</span>
-    <span className="sm:hidden">{props.shortClearanceDate}</span>
+  <div className="w-full">
+    <Button type="button" onClick={props.toggleForm}>
+      <AmountSpan amount={props.amount} />
+    </Button>
+    {props.details.sort(byAmount).map((detail) => (
+      <div key={detail.key} className="w-full text-sm">
+        <AmountSpan amount={detail.amount} />
+      </div>
+    ))}
   </div>
 );
 
-export { CaretComponent, ClearanceDateComponent };
+const DescriptionComponent = (props: {
+  transaction: ModeledTransaction;
+  isDetailShown: boolean;
+  toggleForm: () => void;
+}) => {
+  const { transaction, isDetailShown } = props
+  const { details, description } = transaction
+
+  if (details.length > 1 && isDetailShown) {
+    return (
+      <Button type="button" onClick={props.toggleForm}>
+        <div className="w-full">
+          {description || <BudgetItemsDescription details={details} />}
+        </div>
+        <BudgetItemList details={details} />
+      </Button>
+    )
+  } else if (description === null) {
+    return (
+      <Button type="button" onClick={props.toggleForm}>
+        <BudgetItemsDescription details={details} />
+      </Button>
+    )
+  } else {
+    return (
+      <Button type="button" onClick={props.toggleForm}>
+        {description}
+      </Button>
+    )
+  }
+}
+
+export { BudgetItemAmounts, BudgetItemsDescription, CaretComponent, ClearanceDateComponent, DescriptionComponent };

@@ -68,6 +68,7 @@ interface StripedRowProps {
     flexWrap?: FlexWrapOption | null;
     fontSize?: FontSizeOption;
     fontWeight?: FontWeightOption;
+    gap?: GapOption;
     margin?: string;
     overflow?: OverflowOption;
     padding?: string;

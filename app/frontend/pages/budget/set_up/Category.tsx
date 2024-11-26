@@ -3,8 +3,8 @@ import { Button } from "@/components/common/Button";
 import { SetUpCategory, SetUpEvent } from "@/lib/hooks/useSetUpEventsForm";
 import { AmountInput, inputAmount, TInputAmount } from "@/components/common/AmountInput";
 import { AmountSpan } from "@/components/common/AmountSpan";
-import { emptyError, isAdjust, isCreate, isDelete, TEventError } from "@/lib/hooks/useEventsForm";
-import { Icon } from "@/components/common/Icon";
+import { emptyError, isAdjust, isCreate, isDelete } from "@/lib/hooks/useEventsForm";
+import { GreenCheck, Icon } from "@/components/common/Icon";
 import { useContext } from "react";
 import { AppConfigContext } from "@/components/layout/Provider";
 import { DateFormatter } from "@/lib/DateFormatter";
@@ -273,7 +273,7 @@ const EditForm = (props: {
             styling={{}}
             isEnabled={!processing}
           >
-            <Icon name="check-circle" />
+            <GreenCheck />
           </SubmitButton>
         </div>
       </div>
@@ -372,103 +372,105 @@ const EventComponent = (props: EventComponentProps) => {
     }
   }
 
-  const borderTop = eventCount > 1 && index > 0 ? "border-t-2 border-gray-300" : "border-none"
-  const border = event.amount.display === "" ? "border-2 border-violet-200" : borderTop
+  const border = event.amount.display === "" ? "border-l-4 border-purple-100" : "border-none"
 
   return (
-    <Row styling={{
-      flexDirection: "flex-row",
-      flexWrap: "flex-wrap",
-      flexAlign: "justify-between",
-      rounded: "rounded",
-      border,
-      margin: "mb-4",
-      padding: "p-2"
-    }}>
-      <div className="hidden">{key}</div>
-      <div className="w-3/12">
-        <div>{label}</div>
-        <ErrorComponent messages={errors.budgetItem} />
-      </div>
-      <div className="w-4/12 flex flex-row flex-wrap">
-      <Suggestions
-        category={category}
-        event={event}
-        updateEvent={updateEvent}
-        updateCategory={updateCategory}
-      />
-      </div>
-      <div className="w-4/12">
-        <div className="w-full flex flex-row justify-end pr-1 gap-2">
-          <div className="flex-col gap-2 flex w-[165px]">
-            <div className="text-right">
-              <AmountInput
-                name={`event-${key}`}
-                amount={event.amount}
-                onChange={updateEvent}
-              />
-            </div>
-            <ErrorComponent messages={errors.amount} />
-          </div>
-          <Button styling={{ color: "text-gray-500" }} type="button" onClick={removeEvent}>
-            <Icon name="times-circle" />
-          </Button>
+    <>
+      {eventCount > 1 && index > 0 && <div className="h-0.5 bg-gray-400 w-full mb-4"></div>}
+      <Row styling={{
+        flexDirection: "flex-row",
+        flexWrap: "flex-wrap",
+        flexAlign: "justify-between",
+        border,
+        margin: "mb-4",
+        padding: "p-4"
+      }}>
+        <div className="hidden">{key}</div>
+        <div className="w-3/12">
+          <div>{label}</div>
+          <ErrorComponent messages={errors.budgetItem} />
         </div>
-      </div>
-    </Row>
-  )
-}
+        <div className="w-4/12 flex flex-row flex-wrap">
+        <Suggestions
+          category={category}
+          event={event}
+          updateEvent={updateEvent}
+          updateCategory={updateCategory}
+        />
+        </div>
+        <div className="w-4/12">
+          <div className="w-full flex flex-row justify-end pr-1 gap-2">
+            <div className="flex-col gap-2 flex w-[165px]">
+              <div className="text-right">
+                <AmountInput
+                  name={`event-${key}`}
+                  amount={event.amount}
+                  onChange={updateEvent}
+                />
+              </div>
+              <ErrorComponent messages={errors.amount} />
+            </div>
+            <Button styling={{ color: "text-gray-500" }} type="button" onClick={removeEvent}>
+              <Icon name="times-circle" />
+            </Button>
+          </div>
+        </div>
+      </Row>
+    </>
+    )
+  }
 
-type ComponentProps = {
-  category: SetUpCategory;
-  removeItem: (_: { categoryKey: string, eventKey: string }) => void;
-  removeEvent: (_: { categoryKey: string, eventKey: string }) => void;
-  updateCategory: (props: { key: string, category: SetUpCategory }) => void;
-  updateEvent: (props: { categoryKey: string, eventKey: string, amount: TInputAmount }) => void;
-}
+  type ComponentProps = {
+    category: SetUpCategory;
+    removeItem: (_: { categoryKey: string, eventKey: string }) => void;
+    removeEvent: (_: { categoryKey: string, eventKey: string }) => void;
+    updateCategory: (props: { key: string, category: SetUpCategory }) => void;
+    updateEvent: (props: { categoryKey: string, eventKey: string, amount: TInputAmount }) => void;
+  }
 
-const CategoryComponent = (props: ComponentProps) => {
-  const { category } = props
-  const updateCategory = (category: SetUpCategory) => props.updateCategory({ key: category.key, category })
-  const removeEvent = (key: string) => props.removeEvent({ categoryKey: category.key, eventKey: key })
-  const removeItem = (key: string) => props.removeItem({ categoryKey: category.key, eventKey: key })
-  const updateEvent = (eventKey: string, amount: TInputAmount) => props.updateEvent({
-    categoryKey: category.key,
-    amount,
-    eventKey
-  })
+  const CategoryComponent = (props: ComponentProps) => {
+    const { category } = props
+    const updateCategory = (category: SetUpCategory) => props.updateCategory({ key: category.key, category })
+    const removeEvent = (key: string) => props.removeEvent({ categoryKey: category.key, eventKey: key })
+    const removeItem = (key: string) => props.removeItem({ categoryKey: category.key, eventKey: key })
+    const updateEvent = (eventKey: string, amount: TInputAmount) => props.updateEvent({
+      categoryKey: category.key,
+      amount,
+      eventKey
+    })
 
-  const events = category.events.filter((event) => !isDelete(event))
+    const events = category.events.filter((event) => !isDelete(event))
 
-  return (
-    <StripedRow
-      oddColor="odd:bg-sky-50"
-      evenColor="even:bg-gray-100"
-      styling={{
-        rounded: "rounded",
-        flexDirection: "flex-col",
-        padding: "p-2",
-      }}
-    >
-      <div className="text-lg">
-        {category.name}
-        {category.isAccrual && <AccrualComponent category={category} updateCategory={updateCategory} />}
-      </div>
-      {events.map((event, index) => {
-        return (
-          <EventComponent
-            category={category}
-            event={event}
-            updateCategory={updateCategory}
-            updateEvent={updateEvent}
-            removeEvent={removeEvent}
-            removeItem={removeItem}
-            eventCount={events.length}
-            index={index}
-          />
-        )
-      })}
-    </StripedRow>
+    return (
+      <StripedRow
+        oddColor="odd:bg-sky-50"
+        evenColor="even:bg-gray-50"
+        styling={{
+          rounded: "rounded",
+          flexDirection: "flex-col",
+          padding: "p-2",
+        }}
+      >
+        <div className="text-lg">
+          {category.name}
+          {category.isAccrual && <AccrualComponent category={category} updateCategory={updateCategory} />}
+        </div>
+        {events.map((event, index) => {
+          return (
+            <EventComponent
+              key={event.key}
+              category={category}
+              event={event}
+              updateCategory={updateCategory}
+              updateEvent={updateEvent}
+              removeEvent={removeEvent}
+              removeItem={removeItem}
+              eventCount={events.length}
+              index={index}
+            />
+          )
+        })}
+      </StripedRow>
   )
 }
 

@@ -1,4 +1,5 @@
 export type GapOption =
+  | "gap-px"
   | "gap-0"
   | "gap-1"
   | "gap-2"

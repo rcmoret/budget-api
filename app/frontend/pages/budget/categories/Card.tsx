@@ -2,7 +2,7 @@ import { BudgetCategory } from "@/types/budget"
 import { Point } from "@/components/common/Symbol"
 import { Icon } from "@/components/common/Icon"
 import { AmountSpan } from "@/components/common/AmountSpan";
-import { useState } from "react";
+import { useToggle } from "@/lib/hooks/useToogle";
 import { Button, SubmitButton } from "@/components/common/Button";
 import { useForm } from "@inertiajs/react";
 import { UrlBuilder } from "@/lib/UrlBuilder";
@@ -28,9 +28,7 @@ const AccrualComponent = (props: { category: BudgetCategory }) => {
 const MaturityIntervalComponent = (props: {
   maturityIntervals: Array<{ month: number; year: number; }>
 }) => {
-  const [showList, setShowList] = useState<boolean>(false)
-
-  const toggleShowList = () => setShowList(!showList)
+  const [showList, toggleShowList] = useToggle(false)
 
   const caretClass = showList ? "caret-down" : "caret-right"
   const { maturityIntervals }= props

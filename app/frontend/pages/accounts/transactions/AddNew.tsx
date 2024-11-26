@@ -60,6 +60,8 @@ const AddNewComponent = (props: ComponentProps) => {
   } else {
     return (
       <StripedRow
+        oddColor="odd:bg-sky-50"
+        evenColor="even:bg-white"
         styling={{
           flexAlign: "justify-start",
           flexWrap: "flex-wrap",

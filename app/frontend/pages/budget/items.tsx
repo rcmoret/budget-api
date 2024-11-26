@@ -85,9 +85,9 @@ const HiddenCount = (props: { accruals: number, deleted: number }) => {
 
     const notice = `${count} non-visible ${name} item${count > 1 ? "s" : ""}`
     return (
-      <p>
+      <div>
         <Point>{notice}</Point>
-      </p>
+      </div>
     )
   }
 
@@ -360,7 +360,7 @@ const Section = (props: { title: string; children: React.ReactNode }) => (
         fontSize: "text-xl",
         rounded: "rounded",
         overflow: "overflow-hidden",
-        padding: "pt-2 pb-2 pl-1 pr-1",
+        padding: "p-2",
       }}
     >
       <Point>
