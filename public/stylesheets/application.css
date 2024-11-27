@@ -1560,6 +1560,11 @@ video {
   color: rgb(255 255 255 / var(--tw-text-opacity, 1));
 }
 
+.text-cyan-500 {
+  --tw-text-opacity: 1;
+  color: hsl(172 90% 50% / var(--tw-text-opacity, 1));
+}
+
 .underline {
   text-decoration-line: underline;
 }
@@ -1682,6 +1687,11 @@ video {
 .hover\:bg-orange-900:hover {
   --tw-bg-opacity: 1;
   background-color: hsl(22 100% 13% / var(--tw-bg-opacity, 1));
+}
+
+.hover\:bg-green-700:hover {
+  --tw-bg-opacity: 1;
+  background-color: hsl(142 30% 28% / var(--tw-bg-opacity, 1));
 }
 
 .hover\:text-white:hover {

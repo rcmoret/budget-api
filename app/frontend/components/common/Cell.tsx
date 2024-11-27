@@ -2,6 +2,7 @@ import React from "react";
 
 import type {
   FontSizeOption,
+  FontWeightOption,
   TextAlignOption,
 } from "types/components/text-classes";
 
@@ -22,6 +23,7 @@ interface ComponentProps {
     flexDirection?: FlexDirectionOption;
     flexWrap?: FlexWrapOption;
     fontSize?: FontSizeOption;
+    fontWeight?: FontWeightOption;
     margin?: string;
     overflow?: OverflowOption;
     padding?: string;

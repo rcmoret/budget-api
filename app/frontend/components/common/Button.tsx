@@ -2,6 +2,7 @@ import { MouseEventHandler } from "react";
 
 import {
   CursorOptions,
+  DisplayOption,
   TextAlignOption,
 } from "types/component_classes";
 
@@ -14,11 +15,16 @@ import type {
 import type {
   AlignItemsOption,
   BgColorOption,
+  BgHoverOption,
   FlexAlignOption,
   FlexDirectionOption,
   FlexWrapOption,
   OverflowOption,
 } from "types/components/display-classes";
+
+import type {
+  GapOption
+} from "types/components/spacing-classes";
 
 type StylingProps = {
   alignItems?: AlignItemsOption;
@@ -27,11 +33,14 @@ type StylingProps = {
   border?: string;
   color?: TextColor;
   cursor?: CursorOptions;
+  display?: DisplayOption;
   flexAlign?: FlexAlignOption;
   flexDirection?: FlexDirectionOption;
   flexWrap?: FlexWrapOption | null;
   fontSize?: FontSizeOption;
   fontWeight?: FontWeightOption;
+  gap?: GapOption;
+  hoverColor?: BgHoverOption;
   margin?: string;
   overflow?: OverflowOption;
   padding?: string;

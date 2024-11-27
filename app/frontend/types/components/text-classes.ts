@@ -34,6 +34,7 @@ type TextBlues =
   | "text-blue-800"
 
 type TextGreens =
+  | "text-green-700"
   | "text-green-800"
 
 type TextGrayScale =

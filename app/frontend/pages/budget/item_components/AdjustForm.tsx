@@ -11,7 +11,7 @@ const LineItem = (props: {
   item: DraftItem;
   existingItems: MergedItem[];
   changes: DraftChange[];
-}) => { 
+}) => {
   const { item } = props
   const existingItem = props.existingItems.find((i) => {
     return i.key === item.key
@@ -58,11 +58,11 @@ type ComponentProps = {
 const AdjustForm = (props: ComponentProps) => {
   const { appConfig } = useContext(AppConfigContext)
   const { discretionary } = appConfig.budget
-  const items  = [ ...props.adjustItems, ...props.newDraftItems ].sort((i1, i2) => {
+  const items = [...props.adjustItems, ...props.newDraftItems].sort((i1, i2) => {
     return i1.name.toLowerCase() < i2.name.toLowerCase() ? -1 : 1
   })
 
-  const { discretionary: updatedDiscretionary }  = props
+  const { discretionary: updatedDiscretionary } = props
 
   if (items.length < 2 || !updatedDiscretionary) { return null }
 
@@ -151,7 +151,7 @@ const AdjustForm = (props: ComponentProps) => {
                 color="text-green-800"
                 negativeColor="text-red-400"
                 zeroColor="text-black"
-             />
+              />
             </div>
             <div className="w-4/12 text-right">
               <AmountSpan
@@ -190,10 +190,19 @@ const AdjustForm = (props: ComponentProps) => {
         <div className="w-4/12 flex flex-row justify-end">
           <SubmitButton
             onSubmit={props.postEvents}
-            styling={{ color: "text-white", backgroundColor: "bg-green-600", rounded: "rounded", padding: "px-4 py-2", display: "flex", gap: "gap-2" }}
+            styling={{
+              color: "text-white",
+              backgroundColor: "bg-green-600",
+              hoverColor: "hover:bg-green-700",
+              fontWeight: "font-semibold",
+              rounded: "rounded",
+              padding: "px-4 py-2",
+              display: "flex",
+              gap: "gap-2"
+            }}
             isEnabled={!props.processing}
           >
-            Submit Updates
+            SUBMIT UPDATES
             <div className="text-chartreuse-300">
               <Icon name="check-circle" />
             </div>

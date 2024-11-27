@@ -434,8 +434,8 @@ const TransactionForm = (props: {
           <div className="text-right grow self-end text-lg">
             <div>
               <button disabled={processing} type="submit" >
-                <div className="bg-green-600 text-white rounded px-2 py-1 flex flex-row gap-2">
-                  {isNew ? "Create" : "Update"}
+                <div className="bg-green-600 hover:bg-green-700 text-white rounded px-2 py-1 flex flex-row gap-2 font-semibold">
+                  {isNew ? "CREATE" : "UPDATE"}
                   <div className="text-chartreuse-300">
                     <Icon name="check-circle" />
                   </div>

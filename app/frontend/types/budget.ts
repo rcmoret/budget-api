@@ -1,5 +1,4 @@
 import { IconName } from "@/components/common/Icon";
-import { DraftChange } from "@/lib/hooks/useDraftEventsForm";
 
 export interface AccountBudgetSummary {
   isCurrent: boolean;
@@ -20,7 +19,7 @@ export interface BudgetData extends AccountBudgetSummary {
 export interface DiscretionaryData {
   amount: number;
   overUnderBudget: number;
-  // transactionDetails:
+  transactionDetails: BudgetItemTransaction[];
   transactionsTotal: number;
 }
 

@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 
 import { BudgetItem, TBudgetItem, BudgetItemEvent, BudgetItemTransaction } from "@/types/budget";
-import { Row, StripedRow } from "@/components/common/Row";
+import { Row } from "@/components/common/Row";
 import { Cell } from "@/components/common/Cell";
 import { Icon } from "@/components/common/Icon";
 import { Button, SubmitButton } from "@/components/common/Button";
@@ -90,7 +90,7 @@ const TransactionDetailLineItem = (props: { lineItemProps: LineItemProps }) => {
           <div>{dateString}</div>
           <div>{transactionDetail.accountName}</div>
         </Cell>
-        <Cell styling={{ width: "w-6/12", textAlign: "text-right" }}>
+        <Cell styling={{ fontWeight: "font-bold", width: "w-6/12", textAlign: "text-right" }}>
           <AmountSpan amount={transactionDetail.amount} />
         </Cell>
       </Row>
@@ -100,7 +100,7 @@ const TransactionDetailLineItem = (props: { lineItemProps: LineItemProps }) => {
             <Cell styling={{ width: "w-6/12" }}>
               Budgeted
             </Cell>
-            <Cell styling={{ width: "w-6/12", textAlign: "text-right", padding: "pr-8" }}>
+            <Cell styling={{ fontWeight: "font-bold", width: "w-6/12", textAlign: "text-right", padding: "pr-8" }}>
               <AmountSpan amount={props.lineItemProps.budgeted} />
             </Cell>
           </Row>
@@ -110,7 +110,7 @@ const TransactionDetailLineItem = (props: { lineItemProps: LineItemProps }) => {
             <Cell styling={{ width: "w-6/12", padding: "pl-8" }}>
               Remaining
             </Cell>
-            <Cell styling={{ width: "w-6/12", textAlign: "text-right" }}>
+            <Cell styling={{ fontWeight: "font-bold", width: "w-6/12", textAlign: "text-right" }}>
               <AmountSpan amount={props.lineItemProps.remaining} />
             </Cell>
           </Row>
@@ -132,7 +132,7 @@ const EventLineItem = (props: { lineItemProps: LineItemProps }) => {
         <Cell styling={{ width: "w-4/12", textAlign: "text-center" }}>
           {event.typeName}
         </Cell>
-        <Cell styling={{ width: "w-4/12", textAlign: "text-right" }}>
+        <Cell styling={{ fontWeight: "font-bold", width: "w-4/12", textAlign: "text-right" }}>
           <AmountSpan amount={event.amount} />
         </Cell>
       </Row>
@@ -142,7 +142,7 @@ const EventLineItem = (props: { lineItemProps: LineItemProps }) => {
             <Cell styling={{ width: "w-6/12", padding: "pl-8" }}>
               Budgeted
             </Cell>
-            <Cell styling={{ width: "w-6/12", textAlign: "text-right", padding: "pr-8" }}>
+            <Cell styling={{ fontWeight: "font-bold", width: "w-6/12", textAlign: "text-right", padding: "pr-8" }}>
               <AmountSpan amount={props.lineItemProps.budgeted} />
             </Cell>
           </Row>
@@ -152,7 +152,7 @@ const EventLineItem = (props: { lineItemProps: LineItemProps }) => {
             <Cell styling={{ width: "w-6/12", padding: "pl-8" }}>
               Remaining
             </Cell>
-            <Cell styling={{ width: "w-6/12", textAlign: "text-right", padding: "pr-8" }}>
+            <Cell styling={{ fontWeight: "font-bold", width: "w-6/12", textAlign: "text-right", padding: "pr-8" }}>
               <AmountSpan amount={props.lineItemProps.remaining} />
             </Cell>
           </Row>
@@ -408,7 +408,7 @@ const NameRow = (props: NameRowProps) => {
           {" "}
           <Icon name={iconClassName} />
         </Cell>
-        <Cell styling={{ textAlign: "text-right", width: "w-4/12" }}>
+        <Cell styling={{ fontWeight: "font-bold", textAlign: "text-right", width: "w-4/12" }}>
           <AmountSpan color="text-gray-800" amount={amount} absolute={absolute} />
         </Cell>
       </Row>
@@ -443,7 +443,7 @@ const ClearedMonthItem = ({ item, form, index }: {
           <div>{dateString}</div>
           <div>{transactionDetail.accountName}</div>
         </Cell>
-        <div>
+        <div className="font-bold">
           <AmountSpan color="text-gray-800" amount={transactionDetail.amount} />
         </div>
       </Row>
@@ -455,7 +455,7 @@ const ClearedMonthItem = ({ item, form, index }: {
         <Cell styling={{ width: "w-6/12" }}>
           Difference
         </Cell>
-        <Cell styling={{ width: "w-6/12", textAlign: "text-right" }}>
+        <Cell styling={{ fontWeight: "font-bold", width: "w-6/12", textAlign: "text-right" }}>
           <AmountSpan
             amount={difference}
             absolute={true}
@@ -507,7 +507,7 @@ const PendingMonthItem = (props: {
           <Cell styling={{ width: "w-6/12" }}>
             Updated Amount
           </Cell>
-          <Cell styling={{ width: "w-3/12", textAlign: "text-right"  }}>
+          <Cell styling={{ fontWeight: "font-bold", width: "w-3/12", textAlign: "text-right"  }}>
             <AmountSpan color="text-gray-500" amount={draftItem.amount} />
           </Cell>
         </Row>
@@ -541,28 +541,28 @@ const DayToDayItemForm = ({ item, form }: { form: TChangeForm; item: TBudgetItem
       <Cell styling={{ width: "w-6/12" }}>
         Previous/Updated Amount
       </Cell>
-      <Cell styling={{ width: "w-3/12", textAlign: "text-right"  }}>
+      <Cell styling={{ fontWeight: "font-bold", width: "w-3/12", textAlign: "text-right"  }}>
         <AmountSpan color="text-gray-800" amount={item.amount} />
       </Cell>
-      <Cell styling={{ width: "w-3/12", textAlign: "text-right"  }}>
+      <Cell styling={{ fontWeight: "font-bold", width: "w-3/12", textAlign: "text-right"  }}>
         <AmountSpan color="text-gray-800" amount={draftItem.amount} />
       </Cell>
       <Cell styling={{ width: "w-6/12" }}>
         Spent/Deposited
       </Cell>
-      <Cell styling={{ textAlign: "text-right", width: "w-3/12" }}>
+      <Cell styling={{ fontWeight: "font-bold", textAlign: "text-right", width: "w-3/12" }}>
         <AmountSpan color="text-gray-800" amount={item.spent} absolute={true} />
       </Cell>
-      <Cell styling={{ textAlign: "text-right", width: "w-3/12" }}>
+      <Cell styling={{ fontWeight: "font-bold", textAlign: "text-right", width: "w-3/12" }}>
         <AmountSpan color="text-gray-800" amount={item.spent} absolute={true} />
       </Cell>
       <Cell styling={{ width: "w-6/12" }}>
         Remaining/Difference
       </Cell>
-      <Cell styling={{ textAlign: "text-right", width: "w-3/12" }}>
+      <Cell styling={{ fontWeight: "font-bold", textAlign: "text-right", width: "w-3/12" }}>
         <AmountSpan color="text-gray-800" amount={item.remaining} absolute={true} />
       </Cell>
-      <Cell styling={{ textAlign: "text-right", width: "w-3/12" }}>
+      <Cell styling={{ fontWeight: "font-bold", textAlign: "text-right", width: "w-3/12" }}>
         <AmountSpan color="text-gray-800" amount={draftItem.remaining} absolute={true} />
       </Cell>
     </Row>
@@ -590,7 +590,7 @@ const DayToDayItem = (props: {
         <Cell styling={{ width: "w-6/12" }}>
           Spent/Deposited
         </Cell>
-        <Cell styling={{ textAlign: "text-right", width: "w-4/12" }}>
+        <Cell styling={{ fontWeight: "font-bold", textAlign: "text-right", width: "w-4/12" }}>
           <AmountSpan amount={item.spent} absolute={true} />
         </Cell>
       </Row>
@@ -598,7 +598,7 @@ const DayToDayItem = (props: {
         <Cell styling={{ width: "w-6/12" }}>
           Remaining/Difference
         </Cell>
-        <Cell styling={{ textAlign: "text-right", width: "w-4/12" }}>
+        <Cell styling={{ fontWeight: "font-bold", textAlign: "text-right", width: "w-4/12" }}>
           <AmountSpan amount={item.remaining} absolute={true} />
         </Cell>
       </Row>
@@ -606,4 +606,4 @@ const DayToDayItem = (props: {
   )
 }
 
-export { ClearedMonthItem, DayToDayItem, PendingMonthItem }
+export { ClearedMonthItem, DayToDayItem, PendingMonthItem, TransactionDetailLineItem }

@@ -40,6 +40,7 @@ export type OverflowOption =
   | "overflow-x-hidden"
 
 type OddBgColorOption =
+  | "odd:bg-cyan-50"
   | "odd:bg-cyan-100"
   | "odd:bg-cyan-200"
   | "odd:bg-gray-100"
@@ -80,6 +81,7 @@ type GrayBgOptoin =
   | "bg-gray-400"
 
 type GreenBgOpion =
+  | "bg-green-600"
   | "bg-green-700"
   | "bg-green-800"
 
@@ -104,3 +106,6 @@ export type BgColorOption =
   | SkyBgOpion
   | YellowBgOption
   | GradientBgOption
+
+export type BgHoverOption =
+  | "hover:bg-green-700"
