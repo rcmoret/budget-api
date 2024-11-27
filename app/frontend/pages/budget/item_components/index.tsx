@@ -192,8 +192,9 @@ const ItemContainer = (props: {
   children?: React.ReactNode;
   item: TBudgetItem;
   form: TChangeForm;
+  index: number;
 }) => {
-  const { children, item, form } = props
+  const { children, item, form, index } = props
   const [showDetails, toggleDetails] = useToggle(false)
 
   const openForm = () => form.addChange({
@@ -205,11 +206,10 @@ const ItemContainer = (props: {
   const closeForm = () => form.removeChange(item.key)
 
   return (
-    <StripedRow
-      oddColor="odd:bg-white"
-      evenColor="even:bg-sky-50"
+    <Row
       styling={{
         flexWrap: "flex-wrap",
+        backgroundColor: (index % 2 === 0 ? "bg-sky-50" : "bg-white"),
         color: "text-gray-800",
         gap: "gap-px",
         rounded: "rounded"
@@ -231,7 +231,7 @@ const ItemContainer = (props: {
         processing={form.processing}
       />
       <ItemDetails item={item} showDetails={showDetails} />
-    </StripedRow>
+    </Row>
   )
 }
 
@@ -416,7 +416,11 @@ const NameRow = (props: NameRowProps) => {
   )
 }
 
-const ClearedMonthItem = ({ item, form }: { item: BudgetItem, form: TChangeForm }) => {
+const ClearedMonthItem = ({ item, form, index }: {
+  item: BudgetItem,
+  form: TChangeForm,
+  index: number
+}) => {
   const transactionDetail = item.transactionDetails[0]
 
   if (!transactionDetail) { return }
@@ -428,7 +432,7 @@ const ClearedMonthItem = ({ item, form }: { item: BudgetItem, form: TChangeForm 
   const difference = transactionDetail.amount - item.amount
 
   return (
-    <ItemContainer item={item} form={form}>
+    <ItemContainer item={item} form={form} index={index}>
       <Row styling={{
         flexAlign: "justify-between",
         fontSize: "text-sm",
@@ -465,12 +469,16 @@ const ClearedMonthItem = ({ item, form }: { item: BudgetItem, form: TChangeForm 
   )
 }
 
-const PendingMonthItem = (props: { item: TBudgetItem, form: TChangeForm }) => {
-  const { item, form } = props
+const PendingMonthItem = (props: {
+  item: TBudgetItem,
+  form: TChangeForm,
+  index: number
+}) => {
+  const { item, form, index } = props
 
   if (!item.draftItem || !item.change) {
     return (
-      <ItemContainer item={item} form={form} />
+      <ItemContainer item={item} form={form} index={index} />
     )
   } else {
     const { change, draftItem } = item
@@ -482,6 +490,7 @@ const PendingMonthItem = (props: { item: TBudgetItem, form: TChangeForm }) => {
       <ItemContainer
         item={item}
         form={form}
+        index={index}
       >
         <Row styling={{ padding: "p-2", flexWrap: "flex-wrap", flexAlign: "justify-between" }}>
           <Cell styling={{ width: "w-6/12" }}>
@@ -560,19 +569,23 @@ const DayToDayItemForm = ({ item, form }: { form: TChangeForm; item: TBudgetItem
   )
 }
 
-const DayToDayItem = (props: { form: TChangeForm; item: TBudgetItem }) => {
-  const { item, form } = props
+const DayToDayItem = (props: {
+  form: TChangeForm;
+  item: TBudgetItem,
+  index: number
+}) => {
+  const { item, form, index } = props
 
   if (!!item.draftItem) {
     return (
-      <ItemContainer item={item} form={form}>
+      <ItemContainer item={item} form={form} index={index}>
         <DayToDayItemForm {...props} />
       </ItemContainer>
     )
   }
 
   return (
-    <ItemContainer item={item} form={form}>
+    <ItemContainer item={item} form={form} index={index}>
       <Row styling={{ padding: "p-2", flexAlign: "justify-between" }}>
         <Cell styling={{ width: "w-6/12" }}>
           Spent/Deposited

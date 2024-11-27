@@ -71,7 +71,14 @@ const PendingMonthlyItemsSection = (props: {
     return (
       <Section title={title}>
         <HiddenCount {...hidden} />
-        {collection.map((item) => <PendingMonthItem key={item.key} item={item} form={form} />)}
+        {collection.map((item, index) => (
+          <PendingMonthItem
+            key={item.key}
+            form={form}
+            item={item}
+            index={index}
+          />
+        ))}
       </Section>
     )
   }
@@ -115,12 +122,13 @@ const ClearedMonthlyItemsSection = (props: {
   return (
     <Section title={title}>
       <HiddenCount {...hidden} />
-      {collection.map((item) => {
+      {collection.map((item, index) => {
         return (
           <ClearedMonthItem
             key={item.key}
-            item={item}
             form={form}
+            item={item}
+            index={index}
           />
         )
       })}
@@ -145,12 +153,13 @@ const DayToDayItemsSection = (props: DayToDayItemsSectionProps) => {
   return (
     <Section title={title}>
       <HiddenCount {...hidden} />
-      {collection.map((item) => {
+      {collection.map((item, index) => {
         return (
           <DayToDayItem
             key={item.key}
-            item={item}
             form={form}
+            item={item}
+            index={index}
           />
         )
       })}

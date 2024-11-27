@@ -73,6 +73,7 @@ type BlueBgOpion =
   | "bg-blue-900"
 
 type GrayBgOptoin =
+  | "bg-gray-50"
   | "bg-gray-100"
   | "bg-gray-200"
   | "bg-gray-300"
@@ -86,6 +87,9 @@ type IndigoBgOption =
   | "bg-indigo-100"
   | "bg-indigo-200"
 
+type SkyBgOpion =
+  | "bg-sky-50"
+
 type YellowBgOption =
   | "bg-yellow-100"
   | "bg-yellow-200"
@@ -97,5 +101,6 @@ export type BgColorOption =
   | GrayBgOptoin
   | IndigoBgOption
   | GreenBgOpion
+  | SkyBgOpion
   | YellowBgOption
   | GradientBgOption
