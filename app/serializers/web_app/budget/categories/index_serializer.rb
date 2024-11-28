@@ -9,11 +9,12 @@ module WebApp
         end
         private_constant :IconSerializer
 
-        def initialize(&block)
+        def initialize(current_user_profile, &block)
           super(block.call)
+          @current_user_profile = current_user_profile
         end
 
-        attribute :categories, alias_of: :__getobj__, each_serializer: ShowSerializer
+        attribute :categories, on_render: :render
         attribute :icons, on_render: :render
 
         def icons
@@ -21,6 +22,16 @@ module WebApp
             Icon.all
           end
         end
+
+        def categories
+          SerializableCollection.new(serializer: ShowSerializer, current_user_profile: current_user_profile) do
+            __getobj__
+          end
+        end
+
+        private
+
+        attr_reader :current_user_profile
       end
     end
   end

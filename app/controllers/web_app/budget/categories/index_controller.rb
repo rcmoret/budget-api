@@ -13,7 +13,7 @@ module WebApp
         def props = serializer.render
 
         def serializer
-          IndexSerializer.new do
+          IndexSerializer.new(current_user_profile) do
             ::Budget::Category
               .includes(:icon, maturity_intervals: :interval)
               .belonging_to(current_user_profile)

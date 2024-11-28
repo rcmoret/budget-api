@@ -5,8 +5,8 @@ module API
     module Items
       class TransactionDetailSerializer < ApplicationSerializer
         attributes :key, :account_name, :amount, :description
-        attribute :clearance_date, on_render: proc { |date| date&.strftime("%F") }
-        attribute :comparison_date, on_render: proc { |datestring| datestring.strftime("%FT%TZ") }
+        attribute :clearance_date, on_render: proc { |date| render_date_time(date) }
+        attribute :comparison_date, on_render: proc { |timestamp| render_date_time(timestamp, "%FT%TZ") }
 
         delegate :account_name, :clearance_date, :description, to: :entry
 

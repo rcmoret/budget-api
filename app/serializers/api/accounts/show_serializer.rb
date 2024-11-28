@@ -9,7 +9,7 @@ module API
       attributes :key, :name, :slug, :priority
       attribute :is_cash_flow, alias_of: :cash_flow?
       attribute :is_archived, alias_of: :deleted?
-      attribute :archived_at, on_render: proc { |timestamp| timestamp&.strftime("%F") }
+      attribute :archived_at, on_render: proc { |timestamp| render_date_time(timestamp) }
       attribute :balance
 
       attr_reader :balance

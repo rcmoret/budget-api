@@ -5,10 +5,10 @@ module API
         attributes :key,
                    :amount,
                    :data
-        attribute :created_at, on_render: proc { |datestring| datestring.strftime("%FT%TZ") }
+        attribute :created_at, on_render: proc { |timestamp| render_date_time(timestamp, "%FT%TZ") }
         attribute :comparison_date,
                   alias_of: :created_at,
-                  on_render: proc { |datestring| datestring.strftime("%FT%TZ") }
+                  on_render: proc { |timestamp| render_date_time(timestamp, "%FT%TZ") }
         attribute :type_name, on_render: :titleize
       end
     end

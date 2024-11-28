@@ -8,7 +8,7 @@ module API
                                  alias_of: :account_transactions
         attribute :is_cash_flow, alias_of: :cash_flow?
         attribute :is_archived, alias_of: :deleted?
-        attribute :archived_at, on_render: proc { |datetime| datetime&.strftime("%F") }
+        attribute :archived_at, on_render: proc { |timestamp| render_date_time(timestamp) }
         attribute :metadata, serializer: BudgetSerializer, alias_of: :interval
 
         def initialize(account:, interval:)

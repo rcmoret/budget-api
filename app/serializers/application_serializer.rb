@@ -77,6 +77,8 @@ class ApplicationSerializer < SimpleDelegator
     end
   end
 
+  include WebApp::Mixins::FormatDateTime
+
   private
 
   def handle_render(on_render, value, camelize)

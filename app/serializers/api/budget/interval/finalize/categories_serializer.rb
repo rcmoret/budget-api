@@ -3,8 +3,8 @@ module API
     module Interval
       module Finalize
         class CategoriesSerializer < ApplicationSerializer
-          attribute :first_date, on_render: proc { |timestamp| timestamp.strftime("%F") }
-          attribute :last_date, on_render: proc { |timestamp| timestamp.strftime("%F") }
+          attribute :first_date, on_render: proc { |timestamp| render_date_time(timestamp) }
+          attribute :last_date, on_render: proc { |timestamp| render_date_time(timestamp) }
           attribute :categories, on_render: :render
           attribute :data, on_render: :render
           attribute :target, on_render: :render

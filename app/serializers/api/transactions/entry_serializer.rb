@@ -11,8 +11,8 @@ module API
       attribute :transfer_key, conditional: :transfer?
       attribute :is_budget_exclusion, alias_of: :budget_exclusion?
       attribute :details, each_serializer: DetailSerializer
-      attribute :updated_at, on_render: proc { |timestamp| timestamp.strftime("%FT%TZ") }
-      attribute :clearance_date, on_render: proc { |timestamp| timestamp&.strftime("%F") }
+      attribute :updated_at, on_render: proc { |timestamp| render_date_time(timestamp, "%FT%TZ") }
+      attribute :clearance_date, on_render: proc { |timestamp| render_date_time(timestamp) }
 
       delegate :slug, :key, to: :account, prefix: true
       delegate :key, to: :transfer, prefix: true

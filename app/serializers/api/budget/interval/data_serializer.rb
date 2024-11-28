@@ -5,8 +5,8 @@ module API
         include Mixins::SharedInterval
 
         attributes :month, :year, :days_remaining, :total_days
-        attribute :first_date, on_render: proc { |datestring| datestring.strftime("%F") }
-        attribute :last_date, on_render: proc { |datestring| datestring.strftime("%F") }
+        attribute :first_date, on_render: proc { |timestamp| render_date_time(timestamp) }
+        attribute :last_date, on_render: proc { |timestamp| render_date_time(timestamp) }
         attribute :is_closed_out, alias_of: :closed_out?
         attribute :is_current, alias_of: :current?
         attribute :is_set_up, alias_of: :set_up?
