@@ -408,6 +408,7 @@ const NameRow = (props: NameRowProps) => {
     <>
       <Row styling={{ padding: "p-2", flexAlign: "justify-between" }}>
         <Cell styling={{ width: "w-6/12" }}>
+          <div className="hidden">{item.key}</div>
           <Button 
             type="button"
             onClick={toggleDetails}

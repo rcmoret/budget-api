@@ -97,7 +97,8 @@ const useDraftEvents = (props: HookProps) => {
             })
           })
         },
-      }
+        only: ["draft"]
+      },
     )
   }
 

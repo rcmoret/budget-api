@@ -12,11 +12,17 @@ module WebApp
       private
 
       def props
-        EditSerializer.new(
-          current_user_profile,
-          interval: interval,
+        IndividualSerializer.new(
+          key: :draft,
+          serializable: draft_serializer
+        )
+      end
+
+      def draft_serializer
+        API::Budget::Interval::DraftSerializer.new(
+          interval,
           changes: form.changes
-        ).render
+        )
       end
 
       def metadata
