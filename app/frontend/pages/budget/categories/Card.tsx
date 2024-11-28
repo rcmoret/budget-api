@@ -1,6 +1,6 @@
 import { BudgetCategory } from "@/types/budget"
 import { Point } from "@/components/common/Symbol"
-import { Icon } from "@/components/common/Icon"
+import { Icon, IconName } from "@/components/common/Icon"
 import { AmountSpan } from "@/components/common/AmountSpan";
 import { useToggle } from "@/lib/hooks/useToogle";
 import { Button, SubmitButton } from "@/components/common/Button";
@@ -8,7 +8,6 @@ import { useForm } from "@inertiajs/react";
 import { UrlBuilder } from "@/lib/UrlBuilder";
 import { buildQueryParams } from "@/lib/redirect_params"
 import { CategoryForm } from "@/pages/budget/categories/Form";
-import { IconName } from "@/components/common/Icon"
 
 const AccrualComponent = (props: { category: BudgetCategory }) => {
   const { isAccrual, maturityIntervals } = props.category
@@ -118,7 +117,8 @@ const CardWrapper = (props: {
   }
 }
 
-const ArchiveComponent = ({ category }: { category: BudgetCategory }) => {
+const ArchiveComponent = ({ category, queryParams }:
+                          { category: BudgetCategory, queryParams: string[] }) => {
   if (!category.isArchived) { return null }
   const { processing, put } = useForm({
     category: { archivedAt: null }
@@ -127,7 +127,7 @@ const ArchiveComponent = ({ category }: { category: BudgetCategory }) => {
   const formUrl = UrlBuilder({
     name: "CategoryShow",
     key: category.key,
-    queryParams: buildQueryParams(["budget", "categories"])
+    queryParams: buildQueryParams(queryParams)
   })
 
   const onSubmit = () => put(formUrl)
@@ -137,14 +137,15 @@ const ArchiveComponent = ({ category }: { category: BudgetCategory }) => {
       <div>
         Archived at: {category.archivedAt || ""}
       </div>
-      <div>
+      <div className="bg-green-600 px-1 rounded">
         <form>
           <SubmitButton
             onSubmit={onSubmit}
             isEnabled={!processing}
-            styling={{}}
+            styling={{ color: "text-chartreuse-300" }}
+            title="Unarchive"
           >
-            <Icon name="angle-double-right" />
+            <Icon name="folder-open" />
           </SubmitButton>
         </form>
       </div>
@@ -152,15 +153,16 @@ const ArchiveComponent = ({ category }: { category: BudgetCategory }) => {
   )
 }
 
-const ArchiveButton = ({ category }: { category: BudgetCategory }) => {
-  const { processing, put, transform } = useForm({
+const ArchiveButton = ({ category, queryParams }:
+                       { category: BudgetCategory, queryParams: string[] }) => {
+  const { processing, put } = useForm({
     category: { archivedAt: new Date () }
   })
 
   const formUrl = UrlBuilder({
     name: "CategoryShow",
     key: category.key,
-    queryParams: buildQueryParams(["budget", "categories"])
+    queryParams: buildQueryParams(queryParams)
   })
 
   const onSubmit = () => put(formUrl)
@@ -172,7 +174,7 @@ const ArchiveButton = ({ category }: { category: BudgetCategory }) => {
       <SubmitButton
         onSubmit={onSubmit}
         isEnabled={!processing}
-        styling={{}}
+        styling={{ color: "text-red-400" }}
       >
         <Icon name="trash" />
       </SubmitButton>
@@ -196,7 +198,7 @@ const Card = (props: {
   } = category
 
   return (
-    <div className="w-96 flex flex-row flex-wrap justify-between border-b border-gray-400 pb-2">
+    <div className="w-96 flex flex-row flex-wrap justify-between border-b border-gray-400 pb-2 px-4">
       <div className="w-full flex flex-row justify-between">
         <div className="w-6/12">
           <Point>
@@ -205,17 +207,28 @@ const Card = (props: {
           {" "}
           <Icon name={iconClassName} />
         </div>
-        <div className="w-6/12 text-right text-blue-300 flex justify-end gap-2">
-          <Button
-          type="button"
-          onClick={openForm}
-          >
-            <Icon name="edit" />
-          </Button>
-          <ArchiveButton category={category} />
+        <div className="w-6/12 text-right flex justify-end gap-2">
+          <div>
+            <Button
+              type="button"
+              onClick={openForm}
+              styling={{ color: "text-blue-300" }}
+            >
+              <Icon name="edit" />
+            </Button>
+          </div>
+          <div>
+            <ArchiveButton
+              category={category}
+              queryParams={["budget", "category"]}
+            />
+          </div>
         </div>
       </div>
-      <ArchiveComponent category={category} />
+      <ArchiveComponent
+        category={category}
+        queryParams={["budget", "category"]}
+      />
       <div className="w-6/12">
         {isExpense ? "Expense" : "Revenue"}
       </div>
@@ -238,4 +251,4 @@ const Card = (props: {
   )
 }
 
-export { CardWrapper, TIcon }
+export { Card, CardWrapper, TIcon, PerDayComponent, AccrualComponent, ArchiveComponent, ArchiveButton }

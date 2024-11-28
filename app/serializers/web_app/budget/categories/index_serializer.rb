@@ -24,7 +24,7 @@ module WebApp
         end
 
         def categories
-          SerializableCollection.new(serializer: ShowSerializer, current_user_profile: current_user_profile) do
+          SerializableCollection.new(serializer: CategorySerializer, current_user_profile: current_user_profile) do
             __getobj__
           end
         end

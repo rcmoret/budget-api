@@ -1,5 +1,5 @@
 import { ReactNode, createContext, useState } from "react";
-import { BudgetData, BudgetItem, DiscretionaryData } from "@/types/budget";
+import { BudgetData, SelectBudgetCategory, DiscretionaryData } from "@/types/budget";
 
 type TAppConfig = {
   showConfigMenu: boolean;
@@ -17,6 +17,7 @@ type TAppConfig = {
     showAccruals: boolean;
     showClearedMonthly: boolean;
     showDeletedItems: boolean;
+    categories: SelectBudgetCategory[];
     data: BudgetData;
     discretionary: DiscretionaryData;
   };
@@ -32,6 +33,7 @@ const initialConfig: TAppConfig = {
   },
   accounts: [],
   budget: {
+    categories: [],
     showAccruals: false,
     showDeletedItems: false,
     showClearedMonthly: false,
@@ -50,7 +52,8 @@ const initialConfig: TAppConfig = {
     discretionary: {
       amount: 0,
       overUnderBudget: 0,
-      transactionsTotal: 0
+      transactionsTotal: 0,
+      transactionDetails: []
     }
   },
 }

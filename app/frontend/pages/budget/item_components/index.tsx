@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 
+import { Link } from "@inertiajs/react";
 import { BudgetItem, TBudgetItem, BudgetItemEvent, BudgetItemTransaction } from "@/types/budget";
 import { Row } from "@/components/common/Row";
 import { Cell } from "@/components/common/Cell";
@@ -328,19 +329,35 @@ const ActionableIcons = (props: ActionableIconsProps) => {
 
   // Lets come back and work on the delete button
 
+  const { appConfig } = useContext(AppConfigContext)
+  const category = appConfig.budget.categories.find((category) => {
+    return category.key === item.budgetCategoryKey
+  }) || null
+  const href = !!category ? `/budget/category/${category.slug}` : "#"
+
+
   const isSubmittable = !!item.draftItem && props.changes.length === 1
 
   return (
     <Row styling={{
       padding: "p-2",
-      flexAlign: "justify-end",
+      flexAlign: "justify-between",
       alignItems: "items-center",
       gap: "gap-2"
     }}>
-      {!!item.draftItem ? <CloseFormButton onClick={closeForm} /> : <EditButton onClick={openForm} />}
-      {isSubmittable && <EditSubmitButton postEvents={postEvents} processing={processing} />}
+      <div>
+        <Link href={href}>
+          <span className="text-sm text-blue-300">
+            <Icon name="external-arrow" />
+          </span>
+        </Link>
+      </div>
+      <div className="flex flex-row gap-2">
+        {!!item.draftItem ? <CloseFormButton onClick={closeForm} /> : <EditButton onClick={openForm} />}
+        {isSubmittable && <EditSubmitButton postEvents={postEvents} processing={processing} />}
 
-      <DeleteButton item={item} />
+        <DeleteButton item={item} />
+      </div>
     </Row>
   )
 }

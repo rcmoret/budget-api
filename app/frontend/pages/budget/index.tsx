@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import { BudgetData, BudgetItem, TBudgetItem, DiscretionaryData, SelectBudgetCategry } from "@/types/budget";
+import { BudgetData, BudgetItem, TBudgetItem, DiscretionaryData, SelectBudgetCategory } from "@/types/budget";
 import { AppConfigContext } from "@/components/layout/Provider";
 import {
   accrualFilter,
@@ -44,7 +44,7 @@ export type ItemCollection = {
 
 interface ComponentProps {
   data: BudgetData;
-  categories: Array<SelectBudgetCategry>;
+  categories: Array<SelectBudgetCategory>;
   discretionary: DiscretionaryData;
   items: BudgetItem[];
   draft?: {
@@ -102,6 +102,7 @@ const BudgetComponent = (props: ComponentProps) => {
         ...appConfig.budget,
         data,
         discretionary,
+        categories
       }
     })
   }, [])

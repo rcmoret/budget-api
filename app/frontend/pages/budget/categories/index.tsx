@@ -5,6 +5,7 @@ import { CardWrapper as Card, TIcon } from "@/pages/budget/categories/Card"
 import { CategoryForm, NewBudgetCategory } from "@/pages/budget/categories/Form"
 import { Button } from "@/components/common/Button"
 import { generateKeyIdentifier } from "@/lib/KeyIdentifier"
+import { Icon } from "@/components/common/Icon"
 
 const AddNewComponent = (props: {
   icons: Array<TIcon>;
@@ -20,9 +21,19 @@ const AddNewComponent = (props: {
         <Button
           type="button"
           onClick={openForm}
-          styling={{ backgroundColor: "bg-gray-300", rounded: "rounded", padding: "px-2 py-1" }}
+          styling={{
+            backgroundColor: "bg-blue-300",
+            color: "text-white",
+            rounded: "rounded",
+            padding: "px-2 py-1",
+            fontWeight: "font-bold"
+          }}
           >
-          Add New
+          ADD NEW
+          {" "}
+          <span className="text-sky-200">
+            <Icon name="plus-circle" />
+          </span>
         </Button>
       </div>
     )
@@ -54,13 +65,13 @@ const AddNewComponent = (props: {
   }
 }
 
-const BudgetIndexComponent = (props: { categories: Array<BudgetCategory>, icons: Array<TIcon> }) => {
+const BudgetCategoryIndexComponent = (props: { categories: Array<BudgetCategory>, icons: Array<TIcon> }) => {
   const categories = props.categories.sort(sortByName)
 
   const [showFormKey, setShowFormKey] = useState<null | string>(null)
 
   return (
-    <div className="w-full">
+    <div className="w-full px-4">
       <div className="text-xl">
         Manage Categories
       </div>
@@ -87,4 +98,4 @@ const BudgetIndexComponent = (props: { categories: Array<BudgetCategory>, icons:
   )
 }
 
-export default BudgetIndexComponent
+export default BudgetCategoryIndexComponent

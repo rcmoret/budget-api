@@ -28,7 +28,13 @@ const AmountInput = (props: AmountInputProps) => {
   }
 
   const classes = props.classes || []
-  const className = [`rounded text-${textAlign}`, ...classes].join(" ")
+  const className = [
+    "rounded",
+    "border",
+    "border-gray-300",
+    `text-${textAlign}`,
+    ...classes
+  ].join(" ")
 
   return (
     <input

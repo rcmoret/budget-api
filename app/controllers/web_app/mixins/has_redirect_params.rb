@@ -15,6 +15,8 @@ module WebApp
           budget_categories_index_path
         in ["budget"]
           budget_index_path
+        in ["budget", "category", *rest]
+          resolve_budget_category_path(*rest)
         in ["budget", month, year, *rest]
           raise InvalidPathError unless (1..12).cover?(month.to_i)
           raise InvalidPathError unless year =~ /\A\d{4}\z/
@@ -73,6 +75,15 @@ module WebApp
         transactions_index_path(slug)
       end
       # rubocop:enable Metrics/MethodLength
+
+      def resolve_budget_category_path(*args)
+        case args
+        in [slug]
+          budget_category_show_path(slug)
+        else
+          budget_categories_index_path
+        end
+      end
 
       def redirect_params
         params.require(:redirect).permit(segments: [])[:segments]

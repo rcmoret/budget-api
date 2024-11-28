@@ -116,7 +116,7 @@ export interface TBudgetItem extends BudgetItem {
   change?: DraftChange;
 }
 
-export type SelectBudgetCategry ={
+export type SelectBudgetCategory ={
   key: string;
   name: string;
   slug: string;

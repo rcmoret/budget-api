@@ -4,7 +4,7 @@ import { useForm } from "@inertiajs/react";
 import { buildQueryParams } from "@/lib/redirect_params"
 import { AmountInput, inputAmount } from "@/components/common/AmountInput";
 import { Button, SubmitButton } from "@/components/common/Button";
-import { Icon, IconName } from "@/components/common/Icon";
+import { GreenCheck, Icon } from "@/components/common/Icon";
 import { TIcon } from "@/pages/budget/categories/Card"
 import Select, { SingleValue } from "react-select";
 
@@ -266,6 +266,7 @@ const CategoryForm = (props: {
               <Button
                 type="button"
                 onClick={closeForm}
+                styling={{ "color": "text-blue-300" }}
               >
                 <Icon name="times-circle" />
               </Button>
@@ -275,6 +276,7 @@ const CategoryForm = (props: {
               name="name"
               value={data.name}
               onChange={onChange}
+              className="border border-gray-300 rounded"
             />
           </div>
           <div className="w-full flex flex-row justify-between flex-wrap">
@@ -300,6 +302,7 @@ const CategoryForm = (props: {
               name="slug"
               value={data.slug}
               onChange={onChange}
+              className="border border-gray-300 rounded"
             />
           </div>
           {isNew && <ExpenseFormComponent
@@ -331,13 +334,16 @@ const CategoryForm = (props: {
               onSubmit={onSubmit}
               isEnabled={!processing}
               styling={{
-                backgroundColor: "bg-green-800",
+                backgroundColor: "bg-green-700",
                 color: "text-white",
                 rounded: "rounded",
                 padding: "px-2 py-1"
               }}
             >
-              {isNew ? "Create" : "Update"}
+              <div className="flex flex-row gap-2">
+                <div>{isNew ? "CREATE" : "UPDATE"}</div>
+                <div className="text-chartreuse-300"><Icon name="check-circle" /></div>
+              </div>
             </SubmitButton>
           </div>
         </div>

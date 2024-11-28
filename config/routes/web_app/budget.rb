@@ -1,7 +1,10 @@
 namespace :budget do
   get "/", to: "index#call", as: :home
 
-  put "/category/:key", as: :category, to: "categories/update#call"
+  namespace :category, module: :categories do
+    put "/:key", to: "update#call", as: :update
+    get "/:slug", to: "show#call", as: :show
+  end
 
   namespace :categories do
     get "/", to: "index#call", as: :index

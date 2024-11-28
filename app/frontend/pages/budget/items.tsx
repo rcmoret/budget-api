@@ -6,7 +6,7 @@ import { Row } from "@/components/common/Row";
 import { ClearedMonthItem, DayToDayItem, PendingMonthItem } from "./item_components";
 import { ItemCollection, DraftItem } from "@/pages/budget";
 import { DraftChange, TChangeForm } from "@/lib/hooks/useDraftEvents";
-import { SelectBudgetCategry } from "@/types/budget"
+import { SelectBudgetCategory } from "@/types/budget"
 
 import { AppConfigContext } from "@/components/layout/Provider";
 import { Icon } from "@/components/common/Icon";
@@ -17,7 +17,7 @@ import { inputAmount, AmountInput } from "@/components/common/AmountInput";
 import { useToggle } from "@/lib/hooks/useToogle";
 
 const CategorySelect = (props: {
-  categories: Array<SelectBudgetCategry>;
+  categories: Array<SelectBudgetCategory>;
   addChange: (c: DraftChange) => void;
 }) => {
   const [selectedKey, setSelectedKey] = useState<string>("")
@@ -307,7 +307,7 @@ const NewItems = (props: {
 interface ColumnProps {
   title: string;
   children: React.ReactNode;
-  categories: Array<SelectBudgetCategry>;
+  categories: Array<SelectBudgetCategory>;
   addChange: (c: DraftChange) => void;
   newItems: Array<DraftItem>;
   updateChange: (k: string, a: string) => void;

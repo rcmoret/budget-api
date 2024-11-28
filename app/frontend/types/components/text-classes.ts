@@ -33,6 +33,9 @@ type TextBlues =
   | "text-blue-600"
   | "text-blue-800"
 
+type TextChartreuse =
+  | "text-chartreuse-300"
+
 type TextGreens =
   | "text-green-700"
   | "text-green-800"
@@ -49,6 +52,7 @@ type TextReds =
 
 export type TextColor =
   | TextBlues
+  | TextChartreuse
   | TextGrayScale
   | TextGreens
   | TextReds

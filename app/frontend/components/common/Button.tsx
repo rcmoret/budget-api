@@ -72,11 +72,12 @@ type SubmitButtonProps = {
   isEnabled?: boolean;
   onSubmit: MouseEventHandler<HTMLButtonElement>;
   styling: StylingProps;
+  title?: string;
   disabledStyling?: StylingProps;
 }
 
 const SubmitButton = (props: SubmitButtonProps) => {
-  const { children, onSubmit } = props
+  const { children, onSubmit, title } = props
 
   const isEnabled = !!props.isEnabled
 
@@ -86,6 +87,7 @@ const SubmitButton = (props: SubmitButtonProps) => {
         onClick={onSubmit}
         styling={{ ...props.styling }}
         type="submit"
+        title={title}
       >
         {children}
       </ButtonComponent>
