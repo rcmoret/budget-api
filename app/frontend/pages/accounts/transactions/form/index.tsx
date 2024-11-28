@@ -438,6 +438,7 @@ const TransactionForm = (props: {
             <div>
               <SubmitButton
                 onSubmit={onSubmit}
+                isEnabled={!processing}
                 styling={{}}
               >
                 <div className="bg-green-600 hover:bg-green-700 text-white rounded px-2 py-1 flex flex-row gap-2 font-semibold">
