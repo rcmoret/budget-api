@@ -51,41 +51,51 @@ const Header = ({ metadata, data, selectedAccount }: HeaderProps) => {
   return (
     <Row styling={{
       backgroundColor: "bg-gradient-to-l from-gray-50 to-gray-200",
-      flexAlign: "justify-between",
-      flexWrap: "flex-wrap"
+      padding: "p-4",
+      position: "sticky",
+      top: "top-0"
     }}>
-      <Cell
+      <Row
         styling={{
-          padding: "p-1",
-          width: "w-full sm:w-6/12"
+          border: "border-2 border-sky-600",
+          flexAlign: "justify-between",
+          flexWrap: "flex-wrap",
+          rounded: "rounded"
         }}
       >
-        <Cell styling={{width: "md:w-8/12 w-full"}}>
-          <HeaderButtons namespace={namespace} accountPath={accountPath} />
-        </Cell>
-      </Cell>
-      <Cell
-        styling={{
-          display: "flex",
-          flexAlign: "justify-end",
-          flexDirection: "flex-row-reverse",
-          padding: "p-1",
-          width: "w-full sm:w-6/12"
-        }}
-      >
-        <Cell styling={{ width: "lg:w-4/12 w-2/12", textAlign: "text-right", padding: "pr-4 py-4" }}>
-          <Button
-            type="button"
-            title="Configurations"
-            onClick={toggleConfigMenu}
+        <Cell
+          styling={{
+            padding: "p-1",
+            width: "w-full sm:w-6/12"
+          }}
         >
-            <Icon name="bars" />
-          </Button>
+          <Cell styling={{width: "md:w-8/12 w-full"}}>
+            <HeaderButtons namespace={namespace} accountPath={accountPath} />
+          </Cell>
         </Cell>
-        <Cell styling={{width: "lg:w-8/12 w-full"}}>
-          <Summary metadata={metadata} data={data} selectedAccount={selectedAccount} />
+        <Cell
+          styling={{
+            display: "flex",
+            flexAlign: "justify-end",
+            flexDirection: "flex-row-reverse",
+            padding: "p-1",
+            width: "w-full sm:w-6/12"
+          }}
+        >
+          <Cell styling={{ width: "lg:w-4/12 w-2/12", textAlign: "text-right", padding: "pr-4 py-4" }}>
+            <Button
+              type="button"
+              title="Configurations"
+              onClick={toggleConfigMenu}
+          >
+              <Icon name="bars" />
+            </Button>
+          </Cell>
+          <Cell styling={{width: "lg:w-8/12 w-full"}}>
+            <Summary metadata={metadata} data={data} selectedAccount={selectedAccount} />
+          </Cell>
         </Cell>
-      </Cell>
+      </Row>
     </Row>
   )
 }

@@ -37,7 +37,9 @@ interface RowProps {
     margin?: string;
     overflow?: OverflowOption;
     padding?: string;
+    position?: "sticky";
     rounded?: "rounded" | null;
+    top?: "top-0";
   };
 }
 

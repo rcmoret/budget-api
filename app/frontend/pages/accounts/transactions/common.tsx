@@ -33,7 +33,7 @@ const DetailToggle = (props: {
   const iconName = isDetailShown ? "caret-down" : "caret-right";
 
   return (
-    <Button type="button" onClick={toggleFn}>
+    <Button type="button" onClick={toggleFn} styling={{ color: "text-blue-300" }}>
       <Icon name={iconName} />
     </Button>
   );
@@ -116,12 +116,14 @@ const DescriptionComponent = (props: {
 
   if (details.length > 1 && isDetailShown) {
     return (
-      <Button type="button" onClick={props.toggleForm}>
-        <div className="w-full">
-          {description || <BudgetItemsDescription details={details} />}
-        </div>
+      <div className="w-full">
+        <Button type="button" onClick={props.toggleForm}>
+          {description ?
+            <div className="w-full text-left">{description}</div> :
+            <BudgetItemsDescription details={details} />}
+        </Button>
         <BudgetItemList details={details} />
-      </Button>
+      </div>
     )
   } else if (description === null) {
     return (

@@ -1,4 +1,4 @@
-import { accountTransaction as model } from "@/lib/models/transaction";
+import { accountTransaction as model, ModeledTransaction } from "@/lib/models/transaction";
 import { byClearanceDate } from "@/lib/sort_functions";
 import { AccountTransaction } from "@/types/transaction";
 
@@ -16,6 +16,10 @@ interface ComponentProps {
   };
 }
 
+interface TransactionWithBalance extends ModeledTransaction {
+  balance: number;
+}
+
 const Transactions = (props: ComponentProps) => {
   const transactions = props.transactions.map(model).sort(byClearanceDate);
   const { budget } = props;
@@ -25,7 +29,7 @@ const Transactions = (props: ComponentProps) => {
   const closeForm = () => setShowFormKey(null)
   const showNewForm = () => setShowFormKey("__new__")
 
-  const sorted = transactions.reduce((acc, txn) => {
+  const sortedTransactions = transactions.reduce((acc, txn) => {
     balance = balance + txn.amount
     return [
       {
@@ -34,7 +38,7 @@ const Transactions = (props: ComponentProps) => {
       },
       ...acc
     ]
-  }, [])
+  }, [] as TransactionWithBalance[])
 
   return (
     <div className="w-full flex flex-col">
@@ -43,10 +47,11 @@ const Transactions = (props: ComponentProps) => {
         closeForm={closeForm}
         openForm={showNewForm}
       />
-      {sorted.map((transaction) => {
+      {sortedTransactions.map((transaction) => {
         if (showFormKey === transaction.key) {
           return (
             <TransactionForm
+              key={transaction.key}
               transaction={transaction}
               closeForm={closeForm}
             />
@@ -54,8 +59,8 @@ const Transactions = (props: ComponentProps) => {
         } else {
           return (
             <TransactionShow
+              key={transaction.key}
               transaction={transaction}
-              balance={transaction.balance}
               showFormFn={setShowFormKey}
             />
           )
@@ -66,4 +71,4 @@ const Transactions = (props: ComponentProps) => {
   );
 };
 
-export { Transactions };
+export { Transactions, TransactionWithBalance };

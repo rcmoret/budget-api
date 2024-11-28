@@ -66,6 +66,7 @@ type GradientBgOption =
   | "bg-gradient-to-b from-blue-200 to-white"
   | "bg-gradient-to-r from-green-150 to-chartreuse-200"
   | "bg-gradient-to-t from-blue-400 to-white"
+  | "bg-gradient-to-l from-gray-50 to-gray-200"
 
 type BlueBgOpion =
   | "bg-blue-300"

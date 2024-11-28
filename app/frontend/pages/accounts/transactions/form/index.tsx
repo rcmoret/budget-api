@@ -1,6 +1,5 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { useForm } from "@inertiajs/react";
-import { ModeledTransaction } from "@/lib/models/transaction";
 import DatePicker from "react-datepicker";
 import { parseISO as parseIsoDate } from "date-fns";
 import { AppConfigContext } from "@/components/layout/Provider";
@@ -15,6 +14,8 @@ import { Button } from "@/components/common/Button";
 import Select, { SingleValue } from "react-select";
 import { StripedRow } from "@/components/common/Row"
 import { useToggle } from "@/lib/hooks/useToogle";
+import { TransactionWithBalance } from "@/pages/accounts/transactions";
+import { SubmitButton } from "@/components/common/Button";
 
 type InputProps = {
   name: string;
@@ -225,7 +226,7 @@ export type TFormDetail = {
 }
 
 const TransactionForm = (props: {
-  transaction: ModeledTransaction;
+  transaction: TransactionWithBalance;
   isNew?: boolean;
   closeForm: () => void;
 }) => {
@@ -316,13 +317,16 @@ const TransactionForm = (props: {
   const updateDetailItem = (props: {
     index: number,
     value: string | null
+    amount?: TInputAmount
   }) => {
     const { value } = props
 
     setData({
       ...data,
       details: data.details.map((detail, index) => {
-        return props.index === index ? { ...detail, budgetItemKey: value } : detail
+        return props.index === index ?
+          { ...detail, budgetItemKey: value, amount: (props.amount || detail.amount)} :
+          detail
       })
     })
   }
@@ -370,8 +374,7 @@ const TransactionForm = (props: {
     put(formUrl, { onSuccess: () => props.closeForm() })
   }
 
-  const onSubmit = (ev: React.FormEvent<HTMLFormElement>) => {
-    ev.preventDefault()
+  const onSubmit = () => {
     if (isNew) {
       postCreate()
     } else {
@@ -433,14 +436,17 @@ const TransactionForm = (props: {
           </div>
           <div className="text-right grow self-end text-lg">
             <div>
-              <button disabled={processing} type="submit" >
+              <SubmitButton
+                onSubmit={onSubmit}
+                styling={{}}
+              >
                 <div className="bg-green-600 hover:bg-green-700 text-white rounded px-2 py-1 flex flex-row gap-2 font-semibold">
                   {isNew ? "CREATE" : "UPDATE"}
                   <div className="text-chartreuse-300">
                     <Icon name="check-circle" />
                   </div>
                 </div>
-              </button>
+              </SubmitButton>
             </div>
           </div>
         </div>

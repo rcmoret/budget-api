@@ -1,5 +1,3 @@
-import React from "react";
-
 import { AmountSpan } from "@/components/common/AmountSpan";
 import { Button } from "@/components/common/Button";
 import { Cell } from "@/components/common/Cell";
@@ -13,12 +11,11 @@ import {
   BudgetItemAmounts,
   BudgetItemsDescription
 } from "@/pages/accounts/transactions/common";
-import { ModeledTransaction } from "@/lib/models/transaction";
 import { useToggle } from "@/lib/hooks/useToogle";
+import { TransactionWithBalance } from "../transactions";
 
 const TransactionShow = (props: {
-  transaction: ModeledTransaction;
-  balance: number;
+  transaction: TransactionWithBalance;
   showFormFn: (key: string) => void;
 }) => {
   const [isDetailShown, toggleDetailView] = useToggle(false);
@@ -85,7 +82,7 @@ const TransactionShow = (props: {
         )
       }
       balanceCompnent={
-        <AmountSpan amount={props.balance} negativeColor="text-red-400" />
+        <AmountSpan amount={transaction.balance} negativeColor="text-red-400" />
       }
     >
       <Cell
@@ -128,7 +125,7 @@ const TransactionShow = (props: {
           margin: "mr-4",
         }}
       >
-        <div className="w-full max-sm:justify-between flex flex-row-reverse">
+        <div className="w-full max-sm:justify-between flex flex-row-reverse text-blue-300">
           <div className="mr-2">
             <Icon name="trash" />
           </div>

@@ -20,7 +20,7 @@ const TransactionContainer = (props: ContainerProps) => {
       styling={{
         flexAlign: "justify-start",
         flexWrap: "flex-wrap",
-        padding: "p-2",
+        padding: "px-4 py-2",
       }}
     >
       {props.keyComponent}

@@ -4,13 +4,14 @@ import { AmountSpan } from "@/components/common/AmountSpan";
 import { Label } from "@/pages/accounts/transactions/form/Shared";
 import { TFormDetail } from "@/pages/accounts/transactions/form";
 import { Icon } from "@/components/common/Icon";
-import Select from "react-select";
+import Select, { SingleValue, createFilter } from "react-select";
 import {
   accrualFilter,
   sortByName,
 } from "@/lib/models/budget-items"
 import { AmountInput, inputAmount, TInputAmount } from "@/components/common/AmountInput";
 import { Button } from "@/components/common/Button";
+import { moneyFormatter } from "@/lib/MoneyFormatter";
 
 type RemoveButtonProps = {
   detailKey: string,
@@ -42,7 +43,7 @@ const LineItemComponent = (props: {
   detail: { key: string, budgetItemKey: string | null, amount: TInputAmount },
   addDetail: () => void,
   removeDetail: (key: string) => void,
-  updateDetailItem: (props: { index: number, value: string }) => void,
+  updateDetailItem: (props: { index: number, value: string, amount?: TInputAmount }) => void,
   updateDetailAmount: (props: { index: number, value: TInputAmount }) => void,
 }) => {
   const { appConfig } = useContext(AppConfigContext)
@@ -64,11 +65,20 @@ const LineItemComponent = (props: {
   })
 
   const options = availableItems.sort(sortByName).map((item) => {
-    return { label: item.name, value: item.key }
+    return {
+      label: `${item.name} (${moneyFormatter(item.remaining, { decorate: true })})`,
+      value: item.key
+    }
   })
 
-  const handleSelectChange = ({ value }: { value: string | null, label: string }) => {
-    props.updateDetailItem({ index, value: value })
+  const handleSelectChange = (ev: SingleValue<{ value: string | null; label: string }>) => {
+    const item = items.find((item) => item.key === ev?.value) || null
+
+   if (!!item && amount.cents === 0 && item.isMonthly) {
+     props.updateDetailItem({ index, value: String(ev?.value), amount: inputAmount({ cents: item.remaining }) })
+   } else {
+     props.updateDetailItem({ index, value: String(ev?.value) })
+   }
   }
 
   const handleAmountChange = (amt: string) => {
@@ -83,8 +93,10 @@ const LineItemComponent = (props: {
         <div className="hidden">{key}</div>
         <Select
           options={options}
+          // @ts-ignore
           onChange={handleSelectChange}
           value={value}
+          filterOption={createFilter({ matchFrom: "start" })}
         />
       </div>
     <div className="w-5/12 min-h-12 pl-2">
@@ -128,7 +140,7 @@ const Total = ({ details, addDetail }: { details: Array<TFormDetail>, addDetail:
 
 const BudgetItemsComponent = (props: {
   addDetail: () => void,
-  updateDetailItem: (props: { index: number, value: string }) => void,
+  updateDetailItem: (props: { index: number, value: string, amount?: TInputAmount }) => void,
   updateDetailAmount: (props: { index: number, value:  TInputAmount }) => void,
   removeDetail: (key: string) => void,
   details: Array<{
