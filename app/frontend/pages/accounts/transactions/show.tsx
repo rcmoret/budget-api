@@ -5,14 +5,15 @@ import { Icon } from "@/components/common/Icon";
 import { dateParse } from "@/lib/DateFormatter";
 import { TransactionContainer } from "@/pages/accounts/transactions/container";
 import {
+  BudgetItemAmounts,
+  BudgetItemsDescription,
   CaretComponent,
   ClearanceDateComponent,
   DescriptionComponent,
-  BudgetItemAmounts,
-  BudgetItemsDescription
+  DeleteIcon,
 } from "@/pages/accounts/transactions/common";
 import { useToggle } from "@/lib/hooks/useToogle";
-import { TransactionWithBalance } from "../transactions";
+import { TransactionWithBalance } from "@/pages/accounts/transactions";
 
 const TransactionShow = (props: {
   transaction: TransactionWithBalance;
@@ -125,11 +126,15 @@ const TransactionShow = (props: {
           margin: "mr-4",
         }}
       >
-        <div className="w-full max-sm:justify-between flex flex-row-reverse text-blue-300">
-          <div className="mr-2">
-            <Icon name="trash" />
-          </div>
-          <Button type="button" onClick={toggleForm}>
+        <div className="w-full max-sm:justify-between flex flex-row-reverse">
+          <DeleteIcon
+            transaction={transaction}
+          />
+          <Button
+            type="button"
+            onClick={toggleForm}
+            styling={{ color: "text-blue-300" }}
+          >
             <div className="mr-2">
               <Icon name="edit" />
             </div>

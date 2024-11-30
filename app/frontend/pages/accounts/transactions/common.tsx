@@ -4,6 +4,12 @@ import { Button } from "@/components/common/Button";
 import { Icon } from "@/components/common/Icon";
 import { byAmount, byCategoryName } from "@/lib/sort_functions";
 import { AmountSpan } from "@/components/common/AmountSpan";
+import { useForm } from "@inertiajs/react";
+import { UrlBuilder } from "@/lib/UrlBuilder";
+import { TransactionWithBalance } from "@/pages/accounts/transactions";
+import { buildQueryParams } from "@/lib/redirect_params";
+import { useContext } from "react";
+import { AppConfigContext } from "@/components/layout/Provider";
 
 interface CaretComponentProps {
   details: AccountTransactionDetail[];
@@ -140,4 +146,48 @@ const DescriptionComponent = (props: {
   }
 }
 
-export { BudgetItemAmounts, BudgetItemsDescription, CaretComponent, ClearanceDateComponent, DescriptionComponent };
+const DeleteIcon = (props: {
+  transaction: TransactionWithBalance;
+}) => {
+  const { transaction } = props
+  const { key, accountSlug } = transaction
+  const { delete: destroy } = useForm({})
+  const { appConfig } = useContext(AppConfigContext)
+  const { month, year } = appConfig.budget.data
+
+  const onClick = () => {
+    if (!confirm("Are you sure you want to delete this transaction?")) {
+      return
+    }
+    const formUrl = UrlBuilder({
+      name: "TransactionShow",
+      key: key,
+      accountSlug: accountSlug,
+      queryParams: buildQueryParams(["account", accountSlug, "transactions", month, year])
+    })
+    destroy(formUrl)
+  }
+
+  console.log({ month, year })
+
+  return (
+    <div className="mr-2">
+      <Button
+        type="button"
+        onClick={onClick}
+        styling={{ color: "text-blue-300" }}
+      >
+        <Icon name="trash" />
+      </Button>
+    </div>
+  )
+}
+
+export {
+  BudgetItemAmounts,
+  BudgetItemsDescription,
+  CaretComponent,
+  ClearanceDateComponent,
+  DeleteIcon,
+  DescriptionComponent,
+};
