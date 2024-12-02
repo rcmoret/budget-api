@@ -414,6 +414,7 @@ const TransactionForm = (props: {
             removeDetail={removeDetail}
             updateDetailAmount={updateDetailAmount}
             updateDetailItem={updateDetailItem}
+            isBudgetExclusion={data.isBudgetExclusion}
           />
           <div className="flex flex-col w-2/12 gap-2">
             <CheckNumberComponent
