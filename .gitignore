@@ -38,4 +38,6 @@ node_modules
 *.local
 /.vite/*
 
+/public/stylesheets/*
+
 /dist/tsconfig.tsbuildinfo
