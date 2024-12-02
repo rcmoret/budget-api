@@ -6,7 +6,12 @@ module WebApp
 
     private
 
-    def props = {}
+    def props
+      @props ||= IndividualSerializer.new(
+        key: :dashboard,
+        serializable: DashboardSerializer.new
+      )
+    end
 
     def namespace = "home"
   end

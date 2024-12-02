@@ -9,6 +9,7 @@ end
 module WebApp
   class BaseController < ActionController::Base
     before_action :authenticate_user_profile!
+    before_action :set_current_user!
     layout "application"
     using LocalHash
 
@@ -31,5 +32,9 @@ module WebApp
     end
 
     def errors = {}
+
+    def set_current_user!
+      Current.user_profile = current_user_profile
+    end
   end
 end

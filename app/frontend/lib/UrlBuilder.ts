@@ -42,6 +42,7 @@ type CategoryIndexProps = {
   queryParams?: string;
 }
 
+
 export type CategoryShowProps = {
   name: "CategoryShow";
   key: string;

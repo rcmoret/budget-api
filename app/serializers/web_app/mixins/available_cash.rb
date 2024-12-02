@@ -1,15 +1,13 @@
 # frozen_string_literal: true
 
-module API
+module WebApp
   module Mixins
     module AvailableCash
-      private
-
       def available_cash
         cash_flow_transaction_detail_scope
           .or(non_cash_flow_budget_inclusion_scope)
           .joins(:account)
-          .merge(::Account.belonging_to(user_group))
+          .merge(::Account.belonging_to(Current.user_group))
           .joins(:details)
           .sum(:amount)
       end
