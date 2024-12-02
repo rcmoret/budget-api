@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   end
 
   scope "/", module: :web_app do
-    get "/home", to: "home#call", as: :home
+    get "/dashboard", to: "dashboard#call", as: :dashboard
     draw("web_app/accounts")
     draw("web_app/budget")
   end

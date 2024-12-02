@@ -91,6 +91,11 @@ const OptionsMenu = ({ namespace }: { namespace: string }) => {
             Manage Accounts
           </MenuItem>
         </InertiaLink>
+        <InertiaLink href="/">
+          <MenuItem>
+            Dashboard
+          </MenuItem>
+        </InertiaLink>
         <div>
           <SetUpLink month={month} year={year} isSetUp={isSetUp} isBudget={isBudget} />
         </div>

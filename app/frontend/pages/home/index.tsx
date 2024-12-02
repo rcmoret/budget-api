@@ -1,5 +1,27 @@
 import { AmountSpan } from "@/components/common/AmountSpan";
-import { StripedRow } from "@/components/common/Row";
+import { Row, StripedRow } from "@/components/common/Row";
+import { Link } from "@inertiajs/react";
+
+const AccountLink = ({ account }: {
+  account: { name: string; slug: string; balance: number; }
+}) => {
+  return (
+    <StripedRow
+      oddColor="odd:bg-blue-100"
+      evenColor="even:bg-sky-50"
+      styling={{ flexAlign: "justify-between", padding: "px-4 py-2" }}
+    >
+      <div>
+        <Link href={`/account/${account.slug}/transactions`}>
+          {account.name}
+        </Link>
+      </div>
+      <div>
+        <AmountSpan amount={account.balance} />
+      </div>
+    </StripedRow>
+  )
+}
 
 type DashboardProps = {
   availableCash: number;
@@ -18,16 +40,21 @@ type DashboardProps = {
     dayToDayExpenses: number;
     revenues: number;
   }
+  accounts: Array<{
+    key: string;
+    name: string;
+    slug: string;
+    balance: number;
+  }>
 }
 
 const Home = (props: { dashboard: DashboardProps }) => {
   const {
+    accounts,
     totalBudgeted,
     totalRemaining,
     spent,
   } = props.dashboard
-
-  console.log({ spent })
 
   return (
     <div className="w-full flex flex-col gap-4 px-4 py-2">
@@ -94,6 +121,21 @@ const Home = (props: { dashboard: DashboardProps }) => {
           </div>
         </StripedRow>
       </div>
+      <Row styling={{ flexDirection: "flex-col" }}>
+        <div className="text-lg">
+          Accounts
+        </div>
+        <div className="text-lg w-4/12">
+          {accounts.map((account) => {
+            return (
+              <AccountLink
+                key={account.key}
+                account={account}
+              />
+            )
+          })}
+        </div>
+      </Row>
     </div>
   )
 };

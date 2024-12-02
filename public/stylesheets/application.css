@@ -1651,6 +1651,11 @@ video {
   background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
 }
 
+.odd\:bg-blue-100:nth-child(odd) {
+  --tw-bg-opacity: 1;
+  background-color: hsl(232 100% 93% / var(--tw-bg-opacity, 1));
+}
+
 .even\:bg-cyan-100:nth-child(even) {
   --tw-bg-opacity: 1;
   background-color: hsl(172 40% 90% / var(--tw-bg-opacity, 1));
@@ -1694,6 +1699,21 @@ video {
 .even\:bg-cyan-50:nth-child(even) {
   --tw-bg-opacity: 1;
   background-color: hsl(172 29% 80 / var(--tw-bg-opacity, 1));
+}
+
+.even\:bg-blue-200:nth-child(even) {
+  --tw-bg-opacity: 1;
+  background-color: hsl(232 100% 83% / var(--tw-bg-opacity, 1));
+}
+
+.even\:bg-sky-100:nth-child(even) {
+  --tw-bg-opacity: 1;
+  background-color: hsl(202 70% 88% / var(--tw-bg-opacity, 1));
+}
+
+.even\:bg-blue-100:nth-child(even) {
+  --tw-bg-opacity: 1;
+  background-color: hsl(232 100% 93% / var(--tw-bg-opacity, 1));
 }
 
 .hover\:bg-green-700:hover {

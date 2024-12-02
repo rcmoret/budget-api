@@ -40,6 +40,7 @@ export type OverflowOption =
   | "overflow-x-hidden"
 
 type OddBgColorOption =
+  | "odd:bg-blue-100"
   | "odd:bg-cyan-50"
   | "odd:bg-cyan-100"
   | "odd:bg-cyan-200"

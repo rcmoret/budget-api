@@ -1,7 +1,7 @@
 module WebApp
   class DashboardSerializer < ApplicationSerializer
     LocalAccountSerializer = Class.new(ApplicationSerializer) do
-      attributes :name, :slug, :balance
+      attributes :key, :name, :slug, :balance
 
       def initialize(args)
         super(args[:account])
@@ -21,11 +21,6 @@ module WebApp
                :total_budgeted,
                :total_remaining
     attribute :accounts, on_render: :render
-
-    def initialize
-      interval = ::Budget::Interval.belonging_to(user_profile).current
-      super(interval)
-    end
 
     def total_budgeted
       {
