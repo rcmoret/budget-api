@@ -110,13 +110,34 @@ const DateForm = (props: DateFormProps) => {
   )
 }
 
-const DateComponent = ({ firstDate, lastDate, redirectSegments, month, year }:
-  { firstDate: string, lastDate: string, redirectSegments: string[], month: number, year: number }) => {
+const ProgressBar = ({ percentage }: { percentage: string }) => {
+  return (
+    <div className="w-full bg-gray-300 rounded-full h-3">
+      <div className="bg-sky-600 h-3 rounded-full" style={{ width: `${percentage}%` }}></div>
+    </div>
+  )
+}
+
+const DateComponent = (props:
+  {
+    firstDate: string,
+    lastDate: string,
+    redirectSegments: string[],
+    month: number,
+    year: number,
+}) => {
+  const {
+    firstDate,
+    lastDate,
+    redirectSegments,
+    month,
+    year,
+  } = props
   const [showDateForm, toggleForm] = useToggle(false)
 
   if (!showDateForm) {
     return (
-      <div className="w-full flex gap-2 items-center">
+      <div className="w-full flex gap-2 flex-wrap items-center">
         <DateDiv date={firstDate} />
         <div>to</div>
         <DateDiv date={lastDate} />
@@ -162,27 +183,19 @@ const BudgetSummary = (props: ComponentProps) => {
   } = budget;
 
   const prevMonth =
-    month === 1
-      ? {
-        month: 12,
-        year: year - 1,
-      }
-      : {
-        month: month - 1,
-        year,
-      };
+    month === 1 ?
+      { month: 12, year: year - 1 } :
+      { month: month - 1, year }
+
   const nextMonth =
-    month === 12
-      ? {
-        month: 1,
-        year: year + 1,
-      }
-      : {
-        month: month + 1,
-        year,
-      };
+    month === 12 ?
+      { month: 1, year: year + 1 } :
+      { month: month + 1, year }
+
   const visitNextUrl = `${baseUrl}/${nextMonth.month}/${nextMonth.year}`;
   const visitPrevUrl = `${baseUrl}/${prevMonth.month}/${prevMonth.year}`;
+
+  const percentage = (((totalDays - daysRemaining) * 100.0) / totalDays).toFixed(1)
 
   return (
     <Row
@@ -213,12 +226,14 @@ const BudgetSummary = (props: ComponentProps) => {
             <Point>Days Remaining: {daysRemaining}</Point>
           </div>
         )}
-        <div className="w-full">
+        <div className="w-full mb-2">
           <Point>Total Days: {totalDays}</Point>
         </div>
+        {isCurrent && <ProgressBar percentage={percentage} />}
         <Row
           styling={{
             flexAlign: "justify-between",
+            margin: "mt-2"
           }}
         >
           <ButtonStyleLink href={visitPrevUrl}>
