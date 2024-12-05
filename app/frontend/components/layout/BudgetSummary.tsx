@@ -112,8 +112,8 @@ const DateForm = (props: DateFormProps) => {
 
 const ProgressBar = ({ percentage }: { percentage: string }) => {
   return (
-    <div className="w-full bg-gray-300 rounded-full h-3">
-      <div className="bg-sky-600 h-3 rounded-full" style={{ width: `${percentage}%` }}></div>
+    <div className="w-full bg-gray-200 rounded-full h-3 outline outline-gray-400 outline-1">
+      <div className="bg-gradient-to-l from-sky-600 to-sky-700 h-3 rounded-full" style={{ width: `${percentage}%` }}></div>
     </div>
   )
 }

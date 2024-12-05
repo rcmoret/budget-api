@@ -1246,6 +1246,24 @@ video {
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
 
+.from-sky-300 {
+  --tw-gradient-from: hsl(202, 70%, 68%) var(--tw-gradient-from-position);
+  --tw-gradient-to: hsl(202 70% 68% / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+.from-sky-500 {
+  --tw-gradient-from: hsl(202, 70%, 48%) var(--tw-gradient-from-position);
+  --tw-gradient-to: hsl(202 70% 48% / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+.from-sky-600 {
+  --tw-gradient-from: hsl(202, 95%, 38%) var(--tw-gradient-from-position);
+  --tw-gradient-to: hsl(202 95% 38% / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
 .to-chartreuse-200 {
   --tw-gradient-to: hsl(112, 28%, 78%) var(--tw-gradient-to-position);
 }
@@ -1268,6 +1286,10 @@ video {
 
 .to-white {
   --tw-gradient-to: #fff var(--tw-gradient-to-position);
+}
+
+.to-sky-700 {
+  --tw-gradient-to: hsl(202, 70%, 28%) var(--tw-gradient-to-position);
 }
 
 .p-1 {
@@ -1600,6 +1622,22 @@ video {
 .antialiased {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.outline {
+  outline-style: solid;
+}
+
+.outline-1 {
+  outline-width: 1px;
+}
+
+.outline-gray-300 {
+  outline-color: hsl(202, 10%, 65%);
+}
+
+.outline-gray-400 {
+  outline-color: hsl(202, 12%, 55%);
 }
 
 .grayscale {
