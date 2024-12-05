@@ -168,8 +168,6 @@ const DeleteIcon = (props: {
     destroy(formUrl)
   }
 
-  console.log({ month, year })
-
   return (
     <div className="mr-2">
       <Button
