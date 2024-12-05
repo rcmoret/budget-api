@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Budget::Events::CreateItemForm do
+RSpec.describe Forms::Budget::Events::CreateItemForm do
   describe "event type validation" do
     let(:user) { create(:user) }
     let(:category) { create(:category, :expense, user_group: user.user_group) }

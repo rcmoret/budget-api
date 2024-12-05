@@ -26,14 +26,14 @@ RSpec.describe Forms::Budget::EventsForm do
       let(:params) { { events: [{ event_type: Budget::EventTypes::CREATE_EVENTS.sample }] } }
 
       before do
-        allow(Budget::Events::CreateItemForm)
+        allow(Forms::Budget::Events::CreateItemForm)
           .to receive(:new)
           .with(user, params[:events].first.symbolize_keys)
-          .and_return(instance_double(Budget::Events::CreateItemForm, save: true))
+          .and_return(instance_double(Forms::Budget::Events::CreateItemForm, save: true))
       end
 
       it "initializes a create item event form object" do
-        expect(Budget::Events::CreateItemForm)
+        expect(Forms::Budget::Events::CreateItemForm)
           .to receive(:new)
           .with(user, params[:events].first.symbolize_keys)
         described_class.new(user, params).save
@@ -51,13 +51,13 @@ RSpec.describe Forms::Budget::EventsForm do
     end
 
     context "when valid and the form objects all save" do
-      let(:form_double) { instance_double(Budget::Events::CreateItemForm, save: true) }
+      let(:form_double) { instance_double(Forms::Budget::Events::CreateItemForm, save: true) }
       let(:params) do
         { events: [{ event_type: Budget::EventTypes::CREATE_EVENTS.sample }] }
       end
 
       before do
-        allow(Budget::Events::CreateItemForm)
+        allow(Forms::Budget::Events::CreateItemForm)
           .to receive(:new)
           .with(user, params[:events].first.symbolize_keys)
           .and_return(form_double)
@@ -77,7 +77,7 @@ RSpec.describe Forms::Budget::EventsForm do
 
     context "when valid and one of the form objects has errors" do
       before do
-        allow(Budget::Events::CreateItemForm)
+        allow(Forms::Budget::Events::CreateItemForm)
           .to receive(:new)
           .with(user, params[:events].first.symbolize_keys)
           .and_call_original

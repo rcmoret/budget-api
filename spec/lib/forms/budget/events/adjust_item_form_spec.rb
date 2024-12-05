@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Budget::Events::AdjustItemForm do
+RSpec.describe Forms::Budget::Events::AdjustItemForm do
   describe ".applies?" do
     context "when an applicable event" do
       it "returns true" do

@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Budget::Events::FormGateway do
+RSpec.describe Forms::Budget::Events::FormGateway do
   describe ".handler_registered?" do
     context "when providing one that is registered" do
       it "returns true" do
@@ -23,7 +23,7 @@ RSpec.describe Budget::Events::FormGateway do
     context "when a create event" do
       it "returns the create event form object initialized with event data" do
         event = { event_type: Budget::EventTypes::CREATE_EVENTS.sample, budget_item_id: rand(100), amount: rand(1000) }
-        expect(Budget::Events::CreateItemForm).to receive(:new).with(user, event)
+        expect(Forms::Budget::Events::CreateItemForm).to receive(:new).with(user, event)
 
         described_class.form_for(user, event)
       end

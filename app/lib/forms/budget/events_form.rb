@@ -53,7 +53,7 @@ module Forms
       end
 
       def form_gateway
-        ::Budget::Events::FormGateway
+        Events::FormGateway
       end
 
       attr_reader :current_user, :events_data

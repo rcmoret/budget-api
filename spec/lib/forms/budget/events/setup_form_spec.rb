@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Budget::Events::SetupForm do
+RSpec.describe Forms::Budget::Events::SetupForm do
   let(:user) { create(:user) }
 
   describe "interval not setup validation" do

@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Budget::Events::FormBase do
+RSpec.describe Forms::Budget::Events::FormBase do
   describe ".applies?" do
     it "raises a not implemented error" do
       expect { described_class.applies?("foo_bar_biz") }

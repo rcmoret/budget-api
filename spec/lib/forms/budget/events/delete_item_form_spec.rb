@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Budget::Events::DeleteItemForm do
+RSpec.describe Forms::Budget::Events::DeleteItemForm do
   describe ".applies?" do # inherited from the base class but needs to be tested here
     context "when an applicable event" do
       it "returns true" do

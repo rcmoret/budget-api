@@ -17,7 +17,7 @@ module API
           private
 
           def form
-            @form ||= ::Budget::Events::SetupForm.new(
+            @form ||= Forms::Budget::Events::SetupForm.new(
               user: api_user,
               interval: interval,
               **form_params
