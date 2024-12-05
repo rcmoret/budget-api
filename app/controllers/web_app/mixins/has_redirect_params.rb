@@ -11,10 +11,10 @@ module WebApp
       # rubocop:disable Metrics/AbcSize
       def redirect_path
         case redirect_params
-        in ["budget", "categories"]
-          budget_categories_index_path
         in ["budget"]
           budget_index_path
+        in ["budget", "categories"]
+          budget_categories_index_path
         in ["budget", "category", *rest]
           resolve_budget_category_path(*rest)
         in ["budget", month, year, *rest]
@@ -29,11 +29,11 @@ module WebApp
         in ["account", *rest]
           resolve_account_path(*rest)
         else
-          home_path
+          dashboard_path
         end
       rescue InvalidPathError, NoMatchingPatternError => e
         Rails.logger.error(e)
-        home_path
+        dashboard_path
       end
       # rubocop:enable Metrics/PerceivedComplexity
       # rubocop:enable Metrics/CyclomaticComplexity

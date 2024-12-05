@@ -5,6 +5,7 @@ module BelongsToUserGroup
 
   included do
     belongs_to :user_group, class_name: "User::Group"
+
     scope :belonging_to, lambda { |user_or_group|
       case user_or_group
       in User::Profile => user

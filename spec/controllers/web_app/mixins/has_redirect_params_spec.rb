@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe WebApp::Mixins::HasRedirectParams do
   let(:klass) { Class.new }
-  let(:home_path) { "/home" }
+  let(:dashboard_path) { "/dashboard" }
 
   before do
     klass.send(:include, Rails.application.routes.url_helpers)
@@ -14,16 +14,16 @@ RSpec.describe WebApp::Mixins::HasRedirectParams do
   context "when redirect params are empty" do
     subject { klass.new.tap { |controller| controller.redirect_params = [] } }
 
-    it "returns home path" do
-      expect(subject.redirect_path).to eq home_path
+    it "returns dashboard path" do
+      expect(subject.redirect_path).to eq dashboard_path
     end
   end
 
-  context "when redirect params include 'home' only" do
-    subject { klass.new.tap { |controller| controller.redirect_params = ["home"] } }
+  context "when redirect params include 'dashboard' only" do
+    subject { klass.new.tap { |controller| controller.redirect_params = ["dashboard"] } }
 
-    it "returns home path" do
-      expect(subject.redirect_path).to eq home_path
+    it "returns dashboard path" do
+      expect(subject.redirect_path).to eq dashboard_path
     end
   end
 
@@ -42,8 +42,8 @@ RSpec.describe WebApp::Mixins::HasRedirectParams do
 
     let(:month) { rand(1..12).to_s }
 
-    it "returns the home path" do
-      expect(subject.redirect_path).to eq home_path
+    it "returns the dashboard path" do
+      expect(subject.redirect_path).to eq dashboard_path
     end
   end
 
@@ -69,7 +69,7 @@ RSpec.describe WebApp::Mixins::HasRedirectParams do
     let(:year) { Time.current.year.to_s }
 
     it "returns the budget index path with month and year segments" do
-      expect(subject.redirect_path).to eq home_path
+      expect(subject.redirect_path).to eq dashboard_path
     end
   end
 
@@ -82,7 +82,7 @@ RSpec.describe WebApp::Mixins::HasRedirectParams do
     let(:year) { Time.current.year.to_s }
 
     it "returns the budget index path with no params" do
-      expect(subject.redirect_path).to eq home_path
+      expect(subject.redirect_path).to eq dashboard_path
     end
   end
 
