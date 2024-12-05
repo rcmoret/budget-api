@@ -14,9 +14,8 @@ const IndividualTab = ({ account, isSelected }: AccountSummaryProps) => {
   const bgColor = isSelected ? "bg-sky-200" : "bg-gray-100";
   const borderColor = isSelected ? "border-sky-600" : "border-gray-400"
   const padding = "p-4";
-  const width = "sm:min-w-[30%] md:min-w-[10%] lg:min-w-[12%]";
-  const margin = "";
-  const styles = ["rounded", bgColor, padding, width, margin].join(" ");
+  const width = "sm:min-w-[30%] md:min-w-[10%] lg:min-w-[12%] whitespace-nowrap";
+  const styles = ["rounded", bgColor, padding, width].join(" ");
 
   return (
     <div className={styles}>
@@ -44,23 +43,37 @@ const AccountTabs = (props: PropType) => {
     <Row
       styling={{
         alignItems: "items-start",
-        flexWrap: "flex-wrap",
+        backgroundColor: "bg-white",
+        flexWrap: "flex-nowrap",
         flexDirection: "flex-row",
-        gap: "gap-4",
         rounded: "rounded",
         padding: "p-2",
-        margin: "mb-2",
-        overflow: "overflow-visible",
-        border: "border-b-2 border-blue-100",
+        position: "relative"
       }}
     >
-      {accounts.map((account) => (
-        <IndividualTab
-          key={account.key}
-          account={account}
-          isSelected={account.key === props.selectedAccount?.key}
-        />
-      ))}
+      <div
+        className="absolute top-0 left-0 w-4 h-full z-20"
+        style={{ background: "linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)" }}
+      >
+      </div>
+      <Row styling={{ position: "relative", overflow: "overflow-scroll", gap: "gap-4" }}>
+        {accounts.map((account) => (
+          <IndividualTab
+            key={account.key}
+            account={account}
+            isSelected={account.key === props.selectedAccount?.key}
+          />
+        ))}
+      </Row>
+      <div
+        className="absolute top-0 h-full z-20"
+        style={{
+          right: 0,
+          width: "120px",
+          background: "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,1.0) 70%)"
+        }}
+      >
+      </div>
     </Row>
   );
 };

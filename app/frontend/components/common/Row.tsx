@@ -13,6 +13,7 @@ import {
 import type {
   AlignItemsOption,
   BgColorOption,
+  DisplayOption,
   FlexAlignOption,
   FlexDirectionOption,
   FlexWrapOption,
@@ -37,7 +38,7 @@ interface RowProps {
     margin?: string;
     overflow?: OverflowOption;
     padding?: string;
-    position?: "sticky";
+    position?: DisplayOption;
     rounded?: "rounded" | null;
     top?: "top-0";
   };

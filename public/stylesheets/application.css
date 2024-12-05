@@ -558,12 +558,32 @@ video {
   position: absolute;
 }
 
+.relative {
+  position: relative;
+}
+
 .sticky {
   position: sticky;
 }
 
+.left-0 {
+  left: 0px;
+}
+
+.right-8 {
+  right: 2rem;
+}
+
 .top-0 {
   top: 0px;
+}
+
+.right-0 {
+  right: 0px;
+}
+
+.z-20 {
+  z-index: 20;
 }
 
 .mx-auto {
@@ -715,6 +735,10 @@ video {
 
 .w-3\/12 {
   width: 25%;
+}
+
+.w-4 {
+  width: 1rem;
 }
 
 .w-4\/12 {
@@ -965,6 +989,10 @@ video {
   overflow-y: scroll;
 }
 
+.whitespace-nowrap {
+  white-space: nowrap;
+}
+
 .rounded {
   border-radius: 0.25rem;
 }
@@ -1012,11 +1040,6 @@ video {
 .border-\[\#056155\] {
   --tw-border-opacity: 1;
   border-color: rgb(5 97 85 / var(--tw-border-opacity, 1));
-}
-
-.border-blue-100 {
-  --tw-border-opacity: 1;
-  border-color: hsl(232 100% 93% / var(--tw-border-opacity, 1));
 }
 
 .border-blue-300 {
@@ -1169,11 +1192,6 @@ video {
   background-color: hsl(202 45% 96% / var(--tw-bg-opacity, 1));
 }
 
-.bg-sky-600 {
-  --tw-bg-opacity: 1;
-  background-color: hsl(202 95% 38% / var(--tw-bg-opacity, 1));
-}
-
 .bg-teal-400 {
   --tw-bg-opacity: 1;
   background-color: rgb(45 212 191 / var(--tw-bg-opacity, 1));
@@ -1246,18 +1264,6 @@ video {
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
 
-.from-sky-300 {
-  --tw-gradient-from: hsl(202, 70%, 68%) var(--tw-gradient-from-position);
-  --tw-gradient-to: hsl(202 70% 68% / 0) var(--tw-gradient-to-position);
-  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
-}
-
-.from-sky-500 {
-  --tw-gradient-from: hsl(202, 70%, 48%) var(--tw-gradient-from-position);
-  --tw-gradient-to: hsl(202 70% 48% / 0) var(--tw-gradient-to-position);
-  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
-}
-
 .from-sky-600 {
   --tw-gradient-from: hsl(202, 95%, 38%) var(--tw-gradient-from-position);
   --tw-gradient-to: hsl(202 95% 38% / 0) var(--tw-gradient-to-position);
@@ -1284,12 +1290,12 @@ video {
   --tw-gradient-to: hsl(142, 30%, 38%) var(--tw-gradient-to-position);
 }
 
-.to-white {
-  --tw-gradient-to: #fff var(--tw-gradient-to-position);
-}
-
 .to-sky-700 {
   --tw-gradient-to: hsl(202, 70%, 28%) var(--tw-gradient-to-position);
+}
+
+.to-white {
+  --tw-gradient-to: #fff var(--tw-gradient-to-position);
 }
 
 .p-1 {
@@ -1630,10 +1636,6 @@ video {
 
 .outline-1 {
   outline-width: 1px;
-}
-
-.outline-gray-300 {
-  outline-color: hsl(202, 10%, 65%);
 }
 
 .outline-gray-400 {
