@@ -10,6 +10,7 @@ import { TransactionWithBalance } from "@/pages/accounts/transactions";
 import { buildQueryParams } from "@/lib/redirect_params";
 import { useContext } from "react";
 import { AppConfigContext } from "@/components/layout/Provider";
+import { Point } from "@/components/common/Symbol";
 
 interface CaretComponentProps {
   details: AccountTransactionDetail[];
@@ -21,11 +22,13 @@ const CaretComponent = (props: CaretComponentProps) => {
   const { details, isDetailShown, toggleFn } = props;
 
   return (
-    <div className="w-[5%]">
+    <div className="md:w-[5%] hidden">
       {details.length > 1 ? (
         <DetailToggle isDetailShown={isDetailShown} toggleFn={toggleFn} />
       ) : (
-        ""
+        <span className="text-gray-600">
+          <Point>{" "}</Point>
+        </span>
       )}
     </div>
   );
@@ -95,22 +98,37 @@ const BudgetItemList = (props: { details: AccountTransactionDetail[] }) => {
   ))
 }
 
+const LineItemAmounts = (props: { details: AccountTransactionDetail[], display: sting }) => {
+  return (
+    <div className={props.display}>
+      {props.details.sort(byAmount).map((detail) => (
+        <div key={detail.key} className="w-full text-sm">
+          <AmountSpan amount={detail.amount} />
+        </div>
+      ))}
+    </div>
+  )
+}
+
 const BudgetItemAmounts = (props: {
   details: AccountTransactionDetail[];
   amount: number;
   toggleForm: () => void;
-}) => (
-  <div className="w-full">
-    <Button type="button" onClick={props.toggleForm}>
-      <AmountSpan amount={props.amount} />
-    </Button>
-    {props.details.sort(byAmount).map((detail) => (
-      <div key={detail.key} className="w-full text-sm">
-        <AmountSpan amount={detail.amount} />
-      </div>
-    ))}
-  </div>
-);
+  isDetailShown: boolean;
+}) => {
+  const { details, toggleForm, amount, isDetailShown } = props
+
+  const display = isDetailShown ? "block" : "block md:hidden"
+
+  return (
+    <div className="w-full">
+      <Button type="button" onClick={toggleForm}>
+        <AmountSpan amount={amount} />
+      </Button>
+      {details.length > 1 && <LineItemAmounts details={details} display={display} />}
+    </div>
+  )
+}
 
 const DescriptionComponent = (props: {
   transaction: ModeledTransaction;
@@ -120,9 +138,16 @@ const DescriptionComponent = (props: {
   const { transaction, isDetailShown } = props
   const { details, description } = transaction
 
-  if (details.length > 1 && isDetailShown) {
+  if (description === null) {
     return (
-      <div className="w-full">
+      <Button type="button" onClick={props.toggleForm}>
+        <BudgetItemsDescription details={details} />
+      </Button>
+    )
+  } else if (details.length > 1) {
+    const display = isDetailShown ? "block" : "block md:hidden"
+    return (
+      <div className={`w-full ${display}`}>
         <Button type="button" onClick={props.toggleForm}>
           {description ?
             <div className="w-full text-left">{description}</div> :
@@ -130,12 +155,6 @@ const DescriptionComponent = (props: {
         </Button>
         <BudgetItemList details={details} />
       </div>
-    )
-  } else if (description === null) {
-    return (
-      <Button type="button" onClick={props.toggleForm}>
-        <BudgetItemsDescription details={details} />
-      </Button>
     )
   } else {
     return (

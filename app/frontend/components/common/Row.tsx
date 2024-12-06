@@ -13,11 +13,11 @@ import {
 import type {
   AlignItemsOption,
   BgColorOption,
-  DisplayOption,
   FlexAlignOption,
   FlexDirectionOption,
   FlexWrapOption,
   OverflowOption,
+  PositionOption,
   StripedRowColorOption,
 } from "types/components/display-classes";
 
@@ -38,7 +38,7 @@ interface RowProps {
     margin?: string;
     overflow?: OverflowOption;
     padding?: string;
-    position?: DisplayOption;
+    position?: PositionOption;
     rounded?: "rounded" | null;
     top?: "top-0";
   };

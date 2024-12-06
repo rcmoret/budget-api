@@ -111,3 +111,10 @@ export type BgColorOption =
 
 export type BgHoverOption =
   | "hover:bg-green-700"
+
+export type PositionOption =
+  | "absolute"
+  | "fixed"
+  | "relative"
+  | "static"
+  | "sticky"

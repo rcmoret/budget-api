@@ -52,7 +52,6 @@ const Header = ({ metadata, data, selectedAccount }: HeaderProps) => {
     <Row styling={{
       backgroundColor: "bg-gradient-to-l from-gray-50 to-gray-200",
       padding: "p-4",
-      position: "sticky",
       top: "top-0"
     }}>
       <Row

@@ -70,17 +70,12 @@ const TransactionShow = (props: {
         toggleForm={toggleForm}
       />}
       transactionAmountComponent={
-        isDetailShown ? (
-          <BudgetItemAmounts
-            details={details}
-            amount={transaction.amount}
-            toggleForm={toggleForm}
-            />
-        ) : (
-          <Button type="button" onClick={toggleForm}>
-            <AmountSpan amount={transaction.amount} />
-          </Button>
-        )
+        <BudgetItemAmounts
+          details={details}
+          amount={transaction.amount}
+          isDetailShown={isDetailShown}
+          toggleForm={toggleForm}
+        />
       }
       balanceCompnent={
         <AmountSpan amount={transaction.balance} negativeColor="text-red-400" />
@@ -94,23 +89,23 @@ const TransactionShow = (props: {
           flexWrap: "flex-wrap",
         }}
       >
-        {!!description && details.length > 0 && !isDetailShown && (
-          <div className="ml-4">
+        {!!description && details.length === 1 && !isDetailShown && (
+          <div className="md:ml-4 w-full md:w-unset">
             <BudgetItemsDescription details={details} />
           </div>
         )}
         {isBudgetExclusion && (
-          <div className="ml-4 md:max-w-2/12 max-md:w-full italic">
+          <div className="md:ml-4 md:max-w-2/12 w-full italic">
             budget exclusion
           </div>
         )}
         {checkNumber && (
-          <div className="ml-4">
+          <div className="md:ml-4">
             <Icon name="money-check" /> {checkNumber}
           </div>
         )}
         {transferKey && (
-          <div className="ml-4 max-md:w-full md:max-w-2/12 italic">
+          <div className="md:ml-4 w-full md:max-w-2/12 italic">
             <span className="hidden">{transferKey}</span>
             transfer
           </div>
@@ -121,12 +116,12 @@ const TransactionShow = (props: {
       </Cell>
       <Cell
         styling={{
-          width: "w-[14%]",
-          flexAlign: "justify-start",
-          margin: "mr-4",
+          width: "md:w-[14%] w-full",
+          flexAlign: "md:justify-start justify-end",
+          margin: "md:mr-4",
         }}
       >
-        <div className="w-full max-sm:justify-between flex flex-row-reverse">
+        <div className="w-full flex flex-row-reverse">
           <DeleteIcon
             transaction={transaction}
           />
@@ -147,10 +142,10 @@ const TransactionShow = (props: {
 
 const Notes = (props: { noteLines: string[]; notesNeedAttn: boolean }) => {
   const className = [
-    "ml-4",
-    "max-md:w-full",
+    "md:ml-2",
+    "w-full",
     "md:max-w-4/12",
-    "pl-2",
+    "md:pl-2",
     "pr-2",
     ...(props.notesNeedAttn ? ["bg-teal-400", "text-white", "rounded"] : []),
   ].join(" ");
