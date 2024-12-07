@@ -27,7 +27,7 @@ module WebApp
       end
 
       def selected_account_serializer
-        API::Accounts::Transactions::IndexSerializer.new(
+        IndexSerializer.new(
           account: account,
           interval: interval
         )

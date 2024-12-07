@@ -22,7 +22,7 @@ const CaretComponent = (props: CaretComponentProps) => {
   const { details, isDetailShown, toggleFn } = props;
 
   return (
-    <div className="md:w-[5%] hidden">
+    <div className="hidden md:block w-[4%]">
       {details.length > 1 ? (
         <DetailToggle isDetailShown={isDetailShown} toggleFn={toggleFn} />
       ) : (
@@ -67,30 +67,10 @@ const ClearanceDateComponent = (props: {
   )
 }
 
-const BudgetItemsDescription = (props: {
-  details: AccountTransactionDetail[];
-}) => {
-  const details = props.details
-    .filter((detail: AccountTransactionDetail) => detail.budgetCategoryName)
-    .sort(byCategoryName);
-
-  return (
-    <>
-      {details.map((detail: AccountTransactionDetail, n: number) => (
-        <span key={detail.key}>
-          {n > 0 && "; "}
-          {detail.budgetCategoryName}{" "}
-          {detail.iconClassName && <Icon name={detail.iconClassName} />}
-        </span>
-      ))}
-    </>
-  );
-};
-
-const BudgetItemList = (props: { details: AccountTransactionDetail[] }) => {
+const BudgetItemList = (props: { details: AccountTransactionDetail[], textClass: string }) => {
   return (
     props.details.sort(byAmount).map((detail) => (
-      <div key={detail.key} className="w-full text-sm">
+      <div key={detail.key} className={`w-full ${props.textClass}`}>
         {detail.budgetCategoryName || "Petty Cash"}{" "}
         {detail.iconClassName && <Icon name={detail.iconClassName} />}
       </div>
@@ -98,9 +78,9 @@ const BudgetItemList = (props: { details: AccountTransactionDetail[] }) => {
   ))
 }
 
-const LineItemAmounts = (props: { details: AccountTransactionDetail[], display: sting }) => {
+const LineItemAmounts = (props: { details: AccountTransactionDetail[] }) => {
   return (
-    <div className={props.display}>
+    <div>
       {props.details.sort(byAmount).map((detail) => (
         <div key={detail.key} className="w-full text-sm">
           <AmountSpan amount={detail.amount} />
@@ -114,46 +94,41 @@ const BudgetItemAmounts = (props: {
   details: AccountTransactionDetail[];
   amount: number;
   toggleForm: () => void;
-  isDetailShown: boolean;
 }) => {
-  const { details, toggleForm, amount, isDetailShown } = props
-
-  const display = isDetailShown ? "block" : "block md:hidden"
+  const { details, toggleForm, amount } = props
 
   return (
     <div className="w-full">
       <Button type="button" onClick={toggleForm}>
         <AmountSpan amount={amount} />
       </Button>
-      {details.length > 1 && <LineItemAmounts details={details} display={display} />}
+      {details.length > 1 && <LineItemAmounts details={details} />}
     </div>
   )
 }
 
 const DescriptionComponent = (props: {
   transaction: ModeledTransaction;
-  isDetailShown: boolean;
   toggleForm: () => void;
 }) => {
-  const { transaction, isDetailShown } = props
+  const { transaction } = props
   const { details, description } = transaction
 
-  if (description === null) {
+  if (!description && details.length === 1) {
     return (
-      <Button type="button" onClick={props.toggleForm}>
-        <BudgetItemsDescription details={details} />
+      <Button type="button" onClick={props.toggleForm} styling={{ textAlign: "text-left" }}>
+        <BudgetItemList details={details} textClass="text-base" />
       </Button>
     )
-  } else if (details.length > 1) {
-    const display = isDetailShown ? "block" : "block md:hidden"
+  } else if (details.some((detail) => !!detail.budgetItemKey)) {
     return (
-      <div className={`w-full ${display}`}>
-        <Button type="button" onClick={props.toggleForm}>
-          {description ?
-            <div className="w-full text-left">{description}</div> :
-            <BudgetItemsDescription details={details} />}
-        </Button>
-        <BudgetItemList details={details} />
+      <div>
+          {description ? (
+            <Button type="button" onClick={props.toggleForm}>
+              <div className="w-full text-left">{description}</div>
+            </Button>) :
+            <span className="text-gray-600">Items:</span>}
+        <BudgetItemList details={details} textClass="text-xs" />
       </div>
     )
   } else {
@@ -202,7 +177,6 @@ const DeleteIcon = (props: {
 
 export {
   BudgetItemAmounts,
-  BudgetItemsDescription,
   CaretComponent,
   ClearanceDateComponent,
   DeleteIcon,

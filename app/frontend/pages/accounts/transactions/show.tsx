@@ -6,26 +6,22 @@ import { dateParse } from "@/lib/DateFormatter";
 import { TransactionContainer } from "@/pages/accounts/transactions/container";
 import {
   BudgetItemAmounts,
-  BudgetItemsDescription,
-  CaretComponent,
   ClearanceDateComponent,
   DescriptionComponent,
   DeleteIcon,
 } from "@/pages/accounts/transactions/common";
-import { useToggle } from "@/lib/hooks/useToogle";
 import { TransactionWithBalance } from "@/pages/accounts/transactions";
 
 const TransactionShow = (props: {
   transaction: TransactionWithBalance;
   showFormFn: (key: string) => void;
+  index: number;
 }) => {
-  const [isDetailShown, toggleDetailView] = useToggle(false);
   const { transaction, showFormFn } = props;
   const {
     key,
     isBudgetExclusion,
     checkNumber,
-    description,
     details,
     isPending,
     notes,
@@ -49,14 +45,8 @@ const TransactionShow = (props: {
 
   return (
     <TransactionContainer
+      index={props.index}
       keyComponent={<div className="hidden">{key}</div>}
-      caretComponent={
-        <CaretComponent
-          details={details}
-          isDetailShown={isDetailShown}
-          toggleFn={toggleDetailView}
-        />
-      }
       clearanceDateComponent={
         <ClearanceDateComponent
           clearanceDate={clearanceDate}
@@ -66,14 +56,12 @@ const TransactionShow = (props: {
       }
       descriptionComponent={<DescriptionComponent
         transaction={transaction}
-        isDetailShown={isDetailShown}
         toggleForm={toggleForm}
       />}
       transactionAmountComponent={
         <BudgetItemAmounts
           details={details}
           amount={transaction.amount}
-          isDetailShown={isDetailShown}
           toggleForm={toggleForm}
         />
       }
@@ -89,11 +77,6 @@ const TransactionShow = (props: {
           flexWrap: "flex-wrap",
         }}
       >
-        {!!description && details.length === 1 && !isDetailShown && (
-          <div className="md:ml-4 w-full md:w-unset">
-            <BudgetItemsDescription details={details} />
-          </div>
-        )}
         {isBudgetExclusion && (
           <div className="md:ml-4 md:max-w-2/12 w-full italic">
             budget exclusion

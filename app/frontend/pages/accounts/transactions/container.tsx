@@ -1,30 +1,33 @@
 import React from "react";
-import { StripedRow } from "@/components/common/Row";
+import { Row } from "@/components/common/Row";
 import { Cell } from "@/components/common/Cell";
 
 interface ContainerProps {
   keyComponent: React.ReactNode;
-  caretComponent: React.ReactNode;
   clearanceDateComponent: React.ReactNode;
   descriptionComponent: React.ReactNode | string;
   transactionAmountComponent: React.ReactNode;
   balanceCompnent: React.ReactNode | null;
+  index: number;
   children?: React.ReactNode;
 }
 
 const TransactionContainer = (props: ContainerProps) => {
+  const isEven = props.index % 2 === 0
+
+  const bgColor = isEven ? "bg-white" : "bg-sky-50"
+
   return (
-    <StripedRow
-      oddColor="odd:bg-sky-50"
-      evenColor="even:bg-white"
+    <Row
       styling={{
+        backgroundColor: bgColor,
         flexAlign: "justify-start",
         flexWrap: "flex-wrap",
         padding: "px-4 py-2",
       }}
     >
       {props.keyComponent}
-      <div className="flex w-full sm:w-6/12">
+      <div className="flex w-full md:w-6/12">
         <Cell
           styling={{
             width: "w-full",
@@ -32,17 +35,16 @@ const TransactionContainer = (props: ContainerProps) => {
             display: "flex",
           }}
         >
-          {props.caretComponent}
           {props.clearanceDateComponent}
           <div className="w-3/12">{props.descriptionComponent}</div>
-          <div className="w-3/12 text-right">
-            {props.transactionAmountComponent}
+          <div className="w-6/12 flex flex-row justify-end gap-12 text-right">
+            <div>{props.transactionAmountComponent}</div>
+            <div>{props.balanceCompnent}</div>
           </div>
-          <div className="w-3/12 text-right">{props.balanceCompnent}</div>
         </Cell>
       </div>
       {props.children}
-    </StripedRow>
+    </Row>
   )
 };
 

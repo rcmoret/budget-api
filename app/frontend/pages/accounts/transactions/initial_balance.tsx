@@ -14,6 +14,7 @@ const InitialBalance = (props: { balance: number; initialDate: string }) => {
   return (
     <TransactionContainer
       keyComponent={null}
+      index={0}
       caretComponent={
         <CaretComponent
           details={[]}

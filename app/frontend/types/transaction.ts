@@ -19,6 +19,7 @@ export interface AccountTransaction {
   details: AccountTransactionDetail[];
   isBudgetExclusion: boolean;
   notes: string | null;
+  shortClearanceDate: string | null;
   transferKey?: string;
   updatedAt: string;
 }

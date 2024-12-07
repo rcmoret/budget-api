@@ -16,11 +16,6 @@ import { buildQueryParams } from "@/lib/redirect_params";
 import { SubmitButton } from "@/components/common/Button";
 import { Icon } from "@/components/common/Icon";
 
-// type SimplifiedAccount = {
-//   key: string;
-//   name: string;
-// }
-
 const TransferComponent = () => {
   const { appConfig, setAppConfig } = useContext(AppConfigContext)
   const { accounts, account, budget } = appConfig
@@ -181,7 +176,7 @@ const Transactions = (props: ComponentProps) => {
         closeForm={closeForm}
         openForm={showNewForm}
       />
-      {sortedTransactions.map((transaction) => {
+      {sortedTransactions.map((transaction, index) => {
         if (showFormKey === transaction.key) {
           return (
             <TransactionForm
@@ -193,6 +188,7 @@ const Transactions = (props: ComponentProps) => {
         } else {
           return (
             <TransactionShow
+              index={index + 1}
               key={transaction.key}
               transaction={transaction}
               showFormFn={setShowFormKey}

@@ -53,7 +53,7 @@ const LineItemComponent = (props: {
   const { detail, index, addDetail, removeDetail } = props
   const { key, amount, budgetItemKey  } = detail
 
-  const availableItems = items.filter((item) => {
+  const availableItems = [...items].filter((item) => {
     if (item.key === budgetItemKey) {
       return true
     } else if (item.isDeleted) {
@@ -101,6 +101,7 @@ const LineItemComponent = (props: {
         />
       </div>
       <div className="w-5/12 min-h-12 pl-2">
+        <div className="hidden">{budgetItemKey}</div>
         <Select
           options={options}
           // @ts-ignore
