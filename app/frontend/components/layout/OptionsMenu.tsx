@@ -61,6 +61,15 @@ const OptionsMenu = ({ namespace }: { namespace: string }) => {
     ...appConfig,
     budget: { ...appConfig.budget, showDeletedItems: !appConfig.budget.showDeletedItems }
   })
+
+  const toggleTransferForm = () => setAppConfig({
+    ...appConfig,
+    account: {
+      ...appConfig.account,
+      showTransferForm: !appConfig.account.showTransferForm
+    }
+  })
+
   const isBudget = namespace === "budget"
 
   return (
@@ -91,6 +100,13 @@ const OptionsMenu = ({ namespace }: { namespace: string }) => {
             Manage Accounts
           </MenuItem>
         </InertiaLink>
+        <div className="ml-4">
+          <OptionalMenuItem
+            isVisible={!isBudget}
+            onClick={toggleTransferForm}
+            copy={appConfig.account.showTransferForm ? "Hide Transfer Form" : "Show Transfer Form"}
+          />
+        </div>
         <InertiaLink href="/">
           <MenuItem>
             Dashboard

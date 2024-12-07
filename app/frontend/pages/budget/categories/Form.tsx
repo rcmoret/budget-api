@@ -4,7 +4,7 @@ import { useForm } from "@inertiajs/react";
 import { buildQueryParams } from "@/lib/redirect_params"
 import { AmountInput, inputAmount } from "@/components/common/AmountInput";
 import { Button, SubmitButton } from "@/components/common/Button";
-import { GreenCheck, Icon } from "@/components/common/Icon";
+import { Icon } from "@/components/common/Icon";
 import { TIcon } from "@/pages/budget/categories/Card"
 import Select, { SingleValue } from "react-select";
 

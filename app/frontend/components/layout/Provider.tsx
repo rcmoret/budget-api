@@ -11,6 +11,7 @@ type TAppConfig = {
     isCashFlow: boolean;
     includeArchived: boolean;
     key: string;
+    showTransferForm: boolean;
     slug: string;
   };
   budget: {
@@ -29,6 +30,7 @@ const initialConfig: TAppConfig = {
     isCashFlow: false,
     includeArchived: false,
     key: "",
+    showTransferForm: false,
     slug: "",
   },
   accounts: [],

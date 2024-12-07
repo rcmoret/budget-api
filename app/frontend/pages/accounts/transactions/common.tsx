@@ -158,7 +158,7 @@ const DescriptionComponent = (props: {
     )
   } else {
     return (
-      <Button type="button" onClick={props.toggleForm}>
+      <Button type="button" onClick={props.toggleForm} styling={{ textAlign: "text-left" }}>
         {description}
       </Button>
     )

@@ -24,7 +24,7 @@ const AccountShowComponent = (props: ComponentProps) => {
           ...selectedAccount.metadata
         }
       },
-      accounts: accounts.map(({ key, name }) => ({ key, name })),
+      accounts: accounts.filter((a) => !a.isArchived).map(({ key, name }) => ({ key, name })),
       account: {
         ...appConfig.account,
         isCashFlow: selectedAccount.isCashFlow,

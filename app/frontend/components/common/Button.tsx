@@ -39,6 +39,7 @@ type StylingProps = {
   flexWrap?: FlexWrapOption | null;
   fontSize?: FontSizeOption;
   fontWeight?: FontWeightOption;
+  height?: string;
   gap?: GapOption;
   hoverColor?: BgHoverOption;
   margin?: string;

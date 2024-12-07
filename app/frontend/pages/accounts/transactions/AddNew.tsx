@@ -51,7 +51,7 @@ const AddNewComponent = (props: ComponentProps) => {
 
     return (
       <TransactionForm
-        transaction={transaction}
+        transaction={{...transaction, balance: 0 }}
         closeForm={closeForm}
         isNew={true}
       />

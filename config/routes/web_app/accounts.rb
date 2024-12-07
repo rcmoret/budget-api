@@ -2,6 +2,7 @@ namespace :accounts do
   get "/", to: "index#call", as: :index
   post "/", to: "create#call"
   get "/manage", to: "manage#call", as: :manage
+  post "/transfer", to: "transfers/create#call"
 end
 
 put "/account/:key", to: "accounts/update#call", as: :account_update
