@@ -15,7 +15,7 @@ interface ContainerProps {
 const TransactionContainer = (props: ContainerProps) => {
   const isEven = props.index % 2 === 0
 
-  const bgColor = isEven ? "bg-white" : "bg-sky-50"
+  const bgColor = isEven ? "bg-sky-50" : "bg-sky-100"
 
   return (
     <Row
@@ -36,8 +36,8 @@ const TransactionContainer = (props: ContainerProps) => {
           }}
         >
           {props.clearanceDateComponent}
-          <div className="w-3/12">{props.descriptionComponent}</div>
-          <div className="w-6/12 flex flex-row justify-end gap-12 text-right">
+          <div className="w-4/12">{props.descriptionComponent}</div>
+          <div className="w-4/12 flex flex-row justify-end gap-12 text-right">
             <div>{props.transactionAmountComponent}</div>
             <div>{props.balanceCompnent}</div>
           </div>

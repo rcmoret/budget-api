@@ -1,5 +1,5 @@
 import { ModeledTransaction } from "@/lib/models/transaction";
-import { StripedRow } from "@/components/common/Row";
+import { Row } from "@/components/common/Row";
 import { Cell } from "@/components/common/Cell";
 import { Button } from "@/components/common/Button";
 import { TransactionForm } from "@/pages/accounts/transactions/form";
@@ -8,6 +8,7 @@ import { useContext } from "react";
 import { AppConfigContext } from "@/components/layout/Provider";
 
 type ComponentProps = {
+  index: number;
   isCashFlow?: boolean;
   isFormShown: boolean;
   closeForm: () => void;
@@ -16,6 +17,7 @@ type ComponentProps = {
 
 const AddNewComponent = (props: ComponentProps) => {
   const {
+    index,
     isFormShown,
     closeForm,
     openForm
@@ -23,6 +25,9 @@ const AddNewComponent = (props: ComponentProps) => {
 
   const { appConfig } = useContext(AppConfigContext)
   const { isCashFlow, key: accountKey, slug: accountSlug } = appConfig.account
+  const isEven = props.index % 2 === 0
+
+  const bgColor = isEven ? "bg-sky-50" : "bg-sky-100"
 
   if (isFormShown) {
     const transaction: ModeledTransaction = {
@@ -46,11 +51,13 @@ const AddNewComponent = (props: ComponentProps) => {
       isCleared: false,
       isPending: false,
       notes: "",
+      shortClearanceDate: null,
       updatedAt: ""
     }
 
     return (
       <TransactionForm
+        index={index}
         transaction={{...transaction, balance: 0 }}
         closeForm={closeForm}
         isNew={true}
@@ -59,13 +66,12 @@ const AddNewComponent = (props: ComponentProps) => {
 
   } else {
     return (
-      <StripedRow
-        oddColor="odd:bg-sky-50"
-        evenColor="even:bg-white"
+      <Row
         styling={{
+          backgroundColor: bgColor,
           flexAlign: "justify-start",
           flexWrap: "flex-wrap",
-          padding: "p-2",
+          padding: "p-4",
         }}
       >
         <div className="flex w-full sm:w-6/12">
@@ -76,8 +82,6 @@ const AddNewComponent = (props: ComponentProps) => {
               display: "flex",
             }}
           >
-            <div className="w-[6%]">
-            </div>
             <Button
               type="button"
               onClick={openForm}
@@ -87,7 +91,7 @@ const AddNewComponent = (props: ComponentProps) => {
             </Button>
           </Cell>
         </div>
-      </StripedRow>
+      </Row>
     )
   }
 }

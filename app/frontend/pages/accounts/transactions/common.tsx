@@ -128,7 +128,7 @@ const DescriptionComponent = (props: {
               <div className="w-full text-left">{description}</div>
             </Button>) :
             <span className="text-gray-600">Items:</span>}
-        <BudgetItemList details={details} textClass="text-xs" />
+        <BudgetItemList details={details} textClass="text-sm" />
       </div>
     )
   } else {

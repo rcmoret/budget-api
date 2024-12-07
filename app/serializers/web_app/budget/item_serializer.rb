@@ -12,7 +12,9 @@ module WebApp
                  :icon_class_name,
                  :maturity_month,
                  :maturity_year,
-                 :remaining
+                 :month,
+                 :remaining,
+                 :year
       attribute :is_accrual, alias_of: :accrual?
       attribute :is_deleted, alias_of: :deleted?
       attribute :is_deletable, alias_of: :deletable?
@@ -34,6 +36,8 @@ module WebApp
       def maturity_year
         maturity_interval.year
       end
+
+      delegate :month, :year, to: :interval
 
       private
 

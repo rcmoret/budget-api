@@ -93,6 +93,7 @@ type IndigoBgOption =
 
 type SkyBgOpion =
   | "bg-sky-50"
+  | "bg-sky-100"
 
 type YellowBgOption =
   | "bg-yellow-100"

@@ -58,6 +58,8 @@ const LineItemComponent = (props: {
       return true
     } else if (item.isDeleted) {
       return false 
+    } else if (item.month !== month || item.year !== year) {
+      return false
     } else if (item.isMonthly && item.transactionDetails.length) {
       return false
     } else {

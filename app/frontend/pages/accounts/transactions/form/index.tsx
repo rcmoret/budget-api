@@ -12,7 +12,7 @@ import { inputAmount, TInputAmount } from "@/components/common/AmountInput";
 import { UrlBuilder } from "@/lib/UrlBuilder";
 import { Button } from "@/components/common/Button";
 import Select, { SingleValue } from "react-select";
-import { StripedRow } from "@/components/common/Row"
+import { Row } from "@/components/common/Row"
 import { useToggle } from "@/lib/hooks/useToogle";
 import { TransactionWithBalance } from "@/pages/accounts/transactions";
 import { SubmitButton } from "@/components/common/Button";
@@ -227,6 +227,7 @@ export type TFormDetail = {
 
 const TransactionForm = (props: {
   transaction: TransactionWithBalance;
+  index: number;
   isNew?: boolean;
   closeForm: () => void;
 }) => {
@@ -243,6 +244,10 @@ const TransactionForm = (props: {
     notes,
   } = transaction
   const isNew = !!props.isNew
+
+  const isEven = props.index % 2 === 0
+
+  const bgColor = isEven ? "bg-gray-50" : "bg-sky-100"
 
   const details: Array<TFormDetail> = transaction.details.map((detail) => {
     return {
@@ -383,13 +388,7 @@ const TransactionForm = (props: {
   }
 
   return (
-    <StripedRow
-      oddColor="odd:bg-sky-50"
-      evenColor="even:bg-white"
-      styling={{
-        padding: "px-2 py-1"
-      }}
-    >
+    <Row styling={{ padding: "px-2 py-1", backgroundColor: bgColor }} >
       <form onSubmit={onSubmit} className="w-full">
         <div className="w-full rounded flex flex-row px-2 py-1 gap-2 border border-gray-300">
           <div className="hidden">{key}</div>
@@ -453,7 +452,7 @@ const TransactionForm = (props: {
           </div>
         </div>
       </form>
-    </StripedRow>
+    </Row>
   )
 };
 

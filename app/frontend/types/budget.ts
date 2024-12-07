@@ -62,9 +62,11 @@ export type BudgetItem = {
   isPerDiemEnabled: boolean,
   maturityMonth?: number
   maturityYear?: number
+  month: number,
   remaining: number,
   spent: number,
   transactionDetails: Array<BudgetItemTransaction>,
+  year: number,
   events: Array<BudgetItemEvent>
 }
 

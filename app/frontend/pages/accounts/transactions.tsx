@@ -168,35 +168,46 @@ const Transactions = (props: ComponentProps) => {
     ]
   }, [] as TransactionWithBalance[])
 
+  let index = 0
+
   return (
-    <div className="w-full flex flex-col">
-      <TransferComponent />
-      <AddNewComponent
-        isFormShown={showFormKey === "__new__"}
-        closeForm={closeForm}
-        openForm={showNewForm}
-      />
-      {sortedTransactions.map((transaction, index) => {
-        if (showFormKey === transaction.key) {
-          return (
-            <TransactionForm
-              key={transaction.key}
-              transaction={transaction}
-              closeForm={closeForm}
-            />
-          )
-        } else {
-          return (
-            <TransactionShow
-              index={index + 1}
-              key={transaction.key}
-              transaction={transaction}
-              showFormFn={setShowFormKey}
-            />
-          )
-        }
-      })}
-      <InitialBalance balance={props.initialBalance} initialDate={budget.firstDate} />
+    <div className="bg-gray-50 w-full px-24 mx-auto flex flex-col pb-20  pt-8">
+      <div className="w-full overflow-hidden shadow-lg">
+        <TransferComponent />
+        <AddNewComponent
+          index={index}
+          isFormShown={showFormKey === "__new__"}
+          closeForm={closeForm}
+          openForm={showNewForm}
+        />
+        {sortedTransactions.map((transaction) => {
+          index += 1
+          if (showFormKey === transaction.key) {
+            return (
+              <TransactionForm
+                index={index}
+                key={transaction.key}
+                transaction={transaction}
+                closeForm={closeForm}
+              />
+            )
+          } else {
+            return (
+              <TransactionShow
+                index={index}
+                key={transaction.key}
+                transaction={transaction}
+                showFormFn={setShowFormKey}
+              />
+            )
+          }
+        })}
+        <InitialBalance
+          index={index + 1}
+          balance={props.initialBalance}
+          initialDate={budget.firstDate}
+        />
+      </div>
     </div>
   );
 };

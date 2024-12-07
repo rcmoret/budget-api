@@ -6,22 +6,17 @@ import {
   ClearanceDateComponent,
 } from "@/pages/accounts/transactions/common";
 
-const InitialBalance = (props: { balance: number; initialDate: string }) => {
+const InitialBalance = (props: { index: number, balance: number; initialDate: string }) => {
   const clearanceDate = dateParse(props.initialDate);
   const shortClearanceDate = dateParse(props.initialDate, {
     format: "m/d/yy",
   });
+
+
   return (
     <TransactionContainer
+      index={props.index}
       keyComponent={null}
-      index={0}
-      caretComponent={
-        <CaretComponent
-          details={[]}
-          isDetailShown={false}
-          toggleFn={() => null}
-        />
-      }
       clearanceDateComponent={
         <ClearanceDateComponent
           clearanceDate={clearanceDate}
