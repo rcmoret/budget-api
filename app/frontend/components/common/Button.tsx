@@ -126,6 +126,7 @@ const Button = (props: ButtonProps) => {
   if (isDisabled) {
     return (
       <DisabledButton styling={{
+        cursor: "cursor-not-allowed",
         ...props.styling,
         ...props.disabledStyling
       }}>

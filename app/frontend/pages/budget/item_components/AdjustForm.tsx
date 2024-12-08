@@ -190,6 +190,12 @@ const AdjustForm = (props: ComponentProps) => {
         <div className="w-4/12 flex flex-row justify-end">
           <SubmitButton
             onSubmit={props.postEvents}
+            disabledStyling={{
+              color: "text-black",
+              backgroundColor: "bg-gray-300",
+              hoverColor: "hover:bg-gray-300",
+              cursor: "cursor-not-allowed"
+            }}
             styling={{
               color: "text-white",
               backgroundColor: "bg-green-600",
@@ -203,7 +209,7 @@ const AdjustForm = (props: ComponentProps) => {
             isEnabled={!props.processing}
           >
             SUBMIT UPDATES
-            <div className="text-chartreuse-300">
+            <div className={props.processing ? "text-gray-700" : "text-chartreuse-300"}>
               <Icon name="check-circle" />
             </div>
           </SubmitButton>

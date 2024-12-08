@@ -77,7 +77,10 @@ const useDraftEvents = (props: HookProps) => {
 
   const { transform, setData: setFormData, data, ...form } = useForm({ items })
 
+  const [postingChanges, setPostingChanges] = useState<boolean>(false)
+
   const postChanges = () => {
+    setPostingChanges(true)
     const url = UrlBuilder({ name: "BudgetEdit", month, year })
     const payload = {
       changes: changes.map((change) => ({ ...change, amount: change.amount.cents }))
@@ -88,6 +91,7 @@ const useDraftEvents = (props: HookProps) => {
       payload,
       {
         onSuccess: (page) => {
+          setPostingChanges(false)
           setFormData({
             items: mergeItems({
               items: page.props.items as BudgetItem[],
@@ -130,7 +134,7 @@ const useDraftEvents = (props: HookProps) => {
     )
   }
 
-  const eventsUrl= UrlBuilder({ name: "BudgetItemEvents",
+  const eventsUrl = UrlBuilder({ name: "BudgetItemEvents",
     month,
     year,
     queryParams: buildQueryParams(["budget", month, year]),
@@ -190,7 +194,7 @@ const useDraftEvents = (props: HookProps) => {
     newItems,
     items,
     post,
-    processing: form.processing,
+    processing: form.processing || postingChanges,
     removeChange,
     updateChange,
   }

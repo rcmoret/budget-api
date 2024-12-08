@@ -112,7 +112,8 @@ const TransferComponent = () => {
           styling={{
             color: "text-white",
             padding: "px-2 py-1",
-            backgroundColor: "bg-green-600 hover:bg-green-700",
+            backgroundColor: "bg-green-600",
+            hoverColor: "hover:bg-green-700",
             height: "h-input-lg",
             rounded: "rounded"
           }}

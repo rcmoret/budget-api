@@ -1234,6 +1234,16 @@ video {
   background-color: hsl(52 40% 77% / var(--tw-bg-opacity, 1));
 }
 
+.bg-gray-700 {
+  --tw-bg-opacity: 1;
+  background-color: hsl(202 22% 25% / var(--tw-bg-opacity, 1));
+}
+
+.bg-gray-600 {
+  --tw-bg-opacity: 1;
+  background-color: hsl(202 17% 35% / var(--tw-bg-opacity, 1));
+}
+
 .bg-gradient-to-b {
   background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
 }
@@ -1804,6 +1814,16 @@ video {
 .hover\:bg-orange-900:hover {
   --tw-bg-opacity: 1;
   background-color: hsl(22 100% 13% / var(--tw-bg-opacity, 1));
+}
+
+.hover\:bg-gray-400:hover {
+  --tw-bg-opacity: 1;
+  background-color: hsl(202 12% 55% / var(--tw-bg-opacity, 1));
+}
+
+.hover\:bg-gray-300:hover {
+  --tw-bg-opacity: 1;
+  background-color: hsl(202 10% 65% / var(--tw-bg-opacity, 1));
 }
 
 .hover\:text-white:hover {

@@ -309,8 +309,18 @@ const EditSubmitButton = (props: {
   postEvents: () => void;
   processing: boolean;
 }) => {
+  console.log({ processing: props.processing })
   return (
-    <SubmitButton isEnabled={!props.processing}  onSubmit={props.postEvents} styling={{ color: "text-blue-300" }}>
+    <SubmitButton
+      isEnabled={!props.processing}
+      onSubmit={props.postEvents}
+      disabledStyling={{
+        color: "text-gray-600",
+      }}
+      styling={{
+        color: "text-blue-300"
+      }}
+    >
       <Icon name="check-circle" />
     </SubmitButton>
   )
@@ -336,7 +346,6 @@ const ActionableIcons = (props: ActionableIconsProps) => {
   }) || null
   const href = !!category ? `/budget/category/${category.slug}` : "#"
 
-
   const isSubmittable = !!item.draftItem && props.changes.length === 1
 
   return (
@@ -355,7 +364,12 @@ const ActionableIcons = (props: ActionableIconsProps) => {
       </div>
       <div className="flex flex-row gap-2">
         {!!item.draftItem ? <CloseFormButton onClick={closeForm} /> : <EditButton onClick={openForm} />}
-        {isSubmittable && <EditSubmitButton postEvents={postEvents} processing={processing} />}
+        {isSubmittable && (
+          <EditSubmitButton
+            postEvents={postEvents}
+            processing={processing}
+          />
+        )}
 
         <DeleteButton item={item} />
       </div>

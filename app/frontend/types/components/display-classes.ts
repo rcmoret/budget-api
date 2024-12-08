@@ -111,6 +111,7 @@ export type BgColorOption =
   | GradientBgOption
 
 export type BgHoverOption =
+  | "hover:bg-gray-300"
   | "hover:bg-green-700"
 
 export type PositionOption =

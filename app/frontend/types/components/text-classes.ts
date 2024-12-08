@@ -43,6 +43,7 @@ type TextGreens =
 type TextGrayScale =
   | "text-black"
   | "text-gray-500"
+  | "text-gray-600"
   | "text-gray-800"
   | "text-white"
 
