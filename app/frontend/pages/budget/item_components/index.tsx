@@ -9,7 +9,7 @@ import { Button, SubmitButton } from "@/components/common/Button";
 import { AmountSpan } from "@/components/common/AmountSpan";
 import { Point } from "@/components/common/Symbol";
 import { AppConfigContext } from "@/components/layout/Provider";
-
+import { DateFormatter } from "@/lib/DateFormatter";
 import { clearedItems, sortDetails } from "@/lib/models/budget-items"
 import { dateParse } from "@/lib/DateFormatter";
 import { useEventForm } from "@/lib/hooks/useEventsForm";
@@ -19,6 +19,7 @@ import { buildQueryParams } from "@/lib/redirect_params";
 import { inputAmount, AmountInput } from "@/components/common/AmountInput";
 import { TChangeForm, DraftChange } from "@/lib/hooks/useDraftEvents";
 import { useToggle } from "@/lib/hooks/useToogle";
+import { useForm } from "@inertiajs/react";
 
 type DetailProps = {
   item: BudgetItem;
@@ -362,13 +363,55 @@ const ActionableIcons = (props: ActionableIconsProps) => {
   )
 }
 
+const AccrualFormComponent = (props: { budgetCategoryKey: string }) => {
+  const { budgetCategoryKey } = props
+  const { appConfig } = useContext(AppConfigContext)
+  const { month, year } = appConfig.budget.data
+  const { put, processing } = useForm({
+    category: {
+      maturityIntervals: [
+        {
+          month,
+          year
+        }
+      ]
+    }
+  })
+
+  const onSubmit = (ev: React.MouseEvent) => {
+    ev.preventDefault()
+    const formUrl = UrlBuilder({
+      name: "CategoryShow",
+      key: budgetCategoryKey,
+      queryParams: buildQueryParams(["budget", month, year, "set-up"])
+    })
+    put(formUrl)
+  }
+
+  return (
+    <div>
+      <SubmitButton
+        isEnabled={!processing}
+        onSubmit={onSubmit}
+        styling={{
+          color: "text-blue-300"
+        }}
+      >
+        Mark as Maturing in {DateFormatter({ month, year, format: "monthYear" })}
+      </SubmitButton>
+    </div>
+  )
+}
+
 const AccrualRow = ({ item }: { item: BudgetItem }) => {
   const { maturityMonth, maturityYear } = item
   const { appConfig } = useContext(AppConfigContext)
   const { month, year } = appConfig.budget.data
 
+  const isMature = month === maturityMonth && year === maturityYear
+
   let upcomingMaturityCopy = ""
-  if (month === maturityMonth && year === maturityYear) {
+  if (isMature) {
     upcomingMaturityCopy = "Currently Mature"
   } else if (!!maturityYear && !!maturityMonth) {
     upcomingMaturityCopy = `Maturing: ${maturityMonth}/${maturityYear}`
@@ -377,7 +420,7 @@ const AccrualRow = ({ item }: { item: BudgetItem }) => {
   }
 
   return (
-    <Row styling={{ padding: "p-2", flexAlign: "justify-between" }}>
+    <Row styling={{ padding: "p-2", flexWrap: "flex-wrap", flexAlign: "justify-between" }}>
       <Cell styling={{ width: "w-6/12" }}>
         <span className="italic text-sm">
           <Point>
@@ -388,6 +431,7 @@ const AccrualRow = ({ item }: { item: BudgetItem }) => {
       <Cell styling={{ textAlign: "text-right", width: "w-6/12" }}>
         {upcomingMaturityCopy}
       </Cell>
+      {!isMature && <AccrualFormComponent budgetCategoryKey={item.budgetCategoryKey} />}
     </Row>
   )
 }
