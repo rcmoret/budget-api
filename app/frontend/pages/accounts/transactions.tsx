@@ -172,7 +172,7 @@ const Transactions = (props: ComponentProps) => {
   let index = 0
 
   return (
-    <div className="bg-gray-50 w-full px-24 mx-auto flex flex-col pb-20  pt-8">
+    <div className="bg-gray-50 w-full px-4 md:px-24 mx-auto flex flex-col pb-20  pt-8">
       <div className="w-full overflow-hidden shadow-lg">
         <TransferComponent />
         <AddNewComponent

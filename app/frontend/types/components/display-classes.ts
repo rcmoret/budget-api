@@ -16,13 +16,14 @@ export type DisplayOption =
   | "table-caption"
 
 export type FlexAlignOption =
+  | "justify-around"
+  | "justify-between"
+  | "justify-between md:justify-start"
+  | "justify-center"
+  | "justify-end"
+  | "justify-evenly"
   | "justify-normal"
   | "justify-start"
-  | "justify-end"
-  | "justify-center"
-  | "justify-between"
-  | "justify-around"
-  | "justify-evenly"
   | "justify-stretch"
 
 export type FlexDirectionOption = "flex-row" | "flex-col" | "flex-row-reverse" | "flex-col-reverse"

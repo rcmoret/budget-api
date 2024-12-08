@@ -159,7 +159,7 @@ const BudgetItemsComponent = (props: {
   const { details, addDetail, removeDetail, updateDetailItem, updateDetailAmount } = props
 
   return (
-    <div className="flex flex-col w-[450px] mr-8">
+    <div className="flex flex-col w-full md:w-[450px] md:mr-8">
       <div className="flex flex-row w-full justify-between">
         <Label label="Line Items Amount" classes={["w-6/12"]} />
         <Label label="Budget Category" classes={["w-5/12 pl-2"]} />

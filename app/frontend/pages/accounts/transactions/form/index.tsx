@@ -16,6 +16,7 @@ import { Row } from "@/components/common/Row"
 import { useToggle } from "@/lib/hooks/useToogle";
 import { TransactionWithBalance } from "@/pages/accounts/transactions";
 import { SubmitButton } from "@/components/common/Button";
+import { Cell } from "@/components/common/Cell";
 
 type InputProps = {
   name: string;
@@ -61,7 +62,7 @@ const DescriptionComponent = (props: {
   }
 
   return (
-    <div className="mr-4">
+    <div className="mr-4 w-full md:w-fit">
       <Label label="Description">
         <span className="italic text-xs">* optional</span>
       </Label>
@@ -136,7 +137,7 @@ const NotesComponent = (props: {
   // and !!!
   if (showInput) {
     return (
-      <div>
+      <div className="w-full md:w-fit">
         <Button type="button" onClick={toggleInput}>
           <span className="text-gray-600">
             <Icon name="sticky-note" />
@@ -209,12 +210,16 @@ const AccountSelectComponent = (props: {
   }
 
   return (
-    <Select
-      options={options}
-      value={value}
-      // @ts-ignore
-      onChange={onChange}
-    />
+    <div className="w-full flex justify-end">
+      <div className="w-full md:w-3/12">
+        <Select
+          options={options}
+          value={value}
+          // @ts-ignore
+          onChange={onChange}
+        />
+      </div>
+    </div>
   )
 }
 
@@ -388,25 +393,29 @@ const TransactionForm = (props: {
   }
 
   return (
-    <Row styling={{ padding: "px-2 py-1", backgroundColor: bgColor }} >
+    <Row styling={{ padding: "px-2 py-1", flexWrap: "flex-wrap", backgroundColor: bgColor }} >
       <form onSubmit={onSubmit} className="w-full">
-        <div className="w-full rounded flex flex-row px-2 py-1 gap-2 border border-gray-300">
-          <div className="hidden">{key}</div>
-          <div className="mr-4">
-            <Button type="button" onClick={closeForm}>
-              <span className="text-gray-600">
-                <Icon name="times-circle" />
-              </span>
-            </Button>
-          </div>
-          <ClearanceDateComponent
-            clearanceDate={data.clearanceDate}
-            updateFormData={updateFormData}
-          />
-          <DescriptionComponent
-            description={data.description || ""}
-            updateFormData={updateFormData}
-          />
+        <div className="w-full rounded flex flex-row flex-wrap px-2 py-1 gap-2 border border-gray-300">
+          <Cell styling={{ display: "flex", flexAlign: "justify-between md:justify-start", width: "w-full md:w-fit" }}>
+            <div className="hidden">{key}</div>
+            <div className="mr-4">
+              <Button type="button" onClick={closeForm}>
+                <span className="text-gray-600">
+                  <Icon name="times-circle" />
+                </span>
+              </Button>
+            </div>
+            <ClearanceDateComponent
+              clearanceDate={data.clearanceDate}
+              updateFormData={updateFormData}
+            />
+          </Cell>
+          <Cell styling={{ display: "flex", width: "w-full md:w-fit" }}>
+            <DescriptionComponent
+              description={data.description || ""}
+              updateFormData={updateFormData}
+            />
+          </Cell>
           <BudgetItemsComponent
             details={formDetails}
             addDetail={addDetail}
@@ -415,7 +424,7 @@ const TransactionForm = (props: {
             updateDetailItem={updateDetailItem}
             isBudgetExclusion={data.isBudgetExclusion}
           />
-          <div className="flex flex-col w-2/12 gap-2">
+          <div className="flex flex-col w-8/12 md:w-2/12 gap-2">
             <CheckNumberComponent
               checkNumber={data.checkNumber}
               updateFormData={updateFormData}
@@ -434,7 +443,7 @@ const TransactionForm = (props: {
                 accountKey={data.accountKey}
               />}
           </div>
-          <div className="text-right grow self-end text-lg">
+          <div className="w-full md:w-fit text-right grow self-end text-lg">
             <div>
               <SubmitButton
                 onSubmit={onSubmit}
