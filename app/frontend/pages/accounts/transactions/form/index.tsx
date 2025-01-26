@@ -210,16 +210,12 @@ const AccountSelectComponent = (props: {
   }
 
   return (
-    <div className="w-full flex justify-end">
-      <div className="w-full md:w-3/12">
-        <Select
-          options={options}
-          value={value}
-          // @ts-ignore
-          onChange={onChange}
-        />
-      </div>
-    </div>
+    <Select
+      options={options}
+      value={value}
+      // @ts-ignore
+      onChange={onChange}
+    />
   )
 }
 
@@ -437,6 +433,8 @@ const TransactionForm = (props: {
               isBudgetExclusion={data.isBudgetExclusion}
               updateFormData={updateFormData}
             />
+          </div>
+          <div className="w-full md:w-3/12 ">
             {!isNew &&
               <AccountSelectComponent
                 updateFormData={updateFormData}
