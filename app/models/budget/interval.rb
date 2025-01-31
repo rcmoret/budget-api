@@ -119,11 +119,11 @@ module Budget
     end
 
     def future?
-      first_date > today
+      first_date.to_date > today
     end
 
     def past?
-      last_date < today
+      last_date.to_date < today
     end
 
     private
