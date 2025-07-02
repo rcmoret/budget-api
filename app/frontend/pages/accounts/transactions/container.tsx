@@ -38,8 +38,8 @@ const TransactionContainer = (props: ContainerProps) => {
           {props.clearanceDateComponent}
           <div className="w-4/12">{props.descriptionComponent}</div>
           <div className="w-4/12 flex flex-row justify-end gap-12 text-right">
-            <div>{props.transactionAmountComponent}</div>
-            <div>{props.balanceCompnent}</div>
+            <div className="w-1/2">{props.transactionAmountComponent}</div>
+            <div className="w-1/2">{props.balanceCompnent}</div>
           </div>
         </Cell>
       </div>
