@@ -294,7 +294,7 @@ const SetUpComponent = (props: ComponentProps) => {
       </div>
       <div className="flex flex-col gap-4 w-full">
         <div className="w-full flex flex-wrap flex-row gap-4">
-          <div className="w-8/12 flex flex-col gap-2">
+          <div className="w-8/12 flex flex-col gap-2 overflow-y-auto max-h-96">
             {currentCategories.collection.filter(withItems).map((category) => {
               return (
                 <CategoryComponent

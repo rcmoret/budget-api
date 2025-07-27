@@ -13,6 +13,8 @@ type ComponentProps = {
   isFormShown: boolean;
   closeForm: () => void;
   openForm: () => void;
+  month: number;
+  year: number;
 }
 
 const AddNewComponent = (props: ComponentProps) => {
@@ -20,7 +22,9 @@ const AddNewComponent = (props: ComponentProps) => {
     index,
     isFormShown,
     closeForm,
-    openForm
+    openForm,
+    month,
+    year
   } = props
 
   const { appConfig } = useContext(AppConfigContext)
@@ -60,6 +64,8 @@ const AddNewComponent = (props: ComponentProps) => {
         index={index}
         transaction={{...transaction, balance: 0 }}
         closeForm={closeForm}
+        month={month}
+        year={year}
         isNew={true}
       />
     )

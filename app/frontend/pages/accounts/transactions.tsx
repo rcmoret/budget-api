@@ -142,6 +142,8 @@ interface ComponentProps {
   transactions: AccountTransaction[];
   budget: {
     firstDate: string;
+    month: number;
+    year: number;
   };
 }
 
@@ -170,6 +172,7 @@ const Transactions = (props: ComponentProps) => {
   }, [] as TransactionWithBalance[])
 
   let index = 0
+  const { month, year } = budget
 
   return (
     <div className="bg-gray-50 w-full px-4 md:px-24 mx-auto flex flex-col pb-20  pt-8">
@@ -178,6 +181,8 @@ const Transactions = (props: ComponentProps) => {
         <AddNewComponent
           index={index}
           isFormShown={showFormKey === "__new__"}
+          month={month}
+          year={year}
           closeForm={closeForm}
           openForm={showNewForm}
         />
@@ -189,6 +194,8 @@ const Transactions = (props: ComponentProps) => {
                 index={index}
                 key={transaction.key}
                 transaction={transaction}
+                month={month}
+                year={year}
                 closeForm={closeForm}
               />
             )

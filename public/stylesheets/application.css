@@ -697,6 +697,10 @@ video {
   height: 2.4rem;
 }
 
+.max-h-96 {
+  max-height: 24rem;
+}
+
 .min-h-12 {
   min-height: 3rem;
 }
@@ -1856,10 +1860,6 @@ video {
   .md\:w-fit {
     width: -moz-fit-content;
     width: fit-content;
-  }
-
-  .md\:w-5\/12 {
-    width: 41.666667%;
   }
 
   .md\:min-w-\[10\%\] {

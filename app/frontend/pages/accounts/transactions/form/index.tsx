@@ -25,12 +25,16 @@ type InputProps = {
 
 const ClearanceDateComponent = (props: {
   clearanceDate: string | null,
-  updateFormData: (props: InputProps) => void
+  updateFormData: (props: InputProps) => void,
+  month: number,
+  year: number
 }) => {
-  const { updateFormData } = props
+  const { month, year, updateFormData } = props
   const clearanceDate = !!props.clearanceDate ?
     parseIsoDate(props.clearanceDate) :
     null
+
+  const openToDate = clearanceDate || new Date(year, month - 1)
 
   const onChange = (input: Date | null) => {
     updateFormData({
@@ -44,6 +48,7 @@ const ClearanceDateComponent = (props: {
       <Label label="Clearance Date" />
       <DatePicker
         selected={clearanceDate}
+        openToDate={openToDate}
         onChange={onChange}
         className="border border-gray-300 h-input-lg rounded px-1"
       />
@@ -229,11 +234,13 @@ export type TFormDetail = {
 const TransactionForm = (props: {
   transaction: TransactionWithBalance;
   index: number;
+  month: number;
+  year: number;
   isNew?: boolean;
   closeForm: () => void;
 }) => {
   const { appConfig } = useContext(AppConfigContext)
-  const { transaction, closeForm } = props;
+  const { month, year, transaction, closeForm } = props;
   const {
     key,
     accountKey,
@@ -404,6 +411,8 @@ const TransactionForm = (props: {
             <ClearanceDateComponent
               clearanceDate={data.clearanceDate}
               updateFormData={updateFormData}
+              month={month}
+              year={year}
             />
           </Cell>
           <Cell styling={{ display: "flex", width: "w-full md:w-fit" }}>

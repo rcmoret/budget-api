@@ -51,11 +51,6 @@ const AccountTabs = (props: PropType) => {
         position: "relative"
       }}
     >
-      <div
-        className="absolute top-0 left-0 w-4 h-full z-20"
-        style={{ background: "linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)" }}
-      >
-      </div>
       <Row styling={{ position: "relative", overflow: "overflow-scroll", gap: "gap-4" }}>
         {accounts.map((account) => (
           <IndividualTab
@@ -65,15 +60,6 @@ const AccountTabs = (props: PropType) => {
           />
         ))}
       </Row>
-      <div
-        className="absolute top-0 h-full z-20"
-        style={{
-          right: 0,
-          width: "120px",
-          background: "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,1.0) 70%)"
-        }}
-      >
-      </div>
     </Row>
   );
 };
