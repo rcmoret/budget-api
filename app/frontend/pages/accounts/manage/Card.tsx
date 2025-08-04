@@ -46,7 +46,7 @@ const ArchivedAtComponent = ({ account }: { account: AccountManage; }) => {
 
 const ArchiveButton = (props: { account: AccountManage }) => {
   const { put, processing } = useForm({
-    category: { archivedAt: new Date() }
+    account: { archivedAt: new Date() }
   })
 
   const onSubmit = () => {
