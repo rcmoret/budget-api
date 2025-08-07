@@ -574,16 +574,8 @@ video {
   position: sticky;
 }
 
-.left-0 {
-  left: 0px;
-}
-
 .top-0 {
   top: 0px;
-}
-
-.z-20 {
-  z-index: 20;
 }
 
 .mx-auto {
@@ -735,10 +727,6 @@ video {
 
 .w-3\/12 {
   width: 25%;
-}
-
-.w-4 {
-  width: 1rem;
 }
 
 .w-4\/12 {

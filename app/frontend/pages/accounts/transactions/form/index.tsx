@@ -306,9 +306,15 @@ const TransactionForm = (props: {
   const removeDetail = (key: string) => {
     setData({
       ...data,
-      details: data.details.map((detail) => {
-        return detail.key === key ? { ...detail, _destroy: true } : detail
-      })
+      details: data.details.reduce((collection, detail) => {
+        if (detail.key !== key) {
+          return [...collection, detail]
+        } else if (isNew) {
+          return collection
+        } else {
+          return [...collection, { ...detail, _destroy: true }]
+        }
+      }, [] as TFormDetail[])
     })
   }
 
