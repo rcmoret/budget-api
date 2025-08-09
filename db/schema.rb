@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_11_21_211816) do
+ActiveRecord::Schema[7.0].define(version: 2025_08_09_150756) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -276,4 +276,13 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_21_211816) do
   add_foreign_key "user_events", "user_profiles", column: "actor_id"
   add_foreign_key "user_events", "user_profiles", column: "target_user_id"
   add_foreign_key "user_profiles", "user_groups"
+
+  create_view "user_configuration_view", sql_definition: <<-SQL
+      SELECT up.id AS user_profile_id,
+      uco.description,
+      COALESCE(uc.value, uco.default_value) AS value
+     FROM ((user_configuration_options uco
+       LEFT JOIN user_configurations uc ON ((uc.user_configuration_option_id = uco.id)))
+       LEFT JOIN user_profiles up ON ((up.id = uc.user_profile_id)));
+  SQL
 end
