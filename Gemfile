@@ -17,6 +17,7 @@ gem "rails", "~> 7.0.1"
 gem "rubocop", require: false
 gem "rubocop-rails", require: false
 gem "rubocop-rspec", require: false
+gem "scenic"
 gem "tzinfo-data", platforms: %i[mingw mswin x64_mingw jruby]
 gem "vite_rails", "~> 3.0"
 
