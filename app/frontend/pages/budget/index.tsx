@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 import { BudgetData, BudgetItem, TBudgetItem, DiscretionaryData, SelectBudgetCategory } from "@/types/budget";
 import { AppConfigContext } from "@/components/layout/Provider";
 import {
@@ -19,6 +19,7 @@ import {
   PendingMonthlyItemsSection,
   Section,
 } from "@/pages/budget/items";
+import { FilterComponent } from "@/pages/budget/filter"
 import { Discretionary } from "@/pages/budget/discretionary";
 
 export type DraftItem = {
@@ -88,12 +89,22 @@ const BudgetComponent = (props: ComponentProps) => {
     }
   }
 
-  const clearedMonthlyExpenseItems = decorateCollection(applyFilters(items, [clearedItems, expenseItems]))
-  const clearedMonthlyRevenueItems = decorateCollection(applyFilters(items, [clearedItems, revenueItems]))
-  const dayToDayRevenueItems = decorateCollection(applyFilters(items, [dayToDayItems, revenueItems]))
-  const dayToDayExpenseItems = decorateCollection(applyFilters(items, [dayToDayItems, expenseItems]))
-  const pendingMonthlyExpenseItems = decorateCollection(applyFilters(items, [pendingItems, expenseItems]))
-  const pendingMonthlyRevenueItems = decorateCollection(applyFilters(items, [pendingItems, revenueItems]))
+  const [filterTerm, setFilterTerm] = useState<string>("")
+
+  const searchTermFilter = (item: BudgetItem): boolean => {
+    if (filterTerm.length < 3) { return true }
+
+    const expression = new RegExp(filterTerm, "i")
+
+    return !!item.name.match(expression)
+  }
+
+  const clearedMonthlyExpenseItems = decorateCollection(applyFilters(items, [clearedItems, expenseItems, searchTermFilter]))
+  const clearedMonthlyRevenueItems = decorateCollection(applyFilters(items, [clearedItems, revenueItems, searchTermFilter]))
+  const dayToDayRevenueItems = decorateCollection(applyFilters(items, [dayToDayItems, revenueItems, searchTermFilter]))
+  const dayToDayExpenseItems = decorateCollection(applyFilters(items, [dayToDayItems, expenseItems, searchTermFilter]))
+  const pendingMonthlyExpenseItems = decorateCollection(applyFilters(items, [pendingItems, expenseItems, searchTermFilter]))
+  const pendingMonthlyRevenueItems = decorateCollection(applyFilters(items, [pendingItems, revenueItems, searchTermFilter]))
 
   useEffect(() => {
     setAppConfig({
@@ -106,7 +117,6 @@ const BudgetComponent = (props: ComponentProps) => {
       }
     })
   }, [])
-
 
   const adjustItems = form.draftItems.filter((i) => !i.isNewItem)
   const monthlyCategories = categories.filter((category) => category.isMonthly)
@@ -132,6 +142,7 @@ const BudgetComponent = (props: ComponentProps) => {
         processing={form.processing}
         postEvents={form.post}
       />
+      <FilterComponent filterTerm={filterTerm} setFilterTerm={setFilterTerm} />
       <Column
         title="Day-to-Day"
         categories={dayToDayCategories}
