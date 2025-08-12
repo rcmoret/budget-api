@@ -309,7 +309,6 @@ const EditSubmitButton = (props: {
   postEvents: () => void;
   processing: boolean;
 }) => {
-  console.log({ processing: props.processing })
   return (
     <SubmitButton
       isEnabled={!props.processing}

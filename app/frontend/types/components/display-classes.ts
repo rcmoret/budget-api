@@ -28,7 +28,11 @@ export type FlexAlignOption =
 
 export type FlexDirectionOption = "flex-row" | "flex-col" | "flex-row-reverse" | "flex-col-reverse"
 
-export type FlexWrapOption = "flex-wrap" | "flex-wrap-reverse" | "flex-nowrap"
+export type FlexWrapOption =
+  | "flex-wrap"
+  | "flex-wrap-reverse"
+  | "flex-nowrap"
+  | "flex-wrap md:flex-nowrap"
 
 export type OverflowOption =
   | "overflow-auto"
