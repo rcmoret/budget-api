@@ -173,8 +173,57 @@ const EventLineItem = (props: { lineItemProps: LineItemProps }) => {
   )
 }
 
+const PerDayDetails = (props: { item: BudgetItem }) => {
+  const { item } = props
+  const { appConfig } = useContext(AppConfigContext)
+  console.log({ item })
+  const budgetedPerDay = item.amount / appConfig.budget.data.totalDays
+  const budgetedPerWeek = budgetedPerDay * 7
+  const remainingPerDay = item.remaining / appConfig.budget.data.totalDays
+  const remainingPerWeek = remainingPerDay * 7
+
+  return (
+    <div className="w-full p-2">
+      <div className="w-full flex flex-col gap-1 p-2  rounded border border-gray-200">
+        <div className="w-full flex flex-row justify-between">
+          <div>
+            Budgeted per day
+          </div>
+          <div>
+            <AmountSpan amount={budgetedPerDay} absolute={true} />
+          </div>
+        </div>
+        <div className="w-full flex flex-row justify-between">
+          <div>
+            Remaining per day
+          </div>
+          <div>
+            <AmountSpan amount={remainingPerDay} absolute={true} />
+          </div>
+        </div>
+        <div className="w-full flex flex-row justify-between">
+          <div>
+            Budgeted per week
+          </div>
+          <div>
+            <AmountSpan amount={budgetedPerWeek} absolute={true} />
+          </div>
+        </div>
+        <div className="w-full flex flex-row justify-between">
+          <div>
+            Remaining per week
+          </div>
+          <div>
+            <AmountSpan amount={remainingPerWeek} absolute={true} />
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 const ItemDetails = ({ item, showDetails }: DetailProps) => {
-  const { key, events, isExpense, transactionDetails } = item
+  const { key, events, isExpense, isPerDiemEnabled, transactionDetails } = item
   let details: Array<BudgetItemEvent | BudgetItemTransaction> = []
   if (clearedItems(item)) {
     details = events.sort(sortDetails)
@@ -194,6 +243,7 @@ const ItemDetails = ({ item, showDetails }: DetailProps) => {
           Key: {key}
         </div>
       </Row>
+      {isPerDiemEnabled ? <PerDayDetails item={item} /> : null}
       <ItemDetailHistory details={details} isExpense={isExpense} />
     </>
   )
