@@ -2,7 +2,8 @@
   "type": "module",
   "scripts": {
     "test": "jest",
-    "build:css": "npx tailwindcss --postcss -i ./app/assets/stylesheets/application.tailwind.css -o ./public/stylesheets/application.css"
+    "build:css": "npx tailwindcss --postcss -i ./app/assets/stylesheets/application.tailwind.css -o ./public/stylesheets/application.css",
+    "build:css:watch": "npx tailwindcss --postcss -i ./app/assets/stylesheets/application.tailwind.css -o ./public/stylesheets/application.css --watch"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.24.5",

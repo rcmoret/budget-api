@@ -33,13 +33,19 @@ const TransactionContainer = (props: ContainerProps) => {
             width: "w-full",
             flexAlign: "justify-between",
             display: "flex",
+            flexWrap: "flex-wrap md:flex-nowrap"
           }}
         >
           {props.clearanceDateComponent}
           <div className="w-4/12">{props.descriptionComponent}</div>
           <div className="w-4/12 flex flex-row justify-end gap-12 text-right">
-            <div className="w-1/2">{props.transactionAmountComponent}</div>
-            <div className="w-1/2">{props.balanceCompnent}</div>
+            <div className="w-full">
+              {props.transactionAmountComponent}
+            </div>
+          </div>
+          <div className="w-full md:w-4/12 flex flex-row justify-between mt-4 md:mt-0">
+            <div className="text-sm text-gray-700 md:hidden">Balance</div>
+            <div className="w-4/12 md:w-full border-t border-gray-400 text-right text-bold md:border-none">{props.balanceCompnent}</div>
           </div>
         </Cell>
       </div>

@@ -82,7 +82,7 @@ const LineItemAmounts = (props: { details: AccountTransactionDetail[] }) => {
   return (
     <div>
       {props.details.sort(byAmount).map((detail) => (
-        <div key={detail.key} className="w-full text-sm">
+        <div key={detail.key} className="w-full text-sm pr-2 md:pr-0">
           <AmountSpan amount={detail.amount} />
         </div>
       ))}
