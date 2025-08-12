@@ -21,27 +21,29 @@ import type {
   StripedRowColorOption,
 } from "types/components/display-classes";
 
+interface RowStylingProps {
+  alignItems?: AlignItemsOption;
+  alternatingBgColor?: string;
+  backgroundColor?: BgColorOption;
+  border?: string;
+  color?: TextColor
+  flexAlign?: FlexAlignOption;
+  flexDirection?: FlexDirectionOption;
+  flexWrap?: FlexWrapOption | null;
+  fontSize?: FontSizeOption;
+  fontWeight?: FontWeightOption;
+  gap?: GapOption;
+  margin?: string;
+  overflow?: OverflowOption;
+  padding?: string;
+  position?: PositionOption;
+  rounded?: "rounded" | null;
+  top?: "top-0";
+}
+
 interface RowProps {
   children: React.ReactNode;
-  styling?: {
-    alignItems?: AlignItemsOption;
-    alternatingBgColor?: string;
-    backgroundColor?: BgColorOption;
-    border?: string;
-    color?: TextColor
-    flexAlign?: FlexAlignOption;
-    flexDirection?: FlexDirectionOption;
-    flexWrap?: FlexWrapOption | null;
-    fontSize?: FontSizeOption;
-    fontWeight?: FontWeightOption;
-    gap?: GapOption;
-    margin?: string;
-    overflow?: OverflowOption;
-    padding?: string;
-    position?: PositionOption;
-    rounded?: "rounded" | null;
-    top?: "top-0";
-  };
+  styling?: RowStylingProps;
 }
 
 const Row = (suppliedProps: RowProps) => {
@@ -130,4 +132,4 @@ const TitleRow = (props: TitleRowProps) => {
   return <Row styling={styling}>{props.children}</Row>;
 };
 
-export { Row, StripedRow, TitleRow };
+export { Row, StripedRow, TitleRow, RowStylingProps };

@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 
 import { Link } from "@inertiajs/react";
 import { BudgetItem, TBudgetItem, BudgetItemEvent, BudgetItemTransaction } from "@/types/budget";
-import { Row } from "@/components/common/Row";
+import { Row, RowStylingProps } from "@/components/common/Row";
 import { Cell } from "@/components/common/Cell";
 import { Icon } from "@/components/common/Icon";
 import { Button, SubmitButton } from "@/components/common/Button";
@@ -41,12 +41,12 @@ const ItemDetailHistory = ({ details, isExpense }: { details: Array<BudgetItemEv
   let difference = 0
   const decoratedDetails: Array<LineItemProps> = details.map((detail) => {
     if (isEvent(detail)) {
-      budgeted += detail.amount
-      difference -= detail.amount
+      budgeted -= detail.amount
+      difference = -detail.amount + difference
     } else {
       difference += detail.amount
     }
-    const remaining = isExpense ? Math.max(0, difference)  : Math.min(0, difference)
+    const remaining = isExpense ? Math.max(0, difference) : Math.min(0, difference)
 
     return {
       detail,
@@ -57,18 +57,36 @@ const ItemDetailHistory = ({ details, isExpense }: { details: Array<BudgetItemEv
   })
 
   return (
-    <Row styling={{ flexWrap: "flex-wrap", border: "border-t border-gray-500 border-solid"}}>
+    <Row styling={{ flexWrap: "flex-wrap" }}>
       {decoratedDetails.map((lineItemProps) => (
-        <DetailLineItem lineItemProps={lineItemProps} />
+        <DetailLineItem key={lineItemProps.detail.key} lineItemProps={lineItemProps} />
       ))}
     </Row>
   )
 }
+
 const DetailLineItem = ({ lineItemProps }: { lineItemProps: LineItemProps }) => {
+  const wrapperProps: RowStylingProps = {
+    flexWrap: "flex-wrap",
+    flexAlign: "justify-between",
+    padding: "px-2 md:px-8 pt-4",
+    fontSize: "text-xs"
+  }
+
   if (isEvent(lineItemProps.detail)) {
-    return <EventLineItem lineItemProps={lineItemProps} />
+    return (
+      <Row styling={wrapperProps}>
+        <div className="w-full border-t border-blue-200 mb-2"></div>
+        <EventLineItem lineItemProps={lineItemProps} />
+      </Row>
+    )
   } else {
-    return <TransactionDetailLineItem lineItemProps={lineItemProps} />
+    return (
+      <Row styling={wrapperProps}>
+        <div className="w-full border-t border-blue-200 mb-2"></div>
+        <TransactionDetailLineItem lineItemProps={lineItemProps} />
+      </Row>
+    )
   }
 }
 const TransactionDetailLineItem = (props: { lineItemProps: LineItemProps }) => {
@@ -80,45 +98,38 @@ const TransactionDetailLineItem = (props: { lineItemProps: LineItemProps }) => {
     "pending"
 
   return (
-    <Row styling={{
-      flexWrap: "flex-wrap",
-      flexAlign: "justify-between",
-      padding: "px-8",
-      fontSize: "text-xs",
-      border: "border-t border-gray-500 border-solid"
-    }}>
-      <Row>
-        <Cell styling={{ width: "w-6/12" }}>
-          <div>{dateString}</div>
-          <div>{transactionDetail.accountName}</div>
-        </Cell>
-        <Cell styling={{ fontWeight: "font-bold", width: "w-6/12", textAlign: "text-right" }}>
+    <>
+      <Row styling={{flexAlign: "justify-between"}}>
+        <div className="text-base">
+          {transactionDetail.description}
+        </div>
+        <div className="text-base w-6/12 text-right">
           <AmountSpan amount={transactionDetail.amount} />
-        </Cell>
+        </div>
       </Row>
-      <Row>
-        <Cell styling={{ width: "w-6/12" }}>
-          <Row styling={{ flexWrap: "flex-wrap", flexAlign: "justify-between" }}>
-            <Cell styling={{ width: "w-6/12" }}>
-              Budgeted
-            </Cell>
-            <Cell styling={{ fontWeight: "font-bold", width: "w-6/12", textAlign: "text-right", padding: "pr-8" }}>
-              <AmountSpan amount={props.lineItemProps.budgeted} />
-            </Cell>
-          </Row>
-        </Cell>
-        <Cell styling={{ width: "w-6/12" }}>
-          <Row styling={{ flexWrap: "flex-wrap", flexAlign: "justify-between" }}>
-            <Cell styling={{ width: "w-6/12", padding: "pl-8" }}>
-              Remaining
-            </Cell>
-            <Cell styling={{ fontWeight: "font-bold", width: "w-6/12", textAlign: "text-right" }}>
-              <AmountSpan amount={props.lineItemProps.remaining} />
-            </Cell>
-          </Row>
-        </Cell>
+      <Row styling={{flexAlign: "justify-between"}}>
+        <div>{transactionDetail.accountName}</div>
+        <div>{dateString}</div>
       </Row>
-    </Row>
+      <Row styling={{ flexDirection: "flex-col", margin: "mt-2", padding: "py-2" }}>
+        <Row styling={{ flexWrap: "flex-wrap", flexAlign: "justify-between" }}>
+          <Cell styling={{ width: "w-6/12" }}>
+            Budgeted
+          </Cell>
+          <Cell styling={{ fontWeight: "font-bold", width: "w-6/12", textAlign: "text-right" }}>
+            <AmountSpan amount={props.lineItemProps.budgeted} />
+          </Cell>
+        </Row>
+        <Row styling={{ flexWrap: "flex-wrap", flexAlign: "justify-between" }}>
+          <Cell styling={{ width: "w-6/12" }}>
+            Remaining
+          </Cell>
+          <Cell styling={{ fontWeight: "font-bold", width: "w-6/12", textAlign: "text-right" }}>
+            <AmountSpan amount={props.lineItemProps.remaining} />
+          </Cell>
+        </Row>
+      </Row>
+    </>
   )
 }
 
@@ -126,41 +137,39 @@ const EventLineItem = (props: { lineItemProps: LineItemProps }) => {
   const event = props.lineItemProps.detail as BudgetItemEvent
 
   return (
-    <Row styling={{ flexWrap: "flex-wrap", flexAlign: "justify-between", border: "border-t border-gray-500 border-solid"}}>
-      <Row styling={{ margin: "mb-2", padding: "px-8", border: "border-b border-gray-500 border-solid" }}>
-        <Cell styling={{ width: "w-4/12" }}>
-          {dateParse(event.createdAt)}
-        </Cell>
-        <Cell styling={{ width: "w-4/12", textAlign: "text-center" }}>
+    <>
+      <Row styling={{flexAlign: "justify-between"}}>
+        <div className="text-base">
           {event.typeName}
-        </Cell>
-        <Cell styling={{ fontWeight: "font-bold", width: "w-4/12", textAlign: "text-right" }}>
+        </div>
+        <div className="text-base w-6/12 text-right">
           <AmountSpan amount={event.amount} />
-        </Cell>
+        </div>
       </Row>
-      <Row styling={{ fontSize: "text-xs" }}>
-        <Cell styling={{ width: "w-6/12" }}>
-          <Row styling={{ flexWrap: "flex-wrap", flexAlign: "justify-between" }}>
-            <Cell styling={{ width: "w-6/12", padding: "pl-8" }}>
-              Budgeted
-            </Cell>
-            <Cell styling={{ fontWeight: "font-bold", width: "w-6/12", textAlign: "text-right", padding: "pr-8" }}>
-              <AmountSpan amount={props.lineItemProps.budgeted} />
-            </Cell>
-          </Row>
-        </Cell>
-        <Cell styling={{ width: "w-6/12" }}>
-          <Row styling={{ flexWrap: "flex-wrap", flexAlign: "justify-between" }}>
-            <Cell styling={{ width: "w-6/12", padding: "pl-8" }}>
-              Remaining
-            </Cell>
-            <Cell styling={{ fontWeight: "font-bold", width: "w-6/12", textAlign: "text-right", padding: "pr-8" }}>
-              <AmountSpan amount={props.lineItemProps.remaining} />
-            </Cell>
-          </Row>
-        </Cell>
+      <Row styling={{ flexAlign: "justify-end" }}>
+        <div className="text-right">
+          {dateParse(event.createdAt)}
+        </div>
       </Row>
-    </Row>
+      <Row styling={{ flexDirection: "flex-col", margin: "mt-2", padding: "py-2" }}>
+        <Row styling={{ flexWrap: "flex-wrap", flexAlign: "justify-between" }}>
+          <Cell styling={{ width: "w-6/12" }}>
+            Budgeted
+          </Cell>
+          <Cell styling={{ fontWeight: "font-bold", width: "w-6/12", textAlign: "text-right" }}>
+            <AmountSpan amount={props.lineItemProps.budgeted} />
+          </Cell>
+        </Row>
+        <Row styling={{ flexWrap: "flex-wrap", flexAlign: "justify-between" }}>
+          <Cell styling={{ width: "w-6/12" }}>
+            Remaining
+          </Cell>
+          <Cell styling={{ fontWeight: "font-bold", width: "w-6/12", textAlign: "text-right" }}>
+            <AmountSpan amount={props.lineItemProps.remaining} />
+          </Cell>
+        </Row>
+      </Row>
+    </>
   )
 }
 
@@ -177,12 +186,12 @@ const ItemDetails = ({ item, showDetails }: DetailProps) => {
 
   return (
     <>
-      <Row styling={{ flexWrap: "flex-wrap", border: "border-t border-b border-gray-500 border-solid"}}>
-        <div className="w-8/12">
+      <Row styling={{ flexDirection: "flex-col", padding: "p-2", border: "border-t border-gray-500 border-solid" }}>
+        <div>
           <strong>Budget Item Details</strong>
         </div>
-        <div className="w-4/12 text-right">
-          <strong>Key: {key}</strong>
+        <div className="text-sm font-medium">
+          Key: {key}
         </div>
       </Row>
       <ItemDetailHistory details={details} isExpense={isExpense} />

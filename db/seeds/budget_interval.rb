@@ -60,6 +60,10 @@ def create_budget(user, interval)
   end
 end
 
+Budget::ItemEvent.create_events.find_each do |ev|
+  ev.update(created_at: 1.month.ago)
+end
+
 User::Group.find_by!(name: "Initial User Group").then do |group|
   today = Time.current
 
