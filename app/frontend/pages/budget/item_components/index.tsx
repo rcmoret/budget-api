@@ -179,7 +179,7 @@ const PerDayDetails = (props: { item: BudgetItem }) => {
   console.log({ item })
   const budgetedPerDay = item.amount / appConfig.budget.data.totalDays
   const budgetedPerWeek = budgetedPerDay * 7
-  const remainingPerDay = item.remaining / appConfig.budget.data.totalDays
+  const remainingPerDay = item.remaining / appConfig.budget.data.daysRemaining
   const remainingPerWeek = remainingPerDay * 7
 
   return (
