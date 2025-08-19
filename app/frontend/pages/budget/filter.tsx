@@ -21,7 +21,7 @@ const FilterComponent = (props: FilterComponentProps) => {
       <div>
         <input
           type="text"
-          className="border border-gray-300 rounded h-input-lg"
+          className="border border-gray-300 rounded h-input-lg px-1"
           onChange={onChange}
           value={filterTerm}
         />
