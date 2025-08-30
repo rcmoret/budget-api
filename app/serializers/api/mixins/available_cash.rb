@@ -15,7 +15,7 @@ module API
       end
 
       def cash_flow_transaction_detail_scope
-        ::Transaction::Entry.cash_flow.then do |scope|
+        ::Transaction::Entry.cash_flow.non_transfer.then do |scope|
           if future?
             scope.between(date_range)
           else
@@ -27,6 +27,7 @@ module API
       def non_cash_flow_budget_inclusion_scope
         ::Transaction::Entry
           .non_cash_flow
+          .non_transfer
           .where(budget_exclusion: false)
           .between(date_range, include_pending: current?)
       end
