@@ -18,7 +18,9 @@ class Transfer < ApplicationRecord
   }
 
   def self.transaction_ids
-    select(:from_transaction_id, :to_transaction_id).distinct
+    select(:from_transaction_id, :to_transaction_id)
+      .flat_map { |transfer| [transfer.to_transaction_id, transfer.from_transaction_id] }
+      .uniq
   end
 
   def transaction_keys
