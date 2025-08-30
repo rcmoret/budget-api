@@ -19,7 +19,7 @@ module API
           if future?
             scope.between(date_range)
           else
-            scope.prior_to(last_date, include_pending: current?)
+            scope.prior_to_or_on(last_date, include_pending: current?)
           end
         end
       end

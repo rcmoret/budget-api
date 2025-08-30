@@ -36,6 +36,10 @@ module Transaction
       base_scope = cleared.where(arel_table[:clearance_date].lt(date))
       include_pending ? base_scope.or(pending) : base_scope
     }
+    scope :prior_to_or_on, lambda { |date, include_pending: false|
+      base_scope = cleared.where(arel_table[:clearance_date].lteq(date))
+      include_pending ? base_scope.or(pending) : base_scope
+    }
     scope :in, ->(range) { where(clearance_date: range) }
     scope :between, ->(range, include_pending: false) { include_pending ? self.in(range).or(pending) : self.in(range) }
     scope :budget_inclusions, -> { where(budget_exclusion: false) }
