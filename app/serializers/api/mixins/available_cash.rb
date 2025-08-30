@@ -15,7 +15,7 @@ module API
       end
 
       def cash_flow_transaction_detail_scope
-        ::Transaction::Entry.cash_flow.left_joins(:debit_transfer, :credit_transfer).then do |scope|
+        ::Transaction::Entry.cash_flow.then do |scope|
           if future?
             scope.between(date_range)
           else

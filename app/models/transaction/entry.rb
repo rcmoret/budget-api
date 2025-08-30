@@ -46,10 +46,7 @@ module Transaction
     scope :budget_exclusions, -> { where(budget_exclusion: true) }
     scope :cash_flow, -> { joins(:account).merge(Account.cash_flow) }
     scope :non_cash_flow, -> { joins(:account).merge(Account.non_cash_flow) }
-    scope :non_transfer, lambda {
-      left_joins(:debit_transfer, :credit_transfer)
-        .where(transfers: { id: nil })
-    }
+    scope :non_transfer, -> { where.not(id: Transfer.transaction_ids) }
 
     delegate :name, to: :account, prefix: true
 

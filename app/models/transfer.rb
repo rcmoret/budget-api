@@ -17,6 +17,10 @@ class Transfer < ApplicationRecord
       .merge(Transaction::Entry.belonging_to(user_or_group))
   }
 
+  def self.transaction_ids
+    select(:from_transaction_id, :to_transaction_id).distinct
+  end
+
   def transaction_keys
     transactions.map(&:key)
   end
