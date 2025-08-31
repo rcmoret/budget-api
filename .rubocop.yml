@@ -19,7 +19,7 @@ Layout/LineLength:
 
 Metrics/BlockLength:
   Max: 10
-  IgnoredMethods:
+  AllowedMethods:
     - included
     - class_methods
   Exclude:
@@ -78,8 +78,7 @@ Style/MutableConstant:
   EnforcedStyle: literals
 
 Rails/ApplicationController:
-  Exclude:
-    - app/controllers/home_controller.rb
+  Enabled: false
 
 RSpec/ExampleLength:
   Max: 10
@@ -115,7 +114,4 @@ RSpec/MessageSpies:
   EnforcedStyle: receive
 
 RSpec/IndexedLet:
-  Enabled: false
-
-Rails/ApplicationController:
   Enabled: false
