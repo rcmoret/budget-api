@@ -15,6 +15,7 @@ import { UrlBuilder } from "@/lib/UrlBuilder";
 import { buildQueryParams } from "@/lib/redirect_params";
 import { SubmitButton } from "@/components/common/Button";
 import { Icon } from "@/components/common/Icon";
+import { FilterComponent } from "@/pages/budget/filter"
 
 const TransferComponent = () => {
   const { appConfig, setAppConfig } = useContext(AppConfigContext)
@@ -148,7 +149,7 @@ interface ComponentProps {
 }
 
 interface TransactionWithBalance extends ModeledTransaction {
-  balance: number;
+  balance: number | null;
 }
 
 const Transactions = (props: ComponentProps) => {
@@ -159,6 +160,26 @@ const Transactions = (props: ComponentProps) => {
   const [showFormKey, setShowFormKey] = useState<string | null>(null)
   const closeForm = () => setShowFormKey(null)
   const showNewForm = () => setShowFormKey("__new__")
+
+  const [filterTerm, setFilterTerm] = useState<string>("")
+  const filterActive = filterTerm.length > 2
+  const filterExpression = new RegExp(filterTerm, "i")
+
+  const filteredTransactions = transactions.reduce((acc, txn) => {
+      const { description, details } = txn
+      const detailDescriptions = details.map((detail) => detail.budgetCategoryName)
+      if (!!String(description).match(filterExpression) || detailDescriptions.some((d) => !!d?.match(filterExpression))) {
+        return [
+          {
+            ...txn,
+            balance: null
+          },
+          ...acc
+        ]
+      } else {
+        return acc
+      }
+  }, [] as TransactionWithBalance[])
 
   const sortedTransactions = transactions.reduce((acc, txn) => {
     balance = balance + txn.amount
@@ -171,13 +192,16 @@ const Transactions = (props: ComponentProps) => {
     ]
   }, [] as TransactionWithBalance[])
 
+  const displayableTransactions = filterActive ? filteredTransactions : sortedTransactions
+
   let index = 0
   const { month, year } = budget
 
   return (
-    <div className="bg-gray-50 w-full px-4 md:px-24 mx-auto flex flex-col pb-20  pt-8">
+    <div className="bg-gray-50 w-full mx-auto flex flex-col pb-20">
       <div className="w-full overflow-hidden shadow-lg">
         <TransferComponent />
+        <FilterComponent filterTerm={filterTerm} setFilterTerm={setFilterTerm} />
         <AddNewComponent
           index={index}
           isFormShown={showFormKey === "__new__"}
@@ -186,7 +210,7 @@ const Transactions = (props: ComponentProps) => {
           closeForm={closeForm}
           openForm={showNewForm}
         />
-        {sortedTransactions.map((transaction) => {
+        {displayableTransactions.map((transaction) => {
           index += 1
           if (showFormKey === transaction.key) {
             return (

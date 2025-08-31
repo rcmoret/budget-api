@@ -90,9 +90,10 @@ const BudgetComponent = (props: ComponentProps) => {
   }
 
   const [filterTerm, setFilterTerm] = useState<string>("")
+  const filterActive = filterTerm.length > 2
 
   const searchTermFilter = (item: BudgetItem): boolean => {
-    if (filterTerm.length < 3) { return true }
+    if (!filterActive) { return false }
 
     const expression = new RegExp(filterTerm, "i")
 

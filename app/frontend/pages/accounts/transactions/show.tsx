@@ -66,7 +66,9 @@ const TransactionShow = (props: {
         />
       }
       balanceCompnent={
-        <AmountSpan amount={transaction.balance} negativeColor="text-red-400" />
+        transaction.balance === null ?
+          "" :
+          <AmountSpan amount={transaction.balance} negativeColor="text-red-400" />
       }
     >
       <Cell

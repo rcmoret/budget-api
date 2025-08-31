@@ -14,6 +14,10 @@ import type {
   OverflowOption,
 } from "types/components/display-classes";
 
+import type {
+  GapOption
+} from "types/components/spacing-classes";
+
 interface ComponentProps {
   children: React.ReactNode;
   styling: {
@@ -24,6 +28,7 @@ interface ComponentProps {
     flexWrap?: FlexWrapOption;
     fontSize?: FontSizeOption;
     fontWeight?: FontWeightOption;
+    gap?: GapOption;
     margin?: string;
     overflow?: OverflowOption;
     padding?: string;

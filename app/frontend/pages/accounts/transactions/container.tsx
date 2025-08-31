@@ -33,6 +33,7 @@ const TransactionContainer = (props: ContainerProps) => {
             width: "w-full",
             flexAlign: "justify-between",
             display: "flex",
+            gap: "gap-2",
             flexWrap: "flex-wrap md:flex-nowrap"
           }}
         >

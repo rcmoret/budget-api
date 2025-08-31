@@ -54,7 +54,7 @@ const ClearanceDateComponent = (props: {
   toggleForm: () => void;
 }) => {
   return (
-    <div className="w-2/12">
+    <div className="w-3/12">
       <Button
         type="button"
         onClick={props.toggleForm}
