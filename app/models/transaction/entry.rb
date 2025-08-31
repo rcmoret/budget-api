@@ -36,7 +36,7 @@ module Transaction
       base_scope = cleared.where(arel_table[:clearance_date].lt(date))
       include_pending ? base_scope.or(pending) : base_scope
     }
-    scope :prior_to_or_on, lambda { |date, include_pending: false|
+    scope :on_or_prior_to, lambda { |date, include_pending: false|
       base_scope = cleared.where(arel_table[:clearance_date].lteq(date))
       include_pending ? base_scope.or(pending) : base_scope
     }
