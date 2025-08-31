@@ -10,7 +10,7 @@ const AccountsManageComponent = (props: { accounts: Array<AccountManage> }) => {
   const accounts = props.accounts.sort(sortByPriority)
 
   return (
-    <div className="w-full flex flex-col gap-4">
+    <div className="w-full flex flex-col gap-4 mx-2 my-4 py-4 px-8 border border-gray-300 rounded">
       <span className="text-2xl">
         Manage Accounts
       </span>

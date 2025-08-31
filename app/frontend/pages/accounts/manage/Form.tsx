@@ -89,6 +89,7 @@ const AccountForm = (props: {
           <input
             type="string"
             name="name"
+            className="border border-gray-300 rounded h-input-lg px-1"
             value={data.name}
             onChange={onChange}
           />
@@ -100,6 +101,7 @@ const AccountForm = (props: {
             name="slug"
             value={data.slug}
             onChange={onChange}
+            className="border border-gray-300 rounded h-input-lg px-1"
           />
         </div>
         <div className="w-full">
@@ -109,6 +111,7 @@ const AccountForm = (props: {
             name="priority"
             value={data.priority}
             onChange={onChange}
+            className="border border-gray-300 rounded h-input-lg px-1"
           />
         </div>
         <div className="w-full">
@@ -120,6 +123,7 @@ const AccountForm = (props: {
                 type="checkbox"
                 name="isCashFlow"
                 checked={data.isCashFlow}
+                className="border border-gray-300 rounded h-input-lg px-1"
                 onChange={onChange}
               />
             </div>
@@ -128,6 +132,7 @@ const AccountForm = (props: {
               <input
                 type="checkbox"
                 name="isBudgetExclusion"
+                className="border border-gray-300 rounded h-input-lg px-1"
                 checked={!data.isCashFlow}
                 onChange={onChange}
               />
@@ -139,7 +144,7 @@ const AccountForm = (props: {
             onSubmit={onSumbit}
             styling={{
               rounded: "rounded",
-              backgroundColor: "bg-green-666",
+              backgroundColor: "bg-green-600",
               color: "text-white",
               padding: "px-4 py-1"
             }}
@@ -174,13 +179,20 @@ const NewForm = (props: { closeForm: () => void }) => {
 
 const NewButton = (props: { openForm: () => void }) => {
   return (
-    <Button
-      type="button"
-      onClick={props.openForm}
-      styling={{ color: "text-blue-300" }}
-    >
-      <Icon name="plus-circle" />
-    </Button>
+    <div className="w-full border-b border-gray700 pb-2">
+      <Button
+        type="button"
+        onClick={props.openForm}
+        styling={{ color: "text-blue-300" }}
+      >
+        <div className="w-full flex flex-row gap-2">
+          <Icon name="plus-circle" />
+          <div>
+            Add New
+          </div>
+        </div>
+      </Button>
+    </div>
   )
 }
 
@@ -193,7 +205,7 @@ const AddNewComponent = (props: {
   const openForm = () => setShowFormFor("__new__")
 
   return (
-    <div className="w-72 border-b border-gray700 flex flex-row flex-wrap justify-between pb-2">
+    <div className="w-72 flex flex-row flex-wrap justify-between pb-2">
       {isFormShown ? <NewForm closeForm={closeForm} /> : <NewButton openForm={openForm} />}
     </div>
   )
