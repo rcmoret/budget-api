@@ -93,7 +93,7 @@ const BudgetComponent = (props: ComponentProps) => {
   const filterActive = filterTerm.length > 2
 
   const searchTermFilter = (item: BudgetItem): boolean => {
-    if (!filterActive) { return false }
+    if (!filterActive) { return true }
 
     const expression = new RegExp(filterTerm, "i")
 

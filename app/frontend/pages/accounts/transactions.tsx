@@ -166,19 +166,19 @@ const Transactions = (props: ComponentProps) => {
   const filterExpression = new RegExp(filterTerm, "i")
 
   const filteredTransactions = transactions.reduce((acc, txn) => {
-      const { description, details } = txn
-      const detailDescriptions = details.map((detail) => detail.budgetCategoryName)
-      if (!!String(description).match(filterExpression) || detailDescriptions.some((d) => !!d?.match(filterExpression))) {
-        return [
-          {
-            ...txn,
-            balance: null
-          },
-          ...acc
-        ]
-      } else {
-        return acc
-      }
+    const { description, details } = txn
+    const detailDescriptions = details.map((detail) => detail.budgetCategoryName)
+    if (!!String(description).match(filterExpression) || detailDescriptions.some((d) => !!d?.match(filterExpression))) {
+      return [
+        {
+          ...txn,
+          balance: null
+        },
+        ...acc
+      ]
+    } else {
+      return acc
+    }
   }, [] as TransactionWithBalance[])
 
   const sortedTransactions = transactions.reduce((acc, txn) => {
