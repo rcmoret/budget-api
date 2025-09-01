@@ -59,6 +59,10 @@ module Transaction
       joins(:details).sum(:amount)
     end
 
+    def self.by_detail_key!(key)
+      find(Detail.by_key!(key).transaction_entry_id)
+    end
+
     def total
       details.sum(:amount)
     end

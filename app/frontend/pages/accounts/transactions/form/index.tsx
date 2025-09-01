@@ -44,7 +44,7 @@ const ClearanceDateComponent = (props: {
   }
 
   return (
-    <div className="w-16">
+    <div>
       <Label label="Clearance Date" />
       <DatePicker
         selected={clearanceDate}
