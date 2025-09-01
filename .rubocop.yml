@@ -115,3 +115,6 @@ RSpec/MessageSpies:
 
 RSpec/IndexedLet:
   Enabled: false
+
+Metrics/ClassLength:
+  Enabled: false
