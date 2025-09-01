@@ -722,10 +722,6 @@ video {
   width: 91.666667%;
 }
 
-.w-16 {
-  width: 4rem;
-}
-
 .w-2\/12 {
   width: 16.666667%;
 }
@@ -782,20 +778,12 @@ video {
   width: 100%;
 }
 
-.min-w-40 {
-  min-width: 10rem;
-}
-
 .min-w-72 {
   min-width: 18rem;
 }
 
 .min-w-\[32px\] {
   min-width: 32px;
-}
-
-.max-w-none {
-  max-width: none;
 }
 
 .grow {

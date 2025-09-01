@@ -15,6 +15,11 @@ module Budget
              dependent: :destroy,
              inverse_of: :category,
              foreign_key: :budget_category_id
+    has_many :summaries,
+             class_name: "CategorySummary",
+             inverse_of: :category,
+             dependent: :nullify,
+             foreign_key: :budget_category_id
     belongs_to :icon, optional: true
 
     validates :default_amount, numericality: { only_integer: true }
