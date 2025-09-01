@@ -1805,6 +1805,10 @@ video {
   .sm\:w-6\/12 {
     width: 50%;
   }
+
+  .sm\:min-w-\[30\%\] {
+    min-width: 30%;
+  }
 }
 
 @media (min-width: 768px) {
@@ -1877,6 +1881,10 @@ video {
     width: 100%;
   }
 
+  .md\:min-w-\[10\%\] {
+    min-width: 10%;
+  }
+
   .md\:flex-nowrap {
     flex-wrap: nowrap;
   }
@@ -1910,5 +1918,9 @@ video {
 
   .lg\:w-8\/12 {
     width: 66.666667%;
+  }
+
+  .lg\:min-w-\[12\%\] {
+    min-width: 12%;
   }
 }
