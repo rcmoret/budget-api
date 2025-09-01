@@ -18,7 +18,7 @@ module Budget
     has_many :summaries,
              class_name: "CategorySummary",
              inverse_of: :category,
-             dependent: :nullify,
+             dependent: nil,
              foreign_key: :budget_category_id
     belongs_to :icon, optional: true
 

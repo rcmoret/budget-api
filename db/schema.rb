@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_08_09_150756) do
+ActiveRecord::Schema[7.0].define(version: 2025_09_01_154255) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -277,6 +277,19 @@ ActiveRecord::Schema[7.0].define(version: 2025_08_09_150756) do
   add_foreign_key "user_events", "user_profiles", column: "target_user_id"
   add_foreign_key "user_profiles", "user_groups"
 
+  create_view "budget_category_summaries", sql_definition: <<-SQL
+      SELECT c.id AS budget_category_id,
+      intervals.month,
+      intervals.year,
+      sum(events.amount) AS budgeted,
+      COALESCE(sum(td.amount), (0)::bigint) AS transactions_total
+     FROM ((((budget_categories c
+       JOIN budget_items items ON ((items.budget_category_id = c.id)))
+       JOIN budget_item_events events ON ((events.budget_item_id = items.id)))
+       JOIN budget_intervals intervals ON ((intervals.id = items.budget_interval_id)))
+       LEFT JOIN transaction_details td ON ((td.budget_item_id = items.id)))
+    GROUP BY c.id, intervals.id;
+  SQL
   create_view "user_configuration_view", sql_definition: <<-SQL
       SELECT up.id AS user_profile_id,
       uco.description,
