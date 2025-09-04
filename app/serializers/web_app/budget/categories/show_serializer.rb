@@ -15,9 +15,10 @@ module WebApp
         private_constant :MaturityIntervalSerializer
 
         LocalCategorySerializer = Class.new(ApplicationSerializer) do
-          def initialize(category, current_user_profile:)
+          def initialize(category, current_user_profile:, chart_params:)
             super(category)
             @current_user_profile = current_user_profile
+            @chart_params = chart_params
           end
 
           attributes :key, :slug, :name, :default_amount, :is_per_diem_enabled, :icon_class_name, :icon_key
@@ -28,7 +29,13 @@ module WebApp
           attribute :is_expense, alias_of: :expense?
           attribute :is_monthly, alias_of: :monthly?
           attribute :maturity_intervals, each_serializer: MaturityIntervalSerializer, conditional: :accrual?
-          attribute :summaries, each_serializer: SummarySerializer
+          attribute :summaries, on_render: :render
+
+          def summaries
+            SerializableCollection.new(serializer: SummarySerializer) do
+              super.most_recent(12)
+            end
+          end
 
           private
 
@@ -36,9 +43,10 @@ module WebApp
         end
         private_constant :LocalCategorySerializer
 
-        def initialize(category, current_user_profile:)
+        def initialize(category, current_user_profile:, chart_params: {})
           super(category)
           @current_user_profile = current_user_profile
+          @chart_params = chart_params
         end
 
         attribute :icons, on_render: :render
@@ -53,13 +61,14 @@ module WebApp
         def category
           LocalCategorySerializer.new(
             __getobj__,
-            current_user_profile: current_user_profile
+            current_user_profile: current_user_profile,
+            chart_params: chart_params
           )
         end
 
         private
 
-        attr_reader :current_user_profile
+        attr_reader :current_user_profile, :chart_params
       end
     end
   end

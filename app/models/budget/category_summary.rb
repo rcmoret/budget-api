@@ -28,7 +28,7 @@ module Budget
         .on_or_after(month: date1.month, year: date1.year)
     }
 
-    def most_recent(limit = nil)
+    def self.most_recent(limit = nil)
       if limit.nil?
         order_desc.first
       else
