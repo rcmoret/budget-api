@@ -28,6 +28,7 @@ module WebApp
           attribute :is_expense, alias_of: :expense?
           attribute :is_monthly, alias_of: :monthly?
           attribute :maturity_intervals, each_serializer: MaturityIntervalSerializer, conditional: :accrual?
+          attribute :summaries, each_serializer: SummarySerializer
 
           private
 
