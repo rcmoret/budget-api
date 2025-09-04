@@ -176,6 +176,15 @@ const BudgetSummaryChart: React.FC<BudgetSummaryChartProps> = ({ summaries }) =>
 
   return (
     <div className="w-full">
+      <div>
+        {summaries.map((s) => (
+          <div>
+            <div>month: {s.month} year: {s.year}</div>
+            <div>budgeted: {s.budgeted}</div>
+            <div>total: {s.transactionsTotal}</div>
+          </div>
+        ))}
+      </div>
       <h3 className="text-lg font-semibold mb-4">Budget Summary Chart</h3>
       <div className="flex justify-center">
         <svg ref={svgRef} className="border rounded-lg bg-white"></svg>
