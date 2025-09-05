@@ -56,10 +56,13 @@ const BudgetSummaryChart: React.FC<BudgetSummaryChartProps> = ({ summaries }) =>
       .nice()
       .range([height, 0]);
 
+    const chartBlue = '#001ddb'
+    const chartGreen = '#619d58'
+
     // Create color scale
     const color = d3.scaleOrdinal()
       .domain(['budgeted', 'transactionsTotal'])
-      .range(['#3b82f6', '#ef4444']); // Blue for budgeted, red for transactions
+      .range([chartBlue, chartGreen]); // Blue for budgeted, red for transactions
 
     // Create bars
     const barGroup = g.selectAll('.bar-group')
@@ -176,7 +179,7 @@ const BudgetSummaryChart: React.FC<BudgetSummaryChartProps> = ({ summaries }) =>
 
   return (
     <div className="w-full">
-      <div>
+      <div className="hidden">
         {summaries.map((s) => (
           <div>
             <div>month: {s.month} year: {s.year}</div>
