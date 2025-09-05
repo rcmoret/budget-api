@@ -22,9 +22,9 @@ const BudgetSummaryChart: React.FC<BudgetSummaryChartProps> = ({ summaries }) =>
     svg.selectAll("*").remove(); // Clear previous content
 
     // Set dimensions and margins
-    const margin = { top: 20, right: 30, bottom: 40, left: 60 };
+    const margin = { top: 80, right: 30, bottom: 80, left: 100 };
     const width = 600 - margin.left - margin.right;
-    const height = 300 - margin.top - margin.bottom;
+    const height = 500 - margin.top - margin.bottom;
 
     // Create the main group
     const g = svg
@@ -120,7 +120,7 @@ const BudgetSummaryChart: React.FC<BudgetSummaryChartProps> = ({ summaries }) =>
 
     // Add legend
     const legend = g.append('g')
-      .attr('transform', `translate(${width - 150}, 20)`);
+      .attr('transform', `translate(${width - 180}, -60)`);
 
     const legendItems = [
       { label: 'Budgeted', color: color('budgeted') },

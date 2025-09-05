@@ -33,13 +33,18 @@ module WebApp
 
           def summaries
             SerializableCollection.new(serializer: SummarySerializer) do
-              super.most_recent(12).to_a.sort
+              case chart_params
+              in {}
+                super.most_recent(12)
+              in { limit: }
+                super.most_recent(limit)
+              end.to_a.sort
             end
           end
 
           private
 
-          attr_reader :current_user_profile
+          attr_reader :current_user_profile, :chart_params
         end
         private_constant :LocalCategorySerializer
 
