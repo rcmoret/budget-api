@@ -33,7 +33,7 @@ module WebApp
 
           def summaries
             SerializableCollection.new(serializer: SummarySerializer) do
-              super.order_asc.most_recent(12)
+              super.most_recent(12)
             end
           end
 
