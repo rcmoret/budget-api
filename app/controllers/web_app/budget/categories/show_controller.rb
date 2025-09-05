@@ -16,8 +16,13 @@ module WebApp
         def props
           @props ||= ShowSerializer.new(
             category,
-            current_user_profile: current_user_profile
+            current_user_profile: current_user_profile,
+            chart_params: chart_params.to_h.deep_symbolize_keys
           ).render
+        end
+
+        def chart_params
+          params.permit(q: %i[ limit start_month start_year end_month end_year ])[:q] || {}
         end
 
         def metadata

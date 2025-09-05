@@ -30,19 +30,28 @@ module WebApp
           attribute :is_monthly, alias_of: :monthly?
           attribute :maturity_intervals, each_serializer: MaturityIntervalSerializer, conditional: :accrual?
           attribute :summaries, on_render: :render
+          # attribute :
 
           def summaries
             SerializableCollection.new(serializer: SummarySerializer) do
-              case chart_params
-              in {}
-                super.most_recent(12)
-              in { limit: }
-                super.most_recent(limit)
-              end.to_a.sort
+              summary_scope
             end
           end
 
           private
+
+          def summary_scope
+            base_scope = __getobj__.summaries
+            case chart_params
+            in {}
+              base_scope.most_recent(12).to_a.sort
+            in { limit: }
+              base_scope.most_recent(limit).to_a.sort
+            in { start_month:, start_year:, end_month:, end_year: }
+              date_range = Time.new(start_year, start_month, 1)..Time.new(end_year, end_month, 1)
+              base_scope.between_dates(date_range).order_asc
+            end
+          end
 
           attr_reader :current_user_profile, :chart_params
         end
