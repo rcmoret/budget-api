@@ -35,5 +35,13 @@ module Budget
         order_desc.limit(limit)
       end
     end
+
+    def <=>(other)
+      if year == other.year
+        month <=> other.month
+      else
+        year <=> other.year
+      end
+    end
   end
 end

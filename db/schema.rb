@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_09_05_000018) do
+ActiveRecord::Schema[7.0].define(version: 2025_09_05_001259) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -284,12 +284,14 @@ ActiveRecord::Schema[7.0].define(version: 2025_09_05_000018) do
       sum(events.amount) AS budgeted,
       COALESCE(( SELECT sum(td.amount) AS sum
              FROM transaction_details td
-            WHERE (td.budget_item_id = items.id)), (0)::bigint) AS transactions_total
+            WHERE (td.budget_item_id IN ( SELECT budget_items.id
+                     FROM budget_items
+                    WHERE ((budget_items.budget_category_id = c.id) AND (budget_items.budget_interval_id = intervals.id))))), (0)::bigint) AS transactions_total
      FROM (((budget_categories c
        JOIN budget_items items ON ((items.budget_category_id = c.id)))
        JOIN budget_item_events events ON ((events.budget_item_id = items.id)))
        JOIN budget_intervals intervals ON ((intervals.id = items.budget_interval_id)))
-    GROUP BY c.id, intervals.id, items.id;
+    GROUP BY c.id, intervals.id;
   SQL
   create_view "user_configuration_view", sql_definition: <<-SQL
       SELECT up.id AS user_profile_id,
