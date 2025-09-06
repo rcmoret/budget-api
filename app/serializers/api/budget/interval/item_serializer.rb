@@ -23,11 +23,9 @@ module API
         attribute :is_per_diem_enabled, alias_of: :per_diem_enabled?
         attribute :maturity_month, conditional: :accrual?
         attribute :maturity_year, conditional: :accrual?
+        attribute :events
         attribute :transaction_details,
                   each_serializer: Items::TransactionDetailSerializer,
-                  on_render: :render
-        attribute :events,
-                  each_serializer: Items::EventSerializer,
                   on_render: :render
 
         delegate :name,
@@ -48,6 +46,10 @@ module API
 
         def maturity_year
           maturity_interval.year
+        end
+
+        def events
+          []
         end
 
         private

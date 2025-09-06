@@ -1,4 +1,5 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
+import axios from "axios";
 
 import { Link } from "@inertiajs/react";
 import { BudgetItem, TBudgetItem, BudgetItemEvent, BudgetItemTransaction } from "@/types/budget";
@@ -176,7 +177,6 @@ const EventLineItem = (props: { lineItemProps: LineItemProps }) => {
 const PerDayDetails = (props: { item: BudgetItem }) => {
   const { item } = props
   const { appConfig } = useContext(AppConfigContext)
-  console.log({ item })
   const budgetedPerDay = item.amount / appConfig.budget.data.totalDays
   const budgetedPerWeek = budgetedPerDay * 7
   const remainingPerDay = item.remaining / appConfig.budget.data.daysRemaining
@@ -223,7 +223,23 @@ const PerDayDetails = (props: { item: BudgetItem }) => {
 }
 
 const ItemDetails = ({ item, showDetails }: DetailProps) => {
-  const { key, events, isExpense, isPerDiemEnabled, transactionDetails } = item
+  const { key, isExpense, isPerDiemEnabled, transactionDetails } = item
+
+  const [events, setEvents] = useState<BudgetItemEvent[]>(item.events)
+
+  if (showDetails && !events.length) {
+    const detailsUrl = UrlBuilder({ name: "BudgetItemDetails", key })
+    axios.get(detailsUrl)
+    .then(response => {
+      const { budgetItem } = response.data
+      console.log(budgetItem)
+      setEvents(budgetItem.events)
+    })
+    .catch(error => {
+      console.error('Error fetching summary data:', error)
+    })
+  }
+
   let details: Array<BudgetItemEvent | BudgetItemTransaction> = []
   if (clearedItems(item)) {
     details = events.sort(sortDetails)

@@ -5,7 +5,7 @@ import { AmountInput, inputAmount, TInputAmount } from "@/components/common/Amou
 import { AmountSpan } from "@/components/common/AmountSpan";
 import { emptyError, isAdjust, isCreate, isDelete } from "@/lib/hooks/useEventsForm";
 import { GreenCheck, Icon } from "@/components/common/Icon";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState } from "react";
 import axios from "axios";
 import { AppConfigContext } from "@/components/layout/Provider";
 import { DateFormatter } from "@/lib/DateFormatter";
@@ -483,23 +483,12 @@ const CategoryComponent = (props: ComponentProps) => {
     amount,
     eventKey
   })
-
-  const summaryUrl = UrlBuilder({ name: "CategorySummary", key: category.key })
   
   const [summaryData, setSummaryData] = useState<null | TBudgetCategorySummary>(null);
   
-  // useEffect(() => {
-  //   axios.get(summaryUrl)
-  //     .then(response => {
-  //       console.log(response.data)
-  //       setSummaryData(response.data)
-  //     })
-  //     .catch(error => {
-  //       console.error('Error fetching summary data:', error)
-  //     })
-  // }, [summaryUrl])
+  const getSummaryData = async () => {
+    const summaryUrl = UrlBuilder({ name: "CategorySummary", key: category.key })
 
-  const getSummaryData = () => {
     axios.get(summaryUrl)
     .then(response => {
       console.log(response.data)

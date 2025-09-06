@@ -13,7 +13,7 @@ module WebApp
       private
 
       def account
-        @account ||= Account.belonging_to(current_user_profile).by_slug(params[:slug])
+        @account ||= Account.fetch(current_user_profile, slug: params[:slug])
       end
 
       def store_selected_account_path

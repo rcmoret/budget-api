@@ -4,7 +4,7 @@ module WebApp
   module Budget
     module Categories
       class SummariesController < BaseController
-        before_action -> { redirect_to budget_index_path },
+        before_action -> { render json: {}, status: :not_found },
                       if: -> { category.nil? }
 
         def call
