@@ -47,6 +47,12 @@ type CategoryIndexProps = {
   queryParams?: string;
 }
 
+type CategorySummaryProps = {
+  name: "CategorySummary"
+  key: string;
+  limit?: number;
+  queryParams?: string;
+}
 
 export type CategoryShowProps = {
   name: "CategoryShow";
@@ -77,6 +83,7 @@ type UrlBuilderProps =
   | BudgetShowProps
   | CategoryIndexProps
   | CategoryShowProps
+  | CategorySummaryProps
   | TransactionIndexProps
   | TransactionShowProps
 
@@ -107,6 +114,8 @@ const UrlBuilder = (props: UrlBuilderProps) => {
       return appendQueryParams(`/budget/${props.month}/${props.year}`);
     case "CategoryIndex":
       return appendQueryParams("/budget/categories");
+    case "CategorySummary":
+      return appendQueryParams(`/data/budget/category/${props.key}/recent-summaries/${props.limit || ""}`);
     case "CategoryShow":
       return appendQueryParams(`/budget/category/${props.key}`);
     case "TransactionIndex":

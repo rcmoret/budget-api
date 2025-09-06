@@ -5,13 +5,13 @@ import { AmountInput, inputAmount, TInputAmount } from "@/components/common/Amou
 import { AmountSpan } from "@/components/common/AmountSpan";
 import { emptyError, isAdjust, isCreate, isDelete } from "@/lib/hooks/useEventsForm";
 import { GreenCheck, Icon } from "@/components/common/Icon";
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
+import axios from "axios";
 import { AppConfigContext } from "@/components/layout/Provider";
 import { DateFormatter } from "@/lib/DateFormatter";
-import { useForm } from "@inertiajs/react";
+import { useForm } from '@inertiajs/react'
 import { SubmitButton } from "@/components/common/Button";
 import { buildQueryParams } from "@/lib/redirect_params"
-import { useState } from "react";
 import { UrlBuilder } from "@/lib/UrlBuilder";
 import { useToggle } from "@/lib/hooks/useToogle";
 import { Point } from "@/components/common/Symbol";
@@ -20,7 +20,7 @@ const AccrualFormComponent = (props: {
   category: SetUpCategory,
   updateCategory: (category: SetUpCategory) => void,
 }) => {
-  const { category, updateCategory  } = props
+  const { category, updateCategory } = props
   const { appConfig } = useContext(AppConfigContext)
   const { month, year } = appConfig.budget.data
   const { put, processing } = useForm({
@@ -44,7 +44,7 @@ const AccrualFormComponent = (props: {
     const onSuccess = (page: any) => {
       const categories = page.props.categories as Array<SetUpCategory>
       const updatedCategory = categories.find((cat) => cat.key === category.key)
-      if (!!updatedCategory){
+      if (!!updatedCategory) {
         updateCategory(updatedCategory)
       }
     }
@@ -99,7 +99,7 @@ const AccrualComponent = (props: {
       <div className="w-4/12 flex flex-col text-sm italic text-right px-2">
         <div>
           {accrualInfoMessage}
-          {!isMaturing  && <AccrualFormComponent
+          {!isMaturing && <AccrualFormComponent
             category={category}
             updateCategory={props.updateCategory}
           />}
@@ -174,6 +174,51 @@ const Suggestions = (props: {
   )
 }
 
+type TBudgetCategorySummary = {
+  id: number;
+  budgetedAverage: number;
+  transactionsTotalAverage: number;
+  limit: number;
+}
+
+const SummaryComponent = (props: { summaryData: TBudgetCategorySummary | null }) => {
+  const { summaryData } = props
+
+  if (!summaryData) { return null }
+
+  return (
+    <div>
+      <div>
+        Average Budgeted: <AmountSpan amount={summaryData.budgetedAverage} />
+      </div>
+      <div>
+        Average Total: <AmountSpan amount={summaryData.transactionsTotalAverage} />
+      </div>
+      <div>
+        For past {summaryData.limit} months
+      </div>
+    </div>
+  )
+}
+
+const SummaryUpdateButton = (props: {
+  summaryDataFetched: boolean;
+  onClick: ()  => void;
+}) => {
+  if (props.summaryDataFetched) { return null }
+
+  return (
+    <div>
+      <button
+        type="button"
+        onClick={props.onClick}
+      >
+        Show Averages
+      </button>
+    </div>
+  )
+}
+
 type SuggestionProps = {
   isChecked: boolean;
   label: string;
@@ -233,7 +278,7 @@ const EditForm = (props: {
 
   const onSubmit = (ev: React.MouseEvent) => {
     ev.preventDefault()
-    const onSuccess = (page: any) => { 
+    const onSuccess = (page: any) => {
       const categories = page.props.categories as Array<SetUpCategory>
       const updatedCategory = categories.find((cat) => cat.key === category.key)
       if (!!updatedCategory) {
@@ -300,21 +345,21 @@ const EditableSuggestion = (props: EditableSuggestionProps) => {
 
   if (!showForm) {
     return (
-    <Suggestion
-      label="Default"
-      amount={category.defaultAmount || 0}
-      isChecked={isChecked}
-      onChange={onChange}
-    >
-      <Button
-        type="button"
-        onClick={toggleForm}
+      <Suggestion
+        label="Default"
+        amount={category.defaultAmount || 0}
+        isChecked={isChecked}
+        onChange={onChange}
       >
-        <span className="text-blue-300">
-          <Icon name="edit" />
-        </span>
-      </Button>
-    </Suggestion>
+        <Button
+          type="button"
+          onClick={toggleForm}
+        >
+          <span className="text-blue-300">
+            <Icon name="edit" />
+          </span>
+        </Button>
+      </Suggestion>
     )
   } else {
     return (
@@ -329,13 +374,13 @@ const EditableSuggestion = (props: EditableSuggestionProps) => {
   }
 }
 
-const ErrorComponent = ({ messages }: { messages: string [] }) => {
+const ErrorComponent = ({ messages }: { messages: string[] }) => {
   if (!messages.length) { return null }
 
   return (
     <Row styling={{ color: "text-red-400", fontSize: "text-sm" }}>
       {messages.map((message) => {
-        return(
+        return (
           <Point>
             <span className="italic">
               {message}
@@ -391,12 +436,12 @@ const EventComponent = (props: EventComponentProps) => {
           <ErrorComponent messages={errors.budgetItem} />
         </div>
         <div className="w-4/12 flex flex-row flex-wrap">
-        <Suggestions
-          category={category}
-          event={event}
-          updateEvent={updateEvent}
-          updateCategory={updateCategory}
-        />
+          <Suggestions
+            category={category}
+            event={event}
+            updateEvent={updateEvent}
+            updateCategory={updateCategory}
+          />
         </div>
         <div className="w-4/12">
           <div className="w-full flex flex-row justify-end pr-1 gap-2">
@@ -417,60 +462,92 @@ const EventComponent = (props: EventComponentProps) => {
         </div>
       </Row>
     </>
-    )
-  }
+  )
+}
 
-  type ComponentProps = {
-    category: SetUpCategory;
-    removeItem: (_: { categoryKey: string, eventKey: string }) => void;
-    removeEvent: (_: { categoryKey: string, eventKey: string }) => void;
-    updateCategory: (props: { key: string, category: SetUpCategory }) => void;
-    updateEvent: (props: { categoryKey: string, eventKey: string, amount: TInputAmount }) => void;
-  }
+type ComponentProps = {
+  category: SetUpCategory;
+  removeItem: (_: { categoryKey: string, eventKey: string }) => void;
+  removeEvent: (_: { categoryKey: string, eventKey: string }) => void;
+  updateCategory: (props: { key: string, category: SetUpCategory }) => void;
+  updateEvent: (props: { categoryKey: string, eventKey: string, amount: TInputAmount }) => void;
+}
 
-  const CategoryComponent = (props: ComponentProps) => {
-    const { category } = props
-    const updateCategory = (category: SetUpCategory) => props.updateCategory({ key: category.key, category })
-    const removeEvent = (key: string) => props.removeEvent({ categoryKey: category.key, eventKey: key })
-    const removeItem = (key: string) => props.removeItem({ categoryKey: category.key, eventKey: key })
-    const updateEvent = (eventKey: string, amount: TInputAmount) => props.updateEvent({
-      categoryKey: category.key,
-      amount,
-      eventKey
+const CategoryComponent = (props: ComponentProps) => {
+  const { category } = props
+  const updateCategory = (category: SetUpCategory) => props.updateCategory({ key: category.key, category })
+  const removeEvent = (key: string) => props.removeEvent({ categoryKey: category.key, eventKey: key })
+  const removeItem = (key: string) => props.removeItem({ categoryKey: category.key, eventKey: key })
+  const updateEvent = (eventKey: string, amount: TInputAmount) => props.updateEvent({
+    categoryKey: category.key,
+    amount,
+    eventKey
+  })
+
+  const summaryUrl = UrlBuilder({ name: "CategorySummary", key: category.key })
+  
+  const [summaryData, setSummaryData] = useState<null | TBudgetCategorySummary>(null);
+  
+  // useEffect(() => {
+  //   axios.get(summaryUrl)
+  //     .then(response => {
+  //       console.log(response.data)
+  //       setSummaryData(response.data)
+  //     })
+  //     .catch(error => {
+  //       console.error('Error fetching summary data:', error)
+  //     })
+  // }, [summaryUrl])
+
+  const getSummaryData = () => {
+    axios.get(summaryUrl)
+    .then(response => {
+      console.log(response.data)
+      const { category } = response.data
+      setSummaryData(category)
     })
+    .catch(error => {
+      console.error('Error fetching summary data:', error)
+    })
+  }
 
-    const events = category.events.filter((event) => !isDelete(event))
+  const events = category.events.filter((event) => !isDelete(event))
 
-    return (
-      <StripedRow
-        oddColor="odd:bg-sky-50"
-        evenColor="even:bg-gray-50"
-        styling={{
-          rounded: "rounded",
-          flexDirection: "flex-col",
-          padding: "p-2",
-        }}
-      >
-        <div className="text-lg">
-          {category.name}
-          {category.isAccrual && <AccrualComponent category={category} updateCategory={updateCategory} />}
-        </div>
-        {events.map((event, index) => {
-          return (
-            <EventComponent
-              key={event.key}
-              category={category}
-              event={event}
-              updateCategory={updateCategory}
-              updateEvent={updateEvent}
-              removeEvent={removeEvent}
-              removeItem={removeItem}
-              eventCount={events.length}
-              index={index}
-            />
-          )
-        })}
-      </StripedRow>
+  return (
+    <StripedRow
+      oddColor="odd:bg-sky-50"
+      evenColor="even:bg-gray-50"
+      styling={{
+        rounded: "rounded",
+        flexDirection: "flex-col",
+        padding: "p-2",
+      }}
+    >
+      <div className="text-lg">
+        {category.name}
+        {category.isAccrual && <AccrualComponent category={category} updateCategory={updateCategory} />}
+      </div>
+      {events.map((event, index) => {
+        return (
+          <EventComponent
+            key={event.key}
+            category={category}
+            event={event}
+            updateCategory={updateCategory}
+            updateEvent={updateEvent}
+            removeEvent={removeEvent}
+            removeItem={removeItem}
+            eventCount={events.length}
+            index={index}
+          />
+        )
+      })}
+      <SummaryUpdateButton
+        summaryDataFetched={!!summaryData}
+        onClick={getSummaryData}
+      />
+      <SummaryComponent summaryData={summaryData} />
+    </StripedRow>
   )
 }
 

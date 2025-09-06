@@ -32,7 +32,7 @@ module Budget
       if limit.nil?
         order_desc.first
       else
-        order_desc.limit(limit)
+        order_desc.limit(limit.to_i)
       end
     end
 

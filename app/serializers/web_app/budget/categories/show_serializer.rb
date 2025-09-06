@@ -43,13 +43,13 @@ module WebApp
           def summary_scope
             base_scope = __getobj__.summaries
             case chart_params
-            in {}
-              base_scope.most_recent(12).to_a.sort
-            in { limit: }
+            in { limit:, ** }
               base_scope.most_recent(limit).to_a.sort
-            in { start_month:, start_year:, end_month:, end_year: }
+            in { start_month:, start_year:, end_month:, end_year:, ** }
               date_range = Time.new(start_year, start_month, 1)..Time.new(end_year, end_month, 1)
               base_scope.between_dates(date_range).order_asc
+            else
+              base_scope.most_recent(12).to_a.sort
             end
           end
 

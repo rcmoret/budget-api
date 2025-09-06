@@ -22,7 +22,15 @@ module WebApp
         end
 
         def chart_params
-          params.permit(q: %i[ limit start_month start_year end_month end_year ])[:q] || {}
+          allowed_chart_params = %i[
+            limit
+            start_month
+            start_year
+            end_month
+            end_year
+          ]
+
+          params.permit(q: allowed_chart_params)[:q] || {}
         end
 
         def metadata
@@ -35,7 +43,10 @@ module WebApp
         end
 
         def category
-          @category ||= ::Budget::Category.by_slug(params.fetch(:slug))
+          @category ||= ::Budget::Category.fetch(
+            current_user_profile,
+            slug: params.fetch(:slug)
+          )
         end
       end
     end

@@ -4,12 +4,22 @@ module Fetchable
   extend ActiveSupport::Concern
 
   class_methods do
-    def fetch(user_or_group, key:)
-      belonging_to(user_or_group).by_key(key)
+    def fetch(user_or_group, **find_by)
+      case find_by
+      in { key: }
+        belonging_to(user_or_group).by_key(key)
+      in { slug: }
+        belonging_to(user_or_group).by_slug(slug)
+      end
     end
 
-    def fetch!(user_or_group, key:)
-      fetch(user_or_group, key: key).tap do |result|
+    def fetch!(user_or_group, **find_by)
+      case find_by
+      in { key: }
+        fetch(user_or_group, key: key)
+      in { slug: }
+        fetch(user_or_group, slug: slug)
+      end.tap do |result|
         raise ActiveRecord::RecordNotFound if result.nil?
       end
     end
