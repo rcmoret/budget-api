@@ -2,10 +2,12 @@ import { Header } from "@/components/layout/Header";
 import { OptionsMenu } from "@/components/layout/OptionsMenu";
 import { Provider } from "@/components/layout/Provider";
 import { Row } from "@/components/common/Row";
+import { KeyboardNav } from "./KeyboardNav";
 
 const Layout = ({ children }: { children: any }) => {
   return (
     <Provider>
+      <KeyboardNav />
       <div className="w-11/12 mx-auto h-dvh">
         <Header
           data={children.props.data}
@@ -29,4 +31,4 @@ const Layout = ({ children }: { children: any }) => {
   );
 };
 
-export default (page) => <Layout>{page}</Layout>;
+export default (page: any) => <Layout>{page}</Layout>;

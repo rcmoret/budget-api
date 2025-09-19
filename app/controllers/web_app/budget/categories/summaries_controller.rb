@@ -17,8 +17,8 @@ module WebApp
               id: category.id,
               budgeted_average: summaries.average(:budgeted),
               transactions_total_average: summaries.average(:transactions_total),
-              limit: limit
-            }
+              limit: limit,
+            },
           }
         end
 

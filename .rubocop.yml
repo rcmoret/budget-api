@@ -11,6 +11,9 @@ require:
   - rubocop-rails
   - rubocop-rspec
 
+Rails/TimeZone:
+  Enabled: false
+
 Layout/LineLength:
   Max: 120
   Exclude:

@@ -4,6 +4,7 @@ import { Link as InertiaLink } from "@inertiajs/react";
 interface ButtonLinkProps {
   href: string;
   children: React.ReactNode;
+  id: string;
   styling?: {
     color?: string;
     hoverBgColor?: string;
@@ -27,7 +28,7 @@ const ButtonStyleLink = (props: ButtonLinkProps) => {
   const classes = Object.values(styling).filter((val) => val && val !== "");
 
   return (
-    <InertiaLink href={props.href} className={classes.join(" ")}>
+    <InertiaLink href={props.href} className={classes.join(" ")} id={props.id}>
       {props.children}
     </InertiaLink>
   );

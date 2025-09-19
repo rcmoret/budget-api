@@ -236,7 +236,7 @@ const BudgetSummary = (props: ComponentProps) => {
             margin: "mt-2"
           }}
         >
-          <ButtonStyleLink href={visitPrevUrl}>
+          <ButtonStyleLink href={visitPrevUrl} id="month-year-pagination-prev">
             <span className="text-orange-600">
               <Icon name="angle-double-left" />{" "}
             </span>
@@ -246,7 +246,7 @@ const BudgetSummary = (props: ComponentProps) => {
               format: "shortMonthYear",
             })}
           </ButtonStyleLink>
-          <ButtonStyleLink href={visitNextUrl}>
+          <ButtonStyleLink href={visitNextUrl} id="month-year-pagination-next">
             {DateFormatter({
               month: nextMonth.month,
               year: nextMonth.year,
