@@ -164,11 +164,12 @@ const Transactions = (props: ComponentProps) => {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'x') {
+      console.log(event)
+      if (event.altKey && event.code === "KeyX") {
         event.preventDefault()
         closeForm()
       }
-      if (event.key === 'n') {
+      if (event.altKey && event.code === "KeyN") {
         event.preventDefault()
         showNewForm()
       }
