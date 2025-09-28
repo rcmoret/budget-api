@@ -5,7 +5,7 @@ import { AccountTransaction } from "@/types/transaction";
 import { InitialBalance } from "@/pages/accounts/transactions/initial_balance";
 import { TransactionForm } from "@/pages/accounts/transactions/form";
 import { TransactionShow } from "@/pages/accounts/transactions/show";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { AddNewComponent } from "./transactions/AddNew";
 import { AppConfigContext } from "@/components/layout/Provider";
 import Select, { SingleValue } from "react-select";
@@ -158,8 +158,25 @@ const Transactions = (props: ComponentProps) => {
   let balance = props.initialBalance;
 
   const [showFormKey, setShowFormKey] = useState<string | null>(null)
+  
   const closeForm = () => setShowFormKey(null)
   const showNewForm = () => setShowFormKey("__new__")
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'x') {
+        event.preventDefault()
+        closeForm()
+      }
+      if (event.key === 'n') {
+        event.preventDefault()
+        showNewForm()
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [showFormKey])
 
   const [filterTerm, setFilterTerm] = useState<string>("")
   const filterActive = filterTerm.length > 2
@@ -220,7 +237,9 @@ const Transactions = (props: ComponentProps) => {
                 transaction={transaction}
                 month={month}
                 year={year}
+                isNew={false}
                 closeForm={closeForm}
+                onSuccess={closeForm}
               />
             )
           } else {

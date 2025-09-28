@@ -59,10 +59,16 @@ const AddNewComponent = (props: ComponentProps) => {
       updatedAt: ""
     }
 
+    const onSuccess = () => {
+      closeForm()
+      openForm()
+    }
+
     return (
       <TransactionForm
         index={index}
         transaction={{...transaction, balance: 0 }}
+        onSuccess={onSuccess}
         closeForm={closeForm}
         month={month}
         year={year}

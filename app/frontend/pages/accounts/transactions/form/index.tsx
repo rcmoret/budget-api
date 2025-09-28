@@ -237,10 +237,11 @@ const TransactionForm = (props: {
   month: number;
   year: number;
   isNew?: boolean;
+  onSuccess: () => void;
   closeForm: () => void;
 }) => {
   const { appConfig } = useContext(AppConfigContext)
-  const { month, year, transaction, closeForm } = props;
+  const { month, year, transaction } = props;
   const {
     key,
     accountKey,
@@ -380,7 +381,7 @@ const TransactionForm = (props: {
       accountSlug,
       queryParams
     })
-    post(formUrl, { onSuccess: () => props.closeForm() })
+    post(formUrl, { onSuccess: () => props.onSuccess() })
   }
 
   const putUpdate = () => {
@@ -390,7 +391,7 @@ const TransactionForm = (props: {
       key,
       queryParams
     })
-    put(formUrl, { onSuccess: () => props.closeForm() })
+    put(formUrl, { onSuccess: () => props.onSuccess() })
   }
 
   const onSubmit = () => {
@@ -408,7 +409,7 @@ const TransactionForm = (props: {
           <Cell styling={{ display: "flex", flexAlign: "justify-between md:justify-start", width: "w-full md:w-fit" }}>
             <div className="hidden">{key}</div>
             <div className="mr-4">
-              <Button type="button" onClick={closeForm}>
+              <Button type="button" onClick={props.closeForm}>
                 <span className="text-gray-600">
                   <Icon name="times-circle" />
                 </span>
