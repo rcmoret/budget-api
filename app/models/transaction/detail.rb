@@ -10,7 +10,6 @@ module Transaction
     has_one :account, through: :entry
     validates :amount, presence: true
     validates :budget_item_id, uniqueness: true, if: :budget_item_monthly?
-    validate :amount_static!, if: :transfer?, on: :update
 
     scope :discretionary, -> { where(budget_item_id: nil) }
     scope :prior_to, lambda { |date, include_pending: false|
@@ -33,14 +32,6 @@ module Transaction
 
     def self.total
       sum(:amount)
-    end
-
-    private
-
-    def amount_static!
-      return unless amount_changed?
-
-      errors.add(:amount, "Cannot be changed for a transfer")
     end
   end
 end

@@ -21,8 +21,9 @@ module Transaction
     has_many :budget_items, through: :details
     accepts_nested_attributes_for :details, allow_destroy: true
 
-    validate :single_detail!, if: -> { transfer? || budget_exclusion? }
+    validate :single_detail!, if: :budget_exclusion?
     validate :detail_present!
+    validate :amount_static!, if: :transfer?, on: :update
     alias_attribute :is_budget_exclusion, :budget_exclusion
 
     has_one_attached :receipt
@@ -71,7 +72,15 @@ module Transaction
     end
 
     def transfer?
-      [credit_transfer, debit_transfer].any?
+      credit_transfer? || debit_transfer?
+    end
+
+    def credit_transfer?
+      credit_transfer.present?
+    end
+
+    def debit_transfer?
+      debit_transfer.present?
     end
 
     private
@@ -82,17 +91,8 @@ module Transaction
       if details.none?
         record_no_details!
       else
-        record_multiple_details!
-      end
-    end
-
-    def record_multiple_details!
-      if transfer?
-        errors.add(:transfer,
-                   "Cannot have multiple details for transfer",)
-      else # budget_exclusion
         errors.add(:budget_exclusion,
-                   "Cannot have multiple details for budget exclusion",)
+                   "Cannot have multiple details for budget exclusion")
       end
     end
 
@@ -113,6 +113,20 @@ module Transaction
       else # non-tranfer; budget included
         errors.add(:details, "Must have at least one detail for this entry")
       end
+    end
+
+    def amount_static!
+      return unless details.any?(&:amount_changed?)
+
+      transfer_total =
+        if debit_transfer?
+          transfer.to_transaction.total
+        else
+          transfer.from_transaction.total
+        end
+      return if details.sum(:amount) == -transfer_total
+
+      errors.add(:total, "Cannot be changed for a transfer")
     end
   end
 end
