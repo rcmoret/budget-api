@@ -722,7 +722,7 @@ const DayToDayItemForm = ({ item, form }: { form: TChangeForm; item: TBudgetItem
 const DifferenceLineItem = (props: { item: TBudgetItem }) => {
   const { spent, amount, isExpense, difference } = props.item
 
-  if (Math.abs(amount) > Math.abs(spent)) { return null }
+  if (Math.abs(amount) >= Math.abs(spent)) { return null }
 
   const copy = isExpense ? "Over Budget" : "Exceeding Budget"
 
