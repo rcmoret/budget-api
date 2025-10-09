@@ -22,7 +22,6 @@ module Transaction
     accepts_nested_attributes_for :details, allow_destroy: true
 
     validate :single_detail!, if: -> { transfer? || budget_exclusion? }
-    validate :eligible_for_transfer!, if: :transfer?
     validate :detail_present!
     alias_attribute :is_budget_exclusion, :budget_exclusion
 
@@ -76,12 +75,6 @@ module Transaction
     end
 
     private
-
-    def eligible_for_transfer!
-      return if details.all? { |detail| detail.budget_item.nil? }
-
-      errors.add(:transfer, "Transfer cannot be associated with a budget item")
-    end
 
     def single_detail!
       return if details.size == 1
