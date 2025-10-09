@@ -7,7 +7,7 @@ import { Row, RowStylingProps } from "@/components/common/Row";
 import { Cell } from "@/components/common/Cell";
 import { Icon } from "@/components/common/Icon";
 import { Button, SubmitButton } from "@/components/common/Button";
-import { AmountSpan } from "@/components/common/AmountSpan";
+import { AmountSpan, PercentSpan } from "@/components/common/AmountSpan";
 import { Point } from "@/components/common/Symbol";
 import { AppConfigContext } from "@/components/layout/Provider";
 import { DateFormatter } from "@/lib/DateFormatter";
@@ -21,6 +21,7 @@ import { inputAmount, AmountInput } from "@/components/common/AmountInput";
 import { TChangeForm, DraftChange } from "@/lib/hooks/useDraftEvents";
 import { useToggle } from "@/lib/hooks/useToogle";
 import { useForm } from "@inertiajs/react";
+import { TextColor } from "@/types/components/text-classes"
 
 type DetailProps = {
   item: BudgetItem;
@@ -181,6 +182,23 @@ const PerDayDetails = (props: { item: BudgetItem }) => {
   const budgetedPerWeek = budgetedPerDay * 7
   const remainingPerDay = item.remaining / appConfig.budget.data.daysRemaining
   const remainingPerWeek = remainingPerDay * 7
+  const isAhead = Math.abs(remainingPerWeek) > Math.abs(budgetedPerWeek)
+  const percentOfBudget = isAhead ?
+    (remainingPerWeek / budgetedPerWeek) - 1:
+    (remainingPerWeek / budgetedPerWeek)
+  let prefix = ""
+  let label = ""
+  let color: TextColor = "text-black"
+  if (isAhead) {
+    label = "Percent ahead of prorated budget"
+    prefix = "+"
+    color = "text-green-600"
+  } else {
+    label = "Percent remaining of prorated budget"
+  }
+  if (!isAhead && percentOfBudget < 0.75) {
+    color = "text-red-400"
+  }
 
   return (
     <div className="w-full p-2">
@@ -215,6 +233,20 @@ const PerDayDetails = (props: { item: BudgetItem }) => {
           </div>
           <div>
             <AmountSpan amount={remainingPerWeek} absolute={true} />
+          </div>
+        </div>
+        <div className="w-full flex flex-row justify-between">
+          <div>
+            {label}
+          </div>
+          <div>
+            <PercentSpan
+              prefix={prefix}
+              amount={percentOfBudget * 100}
+              absolute={true}
+              color={color}
+              classes={["font-semibold"]}
+            />
           </div>
         </div>
       </div>
