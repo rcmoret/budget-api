@@ -37,8 +37,8 @@ type TextChartreuse =
   | "text-chartreuse-300"
 
 type TextGreens =
-  | "text-green-700"
-  | "text-green-800"
+  | "text-green-600"
+  | "text-green-600"
 
 type TextGrayScale =
   | "text-black"

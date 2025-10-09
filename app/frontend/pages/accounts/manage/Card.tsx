@@ -34,7 +34,7 @@ const ArchivedAtComponent = ({ account }: { account: AccountManage; }) => {
       <form>
         <SubmitButton
           onSubmit={onSubmit}
-          styling={{ color: "text-green-800" }}
+          styling={{ color: "text-green-600" }}
           isEnabled={!processing}
         >
           <Icon name="angle-double-right" />

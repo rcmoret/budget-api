@@ -719,6 +719,30 @@ const DayToDayItemForm = ({ item, form }: { form: TChangeForm; item: TBudgetItem
   )
 }
 
+const DifferenceLineItem = (props: { item: TBudgetItem }) => {
+  const { spent, amount, isExpense, difference } = props.item
+
+  if (Math.abs(amount) > Math.abs(spent)) { return null }
+
+  const copy = isExpense ? "Over Budget" : "Exceeding Budget"
+
+  return (
+    <Row styling={{ padding: "p-2", flexAlign: "justify-between" }}>
+      <Cell styling={{ width: "w-6/12", fontWeight: "font-semibold" }}>
+        {copy}
+      </Cell>
+      <Cell styling={{ fontWeight: "font-bold", textAlign: "text-right", width: "w-4/12" }}>
+        <AmountSpan
+          amount={difference * -1}
+          color="text-green-600"
+          negativeColor="text-red-400"
+          zeroColor="text-black"
+          absolute={true}
+        />
+      </Cell>
+    </Row>
+  )
+}
 const DayToDayItem = (props: {
   form: TChangeForm;
   item: TBudgetItem,
@@ -744,7 +768,7 @@ const DayToDayItem = (props: {
           <AmountSpan amount={item.spent} absolute={true} />
         </Cell>
       </Row>
-      <Row styling={{ padding: "p-2", flexAlign: "justify-between" }}>
+      <Row styling={{ padding: "p-2", flexAlign: "justify-between", border: "border-b border-gray-100" }}>
         <Cell styling={{ width: "w-6/12" }}>
           Remaining/Difference
         </Cell>
@@ -752,6 +776,7 @@ const DayToDayItem = (props: {
           <AmountSpan amount={item.remaining} absolute={true} />
         </Cell>
       </Row>
+      {<DifferenceLineItem item={item} />}
     </ItemContainer>
   )
 }

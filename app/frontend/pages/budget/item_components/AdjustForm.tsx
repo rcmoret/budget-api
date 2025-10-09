@@ -148,7 +148,7 @@ const AdjustForm = (props: ComponentProps) => {
             <div className="w-4/12 text-right">
               <AmountSpan
                 amount={discretionary.overUnderBudget}
-                color="text-green-800"
+                color="text-green-600"
                 negativeColor="text-red-400"
                 zeroColor="text-black"
               />
@@ -156,7 +156,7 @@ const AdjustForm = (props: ComponentProps) => {
             <div className="w-4/12 text-right">
               <AmountSpan
                 amount={updatedDiscretionary.overUnderBudget}
-                color="text-green-800"
+                color="text-green-600"
                 negativeColor="text-red-400"
                 zeroColor="text-black"
               />
@@ -180,7 +180,7 @@ const AdjustForm = (props: ComponentProps) => {
             <div className="w-6/12 font-semibold">
               <AmountSpan
                 amount={bottomLineChange}
-                color="text-green-800"
+                color="text-green-600"
                 negativeColor="text-red-400"
                 zeroColor="text-black"
               />

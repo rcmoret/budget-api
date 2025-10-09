@@ -88,7 +88,7 @@ const DateForm = (props: DateFormProps) => {
         <div className="flex justify-between flex-row md:w-4/12 w-6/12">
           <div>
             <button type="submit" >
-              <span className="text-green-700">
+              <span className="text-green-600">
                 <Icon name="check-circle" />
               </span>
             </button>

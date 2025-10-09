@@ -110,7 +110,7 @@ export type TextColor =
   | "text-blue-300"
   | "text-blue-400"
   | "text-blue-700"
-  | "text-green-800"
+  | "text-green-600"
   | "text-gray-500"
   | "text-red-700"
   | "text-white"

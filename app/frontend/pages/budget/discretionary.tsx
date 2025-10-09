@@ -85,7 +85,7 @@ const TransactionDetailLineItem = (props: { transaction: BudgetItemTransaction }
         <div className="font-bold">
           <AmountSpan amount={transaction.amount}
             zeroColor="text-black"
-            color="text-green-700"
+            color="text-green-600"
             negativeColor="text-red-400"
            />
         </div>
@@ -124,7 +124,7 @@ const Discretionary = (props: { data: DiscretionaryData }) => {
         <div className="w-4/12 text-right font-bold">
           <AmountSpan
             amount={transactionsTotal}
-            color="text-green-700"
+            color="text-green-600"
             negativeColor="text-red-400"
             zeroColor="text-black"
           />
@@ -140,7 +140,7 @@ const Discretionary = (props: { data: DiscretionaryData }) => {
         <div className="w-4/12 text-right font-bold">
           <AmountSpan
             amount={overUnderBudget}
-            color="text-green-700"
+            color="text-green-600"
             negativeColor="text-red-400"
             zeroColor="text-black"
           />
@@ -156,7 +156,7 @@ const Discretionary = (props: { data: DiscretionaryData }) => {
         <div className="w-4/12 text-right font-bold">
           <AmountSpan
             amount={amount}
-            color="text-green-700"
+            color="text-green-600"
             negativeColor="text-red-400"
             zeroColor="text-black"
           />
