@@ -12,6 +12,17 @@ import {
 } from "@/pages/accounts/transactions/common";
 import { TransactionWithBalance } from "@/pages/accounts/transactions";
 
+const KeyComponent = (props: { transaction: TransactionWithBalance}) => {
+  const { key, transferKey } = props.transaction
+  return (
+    <div>
+      <div className="hidden">{key}</div>
+      <div id={key}></div>
+      {transferKey && <div id={transferKey}></div>}
+    </div>
+  )
+}
+
 const TransactionShow = (props: {
   transaction: TransactionWithBalance;
   showFormFn: (key: string) => void;
@@ -46,7 +57,7 @@ const TransactionShow = (props: {
   return (
     <TransactionContainer
       index={props.index}
-      keyComponent={<div className="hidden">{key}</div>}
+      keyComponent={<KeyComponent transaction={transaction} />}
       clearanceDateComponent={
         <ClearanceDateComponent
           clearanceDate={clearanceDate}
