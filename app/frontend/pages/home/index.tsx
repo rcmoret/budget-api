@@ -64,20 +64,20 @@ const Home = (props: { dashboard: DashboardProps }) => {
       <div className="text-lg">
         Snapshot
       </div>
-      <div className="w-6/12 flex flex-row flex-wrap justify-between">
+      <div className="md:w-6/12 flex flex-row flex-wrap justify-between text-sm">
         <div className="w-3/12">
         </div>
         <div className="w-3/12 text-right">
           budgeted
         </div>
         <div className="w-3/12 text-right">
-          spent/deposited
+          spent / deposited
         </div>
         <div className="w-3/12 text-right">
           remaining
         </div>
       </div>
-      <div className="w-6/12 flex flex-row flex-wrap justify-between">
+      <div className="md:w-6/12 flex flex-row flex-wrap justify-between text-sm">
         <StripedRow oddColor="odd:bg-cyan-50" evenColor="even:bg-cyan-100" styling={{ padding: "p-2", flexAlign: "justify-between" }}>
           <div className="w-3/12 font-semibold">
            Revenues
@@ -125,7 +125,7 @@ const Home = (props: { dashboard: DashboardProps }) => {
         <div className="text-lg">
           Accounts
         </div>
-        <div className="text-lg w-4/12">
+        <div className="text-sm md:w-4/12">
           {accounts.map((account) => {
             return (
               <AccountLink
