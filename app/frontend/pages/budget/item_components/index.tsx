@@ -182,22 +182,23 @@ const PerDayDetails = (props: { item: BudgetItem }) => {
   const budgetedPerWeek = budgetedPerDay * 7
   const remainingPerDay = item.remaining / appConfig.budget.data.daysRemaining
   const remainingPerWeek = remainingPerDay * 7
-  const isAhead = Math.abs(remainingPerWeek) > Math.abs(budgetedPerWeek)
-  const percentOfBudget = isAhead ?
-    (remainingPerWeek / budgetedPerWeek) - 1:
-    (remainingPerWeek / budgetedPerWeek)
-  let prefix = ""
+  const percentOfBudget = (remainingPerDay / budgetedPerDay) - 1
+  let prefix: "" | "+" | "-" = ""
   let label = ""
   let color: TextColor = "text-black"
-  if (isAhead) {
+  console.log({ percentOfBudget })
+  if (Math.abs(percentOfBudget) < 0.001) { // this will get rounded to 100
+    label = "Percent of prorated budget"
+  } else if (percentOfBudget < 0) {
+    label = "Percent behind prorated budget"
+    prefix = "-"
+    if (percentOfBudget < -0.25) {
+      color = "text-red-400"
+    }
+  } else {
     label = "Percent ahead of prorated budget"
     prefix = "+"
     color = "text-green-600"
-  } else {
-    label = "Percent remaining of prorated budget"
-  }
-  if (!isAhead && percentOfBudget < 0.75) {
-    color = "text-red-400"
   }
 
   return (
