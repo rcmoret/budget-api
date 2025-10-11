@@ -1,6 +1,10 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./app/frontend/**/*.{ts,tsx}", "app/views/**/*.{html,html.erb,tsx}"],
+  content: [
+    "./app/frontend/**/*.{ts,tsx}",
+    "app/views/**/*.{html,html.erb,tsx}",
+    "app/views/layouts/devise.html.erb"
+  ],
   safelist: ["odd:bg-gray-200"],
   variants: {
     extend: {
