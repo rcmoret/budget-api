@@ -7,6 +7,7 @@ import { Icon } from "@/components/common/Icon";
 import { AppConfigContext } from "@/components/layout/Provider";
 import { Button } from "@/components/common/Button";
 import { AccountBudgetSummary, SelectedAccount } from "@/types/budget";
+import { Point } from "@/components/common/Symbol";
 
 type BudgetIndexPageData = {
   name: "budget/index";
@@ -94,6 +95,15 @@ const Header = ({ metadata, data, selectedAccount }: HeaderProps) => {
             <Summary metadata={metadata} data={data} selectedAccount={selectedAccount} />
           </Cell>
         </Cell>
+        <Row>
+          <div className="px-4 text-blue-600">
+          <Point>
+            <a href="/sign-out" className="underline font-semibold">
+              Log Out
+            </a>
+          </Point>
+          </div>
+        </Row>
       </Row>
     </Row>
   )

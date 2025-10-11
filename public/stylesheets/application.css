@@ -598,6 +598,11 @@ video {
   margin-bottom: 1rem;
 }
 
+.my-3 {
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
 .mb-1 {
   margin-bottom: 0.25rem;
 }
@@ -636,6 +641,10 @@ video {
 
 .mt-6 {
   margin-top: 1.5rem;
+}
+
+.mb-12 {
+  margin-bottom: 3rem;
 }
 
 .block {
@@ -782,12 +791,28 @@ video {
   width: 100%;
 }
 
+.w-10 {
+  width: 2.5rem;
+}
+
+.w-24 {
+  width: 6rem;
+}
+
+.w-32 {
+  width: 8rem;
+}
+
 .min-w-72 {
   min-width: 18rem;
 }
 
 .min-w-\[32px\] {
   min-width: 32px;
+}
+
+.max-w-\[50\%\] {
+  max-width: 50%;
 }
 
 .grow {
@@ -1133,6 +1158,11 @@ video {
   background-color: hsl(232 100% 13% / var(--tw-bg-opacity, 1));
 }
 
+.bg-chartreuse-50 {
+  --tw-bg-opacity: 1;
+  background-color: hsl(112 28% 93% / var(--tw-bg-opacity, 1));
+}
+
 .bg-cyan-50 {
   --tw-bg-opacity: 1;
   background-color: hsl(172 29% 80% / var(--tw-bg-opacity, 1));
@@ -1371,6 +1401,11 @@ video {
   padding-bottom: 1rem;
 }
 
+.px-3 {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
 .pb-12 {
   padding-bottom: 3rem;
 }
@@ -1526,6 +1561,18 @@ video {
   line-height: 2rem;
 }
 
+.leading-4 {
+  line-height: 1rem;
+}
+
+.leading-9 {
+  line-height: 2.25rem;
+}
+
+.leading-7 {
+  line-height: 1.75rem;
+}
+
 .text-black {
   --tw-text-opacity: 1;
   color: rgb(0 0 0 / var(--tw-text-opacity, 1));
@@ -1614,6 +1661,26 @@ video {
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+}
+
+.text-chartreuse-50 {
+  --tw-text-opacity: 1;
+  color: hsl(112 28% 93% / var(--tw-text-opacity, 1));
+}
+
+.text-chartreuse-100 {
+  --tw-text-opacity: 1;
+  color: hsl(112 28% 88% / var(--tw-text-opacity, 1));
+}
+
+.text-chartreuse-200 {
+  --tw-text-opacity: 1;
+  color: hsl(112 28% 78% / var(--tw-text-opacity, 1));
+}
+
+.text-blue-200 {
+  --tw-text-opacity: 1;
+  color: hsl(232 100% 83% / var(--tw-text-opacity, 1));
 }
 
 .underline {
@@ -1807,6 +1874,11 @@ video {
 }
 
 @media (min-width: 768px) {
+  .md\:mx-8 {
+    margin-left: 2rem;
+    margin-right: 2rem;
+  }
+
   .md\:ml-2 {
     margin-left: 0.5rem;
   }
@@ -1878,6 +1950,14 @@ video {
 
   .md\:min-w-\[10\%\] {
     min-width: 10%;
+  }
+
+  .md\:max-w-\[50\%\] {
+    max-width: 50%;
+  }
+
+  .md\:max-w-\[40\%\] {
+    max-width: 40%;
   }
 
   .md\:flex-nowrap {

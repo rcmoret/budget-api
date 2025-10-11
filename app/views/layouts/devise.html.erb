@@ -9,26 +9,16 @@
     <link rel="stylesheet" media="screen" href="https://fonts.googleapis.com/css?family=Questrial">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://kit.fontawesome.com/50bb231d0e.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <%= stylesheet_link_tag("application") %>
     <style>
       html { font-family: Questrial, Arial; }
       body {
         margin: 0;
-        padding: 2.5%;
+        padding: 0;
         background-color: #9CA3AF;
         background-image: url('/black-linen-2.png');
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
-      }
-      input {
-        border-color: black;
-        border-style: solid;
-        border-width: 1px;
-      }
-      input[type="submit"] {
-        padding: 0.5rem;
-        background-color: green;
-        color: white;
       }
     </style>
 
@@ -38,8 +28,8 @@
   </head>
 
   <body>
-    <div class="w-1/2 p-4 bg-blue-800 rounded">
-      <div class="w-full p-2 bg-white rounded">
+    <div class="w-11/12 mx-auto md:mx-8 bg-white p-4 mt-4 rounded md:max-w-[40%]">
+      <div class="w-full mx-auto bg-chartreuse-50 p-4">
         <%= yield %>
       </div>
     </div>
