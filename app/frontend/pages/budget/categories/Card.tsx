@@ -4,7 +4,7 @@ import { Icon, IconName } from "@/components/common/Icon"
 import { AmountSpan } from "@/components/common/AmountSpan";
 import { useToggle } from "@/lib/hooks/useToogle";
 import { Button, SubmitButton } from "@/components/common/Button";
-import { useForm } from "@inertiajs/react";
+import { Link, useForm } from "@inertiajs/react";
 import { UrlBuilder } from "@/lib/UrlBuilder";
 import { buildQueryParams } from "@/lib/redirect_params"
 import { CategoryForm } from "@/pages/budget/categories/Form";
@@ -195,6 +195,7 @@ const Card = (props: {
     isAccrual,
     isExpense,
     isMonthly,
+    slug,
   } = category
 
   return (
@@ -202,7 +203,9 @@ const Card = (props: {
       <div className="w-full flex flex-row justify-between">
         <div className="w-6/12">
           <Point>
-            {name}
+            <Link href={`/budget/category/${slug}`}>
+              {name}
+            </Link>
           </Point>
           {" "}
           <Icon name={iconClassName} />

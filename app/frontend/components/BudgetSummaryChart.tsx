@@ -180,8 +180,8 @@ const BudgetSummaryChart: React.FC<BudgetSummaryChartProps> = ({ summaries }) =>
   return (
     <div className="w-full">
       <div className="hidden">
-        {summaries.map((s) => (
-          <div>
+        {summaries.map((s, n) => (
+          <div key={n}>
             <div>month: {s.month} year: {s.year}</div>
             <div>budgeted: {s.budgeted}</div>
             <div>total: {s.transactionsTotal}</div>
