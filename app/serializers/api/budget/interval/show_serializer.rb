@@ -6,6 +6,7 @@ module API
         attribute :items, on_render: :render, each_serializer: ItemSerializer, alias_of: :item_objects
         attribute :data, on_render: :render
         attribute :categories, on_render: :render
+        attribute :accounts
 
         def initialize(user_or_group, interval)
           @user_or_group = user_or_group
@@ -35,6 +36,17 @@ module API
           end
         end
 
+        def accounts
+          SerializableCollection.new(serializer: WebApp::DashboardSerializer::LocalAccountSerializer) do
+            user_accounts.map do |account|
+              {
+                account: account,
+                balance: balances_by_account_id.find { |struct| struct.account_id == account.id }&.balance.to_i,
+              }
+            end
+          end
+        end
+
         private
 
         attr_reader :user_or_group
@@ -47,6 +59,20 @@ module API
           @upcoming_maturity_intervals ||= ::Budget::UpcomingMaturityIntervalQuery.new(
             interval: interval
           ).call
+        end
+
+        def user_accounts
+          Current.user_profile.accounts.active
+        end
+
+        def balances_by_account_id
+          @balances_by_account_id ||=
+            Transaction::Detail
+            .joins(:entry)
+            .where(entry: { account: user_accounts })
+            .group(:account_id)
+            .sum(:amount)
+            .map { |id, balance| WebApp::DashboardSerializer::AccountIdWithBalance.new(id, balance) }
         end
       end
     end

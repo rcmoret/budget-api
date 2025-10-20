@@ -21,6 +21,7 @@ import {
 } from "@/pages/budget/items";
 import { FilterComponent } from "@/pages/budget/filter"
 import { Discretionary } from "@/pages/budget/discretionary";
+import { AccountSummary } from "@/types/account";
 
 export type DraftItem = {
   key: string;
@@ -48,6 +49,7 @@ interface ComponentProps {
   categories: Array<SelectBudgetCategory>;
   discretionary: DiscretionaryData;
   items: BudgetItem[];
+  accounts: Array<AccountSummary>;
   draft?: {
     items: Array<DraftItem>;
     discretionary: {
@@ -110,6 +112,7 @@ const BudgetComponent = (props: ComponentProps) => {
   useEffect(() => {
     setAppConfig({
       ...appConfig,
+      accounts: appConfig.accounts ||  props.accounts,
       budget: {
         ...appConfig.budget,
         data,

@@ -5,6 +5,9 @@ import { Row } from "@/components/common/Row";
 import { KeyboardNav } from "./KeyboardNav";
 
 const Layout = ({ children }: { children: any }) => {
+  const accounts = children.props.dashboard?.accounts ||
+    children.props.accounts ||
+    []
   return (
     <Provider>
       <KeyboardNav />
@@ -22,7 +25,7 @@ const Layout = ({ children }: { children: any }) => {
               overflow: "overflow-visible",
             }}
           >
-            <OptionsMenu namespace={children.props.metadata.namespace}/>
+            <OptionsMenu accounts={accounts} namespace={children.props.metadata.namespace}/>
             {children}
           </Row>
         </div>
