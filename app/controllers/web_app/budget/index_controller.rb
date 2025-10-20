@@ -16,13 +16,14 @@ module WebApp
       end
 
       def metadata
-        {
-          namespace: "budget",
+        super.deep_merge(
           page: {
             name: "budget/index",
-          },
-        }
+          }
+        )
       end
+
+      def namespace = "budget"
 
       def error_component = "budget/index"
     end
