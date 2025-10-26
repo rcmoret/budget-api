@@ -2,16 +2,28 @@ type AccountShowProps = {
   name: "AccountShow";
   key: string;
   queryParams?: string;
+  anchor?: string;
 }
 
 type AccountIndexProps = {
   name: "AccountIndex";
   queryParams?: string;
+  anchor?: string;
+}
+
+type AccountTransactions = {
+  name: "AccountTransactions";
+  accountSlug: string;
+  month: number | string;
+  year: number | string;
+  queryParams?: string
+  anchor?: string;
 }
 
 type AccountTransferProps = {
   name: "AccountTransfer";
   queryParams?: string;
+  anchor?: string;
 }
 
 type BudgetEditProps ={
@@ -19,12 +31,14 @@ type BudgetEditProps ={
   month: number | string;
   year: number | string;
   queryParams?: string;
+  anchor?: string;
 }
 
 type BudgetItemDetailsProps = {
   name: "BudgetItemDetails",
   queryParams?: string;
   key: string;
+  anchor?: string;
 }
 
 type BudgetItemEventsProps = {
@@ -32,6 +46,7 @@ type BudgetItemEventsProps = {
   month: number | string;
   year: number | string;
   queryParams?: string;
+  anchor?: string;
 }
 
 type BudgetSetUpProps = {
@@ -39,6 +54,7 @@ type BudgetSetUpProps = {
   month: number | string;
   year: number | string;
   queryParams?: string;
+  anchor?: string;
 }
 
 type BudgetShowProps = {
@@ -46,11 +62,13 @@ type BudgetShowProps = {
   month: number | string;
   year: number | string;
   queryParams?: string;
+  anchor?: string;
 }
 
 type CategoryIndexProps = {
   name: "CategoryIndex"
   queryParams?: string;
+  anchor?: string;
 }
 
 type CategorySummaryProps = {
@@ -58,18 +76,21 @@ type CategorySummaryProps = {
   key: string;
   limit?: number;
   queryParams?: string;
+  anchor?: string;
 }
 
 export type CategoryShowProps = {
   name: "CategoryShow";
   key: string;
   queryParams?: string;
+  anchor?: string;
 }
 
 type TransactionIndexProps = {
   name: "TransactionIndex";
   accountSlug: string;
   queryParams?: string;
+  anchor?: string;
 }
 
 type TransactionShowProps = {
@@ -77,11 +98,13 @@ type TransactionShowProps = {
   accountSlug: string;
   key: string;
   queryParams?: string;
+  anchor?: string;
 }
 
 type UrlBuilderProps =
   | AccountIndexProps
   | AccountShowProps
+  | AccountTransactions
   | AccountTransferProps
   | BudgetEditProps
   | BudgetItemDetailsProps
@@ -95,42 +118,51 @@ type UrlBuilderProps =
   | TransactionShowProps
 
 const UrlBuilder = (props: UrlBuilderProps) => {
-  const { name, queryParams } = props
+  const { name, anchor, queryParams } = props
 
-  const appendQueryParams = (url: string) => {
-    if (!!queryParams) {
-      return `${url}?${queryParams}`
+  const build = (base: string): string => {
+    if (!anchor && !queryParams) { return base }
+    if (!!anchor && !!queryParams) {
+      return `${base}#${anchor}?${queryParams}`
     }
-    return url
+    if (!!anchor && !queryParams) {
+      return `${base}#${anchor}`
+    }
+    if (!anchor && !!queryParams) {
+      return `${base}?${queryParams}`
+    }
+    return ""
   }
 
   switch (name) {
     case "AccountIndex":
-      return appendQueryParams("/accounts");
+      return build("/accounts");
     case "AccountShow":
-      return appendQueryParams(`/account/${props.key}`);
+      return build(`/account/${props.key}`);
+    case "AccountTransactions":
+      return build(`/account/${props.accountSlug}/transactions/${props.month}/${props.year}`)
     case "AccountTransfer":
-      return appendQueryParams("/accounts/transfer");
+      return build("/accounts/transfer");
     case "BudgetEdit":
-      return appendQueryParams(`/budget/${props.month}/${props.year}`);
+      return build(`/budget/${props.month}/${props.year}`);
     case "BudgetItemDetails":
-      return appendQueryParams(`/data/budget/item/${props.key}/events`);
+      return build(`/data/budget/item/${props.key}/events`);
     case "BudgetItemEvents":
-      return appendQueryParams(`/budget/events/${props.month}/${props.year}`);
+      return build(`/budget/events/${props.month}/${props.year}`);
     case "BudgetSetUp":
-      return appendQueryParams(`/budget/${props.month}/${props.year}/set-up`);
+      return build(`/budget/${props.month}/${props.year}/set-up`);
     case "BudgetShow":
-      return appendQueryParams(`/budget/${props.month}/${props.year}`);
+      return build(`/budget/${props.month}/${props.year}`);
     case "CategoryIndex":
-      return appendQueryParams("/budget/categories");
+      return build("/budget/categories");
     case "CategorySummary":
-      return appendQueryParams(`/data/budget/category/${props.key}/recent-summaries/${props.limit || ""}`);
+      return build(`/data/budget/category/${props.key}/recent-summaries/${props.limit || ""}`);
     case "CategoryShow":
-      return appendQueryParams(`/budget/category/${props.key}`);
+      return build(`/budget/category/${props.key}`);
     case "TransactionIndex":
-      return appendQueryParams(`/account/${props.accountSlug}/transaction`);
+      return build(`/account/${props.accountSlug}/transaction`);
     case "TransactionShow":
-      return appendQueryParams(`/account/${props.accountSlug}/transaction/${props.key}`);
+      return build(`/account/${props.accountSlug}/transaction/${props.key}`);
   }
 }
 

@@ -112,7 +112,7 @@ const BudgetComponent = (props: ComponentProps) => {
   useEffect(() => {
     setAppConfig({
       ...appConfig,
-      accounts: appConfig.accounts ||  props.accounts,
+      accounts: appConfig.accounts.length ? appConfig.accounts : props.accounts,
       budget: {
         ...appConfig.budget,
         data,

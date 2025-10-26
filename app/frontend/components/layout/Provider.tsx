@@ -5,6 +5,7 @@ type TAppConfig = {
   showConfigMenu: boolean;
   accounts: Array<{
     key: string;
+    slug: string;
     name: string;
   }>;
   account: {
