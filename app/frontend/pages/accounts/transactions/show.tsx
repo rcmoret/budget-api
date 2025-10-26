@@ -13,12 +13,14 @@ import {
 import { TransactionWithBalance } from "@/pages/accounts/transactions";
 
 const KeyComponent = (props: { transaction: TransactionWithBalance}) => {
-  const { key, transferKey } = props.transaction
+  const { key, transferKey, details } = props.transaction
   return (
-    <div>
-      <div className="hidden">{key}</div>
-      <div id={key}></div>
-      {transferKey && <div id={transferKey}></div>}
+    <div id={key}>
+      <span className="hidden">{key}</span>
+      {details.map((detail) => (
+        <div data-name="detail-key" key={detail.key} id={detail.key}></div>
+      ))}
+      {transferKey && <div data-name="transfer-key" id={transferKey}></div>}
     </div>
   )
 }

@@ -99,11 +99,33 @@ const TransactionDetailLineItem = (props: { lineItemProps: LineItemProps }) => {
     dateParse(transactionDetail.clearanceDate) :
     "pending"
 
+  const { appConfig } = useContext(AppConfigContext)
+  const { month, year } = appConfig.budget.data
+  const accounts = appConfig.accounts
+  const href = (name: string) => {
+    const acct = accounts.find((a) => a.name === name)
+    if (!!acct) {
+      return UrlBuilder(
+        {
+          name: "AccountTransactions",
+          accountSlug: acct.slug,
+          month,
+          year,
+          anchor: transactionDetail.key
+        }
+      )
+    } else {
+      return ""
+    }
+  }
+
   return (
     <>
       <Row styling={{flexAlign: "justify-between"}}>
         <div className="text-base">
-          {transactionDetail.description}
+          <Link href={href(transactionDetail.accountName)}>
+            {transactionDetail.description}
+          </Link>
         </div>
         <div className="text-base w-6/12 text-right">
           <AmountSpan amount={transactionDetail.amount} />

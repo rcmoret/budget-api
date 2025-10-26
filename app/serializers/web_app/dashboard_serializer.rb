@@ -12,7 +12,6 @@ module WebApp
 
       attr_reader :balance
     end
-    private_constant :LocalAccountSerializer
 
     include Mixins::AvailableCash
 

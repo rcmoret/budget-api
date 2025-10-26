@@ -10,9 +10,9 @@ module WebApp
 
     def props
       @props ||= {
-        dashboard: DashboardSerializer.new(interval).render,
-        data: API::Budget::Interval::DataSerializer.new(interval).render,
-      }
+        dashboard: DashboardSerializer.new(interval),
+        data: API::Budget::Interval::DataSerializer.new(interval),
+      }.transform_values(&:render)
     end
 
     def namespace = "dashboard"

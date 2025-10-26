@@ -6,6 +6,7 @@ import { AppConfigContext } from "@/components/layout/Provider";
 import { Link as InertiaLink } from "@inertiajs/react";
 import { DateFormatter } from "@/lib/DateFormatter";
 import { Button } from "@/components//common/Button";
+import { AccountSummary } from "@/types/account";
 
 const MenuItem = ({ children }: { children: React.ReactNode }) => (
   <div className="w-full leading-8">
@@ -42,7 +43,27 @@ const SetUpLink = ({ month, year, isBudget, isSetUp }: { month: number, year: nu
   )
 }
 
-const OptionsMenu = ({ namespace }: { namespace: string }) => {
+const AccountLinks = (props: { accounts: AccountSummary[] }) => {
+  return (
+    <>
+      <Point>
+        Visit Account:
+      </Point>
+      {props.accounts.map((account) => (
+        <div className="ml-4">
+          <InertiaLink href={`/accounts/${account.slug}`}>
+            <Point>
+              {account.name}
+            </Point>
+          </InertiaLink>
+        </div>
+      ))}
+    </>
+  )
+}
+
+const OptionsMenu = (props: { accounts: AccountSummary[], namespace: string }) => {
+  const { accounts, namespace } = props
   const { appConfig, setAppConfig } = useContext(AppConfigContext);
 
   if (!appConfig.showConfigMenu) return null
@@ -100,18 +121,12 @@ const OptionsMenu = ({ namespace }: { namespace: string }) => {
             Manage Accounts
           </MenuItem>
         </InertiaLink>
-        <div className="ml-4">
-          <OptionalMenuItem
-            isVisible={!isBudget}
-            onClick={toggleTransferForm}
-            copy={appConfig.account.showTransferForm ? "Hide Transfer Form" : "Show Transfer Form"}
+        {namespace !== "accounts" && <AccountLinks accounts={accounts} />}
+        <OptionalMenuItem
+          isVisible={!isBudget}
+          onClick={toggleTransferForm}
+          copy={appConfig.account.showTransferForm ? "Hide Transfer Form" : "Show Transfer Form"}
           />
-        </div>
-        <InertiaLink href="/">
-          <MenuItem>
-            Dashboard
-          </MenuItem>
-        </InertiaLink>
         <div>
           <SetUpLink month={month} year={year} isSetUp={isSetUp} isBudget={isBudget} />
         </div>
