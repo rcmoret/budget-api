@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_09_05_001259) do
+ActiveRecord::Schema[7.0].define(version: 2025_10_31_024519) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -105,6 +105,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_09_05_001259) do
     t.datetime "start_date", precision: nil
     t.datetime "end_date", precision: nil
     t.bigint "user_group_id", null: false
+    t.datetime "effective_start"
     t.index ["month", "year", "user_group_id"], name: "index_budget_intervals_on_month_and_year_and_user_group_id", unique: true
     t.index ["user_group_id"], name: "index_budget_intervals_on_user_group_id"
   end

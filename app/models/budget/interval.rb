@@ -14,6 +14,9 @@ module Budget
     validates :month, presence: true, inclusion: (1..12)
     validates :year, presence: true, inclusion: (2000..2099)
     validates :month, uniqueness: { scope: %i[year user_group_id] }
+    validates :effective_start,
+              comparison: { less_than_or_equal_to: proc { Time.current } },
+              allow_nil: true
 
     # before_create :do_callback
 
@@ -43,6 +46,7 @@ module Budget
           .or(where(month: ending_month, year: ending_year))
       end
     }
+    scope :started, -> { where.not(effective_start: nil) }
 
     class << self
       def for(date_hash)
@@ -51,7 +55,7 @@ module Budget
       alias by_key for
 
       def current
-        where(start_date: ..today, end_date: today..).ordered.take.presence ||
+        started.order(effective_start: :desc).take.presence ||
           determine_current
       end
 
