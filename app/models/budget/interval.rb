@@ -122,11 +122,19 @@ module Budget
       self.class.belonging_to(user_group).current == self
     end
 
+    def started?
+      effective_start.present?
+    end
+
     def future?
+      return false if started?
+
       first_date.to_date > today
     end
 
     def past?
+      return true if self.next.started?
+
       last_date.to_date < today
     end
 
