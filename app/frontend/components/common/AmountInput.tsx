@@ -39,6 +39,7 @@ const AmountInput = (props: AmountInputProps) => {
   return (
     <input
       name={name}
+      type="number"
       onChange={onChange}
       value={amount.display}
       style={style}
