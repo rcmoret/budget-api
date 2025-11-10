@@ -2,5 +2,7 @@ SELECT up.id as user_profile_id,
        uco.description,
        coalesce(uc.value, uco.default_value) as value
 FROM user_configuration_options uco
-LEFT OUTER JOIN user_configurations uc on uc.user_configuration_option_id = uco.id
-LEFT OUTER JOIN user_profiles up on up.id = uc.user_profile_id
+CROSS JOIN user_profiles up
+LEFT OUTER JOIN user_configurations uc
+  ON uc.user_configuration_option_id = uco.id
+  AND uc.user_profile_id = up.id

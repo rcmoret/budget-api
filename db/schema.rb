@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_10_31_024519) do
+ActiveRecord::Schema[7.0].define(version: 2025_11_10_141019) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -299,7 +299,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_10_31_024519) do
       uco.description,
       COALESCE(uc.value, uco.default_value) AS value
      FROM ((user_configuration_options uco
-       LEFT JOIN user_configurations uc ON ((uc.user_configuration_option_id = uco.id)))
-       LEFT JOIN user_profiles up ON ((up.id = uc.user_profile_id)));
+       CROSS JOIN user_profiles up)
+       LEFT JOIN user_configurations uc ON (((uc.user_configuration_option_id = uco.id) AND (uc.user_profile_id = up.id))));
   SQL
 end
