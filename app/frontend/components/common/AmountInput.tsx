@@ -1,5 +1,23 @@
 import { decimalToInt, moneyFormatter } from "@/lib/MoneyFormatter";
 
+const handleInputKeyDown = (event: KeyboardEvent) => {
+  const target = event.target as HTMLInputElement;
+  if (!target.classList.contains("numericInput")) { return null }
+
+  if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+    event.preventDefault();
+    const currentValue = parseFloat(target.value) || 0;
+    const increment = event.shiftKey ? 0.1 : 1.0
+    // const increment = event.key === "ArrowUp" ? 1.0 : -1.0;
+    const newValue = event.key === "ArrowUp" ?
+      (currentValue + increment) :
+      (currentValue - increment)
+    target.value = newValue.toString();
+    // Trigger input event so React/other listeners see the change
+    target.dispatchEvent(new Event("input", { bubbles: true }));
+  }
+}
+
 type AmountInputProps = {
   name: string;
   amount: TInputAmount;
@@ -40,7 +58,9 @@ const AmountInput = (props: AmountInputProps) => {
     <input
       name={name}
       type="number"
+      step="1.0"
       onChange={onChange}
+      onKeyDown={handleInputKeyDown}
       value={amount.display}
       style={style}
       className={className}

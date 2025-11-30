@@ -2,7 +2,7 @@ import { Header } from "@/components/layout/Header";
 import { OptionsMenu } from "@/components/layout/OptionsMenu";
 import { Provider } from "@/components/layout/Provider";
 import { Row } from "@/components/common/Row";
-import { KeyboardNav } from "./KeyboardNav";
+import { KeyboardNav, InputScrollHandler } from "./ApplicationListners";
 
 const Layout = ({ children }: { children: any }) => {
   const accounts = children.props.dashboard?.accounts ||

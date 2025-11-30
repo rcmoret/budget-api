@@ -162,23 +162,6 @@ const Transactions = (props: ComponentProps) => {
   const closeForm = () => setShowFormKey(null)
   const showNewForm = () => setShowFormKey("__new__")
 
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      console.log(event)
-      if (event.altKey && event.code === "KeyX") {
-        event.preventDefault()
-        closeForm()
-      }
-      if (event.altKey && event.code === "KeyN") {
-        event.preventDefault()
-        showNewForm()
-      }
-    }
-
-    document.addEventListener('keydown', handleKeyDown)
-    return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [showFormKey])
-
   const [filterTerm, setFilterTerm] = useState<string>("")
   const filterActive = filterTerm.length > 2
   const filterExpression = new RegExp(filterTerm, "i")

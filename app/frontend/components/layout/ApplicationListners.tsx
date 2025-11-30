@@ -54,10 +54,25 @@ const KeyboardNav = () => {
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener("wheel", handleWheel);
     };
   }, []);
 
   return null; // This component doesn't render anything
 };
 
-export { KeyboardNav };
+const InputScrollHandler = () => {
+  useEffect(() => {
+    const handleWheel = () => {
+      if(document.activeElement.type === "number"){
+        document.activeElement.blur();
+      }
+    }
+    return () => {
+      document.removeEventListener("wheel", handleWheel);
+    };
+  }, [])
+  return null; // This component doesn't render anything
+}
+
+export { InputScrollHandler, KeyboardNav };
