@@ -12,7 +12,6 @@ import { Point } from "@/components/common/Symbol";
 import { Icon } from "@/components/common/Icon";
 import { UrlBuilder } from "@/lib/UrlBuilder";
 import { buildQueryParams } from "@/lib/redirect_params";
-import { usePage } from '@inertiajs/react'
 
 type TabName = "revenues" | "monthlyExpenses" | "dayToDayExpense"
 

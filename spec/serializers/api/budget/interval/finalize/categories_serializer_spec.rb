@@ -49,7 +49,7 @@ RSpec.describe API::Budget::Interval::Finalize::CategoriesSerializer do
         let(:category) { create(:category, :monthly, user_group: user_group) }
 
         before do
-          create_list(:budget_item, 2, category: category, interval: interval.prev)
+          create_list(:budget_item, 2, category: category, interval: interval)
         end
 
         it "responds with 2 create events" do
@@ -72,7 +72,7 @@ RSpec.describe API::Budget::Interval::Finalize::CategoriesSerializer do
         let(:category) { create(:category, :weekly, user_group: user_group) }
 
         before do
-          create(:budget_item, category: category, interval: interval.prev).then do |reviewable_item|
+          create(:budget_item, category: category, interval: interval).then do |reviewable_item|
             create(:budget_item_event, :create_event, amount: -100_00, item: reviewable_item)
           end
         end
@@ -107,8 +107,8 @@ RSpec.describe API::Budget::Interval::Finalize::CategoriesSerializer do
         let(:category) { create(:category, :monthly, user_group: user_group) }
 
         before do
-          create(:budget_item, category: category, interval: interval.prev)
           create(:budget_item, category: category, interval: interval)
+          create(:budget_item, category: category, interval: interval.next)
         end
 
         it "responds with a create events and an adjust event" do
@@ -124,21 +124,26 @@ RSpec.describe API::Budget::Interval::Finalize::CategoriesSerializer do
             isExpense: category.expense?,
             isMonthly: category.monthly?,
           )
+          expect(rendered.first.deep_symbolize_keys[:events].first).to include(rolloverAmount: nil)
           expect(rendered.first.deep_symbolize_keys[:events].size).to be 2
         end
       end
 
       context "when the category is a monthly accrual" do
-        let(:category) { create(:category, :monthly, :accrual, user_group: user_group) }
+        let(:category) { create(:category, :weekly, :accrual, user_group: user_group) }
 
         before do
-          create(:budget_item, category: category, interval: interval.prev)
-          create(:budget_item, category: category, interval: interval)
+          create(:budget_item, category: category, interval: interval, key: "1234567890ab").then do |item|
+            create(:budget_item_event, :create_event, item: item, amount: -100_00, key: "1234567890ab")
+            create(:transaction_detail, budget_item: item, amount: -20_00)
+          end
+          create(:budget_item, category: category, interval: interval.next).then do |item|
+            create(:budget_item_event, :create_event, item: item, amount: -100_00)
+          end
         end
 
         it "responds with an adjust event only" do
-          expect(API::Budget::Interval::Finalize::CreateEventSerializer).not_to receive(:new)
-          expect(API::Budget::Interval::Finalize::AdjustEventSerializer).to receive(:new).once
+          expect(rendered.first.deep_symbolize_keys[:events].first).to include(rolloverAmount: -80_00)
           expect(subject.size).to be 1
           expect(rendered.first.deep_symbolize_keys[:events].size).to be 1
         end
@@ -146,11 +151,11 @@ RSpec.describe API::Budget::Interval::Finalize::CategoriesSerializer do
 
       context "when the category is day to day" do
         let(:category) { create(:category, :expense, :weekly, user_group: user_group) }
-        let(:reviewable_item) { create(:budget_item, category: category, interval: interval.prev) }
+        let(:reviewable_item) { create(:budget_item, category: category, interval: interval) }
 
         before do
           create(:budget_item_event, :create_event, amount: -100_00, item: reviewable_item)
-          create(:budget_item, category: category, interval: interval)
+          create(:budget_item, category: category, interval: interval.next)
         end
 
         it "responds with an adjust event only" do

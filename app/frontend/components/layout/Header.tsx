@@ -8,6 +8,7 @@ import { AppConfigContext } from "@/components/layout/Provider";
 import { Button } from "@/components/common/Button";
 import { AccountBudgetSummary, SelectedAccount } from "@/types/budget";
 import { Point } from "@/components/common/Symbol";
+import { DiscretionaryData } from "types/budget"
 
 type BudgetIndexPageData = {
   name: "budget/index";
@@ -17,6 +18,7 @@ export type BudgetFinalizePageData = {
   name: "budget/finalize";
   month: number;
   year: number;
+  discretionary: DiscretionaryData;
 }
 
 type BudgetSetUpPageData = {

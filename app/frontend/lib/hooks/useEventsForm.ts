@@ -1,5 +1,6 @@
 import { useForm } from "@inertiajs/react";
 import { SetUpEvent } from "./useSetUpEventsForm";
+import { FinalizeCategoryEvent } from "./useFinalizeEventsForm";
 import { TInputAmount } from "@/components/common/AmountInput";
 import { inputAmount } from "@/components/common/AmountInput";
 
@@ -7,7 +8,7 @@ type AdjustEvents = "item_adjust" | "multi_item_adjust" | "rollover_item_adjust"
 
 const ADJUST_EVENTS = ["item_adjust", "multi_item_adjust", "rollover_item_adjust", "setup_item_adjust"]
 
-const isAdjust = (event: EventProps | SetUpEvent) => ADJUST_EVENTS.includes(event.eventType)
+const isAdjust = (event: EventProps | SetUpEvent | FinalizeCategoryEvent) => ADJUST_EVENTS.includes(event.eventType)
 
 export type AdjustEventProps = {
   key: string;
@@ -34,7 +35,7 @@ const CREATE_EVENTS = [
   "setup_item_create",
 ]
 
-const isCreate = (event: EventProps | SetUpEvent) => CREATE_EVENTS.includes(event.eventType)
+const isCreate = (event: EventProps | SetUpEvent | FinalizeCategoryEvent) => CREATE_EVENTS.includes(event.eventType)
 
 export type CreateEventProps = {
   key: string;

@@ -9,12 +9,20 @@ module API
           private_constant :MaturityIntervalSerializer
 
           ReviewItemSerializer = Class.new(ApplicationSerializer) do
-            attributes :key, :remaining
+            attributes :key, :remaining, :event_key, :rollover_amount
+
+            def event_key = nil
+
+            def rollover_amount
+              return unless category.accrual?
+
+              remaining
+            end
           end
 
           def initialize(category, interval:, reviewable_items: [], target_items: [])
             super(category)
-            @reviewable_items = reviewable_items
+            @reviewable_items = reviewable_items.map(&:decorated)
             @target_items = target_items
             @interval = interval
           end

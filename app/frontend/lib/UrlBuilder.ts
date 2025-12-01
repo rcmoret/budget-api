@@ -34,6 +34,14 @@ type BudgetEditProps ={
   anchor?: string;
 }
 
+type BudgetFinalizePostProps = {
+  name: "BudgetFinalize"
+  month: number | string;
+  year: number | string;
+  queryParams?: string;
+  anchor?: string;
+}
+
 type BudgetItemDetailsProps = {
   name: "BudgetItemDetails",
   queryParams?: string;
@@ -59,6 +67,14 @@ type BudgetSetUpProps = {
 
 type BudgetShowProps = {
   name: "BudgetShow";
+  month: number | string;
+  year: number | string;
+  queryParams?: string;
+  anchor?: string;
+}
+
+type CategoryCreateEventsProps = {
+  name: "CategoryCreateEvents"
   month: number | string;
   year: number | string;
   queryParams?: string;
@@ -107,10 +123,12 @@ type UrlBuilderProps =
   | AccountTransactions
   | AccountTransferProps
   | BudgetEditProps
+  | BudgetFinalizePostProps
   | BudgetItemDetailsProps
   | BudgetItemEventsProps
   | BudgetSetUpProps
   | BudgetShowProps
+  | CategoryCreateEventsProps
   | CategoryIndexProps
   | CategoryShowProps
   | CategorySummaryProps
@@ -145,6 +163,8 @@ const UrlBuilder = (props: UrlBuilderProps) => {
       return build("/accounts/transfer");
     case "BudgetEdit":
       return build(`/budget/${props.month}/${props.year}`);
+    case "BudgetFinalize":
+      return build(`/budget/${props.month}/${props.year}/finalize`)
     case "BudgetItemDetails":
       return build(`/data/budget/item/${props.key}/events`);
     case "BudgetItemEvents":
@@ -153,6 +173,8 @@ const UrlBuilder = (props: UrlBuilderProps) => {
       return build(`/budget/${props.month}/${props.year}/set-up`);
     case "BudgetShow":
       return build(`/budget/${props.month}/${props.year}`);
+    case "CategoryCreateEvents":
+      return build(`/data/budget/categories/${props.month}/${props.year}/create_events`)
     case "CategoryIndex":
       return build("/budget/categories");
     case "CategorySummary":

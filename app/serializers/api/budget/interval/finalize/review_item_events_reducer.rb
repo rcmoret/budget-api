@@ -29,7 +29,9 @@ module API
 
           def collect_create_events(&block)
             reviewable_items.each_with_object([]) do |item, array|
-              array << CreateEventSerializer.new(item, interval: interval) if block.call(array.size) == :add_item
+              next unless block.call(array.size) == :add_item
+
+              array << CreateEventSerializer.new(item, interval: interval)
             end
           end
 

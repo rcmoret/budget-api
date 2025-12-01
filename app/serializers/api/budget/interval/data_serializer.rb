@@ -10,6 +10,11 @@ module API
         attribute :is_closed_out, alias_of: :closed_out?
         attribute :is_current, alias_of: :current?
         attribute :is_set_up, alias_of: :set_up?
+        attribute :discretionary, on_render: :render
+
+        def discretionary
+          API::Budget::Interval::DiscretionarySerializer.new(__getobj__)
+        end
       end
     end
   end

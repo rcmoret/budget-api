@@ -117,6 +117,7 @@ export type BgColorOption =
 
 export type BgHoverOption =
   | "hover:bg-gray-300"
+  | "hover:bg-gray-400"
   | "hover:bg-green-700"
 
 export type PositionOption =

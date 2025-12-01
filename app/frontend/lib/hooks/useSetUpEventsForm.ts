@@ -1,4 +1,4 @@
-import { EventProps, useEventForm, isAdjust, isCreate, isDelete, TEventError, emptyError } from "@/lib/hooks/useEventsForm";
+import { EventProps, useEventForm, isAdjust, isCreate, isDelete, TEventError } from "@/lib/hooks/useEventsForm";
 import { BudgetCategory, TEvent } from "@/types/budget";
 import { useEffect, useState } from "react";
 import { generateKeyIdentifier } from "../KeyIdentifier";
