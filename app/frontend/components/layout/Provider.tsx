@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useState } from "react";
+import { ReactNode, useContext, createContext, useState } from "react";
 import { BudgetData, SelectBudgetCategory, DiscretionaryData } from "@/types/budget";
 
 type TAppConfig = {
@@ -81,4 +81,13 @@ const Provider = ({ children }: { children: ReactNode }) => {
   )
 }
 
-export { AppConfigContext, Provider, TAppConfig }
+const useAppConfigContext = () => {
+  const context = useContext(AppConfigContext);
+  if (!context) {
+    throw new Error("useAppConfigContext must be used within a Budget Dashboard Item Context Provider")
+  }
+
+  return context;
+}
+
+export { useAppConfigContext, AppConfigContext, Provider, TAppConfig }

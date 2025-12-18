@@ -1,9 +1,10 @@
-import { DiscretionaryData, BudgetItemTransaction } from "@/types/budget";
+import { BudgetItemTransaction } from "@/types/budget";
 import { AmountSpan } from "@/components/common/AmountSpan";
 import { Row } from "@/components/common/Row";
 import { useToggle } from "@/lib/hooks/useToogle";
 import { Button } from "@/components/common/Button";
 import { dateParse } from "@/lib/DateFormatter";
+import { useBudgetDashboardContext } from "@/pages/budget/dashboard/context_provider";
 
 const TransactionButton = (props: {
   toggleTransactions: () => void;
@@ -94,8 +95,9 @@ const TransactionDetailLineItem = (props: { transaction: BudgetItemTransaction }
   )
 }
 
-const Discretionary = (props: { data: DiscretionaryData }) => {
-  const { amount, overUnderBudget, transactionsTotal, transactionDetails: transactions } = props.data;
+const Discretionary = () => {
+  const { discretionary } = useBudgetDashboardContext()
+  const { amount, overUnderBudget, transactionsTotal, transactionDetails: transactions } = discretionary;
 
   const [transactionsShown, toggleTransactions] = useToggle(false)
 
@@ -162,7 +164,7 @@ const Discretionary = (props: { data: DiscretionaryData }) => {
           />
         </div>
       </Row>
-      {!transactionsShown ? 
+      {!transactionsShown ?
         <TransactionButton toggleTransactions={toggleTransactions} /> :
         <TransactionDetails
           toggleTransactions={toggleTransactions}

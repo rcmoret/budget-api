@@ -2,14 +2,13 @@ import { AccountTransactionDetail } from "@/types/transaction";
 import { ModeledTransaction } from "@/lib/models/transaction";
 import { Button } from "@/components/common/Button";
 import { Icon } from "@/components/common/Icon";
-import { byAmount, byCategoryName } from "@/lib/sort_functions";
+import { byAmount } from "@/lib/sort_functions";
 import { AmountSpan } from "@/components/common/AmountSpan";
 import { useForm } from "@inertiajs/react";
 import { UrlBuilder } from "@/lib/UrlBuilder";
 import { TransactionWithBalance } from "@/pages/accounts/transactions";
 import { buildQueryParams } from "@/lib/redirect_params";
-import { useContext } from "react";
-import { AppConfigContext } from "@/components/layout/Provider";
+import { useAppConfigContext } from "@/components/layout/Provider";
 import { Point } from "@/components/common/Symbol";
 
 interface CaretComponentProps {
@@ -146,7 +145,7 @@ const DeleteIcon = (props: {
   const { transaction } = props
   const { key, accountSlug } = transaction
   const { delete: destroy } = useForm({})
-  const { appConfig } = useContext(AppConfigContext)
+  const { appConfig } = useAppConfigContext()
   const { month, year } = appConfig.budget.data
 
   const onClick = () => {

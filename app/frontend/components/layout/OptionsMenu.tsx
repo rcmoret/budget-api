@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { Cell } from "@/components/common/Cell";
 import { Point } from "@/components//common/Symbol";
 import { Row } from "@/components/common/Row";
-import { AppConfigContext } from "@/components/layout/Provider";
+import { useAppConfigContext } from "@/components/layout/Provider";
 import { Link as InertiaLink } from "@inertiajs/react";
 import { DateFormatter } from "@/lib/DateFormatter";
 import { Button } from "@/components//common/Button";
@@ -64,7 +64,7 @@ const AccountLinks = (props: { accounts: AccountSummary[] }) => {
 
 const OptionsMenu = (props: { accounts: AccountSummary[], namespace: string }) => {
   const { accounts, namespace } = props
-  const { appConfig, setAppConfig } = useContext(AppConfigContext);
+  const { appConfig, setAppConfig } = useAppConfigContext()
 
   if (!appConfig.showConfigMenu) return null
 

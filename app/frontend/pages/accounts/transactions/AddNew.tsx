@@ -4,8 +4,7 @@ import { Cell } from "@/components/common/Cell";
 import { Button } from "@/components/common/Button";
 import { TransactionForm } from "@/pages/accounts/transactions/form";
 import { generateKeyIdentifier } from "@/lib/KeyIdentifier";
-import { useContext } from "react";
-import { AppConfigContext } from "@/components/layout/Provider";
+import { useAppConfigContext } from "@/components/layout/Provider";
 
 type ComponentProps = {
   index: number;
@@ -27,7 +26,7 @@ const AddNewComponent = (props: ComponentProps) => {
     year
   } = props
 
-  const { appConfig } = useContext(AppConfigContext)
+  const { appConfig } = useAppConfigContext()
   const { isCashFlow, key: accountKey, slug: accountSlug } = appConfig.account
   const isEven = props.index % 2 === 0
 

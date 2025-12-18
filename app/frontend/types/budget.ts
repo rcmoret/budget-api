@@ -1,4 +1,5 @@
 import { IconName } from "@/components/common/Icon";
+import { DraftChange } from "@/lib/hooks/useDraftEvents";
 
 export interface AccountBudgetSummary {
   isCurrent: boolean;
@@ -102,19 +103,20 @@ export interface TEvent {
   month?: number;
   year?: number;
 }
+export interface TBudgetItemDraftItem {
+  key: string;
+  name: string;
+  amount: number;
+  budgetCategoryKey: string;
+  budgetCategoryName: string;
+  difference: number;
+  isNewItem: boolean;
+  remaining: number;
+  spent: number
+}
 
 export interface TBudgetItem extends BudgetItem {
-  draftItem?: {
-    key: string;
-    name: string;
-    amount: number;
-    budgetCategoryKey: string;
-    budgetCategoryName: string;
-    difference: number;
-    isNewItem: boolean;
-    remaining: number;
-    spent: number
-  };
+  draftItem?: TBudgetItemDraftItem;
   change?: DraftChange;
 }
 

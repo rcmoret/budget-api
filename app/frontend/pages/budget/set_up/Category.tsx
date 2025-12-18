@@ -7,7 +7,7 @@ import { emptyError, isAdjust, isCreate, isDelete } from "@/lib/hooks/useEventsF
 import { GreenCheck, Icon } from "@/components/common/Icon";
 import { useContext, useState } from "react";
 import axios from "axios";
-import { AppConfigContext } from "@/components/layout/Provider";
+import { useAppConfigContext } from "@/components/layout/Provider";
 import { DateFormatter } from "@/lib/DateFormatter";
 import { useForm } from '@inertiajs/react'
 import { SubmitButton } from "@/components/common/Button";
@@ -21,7 +21,7 @@ const AccrualFormComponent = (props: {
   updateCategory: (category: SetUpCategory) => void,
 }) => {
   const { category, updateCategory } = props
-  const { appConfig } = useContext(AppConfigContext)
+  const { appConfig } = useAppConfigContext()
   const { month, year } = appConfig.budget.data
   const { put, processing } = useForm({
     category: {

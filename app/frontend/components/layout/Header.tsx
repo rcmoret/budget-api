@@ -1,10 +1,9 @@
-import { useContext } from "react";
 import { HeaderButtons } from "./HeaderButtons";
 import { Row } from "@/components/common/Row";
 import { Cell } from "@/components/common/Cell";
 import { Summary } from "@/components/layout/BudgetSummary";
 import { Icon } from "@/components/common/Icon";
-import { AppConfigContext } from "@/components/layout/Provider";
+import { useAppConfigContext } from "@/components/layout/Provider";
 import { Button } from "@/components/common/Button";
 import { AccountBudgetSummary, SelectedAccount } from "@/types/budget";
 import { Point } from "@/components/common/Symbol";
@@ -45,7 +44,7 @@ const Header = ({ metadata, data, selectedAccount }: HeaderProps) => {
   if (metadata.prevSelectedAccountPath) {
     accountPath = metadata.prevSelectedAccountPath
   }
-  const { appConfig, setAppConfig } = useContext(AppConfigContext);
+  const { appConfig, setAppConfig } = useAppConfigContext();
   const toggleConfigMenu = () => setAppConfig({
       ...appConfig,
       showConfigMenu: !appConfig.showConfigMenu

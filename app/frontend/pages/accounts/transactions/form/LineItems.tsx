@@ -1,5 +1,4 @@
-import { useContext } from "react";
-import { AppConfigContext } from "@/components/layout/Provider";
+import { useAppConfigContext } from "@/components/layout/Provider";
 import { AmountSpan } from "@/components/common/AmountSpan";
 import { Label } from "@/pages/accounts/transactions/form/Shared";
 import { TFormDetail } from "@/pages/accounts/transactions/form";
@@ -47,7 +46,7 @@ const LineItemComponent = (props: {
   updateDetailItem: (props: { index: number, value: string, amount?: TInputAmount }) => void,
   updateDetailAmount: (props: { index: number, value: TInputAmount }) => void,
 }) => {
-  const { appConfig } = useContext(AppConfigContext)
+  const { appConfig } = useAppConfigContext()
   const { items, month, year } = appConfig.budget.data
   const { showAccruals } = appConfig.budget
   const { detail, index, addDetail, removeDetail } = props
