@@ -111,7 +111,7 @@ RSpec.describe API::Budget::Interval::Finalize::ReviewItemEventsReducer do
 
     context "when the category is an accrual" do
       let(:category) { create(:category, :accrual, user_group: user_group) }
-      let(:reviewable_items) { [instance_double(Presenters::Budget::DayToDayExpensePresenter)] }
+      let(:reviewable_items) { [instance_double(Presenters::Budget::DayToDayExpensePresenter, remaining: 0)] }
 
       context "when there are target items" do
         subject do

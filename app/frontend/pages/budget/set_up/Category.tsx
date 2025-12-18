@@ -491,7 +491,6 @@ const CategoryComponent = (props: ComponentProps) => {
 
     axios.get(summaryUrl)
     .then(response => {
-      console.log(response.data)
       const { category } = response.data
       setSummaryData(category)
     })

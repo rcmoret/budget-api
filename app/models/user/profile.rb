@@ -5,6 +5,7 @@ module User
 
     belongs_to :user_group, class_name: "Group"
     has_many :accounts, through: :user_group
+    has_many :budget_categories, through: :user_group
     alias_attribute :group, :user_group
 
     def configuration(option_description)

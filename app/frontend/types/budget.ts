@@ -127,3 +127,7 @@ export type SelectBudgetCategory ={
   isExpense: boolean;
   isMonthly: boolean;
 }
+
+export type RolloverEventTypes =
+  "rollover_item_create" |
+  "rollover_item_adjust"

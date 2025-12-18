@@ -12,7 +12,15 @@ module User
              dependent: :restrict_with_exception,
              foreign_key: :user_group_id,
              inverse_of: :user_group
-    has_many :budget_categories, dependent: :restrict_with_exception
-    has_many :budget_intervals, dependent: :restrict_with_exception
+    has_many :budget_categories,
+             class_name: "Budget::Category",
+             foreign_key: :user_group_id,
+             inverse_of: :user_group,
+             dependent: :restrict_with_exception
+    has_many :budget_intervals,
+             class_name: "Budget::Interval",
+             foreign_key: :user_group_id,
+             inverse_of: :user_group,
+             dependent: :restrict_with_exception
   end
 end

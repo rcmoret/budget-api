@@ -29,6 +29,8 @@ module API
         private
 
         def item = __getobj__
+
+        alias budget_item item
       end
     end
   end

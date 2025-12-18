@@ -22,6 +22,6 @@ namespace :budget do
     get "/set-up", to: "set_up/form#call", as: :set_up_form
     post "/set-up", to: "set_up/create#call"
     get "/finalize", to: "finalize/form#call", as: :finalize_form
-    post "/finalize", to: "finalize/create#call"
+    post "/finalize", to: "finalize/create_events#call"
   end
 end

@@ -1,4 +1,5 @@
 import { decimalToInt, moneyFormatter } from "@/lib/MoneyFormatter";
+import { forwardRef } from "react";
 
 const handleInputKeyDown = (event: KeyboardEvent) => {
   const target = event.target as HTMLInputElement;
@@ -29,15 +30,23 @@ type AmountInputProps = {
   }
   classes?: Array<string>;
   textAlign?: "left" | "right"
+  borderColor?: string;
 }
 
-const AmountInput = (props: AmountInputProps) => {
+const AmountInput = forwardRef<HTMLInputElement, AmountInputProps>((props, ref) => {
+  const defaultProps = {
+   textAlign: "right",
+   outlineColor: "outline-gray-300",
+   outline: "outline"
+  }
   const { 
     amount,
     textAlign,
     disabled,
+    outline,
+    outlineColor,
     name
-  } = { textAlign: "right", ...props }
+  } = { ...defaultProps, ...props }
   const style = props.style || {}
   const onChange = (
     ev: React.ChangeEvent & { target: HTMLInputElement },
@@ -48,16 +57,19 @@ const AmountInput = (props: AmountInputProps) => {
   const classes = props.classes || []
   const className = [
     "rounded",
-    "border",
-    "border-gray-300",
+    outline,
+    outlineColor,
     `text-${textAlign}`,
+    "border-none",
+    "focus:border-none",
+    "focus:border-none",
     ...classes
   ].join(" ")
 
   return (
     <input
+      ref={ref}
       name={name}
-      type="number"
       step="1.0"
       onChange={onChange}
       onKeyDown={handleInputKeyDown}
@@ -67,7 +79,8 @@ const AmountInput = (props: AmountInputProps) => {
       disabled={!!disabled}
     />
   )
-}
+})
+
 type InputAmountProps = {
   decimal?: string | number;
   cents?: number;
@@ -100,7 +113,6 @@ const inputAmount = (props: InputAmountProps): TInputAmountReturn => {
       display: moneyFormatter(amount)
     }
   }
-
 }
 
 export { AmountInput, inputAmount }

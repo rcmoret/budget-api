@@ -15,7 +15,7 @@ const IndividualTab = ({ account, isSelected }: AccountSummaryProps) => {
   const borderColor = isSelected ? "border-sky-600" : "border-gray-400"
   const padding = "p-4";
   const width = "sm:min-w-[30%] md:min-w-[10%] lg:min-w-[12%] whitespace-nowrap";
-  const styles = ["rounded", bgColor, padding, width].join(" ");
+  const styles = ["rounded", "shadow-lg", bgColor, padding, width].join(" ");
 
   return (
     <div className={styles}>
@@ -51,7 +51,7 @@ const AccountTabs = (props: PropType) => {
         position: "relative"
       }}
     >
-      <Row styling={{ position: "relative", overflow: "overflow-scroll", gap: "gap-4" }}>
+      <Row styling={{ position: "relative", overflow: "overflow-scroll", gap: "gap-4", padding: "py-1" }}>
         {accounts.map((account) => (
           <IndividualTab
             key={account.key}

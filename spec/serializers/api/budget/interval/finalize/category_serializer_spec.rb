@@ -17,7 +17,7 @@ RSpec.describe API::Budget::Interval::Finalize::CategorySerializer do
         create(:budget_item_event, :create_event, item: item, amount: -200_00)
       end
     end
-    let(:reviewable_items) { [reviewable_item] }
+    let(:reviewable_items) { [reviewable_item.decorated] }
   end
 
   shared_context "with a single target item" do
@@ -94,7 +94,7 @@ RSpec.describe API::Budget::Interval::Finalize::CategorySerializer do
       described_class.new(
         category,
         interval: interval,
-        reviewable_items: reviewable_items,
+        reviewable_items: reviewable_items.map(&:decorated),
         target_items: target_items,
       )
     end
