@@ -1,7 +1,8 @@
 import { AmountSpan } from "@/components/common/AmountSpan";
 import { Row, StripedRow } from "@/components/common/Row";
 import { Link } from "@inertiajs/react";
-import { TSimpleAccount, sortByPriority } from "@/lib/models/account";
+import { TSimpleAccount } from "@/lib/models/account";
+import { byPriority as sortByPriority } from "@/lib/sort_functions";
 
 const AccountLink = ({ account }: {
   account: { name: string; slug: string; balance: number; }

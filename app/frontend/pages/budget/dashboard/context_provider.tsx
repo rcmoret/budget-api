@@ -3,6 +3,7 @@ import { useAppConfigContext } from "@/components/layout/Provider";
 import { BudgetItem, DiscretionaryData, SelectBudgetCategory } from "@/types/budget";
 import { DraftChange, MergedItem } from "@/lib/hooks/useDraftEvents";
 import { DraftItem } from ".";
+import { byName } from "@/lib/sort_functions";
 
 type TFilterScopes = "expenses" | "revenues" | "monthly" | "weekly" | "cleared" | "pending";
 
@@ -37,7 +38,7 @@ const sortedItems = (props: {
     const items = p.items.filter(p.scope.filter)
 
     return {
-      items,
+      items: items.sort(byName),
       name: p.scope.name,
       count: items.length,
       hidden: {

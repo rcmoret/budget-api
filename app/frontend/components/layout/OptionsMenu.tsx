@@ -6,7 +6,7 @@ import { Link as InertiaLink } from "@inertiajs/react";
 import { DateFormatter } from "@/lib/DateFormatter";
 import { Button } from "@/components//common/Button";
 import { AccountSummary } from "@/types/account";
-import { sortByPriority } from "@/lib/models/account";
+import { byPriority as sortByPriority } from "@/lib/sort_functions";
 
 const MenuItem = ({ children }: { children: React.ReactNode }) => (
   <div className="w-full leading-8">

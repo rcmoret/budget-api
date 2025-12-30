@@ -1,6 +1,6 @@
 import { AccountManage } from "@/types/account";
 import { useState } from "react";
-import { sortByPriority } from "@/lib/models/account";
+import { byPriority as sortByPriority } from "@/lib/sort_functions";
 import { AccountCardWrapper as AccountCard } from "@/pages/accounts/manage/Card";
 import { AddNewComponent } from "./manage/Form";
 

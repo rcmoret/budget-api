@@ -10,7 +10,8 @@ import { Button, SubmitButton } from "@/components/common/Button";
 import { AmountSpan, PercentSpan } from "@/components/common/AmountSpan";
 import { Point } from "@/components/common/Symbol";
 import { useAppConfigContext } from "@/components/layout/Provider";
-import { clearedItems, sortDetails } from "@/lib/models/budget-items"
+import { clearedItems } from "@/lib/models/budget-items"
+import { byComparisonDate as sortDetails } from "@/lib/sort_functions";
 import { dateParse } from "@/lib/DateFormatter";
 import { useEventForm } from "@/lib/hooks/useEventsForm";
 import { generateKeyIdentifier } from "@/lib/KeyIdentifier";

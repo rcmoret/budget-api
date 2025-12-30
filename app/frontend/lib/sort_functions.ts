@@ -1,9 +1,13 @@
-import { AccountTransactionDetail } from "@/types/transaction";
-import { ModeledTransaction as Transaction } from "@/lib/models/transaction";
-
-const byClearanceDate = (
-  transaction1: Transaction,
-  transaction2: Transaction,
+const byClearanceDate = <
+  T extends {
+    clearanceDate: string;
+    updatedAt: string;
+    isCleared: boolean;
+    isPending: boolean;
+  }
+>(
+  transaction1: T,
+  transaction2: T,
 ) => {
   const today = new Date().toISOString().split("T")[0];
   const txn1ClearanceDate = String(transaction1.clearanceDate);
@@ -20,9 +24,9 @@ const byClearanceDate = (
   }
 };
 
-const byCategoryName = (
-  detail1: AccountTransactionDetail,
-  detail2: AccountTransactionDetail,
+const byCategoryName = <T extends { key: string; budgetCategoryName: string }>(
+  detail1: T,
+  detail2: T,
 ) => {
   if (detail1.budgetCategoryName === detail2.budgetCategoryName) {
     return detail1.key > detail2.key ? -1 : 1;
@@ -34,9 +38,9 @@ const byCategoryName = (
   }
 };
 
-const byAmount = (
-  detail1: AccountTransactionDetail,
-  detail2: AccountTransactionDetail,
+const byAmount = <T extends { amount: number; key: string }>(
+  detail1: T,
+  detail2: T,
 ) => {
   if (detail1.amount === detail2.amount) {
     return detail1.key > detail2.key ? -1 : 1;
@@ -45,4 +49,48 @@ const byAmount = (
   }
 };
 
-export { byAmount, byCategoryName, byClearanceDate };
+const byName = <NameSortable extends { name: string }>(
+  item1: NameSortable, item2: NameSortable
+) => {
+  return item1.name < item2.name ? -1 : 1
+}
+
+const byPriority = <
+  T extends { priority: number }
+>(account1: T, account2: T) => {
+  return  account1.priority - account2.priority
+}
+
+const byComparisonDate = <T extends { comparisonDate: string }>(
+  detail1: T,
+  detail2: T
+) => {
+  return detail1.comparisonDate < detail2.comparisonDate ? -1 : 1
+}
+
+const byNameAndAmount = <
+  T extends { key: string; name: string; amount: number }
+>(item1: T, item2: T) => {
+
+  // when the items have different names
+  if (item1.name !== item2.name) {
+    return byName(item1, item2)
+  }
+
+  // when the items have the same name
+  if (item1.amount === item2.amount) {
+    return item1.key < item2.key ? -1 : 1
+  } else {
+    return Math.abs(item1.amount) - Math.abs(item2.amount)
+  }
+}
+
+export {
+  byAmount,
+  byCategoryName,
+  byClearanceDate,
+  byComparisonDate,
+  byName,
+  byNameAndAmount,
+  byPriority
+};

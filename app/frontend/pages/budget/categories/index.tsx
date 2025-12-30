@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { sortByName } from "@/lib/models/budget-category"
+import { byName as sortByName } from "@/lib/sort_functions"
 import { BudgetCategory } from "@/types/budget"
 import { CardWrapper as Card, TIcon } from "@/pages/budget/categories/Card"
 import { CategoryForm, NewBudgetCategory } from "@/pages/budget/categories/Form"

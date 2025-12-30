@@ -4,13 +4,11 @@ import { Label } from "@/pages/accounts/transactions/form/Shared";
 import { TFormDetail } from "@/pages/accounts/transactions/form";
 import { Icon } from "@/components/common/Icon";
 import Select, { SingleValue, createFilter } from "react-select";
-import {
-  accrualFilter,
-  sortByName,
-} from "@/lib/models/budget-items"
+import { accrualFilter, } from "@/lib/models/budget-items"
 import { AmountInput, inputAmount, TInputAmount } from "@/components/common/AmountInput";
 import { Button } from "@/components/common/Button";
 import { moneyFormatter } from "@/lib/MoneyFormatter";
+import { byNameAndAmount as sortByName } from "@/lib/sort_functions";
 
 type RemoveButtonProps = {
   detailKey: string,
