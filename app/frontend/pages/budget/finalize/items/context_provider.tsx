@@ -2,6 +2,7 @@ import { createContext, useContext, ReactNode } from "react";
 import { FinalizeCategoryFormItem } from "@/lib/hooks/useFinalizeEventsForm";
 
 type TItemContext = {
+  anchorId: string;
   index: number;
   item: FinalizeCategoryFormItem; 
   setItemEventKey: (eventKey: string) => void;
@@ -39,6 +40,7 @@ const ItemProvider = (props: {
   }
 
   const value = {
+    anchorId: `review-item-${item.key}`,
     index: props.index,
     item,
     setItemEventKey,

@@ -18,7 +18,7 @@ module WebApp
         end
 
         def update_close_out_completed_at!
-          interval.update(close_out_completed_at: Time.current)
+          interval.prev.update(close_out_completed_at: Time.current)
         end
 
         def metadata

@@ -8,6 +8,17 @@ import { ReactNode, useRef } from "react";
 import { SelectSomeIndicator, SelectNoneOption, SelectAllOption } from "./option_button";
 import { i18n } from "@/lib/i18n"
 import { useFinalizeFormContext } from "../form_context";
+import { KeySpan as MainKeySpan } from "@/components/common/KeySpan";
+
+const KeySpan = () => {
+  const { anchorId, item } = useItem()
+
+  if (item.needsReview) {
+    return <MainKeySpan id={anchorId} _key={item.key} />
+  } else {
+    return null
+  }
+}
 
 type SelectOption = {
   label: string;
@@ -118,6 +129,7 @@ const ItemCard = (props: { item: FinalizeCategoryFormItem; index: number; childr
       setRolloverAmountForItem={setRolloverAmountForItem}
       setRolloverNoneForItem={setRolloverNoneForItem}
     >
+      <KeySpan />
       <div className={`flex flex-col gap-2 border ${borderColor} rounded p-4 mb-2 shadow-lg ${bgColor}`}>
         <div className="flex flex-row mb-4 justify-between">
           <div className="flex flex-col gap-2 w-1/2 pr-4 justify-between">
