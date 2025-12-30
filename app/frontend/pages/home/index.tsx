@@ -1,6 +1,7 @@
 import { AmountSpan } from "@/components/common/AmountSpan";
 import { Row, StripedRow } from "@/components/common/Row";
 import { Link } from "@inertiajs/react";
+import { TSimpleAccount, sortByPriority } from "@/lib/models/account";
 
 const AccountLink = ({ account }: {
   account: { name: string; slug: string; balance: number; }
@@ -40,12 +41,7 @@ type DashboardProps = {
     dayToDayExpenses: number;
     revenues: number;
   }
-  accounts: Array<{
-    key: string;
-    name: string;
-    slug: string;
-    balance: number;
-  }>
+  accounts: Array<TSimpleAccount>;
 }
 
 const Home = (props: { dashboard: DashboardProps }) => {
@@ -126,7 +122,7 @@ const Home = (props: { dashboard: DashboardProps }) => {
           Accounts
         </div>
         <div className="text-sm md:w-4/12">
-          {accounts.map((account) => {
+          {accounts.sort(sortByPriority).map((account) => {
             return (
               <AccountLink
                 key={account.key}

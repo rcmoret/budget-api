@@ -6,6 +6,7 @@ import { Link as InertiaLink } from "@inertiajs/react";
 import { DateFormatter } from "@/lib/DateFormatter";
 import { Button } from "@/components//common/Button";
 import { AccountSummary } from "@/types/account";
+import { sortByPriority } from "@/lib/models/account";
 
 const MenuItem = ({ children }: { children: React.ReactNode }) => (
   <div className="w-full leading-8">
@@ -65,7 +66,7 @@ const AccountLinks = (props: { accounts: AccountSummary[] }) => {
       <Point>
         Visit Account:
       </Point>
-      {props.accounts.map((account) => (
+      {props.accounts.sort(sortByPriority).map((account) => (
         <div className="ml-4">
           <InertiaLink href={`/accounts/${account.slug}`}>
             <Point>
