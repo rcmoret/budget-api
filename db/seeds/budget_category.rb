@@ -115,4 +115,64 @@ User::Group.find_by!(name: "Initial User Group").then do |group|
       accrual: true
     )
   end
+
+  cleaning_supplies = Budget::Category.find_or_initialize_by(
+    name: "Cleaning Supplies",
+    slug: "cleaning",
+    user_group: group,
+    monthly: false,
+    expense: true,
+  )
+
+  if cleaning_supplies.new_record?
+    cleaning_supplies.update(
+      default_amount: 0,
+      key: SecureRandom.hex(6),
+    )
+  end
+
+  electric_bill = Budget::Category.find_or_initialize_by(
+    name: "Electric",
+    slug: "electric-bill",
+    user_group: group,
+    monthly: true,
+    expense: true,
+  )
+
+  if electric_bill.new_record?
+    electric_bill.update(
+      default_amount: 0,
+      key: SecureRandom.hex(6),
+    )
+  end
+
+  extra_liability = Budget::Category.find_or_initialize_by(
+    name: "Extra Liablity",
+    slug: "extra-liability",
+    user_group: group,
+    monthly: true,
+    expense: true,
+  )
+
+  extra_liability.update(default_amount: 0, key: SecureRandom.hex(6)) if extra_liability.new_record?
+
+  extra_income = Budget::Category.find_or_initialize_by(
+    name: "Extra Income",
+    slug: "ex-income",
+    user_group: group,
+    monthly: true,
+    expense: false,
+  )
+
+  extra_income.update(default_amount: 0, key: SecureRandom.hex(6)) if extra_liability.new_record?
+
+  rolled_change = Budget::Category.find_or_initialize_by(
+    name: "Rolled Change",
+    slug: "change",
+    user_group: group,
+    monthly: true,
+    expense: false,
+  )
+
+  rolled_change.update(default_amount: 0, key: SecureRandom.hex(6)) if rolled_change.new_record?
 end

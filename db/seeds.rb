@@ -1,3 +1,5 @@
+require_relative "seeds/item_amounts"
+
 ApplicationRecord.transaction do
   %i[
     user_group

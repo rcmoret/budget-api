@@ -265,14 +265,7 @@ const useFinalizeEventsForm = (props: HookProps) => {
     data: {}
   }
 
-  const events: EventProps[] = [
-    ...categories.flatMap(categoryEventsReducer),
-    {
-      ...extraEventBaseProps,
-      amount: inputAmount({ cents: extraAmount }),
-      budgetCategoryKey: extraEvent?.budget_category_key ?? generateKeyIdentifier(),
-    } as CreateEventProps,
-  ]
+  const events: EventProps[] = categories.flatMap(categoryEventsReducer)
 
   useMemo(() => {
     if (allItemsReviewed) {

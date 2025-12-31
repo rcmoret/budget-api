@@ -8,6 +8,7 @@ module WebApp
         include Mixins::HasBudgetInterval
 
         after_action :update_close_out_completed_at!, if: -> { form.errors.none? }
+        after_action :update_effective_start!, if: -> { form.errors.none? }
 
         private
 
@@ -19,6 +20,10 @@ module WebApp
 
         def update_close_out_completed_at!
           interval.prev.update(close_out_completed_at: Time.current)
+        end
+
+        def update_effective_start!
+          interval.update(effective_start: Time.current)
         end
 
         def metadata
