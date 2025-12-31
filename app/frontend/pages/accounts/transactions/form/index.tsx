@@ -1,8 +1,8 @@
-import React, { useContext } from "react";
+import React from "react";
 import { useForm } from "@inertiajs/react";
 import DatePicker from "react-datepicker";
 import { parseISO as parseIsoDate } from "date-fns";
-import { AppConfigContext } from "@/components/layout/Provider";
+import { useAppConfigContext } from "@/components/layout/Provider";
 import { Icon } from "@/components/common/Icon";
 import { buildQueryParams } from "@/lib/redirect_params"
 import { Label } from "@/pages/accounts/transactions/form/Shared";
@@ -178,7 +178,7 @@ const BudgetExclusionComponent = (props: {
   isBudgetExclusion: boolean;
 }) => {
   const { isBudgetExclusion, updateFormData } = props
-  const { appConfig } = useContext(AppConfigContext)
+  const { appConfig } = useAppConfigContext()
   const { isCashFlow } = appConfig.account
   const onChange = () => {
     updateFormData({ name: "isBudgetExclusion", value: !isBudgetExclusion })
@@ -204,7 +204,7 @@ const AccountSelectComponent = (props: {
   accountKey: string;
   updateFormData: (props: InputProps) => void;
 }) => {
-  const { appConfig } = useContext(AppConfigContext)
+  const { appConfig } = useAppConfigContext()
   const options = appConfig.accounts.map((account) => {
     return { label: account.name, value: account.key }
   })
@@ -240,7 +240,7 @@ const TransactionForm = (props: {
   onSuccess: () => void;
   closeForm: () => void;
 }) => {
-  const { appConfig } = useContext(AppConfigContext)
+  const { appConfig } = useAppConfigContext()
   const { month, year, transaction } = props;
   const {
     key,

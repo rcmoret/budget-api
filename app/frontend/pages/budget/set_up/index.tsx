@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSetUpEventsForm, ResponseSetUpCategory, SetUpCategory } from "@/lib/hooks/useSetUpEventsForm";
 import { dayToDayItems, expenseItems, monthlyItems, revenueItems } from "@/lib/models/budget-items";
 import { isCreate, isDelete } from "@/lib/hooks/useEventsForm";
@@ -7,7 +7,7 @@ import Select, { SingleValue } from "react-select";
 import { Button, SubmitButton } from "@/components/common/Button";
 import { SummaryComponent } from "@/pages/budget/set_up/Summary";
 import { CategoryComponent } from "@/pages/budget/set_up/Category";
-import { AppConfigContext } from "@/components/layout/Provider";
+import { useAppConfigContext } from "@/components/layout/Provider";
 import { Point } from "@/components/common/Symbol";
 import { Icon } from "@/components/common/Icon";
 import { UrlBuilder } from "@/lib/UrlBuilder";
@@ -195,7 +195,7 @@ type ComponentProps = {
 }
 
 const SetUpComponent = (props: ComponentProps) => {
-  const { appConfig, setAppConfig } = useContext(AppConfigContext);
+  const { appConfig, setAppConfig } = useAppConfigContext()
   const [viewTab, setViewTab] = useState<TabName>("revenues")
   const { month, year } = props
 

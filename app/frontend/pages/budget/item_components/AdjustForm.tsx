@@ -1,25 +1,22 @@
-import { AppConfigContext } from "@/components/layout/Provider";
-import { DraftItem } from "@/pages/budget"
-import { useContext } from "react";
+import { DraftItem } from "../dashboard";
 import { AmountSpan } from "@/components/common/AmountSpan";
-import { DraftChange, MergedItem } from "@/lib/hooks/useDraftEvents";
 import { SubmitButton } from "@/components/common/Button";
 import { StripedRow } from "@/components/common/Row";
 import { Icon } from "@/components/common/Icon";
+import { useBudgetDashboardContext } from "@/pages/budget/dashboard/context_provider";
 
 const LineItem = (props: {
   item: DraftItem;
-  existingItems: MergedItem[];
-  changes: DraftChange[];
 }) => {
+  const { form } = useBudgetDashboardContext()
   const { item } = props
-  const existingItem = props.existingItems.find((i) => {
+  const existingItem = form.items.find((i) => {
     return i.key === item.key
-  }) || null
+  }) ?? null
 
-  const change = props.changes.find((change) => {
+  const change = form.changes.find((change) => {
     return change.budgetItemKey === item.key
-  }) || null
+  }) ?? null
 
   return (
     <StripedRow oddColor="odd:bg-cyan-50" evenColor="even:bg-cyan-100" styling={{ rounded: "rounded", padding: "p-2", flexAlign: "justify-between" }}>
@@ -45,24 +42,13 @@ const LineItem = (props: {
   )
 }
 
-type ComponentProps = {
-  newDraftItems: Array<DraftItem>;
-  adjustItems: Array<DraftItem>;
-  discretionary: { amount: number; overUnderBudget: number } | undefined;
-  existingItems: MergedItem[];
-  changes: DraftChange[]
-  postEvents: () => void;
-  processing: boolean;
-}
-
-const AdjustForm = (props: ComponentProps) => {
-  const { appConfig } = useContext(AppConfigContext)
-  const { discretionary } = appConfig.budget
-  const items = [...props.adjustItems, ...props.newDraftItems].sort((i1, i2) => {
+const AdjustForm = () => {
+  const { form, discretionary } = useBudgetDashboardContext()
+  const { discretionary: updatedDiscretionary } = form
+  const adjustItems = form.draftItems.filter((i) => !i.isNewItem)
+  const items = [...adjustItems, ...form.newItems].sort((i1, i2) => {
     return i1.name.toLowerCase() < i2.name.toLowerCase() ? -1 : 1
   })
-
-  const { discretionary: updatedDiscretionary } = props
 
   if (items.length < 2 || !updatedDiscretionary) { return null }
 
@@ -101,8 +87,6 @@ const AdjustForm = (props: ComponentProps) => {
             <LineItem
               key={item.key}
               item={item}
-              existingItems={props.existingItems}
-              changes={props.changes}
             />
           )
         })}
@@ -189,7 +173,7 @@ const AdjustForm = (props: ComponentProps) => {
         </div>
         <div className="w-4/12 flex flex-row justify-end">
           <SubmitButton
-            onSubmit={props.postEvents}
+            onSubmit={form.post}
             disabledStyling={{
               color: "text-black",
               backgroundColor: "bg-gray-300",
@@ -206,10 +190,10 @@ const AdjustForm = (props: ComponentProps) => {
               display: "flex",
               gap: "gap-2"
             }}
-            isEnabled={!props.processing}
+            isEnabled={!form.processing}
           >
             SUBMIT UPDATES
-            <div className={props.processing ? "text-gray-700" : "text-chartreuse-300"}>
+            <div className={form.processing ? "text-gray-700" : "text-chartreuse-300"}>
               <Icon name="check-circle" />
             </div>
           </SubmitButton>

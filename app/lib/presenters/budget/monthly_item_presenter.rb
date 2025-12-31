@@ -10,7 +10,7 @@ module Presenters
       end
 
       def reviewable?
-        deletable?
+        deletable? && !remaining.zero?
       end
 
       def budget_impact

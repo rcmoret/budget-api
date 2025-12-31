@@ -24,6 +24,7 @@ type CreateEvents =
   "pre_setup_item_create" |
   "pre_setup_multi_item_adjust_create" |
   "rollover_item_create" |
+  "rollover_extra_target_create" |
   "setup_item_create"
 
 const CREATE_EVENTS = [

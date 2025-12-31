@@ -6,7 +6,7 @@ module WebApp
       include Mixins::HasBudgetInterval
 
       def call
-        render inertia: "budget/index", props: page_props
+        render inertia: "budget/dashboard/index", props: page_props
       end
 
       private
@@ -29,7 +29,7 @@ module WebApp
         {
           namespace: "budget",
           page: {
-            name: "budget/index",
+            name: "budget/dashboard/index",
           },
         }
       end
@@ -47,7 +47,7 @@ module WebApp
         @form ||= Forms::Budget::DraftChangesForm.new(interval, changes: change_params)
       end
 
-      def error_component = "budget/index"
+      def error_component = "budget/dashboard/index"
     end
   end
 end

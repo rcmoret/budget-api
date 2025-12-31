@@ -1,12 +1,12 @@
-import { useContext } from "react";
 import { Cell } from "@/components/common/Cell";
 import { Point } from "@/components//common/Symbol";
 import { Row } from "@/components/common/Row";
-import { AppConfigContext } from "@/components/layout/Provider";
+import { useAppConfigContext } from "@/components/layout/Provider";
 import { Link as InertiaLink } from "@inertiajs/react";
 import { DateFormatter } from "@/lib/DateFormatter";
 import { Button } from "@/components//common/Button";
 import { AccountSummary } from "@/types/account";
+import { byPriority as sortByPriority } from "@/lib/sort_functions";
 
 const MenuItem = ({ children }: { children: React.ReactNode }) => (
   <div className="w-full leading-8">
@@ -30,7 +30,9 @@ const OptionalMenuItem = ({ isVisible, onClick, copy }: { isVisible: boolean; on
   )
 }
 
-const SetUpLink = ({ month, year, isBudget, isSetUp }: { month: number, year: number, isBudget: boolean, isSetUp: boolean }) => {
+const SetUpLink = ({ isBudget }: { isBudget: boolean }) => {
+  const { appConfig } = useAppConfigContext()
+  const { isSetUp, month, year } = appConfig.budget.data
   if (!isBudget || !!isSetUp) { return }
 
   return (
@@ -43,13 +45,28 @@ const SetUpLink = ({ month, year, isBudget, isSetUp }: { month: number, year: nu
   )
 }
 
+const FinalizeLink = ({ isBudget }: { isBudget: boolean }) => {
+  const { appConfig } = useAppConfigContext()
+  const { isSetUp, isClosedOut, month, year } = appConfig.budget.data
+  if (!isSetUp || !isBudget || !!isClosedOut) { return }
+
+  return (
+    <InertiaLink href={`/budget/${month}/${year}/finalize`}>
+      <MenuItem>
+        Finalize {DateFormatter({ month, year, format: "monthYear" })}
+      </MenuItem>
+    </InertiaLink>
+
+  )
+}
+
 const AccountLinks = (props: { accounts: AccountSummary[] }) => {
   return (
     <>
       <Point>
         Visit Account:
       </Point>
-      {props.accounts.map((account) => (
+      {props.accounts.sort(sortByPriority).map((account) => (
         <div className="ml-4">
           <InertiaLink href={`/accounts/${account.slug}`}>
             <Point>
@@ -64,11 +81,9 @@ const AccountLinks = (props: { accounts: AccountSummary[] }) => {
 
 const OptionsMenu = (props: { accounts: AccountSummary[], namespace: string }) => {
   const { accounts, namespace } = props
-  const { appConfig, setAppConfig } = useContext(AppConfigContext);
+  const { appConfig, setAppConfig } = useAppConfigContext()
 
   if (!appConfig.showConfigMenu) return null
-
-  const { isSetUp, month, year } = appConfig.budget.data
 
   const toggleAccruals = () => setAppConfig({
     ...appConfig,
@@ -128,7 +143,10 @@ const OptionsMenu = (props: { accounts: AccountSummary[], namespace: string }) =
           copy={appConfig.account.showTransferForm ? "Hide Transfer Form" : "Show Transfer Form"}
           />
         <div>
-          <SetUpLink month={month} year={year} isSetUp={isSetUp} isBudget={isBudget} />
+          <SetUpLink isBudget={isBudget} />
+        </div>
+        <div>
+          <FinalizeLink isBudget={isBudget} />
         </div>
       </Cell>
       <Cell styling={{ width: "w-full md:w-4/12" }}>

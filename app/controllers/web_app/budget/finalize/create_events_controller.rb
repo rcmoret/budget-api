@@ -8,17 +8,22 @@ module WebApp
         include Mixins::HasBudgetInterval
 
         after_action :update_close_out_completed_at!, if: -> { form.errors.none? }
+        after_action :update_effective_start!, if: -> { form.errors.none? }
 
         private
 
-        def error_component = "budget/set_up/index"
+        def error_component = "budget/finalize/index"
 
         def form_props
           API::Budget::Interval::Finalize::CategoriesSerializer.new(interval)
         end
 
         def update_close_out_completed_at!
-          interval.update(close_out_completed_at: Time.current)
+          interval.prev.update(close_out_completed_at: Time.current)
+        end
+
+        def update_effective_start!
+          interval.update(effective_start: Time.current)
         end
 
         def metadata

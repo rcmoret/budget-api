@@ -3,7 +3,7 @@ import { Link as InertiaLink } from "@inertiajs/react";
 import { AccountShow, AccountSummary } from "@/types/account";
 import { Row } from "@/components/common/Row";
 import { AmountSpan } from "@/components/common/AmountSpan";
-import { sortByPriority } from "@/lib/models/account";
+import { byPriority as sortByPriority } from "@/lib/sort_functions";
 
 interface AccountSummaryProps {
   account: AccountSummary;

@@ -6,7 +6,7 @@ module WebApp
       include Mixins::HasBudgetInterval
 
       def call
-        render inertia: "budget/index", props: page_props
+        render inertia: "budget/dashboard/index", props: page_props
       end
 
       private
@@ -25,7 +25,7 @@ module WebApp
 
       def namespace = "budget"
 
-      def error_component = "budget/index"
+      def error_component = "budget/dashboard/index"
     end
   end
 end

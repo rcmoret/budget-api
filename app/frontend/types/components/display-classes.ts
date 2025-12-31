@@ -66,7 +66,8 @@ type EvenBgColorOption =
   | "even:bg-sky-50"
   | "even:bg-white"
 
-export type StripedRowColorOption = OddBgColorOption | EvenBgColorOption
+export type StripedRowColorOption = OddBgColorOption | EvenBgColorOption |
+ "even:bg-sky-50 odd:bg-white"
 
 type GradientBgOption =
   | "bg-gradient-to-b from-blue-200 to-white"

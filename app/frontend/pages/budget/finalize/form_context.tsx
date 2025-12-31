@@ -20,7 +20,7 @@ type TFinalizeFormContext = {
   isSubmittable: boolean;
   setCategory: (props: UpdateCategoryProps & {key: string}) =>void;
   setExtraEventKey: (key: string) => void;
-  submitHandler: () => void;
+  submitHandler: (ev: React.MouseEvent) => void;
 }
 
 const FinalizeFormContext = createContext<TFinalizeFormContext | null>(null);

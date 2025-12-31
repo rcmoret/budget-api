@@ -1,5 +1,5 @@
-import { useContext, useEffect } from "react";
-import { AppConfigContext } from "@/components/layout/Provider";
+import { useEffect } from "react";
+import { useAppConfigContext } from "@/components/layout/Provider";
 import { AccountTabs } from "@/pages/accounts/tabs";
 
 import { AccountSummary, AccountShow } from "@/types/account";
@@ -12,7 +12,7 @@ interface ComponentProps {
 
 const AccountShowComponent = (props: ComponentProps) => {
   const { accounts, selectedAccount } = props;
-  const { appConfig, setAppConfig } = useContext(AppConfigContext);
+  const { appConfig, setAppConfig } = useAppConfigContext();
   const { items } = selectedAccount.metadata
 
   useEffect(() => {

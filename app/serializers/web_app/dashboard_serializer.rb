@@ -1,7 +1,7 @@
 module WebApp
   class DashboardSerializer < ApplicationSerializer
     LocalAccountSerializer = Class.new(ApplicationSerializer) do
-      attributes :key, :name, :slug, :balance
+      attributes :key, :name, :slug, :balance, :priority
 
       def initialize(args)
         super(args[:account])

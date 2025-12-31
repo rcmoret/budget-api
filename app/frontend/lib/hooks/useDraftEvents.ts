@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { BudgetItem } from "@/types/budget";
-import { DraftItem } from "@/pages/budget/index";
+import { DraftItem } from "@/pages/budget/dashboard";
 import { inputAmount, TInputAmount } from "@/components/common/AmountInput";
 import { router, useForm } from '@inertiajs/react'
 import { UrlBuilder } from "@/lib/UrlBuilder";
@@ -12,6 +12,7 @@ export type DraftChange = {
   budgetCategoryKey: string,
   budgetItemKey: string,
   amount: TInputAmount;
+  updatedAmount: TInputAmount;
 }
 
 type TChangeForm = {
@@ -49,7 +50,7 @@ const mergeItems = (props: {
   const { draftItems, changes } = props
 
   return props.items.map((item) => {
-    const draftItem =  (draftItems.find((i) => i.key === item.key))
+    const draftItem = draftItems.find((i) => i.key === item.key)
     const change = changes.find((change) => change.budgetItemKey === item.key)
 
     if (!!draftItem && !!change) {
@@ -134,6 +135,58 @@ const useDraftEvents = (props: HookProps) => {
     )
   }
 
+  const updateChangeV2 = (props: {
+    key: string;
+    amount?: string;
+    adjustment?: string;
+  }) => {
+    const { key, ...rest } = props
+
+    setChanges(
+      changes.map((change) => {
+        if (change.budgetItemKey === props.key) {
+          return updatedChange({ change, ...rest })
+        } else {
+          return change
+        }
+      })
+    )
+  }
+
+  const updatedChange = (props: {
+    change: DraftChange;
+    amount?: string;
+    adjustment?: string;
+  }) => {
+    const { change, amount, adjustment } = props
+
+    if ((!!amount && !!adjustment) || (!amount && !adjustment)) { return change }
+
+    const item = items.find((i) => i.key === change.budgetItemKey)
+
+    if (!item) { return change }
+
+    if (!!adjustment) {
+      console.log(item.amount + inputAmount({ display: adjustment }).cents)
+      return {
+        ...change,
+        amount: inputAmount({ display: adjustment }),
+        updatedAmount: (
+          inputAmount({ cents: item.amount + inputAmount({ display: adjustment }).cents })
+        )
+      }
+    } else {
+
+      const newAmount = ((-1 * item.amount) + inputAmount({ display: props.amount }).cents)
+
+      return {
+        ...change,
+        amount: inputAmount({ cents: newAmount }),
+        updatedAmount: inputAmount({ display: props.amount })
+      }
+    }
+  }
+
   const eventsUrl = UrlBuilder({ name: "BudgetItemEvents",
     month,
     year,
@@ -197,6 +250,7 @@ const useDraftEvents = (props: HookProps) => {
     processing: form.processing || postingChanges,
     removeChange,
     updateChange,
+    updateChangeV2
   }
 }
 

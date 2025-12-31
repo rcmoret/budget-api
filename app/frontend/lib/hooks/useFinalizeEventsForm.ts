@@ -1,6 +1,6 @@
 import axios from "axios";
 import { UrlBuilder } from "@/lib/UrlBuilder";
-import { useEventForm, isCreate, EventProps } from "@/lib/hooks/useEventsForm";
+import { useEventForm, isCreate, EventProps, CreateEventProps } from "@/lib/hooks/useEventsForm";
 import { inputAmount, TInputAmount } from "@/components/common/AmountInput";
 import { generateKeyIdentifier } from "../KeyIdentifier";
 import { useState, useEffect, useMemo } from "react";
@@ -248,7 +248,24 @@ const useFinalizeEventsForm = (props: HookProps) => {
     }, [] as EventProps[])
   }
 
-  const events = categories.flatMap(categoryEventsReducer)
+  const [extraCategoryOptions, setExtraCategoryOptions] = useState<TExtraCategoryCreateEvent[]>([])
+
+  const [extraEventKey, setExtraEventKey] = useState<null | string>(null)
+
+  const extraEvent = extraCategoryOptions
+    .flatMap((categoryOption) => categoryOption.events)
+    .find((ev) => ev.key === extraEventKey) ?? null
+
+  const extraEventBaseProps = {
+    eventType: "rollover_extra_target_create" as const,
+    key: generateKeyIdentifier(),
+    budgetItemKey: generateKeyIdentifier(),
+    month,
+    year,
+    data: {}
+  }
+
+  const events: EventProps[] = categories.flatMap(categoryEventsReducer)
 
   useMemo(() => {
     if (allItemsReviewed) {
@@ -256,9 +273,7 @@ const useFinalizeEventsForm = (props: HookProps) => {
     } else {
       setEventsData({ events: []})
     }
-  }, [categories])
-
-  const [extraCategoryOptions, setExtraCategoryOptions] = useState<TExtraCategoryCreateEvent[]>([])
+  }, [categories, extraEvent])
 
   useEffect(() => {
     if (allItemsReviewed) {
@@ -281,12 +296,6 @@ const useFinalizeEventsForm = (props: HookProps) => {
     }
   }, [categories])
 
-  const [extraEventKey, setExtraEventKey] = useState<null | string>(null)
-
-  const extraEvent = extraCategoryOptions
-    .flatMap((categoryOption) => categoryOption.events)
-    .find((ev) => ev.key === extraEventKey) || null
-
   const isSubmittable = allItemsReviewed && !!extraEvent
 
   const submitHandler = (ev: React.MouseEvent) => {
@@ -301,10 +310,24 @@ const useFinalizeEventsForm = (props: HookProps) => {
     postEvents(formUrl)
   }
 
+  const submittableEvents: EventProps[] = [
+    {
+      key: generateKeyIdentifier(),
+      eventType: CREATE_EXTRA_EVENT,
+      amount: inputAmount({ cents: extraAmount }),
+      budgetCategoryKey: extraEvent?.budget_category_key ?? generateKeyIdentifier(),
+      budgetItemKey: generateKeyIdentifier(),
+      month,
+      year,
+      data: {}
+    },
+    ...events
+  ]
+
   // @ts-ignore
   transform(() => {
     return {
-      events: events.map((event) => {
+      events: submittableEvents.map((event) => {
         return {
           ...event,
           amount: event.amount.cents,

@@ -1,28 +1,3 @@
-CATEGORIES = {
-  "mortgage" => [
-    { amount: -900_00 },
-    { amount: -900_00 },
-  ],
-  "cell-phone" => {
-    amount: -> { (200..230).to_a.sample * -100 },
-  },
-  "salary" => [
-    { amount: 250_000 },
-  ],
-  "groceries" => {
-    amount: -> { (600..700).to_a.sample * -100 },
-  },
-  "gas" => {
-    amount: -> { (90..110).to_a.sample * -100 },
-  },
-  "misc-income" => {
-    amount: -> { (100..150).to_a.sample * 100 },
-  },
-  "car-ins" => {
-    amount: -80_00,
-  },
-}.freeze
-
 def amount_handler(amount)
   case amount
   when Integer
@@ -33,7 +8,7 @@ def amount_handler(amount)
 end
 
 # rubocop:disable Metrics/MethodLength
-def event_form(user, interval, amount, category_key)
+def event_form(user, interval, amount, category_key, budget_item_key: SecureRandom.hex(6))
   Forms::Budget::EventsForm.new(
     user,
     events: [{
@@ -41,19 +16,22 @@ def event_form(user, interval, amount, category_key)
       month: interval.month,
       year: interval.year,
       budget_category_key: category_key,
-      budget_item_key: SecureRandom.hex(6),
+      budget_item_key: budget_item_key,
       event_type: Budget::EventTypes::ITEM_CREATE,
     }]
   )
 end
 # rubocop:enable Metrics/MethodLength
 
-def create_budget(user, interval)
-  CATEGORIES.each_pair do |slug, attributes|
-    Budget::Category.by_slug(slug).then do |category|
+def create_budget(user, interval, description: :base)
+  ITEM_AMOUNTS.each_pair do |category_slug, attributes|
+    Budget::Category.by_slug(category_slug).then do |category|
       Array.wrap(attributes).each do |item_attrs|
-        amount = amount_handler(item_attrs[:amount])
-        form = event_form(user, interval, amount, category.key)
+        next if item_attrs[description.to_s].nil?
+
+        amount = amount_handler(item_attrs[description.to_s])
+        form = event_form(user, interval, amount, category.key,
+                          **{ budget_item_key: item_attrs["key"] }.compact)
         form.save.then { |result| binding.pry if result != true }
       end
     end
@@ -67,9 +45,16 @@ end
 User::Group.find_by!(name: "Initial User Group").then do |group|
   today = Time.current
 
-  interval = Budget::Interval.for({ month: today.month, year: today.year, user_group: group })
+  base_interval = Budget::Interval.for({ month: today.month, year: today.year, user_group: group })
 
-  interval.update(start_date: today.beginning_of_month, end_date: today.end_of_month, set_up_completed_at: Time.current)
+  base_interval.update(
+    start_date: today.beginning_of_month,
+    end_date: today.end_of_month,
+    set_up_completed_at: Time.current
+  )
 
-  create_budget(group.users.first, interval)
+  create_budget(group.users.first, base_interval)
+
+  next_interval = base_interval.next
+  create_budget(group.users.first, next_interval, description: :future)
 end

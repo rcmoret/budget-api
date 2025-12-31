@@ -5,9 +5,9 @@ import { AccountTransaction } from "@/types/transaction";
 import { InitialBalance } from "@/pages/accounts/transactions/initial_balance";
 import { TransactionForm } from "@/pages/accounts/transactions/form";
 import { TransactionShow } from "@/pages/accounts/transactions/show";
-import { useContext, useState, useEffect } from "react";
+import { useState } from "react";
 import { AddNewComponent } from "./transactions/AddNew";
-import { AppConfigContext } from "@/components/layout/Provider";
+import { useAppConfigContext } from "@/components/layout/Provider";
 import Select, { SingleValue } from "react-select";
 import { AmountInput, inputAmount } from "@/components/common/AmountInput";
 import { useForm } from "@inertiajs/react";
@@ -18,7 +18,7 @@ import { Icon } from "@/components/common/Icon";
 import { FilterComponent } from "@/pages/budget/filter"
 
 const TransferComponent = () => {
-  const { appConfig, setAppConfig } = useContext(AppConfigContext)
+  const { appConfig, setAppConfig } = useAppConfigContext()
   const { accounts, account, budget } = appConfig
   const { data, setData, transform, post, processing } = useForm({
     amount: inputAmount({ display: "" }),
