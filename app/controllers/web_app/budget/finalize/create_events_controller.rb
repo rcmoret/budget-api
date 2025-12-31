@@ -12,7 +12,7 @@ module WebApp
 
         private
 
-        def error_component = "budget/set_up/index"
+        def error_component = "budget/finalize/index"
 
         def form_props
           API::Budget::Interval::Finalize::CategoriesSerializer.new(interval)
