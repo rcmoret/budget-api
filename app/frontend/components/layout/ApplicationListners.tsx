@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { router } from "@inertiajs/react";
+import { useAppConfigContext } from "@/components/layout/Provider";
 
 const KeyboardNav = () => {
   useEffect(() => {
@@ -54,25 +55,19 @@ const KeyboardNav = () => {
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
-      document.removeEventListener("wheel", handleWheel);
     };
   }, []);
 
   return null; // This component doesn't render anything
 };
 
-const InputScrollHandler = () => {
-  useEffect(() => {
-    const handleWheel = () => {
-      if(document.activeElement.type === "number"){
-        document.activeElement.blur();
-      }
-    }
-    return () => {
-      document.removeEventListener("wheel", handleWheel);
-    };
-  }, [])
-  return null; // This component doesn't render anything
+const KeyboardNavContainer = () => {
+  const { appConfig } = useAppConfigContext()
+  if (appConfig.metadata?.page?.name === "budget/finalize") {
+    return null
+  } else {
+    return <KeyboardNav />
+  }
 }
 
-export { InputScrollHandler, KeyboardNav };
+export { KeyboardNavContainer as KeyboardNav };

@@ -1,6 +1,7 @@
 import Select, { SingleValue } from "react-select";
 import { T_CREATE_EXTRA_EVENT } from "@/lib/hooks/useFinalizeEventsForm";
 import { useFinalizeFormContext } from "./form_context";
+import { byLabel } from "@/lib/sort_functions";
 
 type TExtraCreateEvent = {
   amount: 0;
@@ -30,7 +31,7 @@ const ExtraEventsSelect = () => {
         value: ev.key
       }))
     })
-  ]
+  ].sort(byLabel)
 
   const onChange = (ev: SingleValue<{ label: string; value: string }>) => {
     if (!ev) { return }

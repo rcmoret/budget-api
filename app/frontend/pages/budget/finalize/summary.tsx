@@ -17,7 +17,7 @@ const SummaryLineItem = (props: { label: string; children: React.ReactNode }) =>
 const Summary = () => {
   const { base, extraAmount } = useFinalizeFormContext()
   return (
-    <div className="flex flex-col bg-yellow-100 p-2 gap-2 w-96 rounded">
+    <div className="flex flex-col bg-yellow-100 p-2 gap-2 w-96 rounded shadow-md">
       <div className="text-lg flex flex-row justify-between border-b border-yellow-400">
         <div>Final Review</div>
         <div>{DateFormatter({ month: base.month, year: base.year, format: "monthYear" })}</div>

@@ -44,11 +44,7 @@ const Header = ({ metadata, data, selectedAccount }: HeaderProps) => {
   if (metadata.prevSelectedAccountPath) {
     accountPath = metadata.prevSelectedAccountPath
   }
-  const { appConfig, setAppConfig } = useAppConfigContext();
-  const toggleConfigMenu = () => setAppConfig({
-      ...appConfig,
-      showConfigMenu: !appConfig.showConfigMenu
-  })
+  const { toggles } = useAppConfigContext();
 
   return (
     <Row styling={{
@@ -87,7 +83,7 @@ const Header = ({ metadata, data, selectedAccount }: HeaderProps) => {
             <Button
               type="button"
               title="Configurations"
-              onClick={toggleConfigMenu}
+              onClick={toggles.toggleOptionsMenu}
           >
               <Icon name="bars" />
             </Button>

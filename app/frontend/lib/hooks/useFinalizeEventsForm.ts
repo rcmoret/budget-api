@@ -1,9 +1,9 @@
 import axios from "axios";
 import { UrlBuilder } from "@/lib/UrlBuilder";
-import { useEventForm, isCreate, EventProps, CreateEventProps } from "@/lib/hooks/useEventsForm";
+import { useEventForm, isCreate, EventProps } from "@/lib/hooks/useEventsForm";
 import { inputAmount, TInputAmount } from "@/components/common/AmountInput";
 import { generateKeyIdentifier } from "../KeyIdentifier";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { clamp } from "@/lib/number-helpers"
 import { TExtraCategoryCreateEvent } from "@/pages/budget/finalize/extra_events_select";
 import { buildQueryParams } from "@/lib/redirect_params";
@@ -36,6 +36,7 @@ type FinalizeCategoryItem = SharedItemType & {
 }
 
 type FinalizeCategoryFormItem = SharedItemType & {
+  amountInputRef: React.RefObject<HTMLInputElement>;
   rolloverAmount: TInputAmount;
   showWarning: boolean;
   appliedToExtra: number;
@@ -111,6 +112,7 @@ const decorate = (props: {
   isExpense: boolean;
   rolloverAmount: string
   eventKey: null | string;
+  amountInputRef?: React.RefObject<HTMLInputElement>;
 }): FinalizeCategoryFormItem => {
   const { item, isExpense } = props
 
@@ -133,6 +135,7 @@ const decorate = (props: {
 
   return {
     ...item,
+    amountInputRef: props.amountInputRef || { current: null },
     appliedToExtra,
     eventKey: props.eventKey,
     needsReview,
@@ -142,9 +145,10 @@ const decorate = (props: {
 }
 
 const mapCategories = (props: {
-  categories: Array<FinalizeCategory>
+  categories: Array<FinalizeCategory>;
+  refsMap: Map<string, React.RefObject<HTMLInputElement>>;
 }) => {
-  const { categories } = props
+  const { categories, refsMap } = props
 
   return categories.map((category) => {
     return {
@@ -157,11 +161,15 @@ const mapCategories = (props: {
           category.events[0].key :
           null
 
+        const amountInputRef = refsMap.get(item.key) || { current: null }
+
         return decorate({
           item,
           isExpense: category.isExpense,
           eventKey,
-          rolloverAmount: rolloverAmount.display })
+          rolloverAmount: rolloverAmount.display,
+          amountInputRef
+        })
       })
     }
   })
@@ -182,8 +190,24 @@ const useFinalizeEventsForm = (props: HookProps) => {
     events: []
   })
 
+  // Create a map to store refs for each item - reuse existing refs to maintain references
+  const refsMapRef = useRef(new Map<string, React.RefObject<HTMLInputElement>>())
+
+  // Initialize refs for all items - only add new ones, don't clear existing
+  useMemo(() => {
+    const map = refsMapRef.current
+    props.categories.forEach((category) => {
+      category.items.forEach((item) => {
+        if (!map.has(item.key)) {
+          map.set(item.key, { current: null })
+        }
+      })
+    })
+  }, [props.categories])
+
   const [categories, setCategories] = useState<FinalizeFormCategory[]>(mapCategories({
     categories: props.categories,
+    refsMap: refsMapRef.current,
   }))
 
   const eventModel = (event: FinalizeCategoryEvent): EventProps => {

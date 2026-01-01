@@ -1,4 +1,5 @@
 import { createContext, useContext, ReactNode } from "react";
+import { useFinalizeFormContext } from "@/pages/budget/finalize/form_context";
 import { FinalizeCategoryFormItem } from "@/lib/hooks/useFinalizeEventsForm";
 
 type TItemContext = {
@@ -13,6 +14,7 @@ type TItemContext = {
 const ItemContext = createContext<TItemContext | null>(null);
 
 const ItemProvider = (props: {
+  budgetCategoryKey: string;
   index: number;
   item: FinalizeCategoryFormItem;
   setRolloverAmountForItem: (props: { itemKey: string; rolloverAmount: string; }) => void;

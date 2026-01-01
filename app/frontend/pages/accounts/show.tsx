@@ -11,30 +11,28 @@ interface ComponentProps {
 }
 
 const AccountShowComponent = (props: ComponentProps) => {
-  const { accounts, selectedAccount } = props;
-  const { appConfig, setAppConfig } = useAppConfigContext();
+  const { selectedAccount } = props;
+  const { appConfig, setAccount, setAccounts, setBudgetConfig } = useAppConfigContext();
   const { items } = selectedAccount.metadata
+  const accounts = props.accounts.filter((a) => !a.isArchived)
 
   useEffect(() => {
-    setAppConfig({
-      ...appConfig,
-      budget: {
-        ...appConfig.budget,
-        data: {
-          ...appConfig.budget.data,
-          ...selectedAccount.metadata,
-          items,
-        }
-      },
-      accounts: accounts.filter((a) => !a.isArchived).map(({ key, name }) => ({ key, name })),
-      account: {
-        ...appConfig.account,
-        isCashFlow: selectedAccount.isCashFlow,
-        key: selectedAccount.key,
-        slug: selectedAccount.slug,
+    setAccounts(accounts)
+
+    setBudgetConfig({
+      data: {
+        ...appConfig.budget.data,
+        ...selectedAccount.metadata,
+        items,
       }
     })
-  }, [items])
+
+    setAccount({
+      isCashFlow: selectedAccount.isCashFlow,
+      key: selectedAccount.key,
+      slug: selectedAccount.slug,
+    })
+  }, [items, selectedAccount.key])
 
   return (
     <>
