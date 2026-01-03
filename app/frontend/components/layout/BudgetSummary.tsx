@@ -17,6 +17,7 @@ import { Row } from "@/components/common/Row";
 import { buildQueryParams } from "@/lib/redirect_params";
 import { UrlBuilder } from "@/lib/UrlBuilder";
 import { useToggle } from "@/lib/hooks/useToogle";
+import { useAppConfigContext } from "@/components/layout/Provider";
 
 const DateDiv = ({ date }: { date: string }) => {
   return (
@@ -118,6 +119,16 @@ const ProgressBar = ({ percentage }: { percentage: string }) => {
   )
 }
 
+const ToggleDateEditButton = (props: { toggleForm: () => void; }) => {
+  return (
+    <Button type="button" onClick={props.toggleForm}>
+      <span className="text-blue-300 text-xs">
+        <Icon name="edit" />
+      </span>
+    </Button>
+  )
+}
+
 const DateComponent = (props:
   {
     firstDate: string,
@@ -141,11 +152,7 @@ const DateComponent = (props:
         <DateDiv date={firstDate} />
         <div>to</div>
         <DateDiv date={lastDate} />
-        <Button type="button" onClick={toggleForm}>
-          <span className="text-blue-300 text-xs">
-            <Icon name="edit" />
-          </span>
-        </Button>
+        <ToggleDateEditButton toggleForm={toggleForm} />
       </div>
     )
   } else {
@@ -196,71 +203,108 @@ const BudgetSummary = (props: ComponentProps) => {
   const visitPrevUrl = `${baseUrl}/${prevMonth.month}/${prevMonth.year}`;
 
   const percentage = (((totalDays - daysRemaining) * 100.0) / totalDays).toFixed(1)
+  const { appConfig } = useAppConfigContext()
 
-  return (
-    <Row
-      styling={{
-        flexWrap: "flex-wrap",
-        padding: "p-1",
-      }}
-    >
-      <Cell
+  if (appConfig.metadata?.page?.name === "budget/finalize") {
+    return (
+      <Row
         styling={{
-          width: "w-full",
-          padding: "p-1",
-          rounded: "rounded",
           flexWrap: "flex-wrap",
-          margin: "mb-2 mr-2",
+          padding: "p-1",
         }}
       >
-        <div className="text-xl">{props.titleComponent}</div>
-        <DateComponent
-          firstDate={firstDate}
-          lastDate={lastDate}
-          redirectSegments={redirectSegments}
-          month={month}
-          year={year}
-        />
-        {isCurrent && (
-          <div className="w-full">
-            <Point>Days Remaining: {daysRemaining}</Point>
-          </div>
-        )}
-        <div className="w-full mb-2">
-          <Point>Total Days: {totalDays}</Point>
-        </div>
-        {isCurrent && <ProgressBar percentage={percentage} />}
-        <Row
+        <Cell
           styling={{
-            flexAlign: "justify-between",
-            margin: "mt-2"
+            width: "w-full",
+            padding: "p-1",
+            rounded: "rounded",
+            flexWrap: "flex-wrap",
+            margin: "mb-2 mr-2",
           }}
         >
-          <ButtonStyleLink href={visitPrevUrl} id="month-year-pagination-prev">
-            <span className="text-orange-600">
-              <Icon name="angle-double-left" />{" "}
-            </span>
-            {DateFormatter({
-              month: prevMonth.month,
-              year: prevMonth.year,
-              format: "shortMonthYear",
-            })}
-          </ButtonStyleLink>
-          <ButtonStyleLink href={visitNextUrl} id="month-year-pagination-next">
-            {DateFormatter({
-              month: nextMonth.month,
-              year: nextMonth.year,
-              format: "shortMonthYear",
-            })}{" "}
-            <span className="text-orange-600">
-              <Icon name="angle-double-right" />
-            </span>
-          </ButtonStyleLink>
-        </Row>
-        {props.children}
-      </Cell>
-    </Row>
-  );
+          <div className="text-xl">{props.titleComponent}</div>
+          <DateComponent
+            firstDate={firstDate}
+            lastDate={lastDate}
+            redirectSegments={redirectSegments}
+            month={month}
+            showCalendar={false}
+            year={year}
+          />
+          <div className="w-full mb-2">
+            <Point>Total Days: {totalDays}</Point>
+          </div>
+          {props.children}
+        </Cell>
+      </Row>
+    )
+  } else {
+    return (
+      <Row
+        styling={{
+          flexWrap: "flex-wrap",
+          padding: "p-1",
+        }}
+      >
+        <Cell
+          styling={{
+            width: "w-full",
+            padding: "p-1",
+            rounded: "rounded",
+            flexWrap: "flex-wrap",
+            margin: "mb-2 mr-2",
+          }}
+        >
+          <div className="text-xl">{props.titleComponent}</div>
+          <DateComponent
+            firstDate={firstDate}
+            lastDate={lastDate}
+            redirectSegments={redirectSegments}
+            month={month}
+            showCalendar={false}
+            year={year}
+          />
+          {isCurrent && (
+            <div className="w-full">
+              <Point>Days Remaining: {daysRemaining}</Point>
+            </div>
+          )}
+          <div className="w-full mb-2">
+            <Point>Total Days: {totalDays}</Point>
+          </div>
+          {isCurrent && <ProgressBar percentage={percentage} />}
+          <Row
+            styling={{
+              flexAlign: "justify-between",
+              margin: "mt-2"
+            }}
+          >
+            <ButtonStyleLink href={visitPrevUrl} id="month-year-pagination-prev">
+              <span className="text-orange-600">
+                <Icon name="angle-double-left" />{" "}
+              </span>
+              {DateFormatter({
+                month: prevMonth.month,
+                year: prevMonth.year,
+                format: "shortMonthYear",
+              })}
+            </ButtonStyleLink>
+            <ButtonStyleLink href={visitNextUrl} id="month-year-pagination-next">
+              {DateFormatter({
+                month: nextMonth.month,
+                year: nextMonth.year,
+                format: "shortMonthYear",
+              })}{" "}
+              <span className="text-orange-600">
+                <Icon name="angle-double-right" />
+              </span>
+            </ButtonStyleLink>
+          </Row>
+          {props.children}
+        </Cell>
+      </Row>
+    );
+  }
 };
 
 const BudgetSetUpTitleComponent = (props: {
@@ -322,6 +366,10 @@ type SummaryProps = {
 }
 
 const Summary = (props: SummaryProps) => {
+  const { appConfig } = useAppConfigContext()
+
+  const showDateNav = appConfig.metadata?.page?.name !== "budget/finalize"
+
   if (!!props.data && !!props.selectedAccount?.metadata && !!props.metadata.page) {
     return null
   } else if (props.metadata.page?.name === "budget/finalize" && props.data) {
@@ -334,11 +382,7 @@ const Summary = (props: SummaryProps) => {
         redirectSegments={["budget", String(month), String(year), "finalize"]}
         titleComponent={<BudgetSetUpTitleComponent month={Number(month)} year={Number(year)} />}
       >
-        <MonthYearNav
-          baseUrl={baseUrl}
-          month={month}
-          year={year}
-        />
+        {showDateNav && <MonthYearNav baseUrl={baseUrl} month={month} year={year} />}
       </BudgetSummary>
     )
   } else if (props.metadata.page?.name === "budget/set-up" && props.data) {
