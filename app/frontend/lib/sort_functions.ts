@@ -55,6 +55,12 @@ const byName = <NameSortable extends { name: string }>(
   return item1.name < item2.name ? -1 : 1
 }
 
+const byLabel = <T extends { label: string }>(
+  item1: T, item2: T
+) => {
+  return item1.label < item2.label ? -1 : 1
+}
+
 const byPriority = <
   T extends { priority: number }
 >(account1: T, account2: T) => {
@@ -90,6 +96,7 @@ export {
   byCategoryName,
   byClearanceDate,
   byComparisonDate,
+  byLabel,
   byName,
   byNameAndAmount,
   byPriority
