@@ -119,19 +119,31 @@ const ProgressBar = ({ percentage }: { percentage: string }) => {
   )
 }
 
+const ToggleDateEditButton = (props: { toggleForm: () => void; }) => {
+  return (
+    <Button type="button" onClick={props.toggleForm}>
+      <span className="text-blue-300 text-xs">
+        <Icon name="edit" />
+      </span>
+    </Button>
+  )
+}
+
 const DateComponent = (props:
   {
-    firstDate: string,
-    lastDate: string,
-    redirectSegments: string[],
-    month: number,
-    year: number,
+    firstDate: string;
+    lastDate: string;
+    redirectSegments: string[];
+    showCalendar: boolean;
+    month: number;
+    year: number;
 }) => {
   const {
     firstDate,
     lastDate,
     redirectSegments,
     month,
+    showCalendar,
     year,
   } = props
   const [showDateForm, toggleForm] = useToggle(false)

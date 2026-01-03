@@ -144,9 +144,10 @@ type TBudgetDashboardContext = {
 const BudgetDashboardContext = createContext<TBudgetDashboardContext | null>(null)
 
 const BudgetDashboardProvider = (props: HookProps & { children: React.ReactNode }) => {
-  const { appConfig } = useAppConfigContext()
+  const { appConfig, toggles } = useAppConfigContext()
   const { budget } = appConfig
-  const { data, showAccruals, showDeletedItems } = budget
+  const { data } = budget
+  const { showAccruals, showDeletedItems } = toggles
   const { children, categories, items, ...rest } = props
 
   const monthly = {

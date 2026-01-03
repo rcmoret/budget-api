@@ -44,9 +44,9 @@ const LineItemComponent = (props: {
   updateDetailItem: (props: { index: number, value: string, amount?: TInputAmount }) => void,
   updateDetailAmount: (props: { index: number, value: TInputAmount }) => void,
 }) => {
-  const { appConfig } = useAppConfigContext()
+  const { appConfig, toggles } = useAppConfigContext()
   const { items, month, year } = appConfig.budget.data
-  const { showAccruals } = appConfig.budget
+  const { showAccruals } = toggles
   const { detail, index, addDetail, removeDetail } = props
   const { key, amount, budgetItemKey  } = detail
 

@@ -100,10 +100,10 @@ const DayToDayItemsSection = (props: DayToDayItemsSectionProps) => {
 }
 
 const ClearedMonthlyItemsSections = () => {
-  const { appConfig } = useAppConfigContext()
+  const { toggles } = useAppConfigContext()
   const { itemCollections } = useBudgetDashboardContext()
 
-  if (!appConfig.budget.showClearedMonthly) {
+  if (!toggles.showClearedMonthly) {
     return null
   }
 

@@ -81,30 +81,21 @@ const AccountLinks = (props: { accounts: AccountSummary[] }) => {
 
 const OptionsMenu = (props: { accounts: AccountSummary[], namespace: string }) => {
   const { accounts, namespace } = props
-  const { appConfig, setAppConfig } = useAppConfigContext()
+  const { toggles } = useAppConfigContext()
 
-  if (!appConfig.showConfigMenu) return null
+  const {
+    showAccruals,
+    toggleAccruals,
+    showClearedMonthly,
+    toggleClearedMonthly,
+    showDeletedItems,
+    toggleDeletedItems,
+    showOptionsMenu,
+    showTransferForm,
+    toggleTransferForm
+  } = toggles
 
-  const toggleAccruals = () => setAppConfig({
-    ...appConfig,
-    budget: { ...appConfig.budget, showAccruals: !appConfig.budget.showAccruals }
-  })
-  const toggleClearedMonthly = () => setAppConfig({
-    ...appConfig,
-    budget: { ...appConfig.budget, showClearedMonthly: !appConfig.budget.showClearedMonthly }
-  })
-  const toggleDeletedItems = () => setAppConfig({
-    ...appConfig,
-    budget: { ...appConfig.budget, showDeletedItems: !appConfig.budget.showDeletedItems }
-  })
-
-  const toggleTransferForm = () => setAppConfig({
-    ...appConfig,
-    account: {
-      ...appConfig.account,
-      showTransferForm: !appConfig.account.showTransferForm
-    }
-  })
+  if (!showOptionsMenu) return null
 
   const isBudget = namespace === "budget"
 
@@ -140,7 +131,7 @@ const OptionsMenu = (props: { accounts: AccountSummary[], namespace: string }) =
         <OptionalMenuItem
           isVisible={!isBudget}
           onClick={toggleTransferForm}
-          copy={appConfig.account.showTransferForm ? "Hide Transfer Form" : "Show Transfer Form"}
+          copy={showTransferForm ? "Hide Transfer Form" : "Show Transfer Form"}
           />
         <div>
           <SetUpLink isBudget={isBudget} />
@@ -156,19 +147,19 @@ const OptionsMenu = (props: { accounts: AccountSummary[], namespace: string }) =
         <div>
           <Button type="button" onClick={toggleAccruals}>
             <MenuItem>
-              {appConfig.budget.showAccruals ? "Hide" : "Show"} Accruals
+              {showAccruals ? "Hide" : "Show"} Accruals
             </MenuItem>
           </Button>
         </div>
         <OptionalMenuItem
           isVisible={isBudget}
           onClick={toggleClearedMonthly}
-          copy={appConfig.budget.showClearedMonthly ? "Hide Cleared Monthly Items" : "Show Cleared Monthly Items"}
+          copy={showClearedMonthly ? "Hide Cleared Monthly Items" : "Show Cleared Monthly Items"}
         />
         <OptionalMenuItem
           isVisible={isBudget}
           onClick={toggleDeletedItems}
-          copy={appConfig.budget.showDeletedItems ? "Hide Deleted Items" : "Show Deleted Items"}
+          copy={showDeletedItems ? "Hide Deleted Items" : "Show Deleted Items"}
         />
       </Cell>
     </Row>

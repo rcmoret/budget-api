@@ -38,6 +38,14 @@ const SubmitSection = (props: { children: React.ReactNode }) => {
 }
 
 const BudgetFinalizeIndex = (props: IndexComponentProps) => {
+  const { appConfig, setAppConfig } = useAppConfigContext()
+  useEffect(() => {
+    setAppConfig({
+      ...appConfig,
+      metadata: props.metadata
+    })
+  }, [])
+
   return (
     <div className="w-full flex flex-row flex-wrap">
       <FinalizeFormProvider {...props}>

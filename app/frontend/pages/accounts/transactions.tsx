@@ -18,7 +18,7 @@ import { Icon } from "@/components/common/Icon";
 import { FilterComponent } from "@/pages/budget/filter"
 
 const TransferComponent = () => {
-  const { appConfig, setAppConfig } = useAppConfigContext()
+  const { appConfig, toggles } = useAppConfigContext()
   const { accounts, account, budget } = appConfig
   const { data, setData, transform, post, processing } = useForm({
     amount: inputAmount({ display: "" }),
@@ -36,7 +36,8 @@ const TransferComponent = () => {
     }
   })
 
-  if (!account.showTransferForm) { return }
+  const { showTransferForm, toggleTransferForm } = toggles
+  if (!showTransferForm) { return }
 
 
   const { slug, key } = account
@@ -63,13 +64,7 @@ const TransferComponent = () => {
 
   const onSubmit = () => {
     const onSuccess = () => {
-      setAppConfig({
-        ...appConfig,
-        account: {
-          ...appConfig.account,
-          showTransferForm: false
-        }
-      })
+      toggleTransferForm()
       setData({
         accountKey: "",
         amount: inputAmount({ display: "" })

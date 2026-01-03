@@ -48,7 +48,7 @@ interface ComponentProps {
 }
 
 const BudgetComponent = (props: ComponentProps) => {
-  const { appConfig, setAppConfig } = useAppConfigContext()
+  const { appConfig, setAccounts, setBudgetConfig } = useAppConfigContext()
   const { data, discretionary, draft, categories } = props
   const { month, year } = data
   const { items, ...form } = useDraftEvents({
@@ -59,16 +59,9 @@ const BudgetComponent = (props: ComponentProps) => {
   })
 
   useEffect(() => {
-    setAppConfig({
-      ...appConfig,
-      accounts: appConfig.accounts.length ? appConfig.accounts : props.accounts,
-      budget: {
-        ...appConfig.budget,
-        data,
-        discretionary,
-        categories
-      }
-    })
+    const accounts = appConfig.accounts.length ? appConfig.accounts : props.accounts
+    setAccounts(accounts)
+    setBudgetConfig({ data, discretionary, categories })
   }, [])
 
   return (

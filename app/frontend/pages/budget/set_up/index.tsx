@@ -194,20 +194,8 @@ type ComponentProps = {
 }
 
 const SetUpComponent = (props: ComponentProps) => {
-  const { appConfig, setAppConfig } = useAppConfigContext()
   const [viewTab, setViewTab] = useState<TabName>("revenues")
   const { month, year } = props
-
-  useEffect(() => {
-    setAppConfig({
-      ...appConfig,
-      budget: {
-        ...appConfig.budget,
-        data: { ...appConfig.budget.data, month, year }
-      }
-    })
-  }, [])
-
 
   const {
     addCreateEvent,
