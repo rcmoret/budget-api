@@ -2,6 +2,8 @@
 
 module Budget
   class CategoryMaturityInterval < ApplicationRecord
+    include BelongsToUserGroup::Through[association: :category, class_name: "Budget::Category"]
+
     belongs_to :interval, foreign_key: :budget_interval_id, inverse_of: :maturity_intervals
     belongs_to :category, foreign_key: :budget_category_id, inverse_of: :maturity_intervals
 
@@ -10,7 +12,6 @@ module Budget
 
     scope :ordered, -> { joins(:interval).merge(Interval.ordered) }
     scope :on_or_after, ->(month:, year:) { joins(:interval).merge(Interval.on_or_after(month: month, year: year)) }
-    scope :belonging_to, ->(user_or_group) { joins(:category).merge(Category.belonging_to(user_or_group)) }
 
     delegate :month, :year, to: :interval
 
