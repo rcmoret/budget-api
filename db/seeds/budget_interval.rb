@@ -7,7 +7,6 @@ def amount_handler(amount)
   end
 end
 
-# rubocop:disable Metrics/MethodLength
 def event_form(user, interval, amount, category_key, budget_item_key: SecureRandom.hex(6))
   Forms::Budget::EventsForm.new(
     user,
@@ -21,8 +20,8 @@ def event_form(user, interval, amount, category_key, budget_item_key: SecureRand
     }]
   )
 end
-# rubocop:enable Metrics/MethodLength
 
+# rubocop:disable Metrics/AbcSize
 def create_budget(user, interval, description: :base)
   ITEM_AMOUNTS.each_pair do |category_slug, attributes|
     Budget::Category.by_slug(category_slug).then do |category|
@@ -37,6 +36,7 @@ def create_budget(user, interval, description: :base)
     end
   end
 end
+# rubocop:enable Metrics/AbcSize
 
 Budget::ItemEvent.create_events.find_each do |ev|
   ev.update(created_at: 1.month.ago)

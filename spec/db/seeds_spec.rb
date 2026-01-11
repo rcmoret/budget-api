@@ -1,6 +1,7 @@
 require "rails_helper"
 require_relative "../../db/seeds/item_amounts"
 
+# rubocop:disable RSpec/DescribeClass
 RSpec.describe "seeding the db" do
   subject(:task) do
     lambda do
@@ -29,3 +30,4 @@ RSpec.describe "seeding the db" do
     expect { task.call }.to change { Transaction::Entry.count }.by(14)
   end
 end
+# rubocop:enable RSpec/DescribeClass
