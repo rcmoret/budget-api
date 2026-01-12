@@ -7,7 +7,6 @@ import { ItemProvider, useItem } from "./context_provider";
 import { ReactNode, useRef } from "react";
 import { SelectSomeIndicator, SelectNoneOption, SelectAllOption } from "./option_button";
 import { i18n } from "@/lib/i18n"
-import { useFinalizeFormContext } from "../form_context";
 import { KeySpan as MainKeySpan } from "@/components/common/KeySpan";
 
 const KeySpan = () => {
@@ -23,22 +22,6 @@ const KeySpan = () => {
 type SelectOption = {
   label: string;
   value: string;
-}
-
-const JumpToBottomLink = () => {
-  const { index } = useItem()
-  const { category } = useCategory()
-  const { allItemsReviewed } = useFinalizeFormContext()
-
-  if (!allItemsReviewed || (index + 1) !== category.items.length) {
-    return null
-  } else {
-    return (
-      <div>
-        <a href="#finalize-summary">go to summary &#8595;</a>
-      </div>
-    )
-  }
 }
 
 const ItemAmountForm = (props: { amountInputRef: React.RefObject<HTMLInputElement> }) => {
@@ -61,6 +44,18 @@ const ItemAmountForm = (props: { amountInputRef: React.RefObject<HTMLInputElemen
 
   const inputProps = showWarning ? warningOutlineClasses : outlineClasses
 
+  // Ref callback to sync both refs
+  const refCallback = (element: HTMLInputElement | null) => {
+    // Update the local ref
+    if (props.amountInputRef) {
+      (props.amountInputRef as React.MutableRefObject<HTMLInputElement | null>).current = element
+    }
+    // Update the item's ref so it can be accessed from context
+    if (item.amountInputRef) {
+      item.amountInputRef.current = element
+    }
+  }
+
   return (
     <div className="w-full flex flex-col gap-2">
       <div className="w-full flex flex-row justify-between">
@@ -71,7 +66,7 @@ const ItemAmountForm = (props: { amountInputRef: React.RefObject<HTMLInputElemen
       </div>
       <div>
         <AmountInput
-          ref={props.amountInputRef}
+          ref={refCallback}
           name={`item-${item.key}`}
           amount={item.rolloverAmount}
           onChange={onChange}
@@ -114,15 +109,17 @@ const EventSelect = () => {
   )
 }
 
-const ItemCard = (props: { item: FinalizeCategoryFormItem; index: number; children?: ReactNode }) => {
+const ItemCard = (props: { item: FinalizeCategoryFormItem; index: number; budgetCategoryKey: string; children?: ReactNode }) => {
   const { setItemEventKey, setRolloverAmountForItem, setRolloverNoneForItem } = useCategory()
   const { item } = props
   const amountInputRef = useRef<HTMLInputElement>(null)
+
   const bgColor = item.needsReview ? "bg-sky-50" : "bg-gray-50"
   const borderColor = item.needsReview ? "border-sky-100" : "border-gray-300"
 
   return (
     <ItemProvider
+      budgetCategoryKey={props.budgetCategoryKey}
       index={props.index}
       item={item}
       setItemEventKey={setItemEventKey}
@@ -135,7 +132,6 @@ const ItemCard = (props: { item: FinalizeCategoryFormItem; index: number; childr
           <div className="flex flex-col gap-2 w-1/2 pr-4 justify-between">
             <ItemAmountForm amountInputRef={amountInputRef} />
             <EventSelect />
-            <JumpToBottomLink />
           </div>
           <div className="flex flex-col gap-2 border-gray-100 border-l pl-4 w-1/2">
             <SelectAllOption amountInputRef={amountInputRef} />

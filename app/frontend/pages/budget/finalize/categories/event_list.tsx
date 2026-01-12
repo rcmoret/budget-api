@@ -39,7 +39,7 @@ const EventItem = (props: { event: FinalizeCategoryEvent }) => {
   return (
     <div>
       {items.map((item) => (
-        <LineItem key={item.key} description={`(${item.key})`} prefix="+">
+        <LineItem key={item.key} description="roll-over" prefix="+">
           <AmountSpan absolute={true} amount={item.rolloverAmount.cents || 0} />
         </LineItem>
       ))}
@@ -49,7 +49,7 @@ const EventItem = (props: { event: FinalizeCategoryEvent }) => {
 
 const InitialLineItem = (props: { event: FinalizeCategoryEvent }) => {
   if (props.event.eventType === "rollover_item_create") {
-    const description = `new item - (${props.event.key})`
+    const description = "new item"
 
     return (
       <LineItem description={description}>
@@ -57,7 +57,7 @@ const InitialLineItem = (props: { event: FinalizeCategoryEvent }) => {
       </LineItem>
     )
   } else {
-    const description = `Currently budgeted (${props.event.key})`
+    const description = "currently budgeted"
 
     return (
       <LineItem description={description}>
@@ -112,7 +112,7 @@ const EventSummary = (props: {
         <InitialLineItem event={event} />
         <EventItem event={event} />
         <div className="w-4/12 h-0.5 bg-chartreuse-200 px-2"></div>
-        <LineItem description="updated amount">
+        <LineItem description="new amount">
           <AmountSpan absolute={true} amount={total + event.amount} />
         </LineItem>
       </div>

@@ -70,7 +70,7 @@ const AccrualComponent = (props: {
   category: SetUpCategory,
   updateCategory: (category: SetUpCategory) => void
 }) => {
-  const { appConfig } = useContext(AppConfigContext)
+  const { appConfig } = useAppConfigContext()
   const { category } = props
 
   const { month, year } = appConfig.budget.data
@@ -264,7 +264,7 @@ const EditForm = (props: {
   })
   const { category, isChecked, toggleForm, updateCategory } = props
 
-  const { appConfig } = useContext(AppConfigContext)
+  const { appConfig } = useAppConfigContext()
   const { month, year } = appConfig.budget.data
 
   // @ts-ignore
