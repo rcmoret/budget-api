@@ -4,6 +4,7 @@ import { AccountTabs } from "@/pages/accounts/tabs";
 
 import { AccountSummary, AccountShow } from "@/types/account";
 import { Transactions } from "./transactions";
+import { KeyboardNav } from "@/components/layout/ApplicationListners";
 
 interface ComponentProps {
   accounts: AccountSummary[];
@@ -38,6 +39,7 @@ const AccountShowComponent = (props: ComponentProps) => {
 
   return (
     <>
+      <KeyboardNav />
       <AccountTabs accounts={accounts} selectedAccount={selectedAccount} />
       <Transactions
         initialBalance={selectedAccount.balancePriorTo}

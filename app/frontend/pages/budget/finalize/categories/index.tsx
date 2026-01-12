@@ -177,7 +177,6 @@ const SubmitSection = (props: { children: React.ReactNode }) => {
   }
 }
 
-
 const CategoryIndex = () => {
   const { groups, viewingCategoryKey } = useFinalizeFormContext()
   if (viewingCategoryKey === "__summary__") {

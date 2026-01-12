@@ -2,7 +2,6 @@ import { Header } from "@/components/layout/Header";
 import { OptionsMenu } from "@/components/layout/OptionsMenu";
 import { Provider } from "@/components/layout/Provider";
 import { Row } from "@/components/common/Row";
-import { KeyboardNav } from "./ApplicationListners";
 
 const Layout = ({ children }: { children: any }) => {
   const accounts = children.props.dashboard?.accounts ||
@@ -10,7 +9,6 @@ const Layout = ({ children }: { children: any }) => {
     []
   return (
     <Provider>
-      <KeyboardNav />
       <div className="w-11/12 mx-auto h-dvh">
         <Header
           data={children.props.data}

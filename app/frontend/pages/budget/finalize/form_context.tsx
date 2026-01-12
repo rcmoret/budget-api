@@ -106,11 +106,11 @@ const FinalizeFormProvider = (props: HookProps & { children: ReactNode; }) => {
   }, [viewingCategoryKey, groups])
 
   const setPrevReviewingCategoryKey = () => {
-    const nextKey = indexAt === 0 ?
+    const prevKey = indexAt === 0 ?
       (keyList.at(-1) ?? "") :
       (keyList[indexAt - 1])
 
-    setViewingCategoryKey(nextKey)
+    setViewingCategoryKey(prevKey)
   }
 
   const setNextReviewingCategoryKey = () => {

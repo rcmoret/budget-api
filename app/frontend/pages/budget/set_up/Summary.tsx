@@ -22,11 +22,13 @@ const AmountComponent = (props: { amount: number }) => {
 }
 
 const SummaryComponent = (props: SummaryProps) => {
-  const { revenueCategories,
+  const {
+    revenueCategories,
     monthlyCategories,
     dayToDayCategories,
     totalBudgeted
   } = props
+
   const getTotal = (categories: Array<SetUpCategory>) => {
     return categories.reduce((sum, category) => {
       return sum + category.events.reduce((acc, event) => acc + Number(event.amount.cents), 0)

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSetUpEventsForm, ResponseSetUpCategory, SetUpCategory } from "@/lib/hooks/useSetUpEventsForm";
 import { dayToDayItems, expenseItems, monthlyItems, revenueItems } from "@/lib/models/budget-items";
 import { isCreate, isDelete } from "@/lib/hooks/useEventsForm";
@@ -11,6 +11,7 @@ import { Point } from "@/components/common/Symbol";
 import { Icon } from "@/components/common/Icon";
 import { UrlBuilder } from "@/lib/UrlBuilder";
 import { buildQueryParams } from "@/lib/redirect_params";
+import { useAppConfigContext } from "@/components/layout/Provider";
 
 type TabName = "revenues" | "monthlyExpenses" | "dayToDayExpense"
 
