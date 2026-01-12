@@ -37,6 +37,10 @@ module Budget
       DELETE_EVENTS.include?(type.name)
     end
 
+    def budget_item_key=(item_key)
+      self.budget_item_id = Budget::Item.fetch(user_group, key: item_key)&.id
+    end
+
     private
 
     def validate_json_data

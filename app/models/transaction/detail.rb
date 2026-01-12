@@ -33,5 +33,9 @@ module Transaction
     def self.total
       sum(:amount)
     end
+
+    def budget_item_key=(itemkey)
+      self.budget_item_id = Budget::Item.by_key(itemkey)&.id
+    end
   end
 end

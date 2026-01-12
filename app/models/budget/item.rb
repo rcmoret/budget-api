@@ -78,6 +78,15 @@ module Budget
       decorator_class.new(self)
     end
 
+    def budget_category_key=(category_key)
+      self.budget_category_id =
+        if category_key.blank?
+          nil
+        else
+          Category.by_key(category_key)&.id
+        end
+    end
+
     NonDeleteableError = Class.new(StandardError)
 
     private

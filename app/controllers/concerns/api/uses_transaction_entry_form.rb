@@ -73,8 +73,7 @@ module API
 
     def handle_detail(detail_attrs)
       detail_id = transaction_entry.details.by_key(detail_attrs.fetch(:key))&.id
-      budget_item = budget_item_look_up(detail_attrs.delete(:budget_item_key))
-      detail_attrs.merge(id: detail_id, budget_item: budget_item)
+      detail_attrs.merge(id: detail_id, budget_item_key: detail_attrs.delete(:budget_item_key))
     end
 
     def budget_item_keys
