@@ -1,36 +1,36 @@
 import { decimalToInt, moneyFormatter } from "@/lib/MoneyFormatter";
 import { forwardRef } from "react";
 
-const handleInputKeyDown = (event: KeyboardEvent) => {
+const handleInputIncrement = (event: React.KeyboardEvent<HTMLInputElement>) => {
   const target = event.target as HTMLInputElement;
   if (!target.classList.contains("numericInput")) { return null }
 
   if (event.key === "ArrowUp" || event.key === "ArrowDown") {
     event.preventDefault();
-    const currentValue = parseFloat(target.value) || 0;
-    const increment = event.shiftKey ? 0.1 : 1.0
+    const currentValue = inputAmount({ display: target.value || "" });
+    const increment = event.shiftKey ? 1 : 100
     // const increment = event.key === "ArrowUp" ? 1.0 : -1.0;
     const newValue = event.key === "ArrowUp" ?
-      (currentValue + increment) :
-      (currentValue - increment)
-    target.value = newValue.toString();
-    // Trigger input event so React/other listeners see the change
+      (currentValue.cents + increment) :
+      (currentValue.cents - increment)
+    target.value = inputAmount({ cents: newValue }).display
     target.dispatchEvent(new Event("input", { bubbles: true }));
   }
 }
 
 type AmountInputProps = {
-  name: string;
   amount: TInputAmount;
-  onChange: (a: string) => void;
+  borderColor?: string;
+  classes?: Array<string>;
   disabled?: boolean;
+  handleKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  name: string;
+  onChange: (a: string) => void;
   style?: {
     height?: string;
     width?: string;
   }
-  classes?: Array<string>;
-  textAlign?: "left" | "right"
-  borderColor?: string;
+  textAlign?: "left" | "right";
 }
 
 const AmountInput = forwardRef<HTMLInputElement, AmountInputProps>((props, ref) => {
@@ -66,13 +66,18 @@ const AmountInput = forwardRef<HTMLInputElement, AmountInputProps>((props, ref) 
     ...classes
   ].join(" ")
 
+  const handleKeyDown = (ev: React.KeyboardEvent<HTMLInputElement>) => {
+    handleInputIncrement(ev)
+    if (props.handleKeyDown) { props.handleKeyDown(ev) }
+  }
+
   return (
     <input
       ref={ref}
       name={name}
       step="1.0"
       onChange={onChange}
-      onKeyDown={handleInputKeyDown}
+      onKeyDown={handleKeyDown}
       value={amount.display}
       style={style}
       className={className}

@@ -209,7 +209,6 @@ const SetUpComponent = (props: ComponentProps) => {
     })
   }, [])
 
-
   const {
     addCreateEvent,
     categories,
