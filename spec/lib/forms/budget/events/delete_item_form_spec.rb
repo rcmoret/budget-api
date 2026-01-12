@@ -65,7 +65,7 @@ RSpec.describe Forms::Budget::Events::DeleteItemForm do
       context "when the budget item exists for the id passed" do
         it "is an invalid form object" do
           params = {
-            budget_item_key: SecureRandom.hex(6),
+            budget_item_key: KeyGenerator.call,
             event_type: Budget::EventTypes::DELETE_EVENTS.sample,
           }
           form = described_class.new(user, params)

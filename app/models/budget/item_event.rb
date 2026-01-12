@@ -8,12 +8,17 @@ module Budget
     belongs_to :user, class_name: "User::Profile"
     belongs_to :item, class_name: "Item", foreign_key: :budget_item_id, inverse_of: :events
     belongs_to :type, class_name: "ItemEventType", foreign_key: :budget_item_event_type_id, inverse_of: :events
+    belongs_to :change_set,
+               class_name: "ChangeSet",
+               foreign_key: :budget_change_set_id,
+               inverse_of: :events
 
     alias_attribute :type_id, :budget_item_event_type_id
     alias_attribute :item_id, :budget_item_id
 
     validates :type_id, uniqueness: { scope: :item_id }, if: :item_create?
     validates :type_id, uniqueness: { scope: :item_id }, if: :item_delete?
+    validates :change_set, presence: true, if: -> { (created_at || Time.current).year > 2025 }
     validate :validate_json_data, if: :data_present?
 
     scope :prior_to, ->(date_hash) { joins(:item).merge(Item.prior_to(date_hash)) }

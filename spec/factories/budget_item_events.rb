@@ -3,7 +3,7 @@ FactoryBot.define do
     association :type, factory: :budget_item_event_type
     association :item, factory: :budget_item
     association :user
-    key { SecureRandom.hex(6) }
+    key { KeyGenerator.call }
     amount { (-1000..1000).to_a.sample }
 
     trait :create_event do

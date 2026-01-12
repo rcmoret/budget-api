@@ -7,8 +7,8 @@ RSpec.describe "DELETE /api/account/:account_key/transactions/:key/:month/:year"
   end
 
   context "when the account is not found" do
-    let(:transaction_key) { SecureRandom.hex(6) }
-    let(:account_key) { SecureRandom.hex(6) }
+    let(:transaction_key) { KeyGenerator.call }
+    let(:account_key) { KeyGenerator.call }
 
     include_context "with valid token"
     include_examples "endpoint requires account"
@@ -19,7 +19,7 @@ RSpec.describe "DELETE /api/account/:account_key/transactions/:key/:month/:year"
     include_context "with an account belonging to a different user group"
 
     let(:account_key) { other_groups_account.key }
-    let(:transaction_key) { SecureRandom.hex(6) }
+    let(:transaction_key) { KeyGenerator.call }
 
     include_examples "endpoint requires account"
   end
@@ -35,7 +35,7 @@ RSpec.describe "DELETE /api/account/:account_key/transactions/:key/:month/:year"
              headers: headers)
     end
 
-    let(:transaction_key) { SecureRandom.hex(6) }
+    let(:transaction_key) { KeyGenerator.call }
 
     include_context "with valid token"
     include_examples "endpoint requires budget interval"
@@ -93,8 +93,8 @@ RSpec.describe "DELETE /api/account/:account_key/transactions/:key/:month/:year"
   end
 
   describe "token authentication" do
-    let(:account_key) { SecureRandom.hex(6) }
-    let(:transaction_key) { SecureRandom.hex(6) }
+    let(:account_key) { KeyGenerator.call }
+    let(:transaction_key) { KeyGenerator.call }
     let(:month) { rand(1..12) }
     let(:year) { rand(2020..2039) }
     let(:params) { {} }

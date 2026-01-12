@@ -38,7 +38,7 @@ RSpec.describe Forms::Budget::FinalizeIntervalForm do
             year: interval.year,
             budget_category_key: category.key,
             event_type: Budget::EventTypes::CREATE_EVENTS.sample,
-            budget_item_key: SecureRandom.hex(6),
+            budget_item_key: KeyGenerator.call,
           },
         ]
       end

@@ -5,6 +5,11 @@ module Budget
     include Fetchable
 
     has_many :items, foreign_key: :budget_interval_id, inverse_of: :interval, dependent: :restrict_with_exception
+    has_many :change_sets,
+             class_name: "ChangeSet",
+             dependent: :destroy,
+             inverse_of: :interval,
+             foreign_key: :budget_change_set_id
     has_many :maturity_intervals,
              class_name: "CategoryMaturityInterval",
              dependent: :destroy,

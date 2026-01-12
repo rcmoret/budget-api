@@ -16,7 +16,7 @@ RSpec.describe "POST /api/accounts" do
             slug: "checking",
             priority: rand(100),
             isCashFlow: true,
-            key: SecureRandom.hex(6),
+            key: KeyGenerator.call,
           },
         }
       end

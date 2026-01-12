@@ -9,7 +9,7 @@ module User
             ok_tuple(
               auth_token_context_attributes: {
                 user_id: payload.fetch(:target_user).id,
-                key: SecureRandom.hex(6),
+                key: KeyGenerator.call,
                 ip_address: data.fetch(:ip_address),
                 expires_at: 24.hours.from_now,
               },

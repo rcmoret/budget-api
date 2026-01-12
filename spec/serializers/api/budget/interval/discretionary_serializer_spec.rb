@@ -21,7 +21,7 @@ RSpec.describe API::Budget::Interval::DiscretionarySerializer do
         clearance_date: interval.date_range.to_a.sample,
         details_attributes: [
           {
-            key: SecureRandom.hex(6),
+            key: KeyGenerator.call,
             amount: rand(-100_00..100_00),
             budget_item_id: nil,
           },
@@ -55,7 +55,7 @@ RSpec.describe API::Budget::Interval::DiscretionarySerializer do
         clearance_date: interval.date_range.to_a.sample,
         details_attributes: [
           {
-            key: SecureRandom.hex(6),
+            key: KeyGenerator.call,
             amount: rand(-100_00..100_00),
             budget_item_id: nil,
           },
@@ -90,7 +90,7 @@ RSpec.describe API::Budget::Interval::DiscretionarySerializer do
         clearance_date: nil,
         details_attributes: [
           {
-            key: SecureRandom.hex(6),
+            key: KeyGenerator.call,
             amount: rand(-100_00..100_00),
             budget_item_id: nil,
           },
@@ -113,7 +113,7 @@ RSpec.describe API::Budget::Interval::DiscretionarySerializer do
         clearance_date: nil,
         details_attributes: [
           {
-            key: SecureRandom.hex(6),
+            key: KeyGenerator.call,
             amount: rand(-100_00..100_00),
             budget_item_id: nil,
           },
@@ -135,7 +135,7 @@ RSpec.describe API::Budget::Interval::DiscretionarySerializer do
         budget_excludion: true,
         details_attributes: [
           {
-            key: SecureRandom.hex(6),
+            key: KeyGenerator.call,
             amount: rand(-100_00..100_00),
             budget_item_id: nil,
           },
@@ -178,7 +178,7 @@ RSpec.describe API::Budget::Interval::DiscretionarySerializer do
         clearance_date: interval.date_range.to_a.sample,
         details_attributes: [
           {
-            key: SecureRandom.hex(6),
+            key: KeyGenerator.call,
             amount: rand(-100_00..100_00),
             budget_item_id: nil,
           },
@@ -352,7 +352,7 @@ RSpec.describe API::Budget::Interval::DiscretionarySerializer do
         clearance_date: (interval.first_date - 10.days),
         details_attributes: [
           {
-            key: SecureRandom.hex(6),
+            key: KeyGenerator.call,
             amount: rand(1..100_00),
           },
         ]
@@ -375,7 +375,7 @@ RSpec.describe API::Budget::Interval::DiscretionarySerializer do
         clearance_date: (interval.first_date - 10.days),
         details_attributes: [
           {
-            key: SecureRandom.hex(6),
+            key: KeyGenerator.call,
             amount: rand(1..100_00),
           },
         ]
@@ -399,7 +399,7 @@ RSpec.describe API::Budget::Interval::DiscretionarySerializer do
             clearance_date: nil,
             details_attributes: [
               {
-                key: SecureRandom.hex(6),
+                key: KeyGenerator.call,
                 amount: rand(1..100_00),
               },
             ]
@@ -419,7 +419,7 @@ RSpec.describe API::Budget::Interval::DiscretionarySerializer do
             clearance_date: interval.date_range.to_a.sample,
             details_attributes: [
               {
-                key: SecureRandom.hex(6),
+                key: KeyGenerator.call,
                 amount: rand(1..100_00),
               },
             ]
@@ -439,7 +439,7 @@ RSpec.describe API::Budget::Interval::DiscretionarySerializer do
             clearance_date: interval.date_range.to_a.sample,
             details_attributes: [
               {
-                key: SecureRandom.hex(6),
+                key: KeyGenerator.call,
                 amount: rand(1..100_00),
               },
             ]
@@ -463,7 +463,7 @@ RSpec.describe API::Budget::Interval::DiscretionarySerializer do
             clearance_date: (interval.last_date + 1.day),
             details_attributes: [
               {
-                key: SecureRandom.hex(6),
+                key: KeyGenerator.call,
                 amount: rand(1..100_00),
               },
             ]
@@ -477,7 +477,7 @@ RSpec.describe API::Budget::Interval::DiscretionarySerializer do
             clearance_date: interval.date_range.to_a.sample,
             details_attributes: [
               {
-                key: SecureRandom.hex(6),
+                key: KeyGenerator.call,
                 amount: rand(1..100_00),
               },
             ]
@@ -498,7 +498,7 @@ RSpec.describe API::Budget::Interval::DiscretionarySerializer do
             clearance_date: nil,
             details_attributes: [
               {
-                key: SecureRandom.hex(6),
+                key: KeyGenerator.call,
                 amount: rand(1..100_00),
               },
             ]
@@ -520,7 +520,7 @@ RSpec.describe API::Budget::Interval::DiscretionarySerializer do
             clearance_date: interval.date_range.to_a.sample,
             details_attributes: [
               {
-                key: SecureRandom.hex(6),
+                key: KeyGenerator.call,
                 amount: rand(1..100_00),
               },
             ]
@@ -542,7 +542,7 @@ RSpec.describe API::Budget::Interval::DiscretionarySerializer do
             clearance_date: nil,
             details_attributes: [
               {
-                key: SecureRandom.hex(6),
+                key: KeyGenerator.call,
                 amount: rand(1..100_00),
               },
             ]
@@ -573,7 +573,7 @@ RSpec.describe API::Budget::Interval::DiscretionarySerializer do
             clearance_date: nil,
             details_attributes: [
               {
-                key: SecureRandom.hex(6),
+                key: KeyGenerator.call,
                 amount: rand(1..100_00),
               },
             ]
@@ -594,7 +594,7 @@ RSpec.describe API::Budget::Interval::DiscretionarySerializer do
             clearance_date: nil,
             details_attributes: [
               {
-                key: SecureRandom.hex(6),
+                key: KeyGenerator.call,
                 amount: rand(1..100_00),
               },
             ]
@@ -615,7 +615,7 @@ RSpec.describe API::Budget::Interval::DiscretionarySerializer do
             clearance_date: interval.date_range.to_a.sample,
             details_attributes: [
               {
-                key: SecureRandom.hex(6),
+                key: KeyGenerator.call,
                 amount: rand(1..100_00),
               },
             ]

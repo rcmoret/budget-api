@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :auth_token_context, class: "Auth::Token::Context" do
     association :user
-    key { SecureRandom.hex(6) }
+    key { KeyGenerator.call }
     ip_address { Faker::Internet.ip_v4_address }
     expires_at { 24.hours.from_now }
 

@@ -54,7 +54,7 @@ RSpec.describe API::Budget::Interval::DraftDiscretionarySerializer do
 
     context "when passing a new item" do
       let(:util_category) { create(:category, :monthly, :expense, name: "Utilities", user_group: group) }
-      let(:item_key) { SecureRandom.hex(6) }
+      let(:item_key) { KeyGenerator.call }
       let(:utilities) do
         Budget::DraftItem.new(
           Forms::Budget::DraftChangeForm.new(

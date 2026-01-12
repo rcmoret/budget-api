@@ -83,7 +83,7 @@ RSpec.describe Forms::Budget::EventsForm do
           .and_call_original
       end
 
-      let(:event_key) { SecureRandom.hex(6) }
+      let(:event_key) { KeyGenerator.call }
       let(:params) do
         { events: [{ key: event_key, event_type: Budget::EventTypes::CREATE_EVENTS.sample }] }
       end

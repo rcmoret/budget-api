@@ -11,7 +11,7 @@ RSpec.describe Forms::TransactionForm do
           budget_exclusion: budget_exclusion,
           check_number: nil,
           clearance_date: Time.current.to_date,
-          key: SecureRandom.hex(6),
+          key: KeyGenerator.call,
           notes: nil,
           receipt: nil,
           details_attributes: details_attributes,
@@ -25,7 +25,7 @@ RSpec.describe Forms::TransactionForm do
         let(:details_attributes) do
           [
             {
-              key: SecureRandom.hex(6),
+              key: KeyGenerator.call,
               amount: 100_00,
               budget_item_id: budget_item.id,
             },
@@ -57,8 +57,8 @@ RSpec.describe Forms::TransactionForm do
           let(:additional_budget_item) { create(:budget_item, category: category) }
           let(:details_attributes) do
             [
-              { key: SecureRandom.hex(6), amount: 100_00, budget_item_id: additional_budget_item.id },
-              { key: SecureRandom.hex(6), amount: 100_00, budget_item_id: budget_item.id },
+              { key: KeyGenerator.call, amount: 100_00, budget_item_id: additional_budget_item.id },
+              { key: KeyGenerator.call, amount: 100_00, budget_item_id: budget_item.id },
             ]
           end
 
@@ -76,7 +76,7 @@ RSpec.describe Forms::TransactionForm do
         context "when the account is non-cash-flow" do
           let(:account) { create(:account, :non_cash_flow, user_group: user.group) }
           let(:transaction_entry) { Transaction::Entry.new(account: account) }
-          let(:details_attributes) { [{ key: SecureRandom.hex(6), amount: 250_00 }] }
+          let(:details_attributes) { [{ key: KeyGenerator.call, amount: 250_00 }] }
 
           it "returns true" do
             expect(described_class.new(user, transaction_entry, params).save)
@@ -93,7 +93,7 @@ RSpec.describe Forms::TransactionForm do
         context "when the account is cash-flow" do
           let(:account) { create(:account, :cash_flow, user_group: user.group) }
           let(:transaction_entry) { Transaction::Entry.new(account: account) }
-          let(:details_attributes) { [{ key: SecureRandom.hex(6), amount: 250_00 }] }
+          let(:details_attributes) { [{ key: KeyGenerator.call, amount: 250_00 }] }
 
           it "returns false" do
             expect(described_class.new(user, transaction_entry, params).save)
@@ -120,7 +120,7 @@ RSpec.describe Forms::TransactionForm do
           let(:details_attributes) do
             [
               {
-                key: SecureRandom.hex(6),
+                key: KeyGenerator.call,
                 amount: 250_00,
                 budget_item_id: budget_item.id,
               },
@@ -149,8 +149,8 @@ RSpec.describe Forms::TransactionForm do
           let(:transaction_entry) { Transaction::Entry.new(account: account) }
           let(:details_attributes) do
             [
-              { key: SecureRandom.hex(6), amount: 250_00 },
-              { key: SecureRandom.hex(6), amount: 250_00 },
+              { key: KeyGenerator.call, amount: 250_00 },
+              { key: KeyGenerator.call, amount: 250_00 },
             ]
           end
 
@@ -177,7 +177,7 @@ RSpec.describe Forms::TransactionForm do
         let(:category) { create(:category, user_group: user.group) }
         let(:second_category) { create(:category, user_group: user.group) }
         let(:additional_budget_item) { create(:budget_item, category: second_category) }
-        let(:key) { SecureRandom.hex(6) }
+        let(:key) { KeyGenerator.call }
         let(:details_attributes) do
           [
             { key: key, amount: 100_00, budget_item_id: additional_budget_item.id },
@@ -205,8 +205,8 @@ RSpec.describe Forms::TransactionForm do
       context "when creating multiple details with the same monthly budget item" do
         let(:budget_item) { create(:budget_item, category: category) }
         let(:category) { create(:category, :monthly, user_group: user.group) }
-        let(:detail_1_key) { SecureRandom.hex(6) }
-        let(:detail_2_key) { SecureRandom.hex(6) }
+        let(:detail_1_key) { KeyGenerator.call }
+        let(:detail_2_key) { KeyGenerator.call }
         let(:details_attributes) do
           [
             { key: detail_1_key, amount: 40_00, budget_item_id: budget_item.id },
@@ -255,7 +255,7 @@ RSpec.describe Forms::TransactionForm do
 
       context "when passing a user that does not have access to the account" do
         let(:other_user) { create(:user) }
-        let(:details_attributes) { [{ key: SecureRandom.hex(6), amount: 100_00 }] }
+        let(:details_attributes) { [{ key: KeyGenerator.call, amount: 100_00 }] }
 
         it "does not create a transaction entry" do
           expect { described_class.new(other_user, transaction_entry, params).save }
@@ -337,7 +337,7 @@ RSpec.describe Forms::TransactionForm do
             described_class.new(
               user,
               transaction_entry,
-              details_attributes: [{ key: SecureRandom.hex(6), amount: 45_00, budget_item_id: budget_item.id }],
+              details_attributes: [{ key: KeyGenerator.call, amount: 45_00, budget_item_id: budget_item.id }],
             ).save
           end.to change { transaction_entry.reload.details.count }.by(+1)
         end
@@ -438,14 +438,14 @@ RSpec.describe Forms::TransactionForm do
 
         context "when adding a detail" do
           it "does not create a detail" do
-            params = { details_attributes: [{ key: SecureRandom.hex(6), amount: 55_82 }] }
+            params = { details_attributes: [{ key: KeyGenerator.call, amount: 55_82 }] }
 
             expect { described_class.new(user, transaction_entry, params).save }
               .not_to(change { transaction_entry.reload.details.count })
           end
 
           it "includes an error" do
-            params = { details_attributes: [{ key: SecureRandom.hex(6), amount: 55_82 }] }
+            params = { details_attributes: [{ key: KeyGenerator.call, amount: 55_82 }] }
 
             subject = described_class.new(user, transaction_entry, params).tap(&:save)
 
@@ -489,14 +489,14 @@ RSpec.describe Forms::TransactionForm do
 
         context "when adding a detail" do
           it "does not create a detail" do
-            params = { details_attributes: [{ key: SecureRandom.hex(6), amount: 55_82 }] }
+            params = { details_attributes: [{ key: KeyGenerator.call, amount: 55_82 }] }
 
             expect { described_class.new(user, to_transaction, params).save }
               .not_to(change { to_transaction.reload.details.count })
           end
 
           it "includes an error" do
-            params = { details_attributes: [{ key: SecureRandom.hex(6), amount: 55_82 }] }
+            params = { details_attributes: [{ key: KeyGenerator.call, amount: 55_82 }] }
 
             subject = described_class.new(user, to_transaction, params).tap(&:save)
 

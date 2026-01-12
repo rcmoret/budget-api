@@ -115,10 +115,10 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
         "transaction_entry" => {
           "description" => "Publix",
           "clearance_date" => nil,
-          "key" => SecureRandom.hex(6),
+          "key" => KeyGenerator.call,
           "details_attributes" => [
             {
-              "key" => SecureRandom.hex(6),
+              "key" => KeyGenerator.call,
               "amount" => 170_35,
             },
           ],
@@ -161,17 +161,17 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
         "transaction" => {
           "description" => "Publix",
           "clearance_date" => nil,
-          "key" => SecureRandom.hex(6),
+          "key" => KeyGenerator.call,
           "details_attributes" => [
             {
-              "key" => SecureRandom.hex(6),
+              "key" => KeyGenerator.call,
               "amount" => 170_35,
             },
           ],
         },
       }
     end
-    let(:account_key) { SecureRandom.hex(6) }
+    let(:account_key) { KeyGenerator.call }
 
     include_examples "endpoint requires account"
   end
@@ -346,14 +346,14 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
     let(:account_key) { account.key }
     let(:first_amount) { rand(100_00) }
     let(:second_amount) { -1 * rand(100_00) }
-    let(:detail_key) { SecureRandom.hex(6) }
+    let(:detail_key) { KeyGenerator.call }
 
     let(:params) do
       {
         "transaction" => {
           "description" => "Publix",
           "clearance_date" => nil,
-          "key" => SecureRandom.hex(6),
+          "key" => KeyGenerator.call,
           "details_attributes" => [
             {
               "key" => detail_key,
@@ -379,7 +379,7 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
   end
 
   describe "token authentication" do
-    let(:account_key) { SecureRandom.hex(6) }
+    let(:account_key) { KeyGenerator.call }
     let(:month) { rand(1..12) }
     let(:year) { rand(2020..2039) }
     let(:params) { {} }

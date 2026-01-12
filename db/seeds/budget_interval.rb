@@ -7,10 +7,12 @@ def amount_handler(amount)
   end
 end
 
-def event_form(user, interval, amount, category_key, budget_item_key: SecureRandom.hex(6))
+def event_form(user, interval, amount, category_key, budget_item_key: KeyGenerator.call)
+  @adjustment ||= Budget::Changes::Adjust.where(interval: interval).create!(key: KeyGenerator.call, type_key: "setup")
   Forms::Budget::EventsForm.new(
     user,
     events: [{
+      adjustment: @adjustment,
       amount: amount,
       month: interval.month,
       year: interval.year,
@@ -29,8 +31,13 @@ def create_budget(user, interval, description: :base)
         next if item_attrs[description.to_s].nil?
 
         amount = amount_handler(item_attrs[description.to_s])
-        form = event_form(user, interval, amount, category.key,
-                          **{ budget_item_key: item_attrs["key"] }.compact)
+        form = event_form(
+          user,
+          interval,
+          amount,
+          category.key,
+          **{ budget_item_key: item_attrs["key"] }.compact
+        )
         form.save.then { |result| binding.pry if result != true }
       end
     end

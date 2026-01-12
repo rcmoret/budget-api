@@ -41,7 +41,7 @@ module WebApp
 
       def handle_detail(detail_attrs)
         detail_id = transaction.details.by_key(detail_attrs.fetch("key"))&.id
-        detail_attrs!.merge(id: detail_id, budget_item_key: detail_attrs.delete("budget_item_key"))
+        detail_attrs.merge!(id: detail_id, budget_item_key: detail_attrs.delete("budget_item_key"))
       end
 
       def form_parameters

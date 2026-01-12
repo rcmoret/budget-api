@@ -17,8 +17,8 @@ RSpec.describe "POST /api/budget/events" do
     let(:month) { interval.month }
     let(:year) { interval.year }
     let(:amount) { rand(-100_00..-1_00) }
-    let(:item_key) { SecureRandom.hex(6) }
-    let(:event_key) { SecureRandom.hex(6) }
+    let(:item_key) { KeyGenerator.call }
+    let(:event_key) { KeyGenerator.call }
     let(:events_params) do
       [
         {
@@ -92,8 +92,8 @@ RSpec.describe "POST /api/budget/events" do
     let(:month) { interval.month }
     let(:year) { interval.year }
     let(:amount) { rand(10_00..100_00) }
-    let(:item_key) { SecureRandom.hex(6) }
-    let(:event_key) { SecureRandom.hex(6) }
+    let(:item_key) { KeyGenerator.call }
+    let(:event_key) { KeyGenerator.call }
     let(:events_params) do
       [
         {
@@ -160,10 +160,10 @@ RSpec.describe "POST /api/budget/events" do
       {
         ev: [
           {
-            key: SecureRandom.hex(6),
-            budget_item_key: SecureRandom.hex(6),
+            key: KeyGenerator.call,
+            budget_item_key: KeyGenerator.call,
             amount: rand(100),
-            budget_category_key: SecureRandom.hex(6),
+            budget_category_key: KeyGenerator.call,
           },
         ],
       }

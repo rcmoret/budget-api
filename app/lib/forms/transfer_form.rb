@@ -79,7 +79,7 @@ module Forms
     end
 
     def generate_key_indentifier
-      SecureRandom.hex(6)
+      KeyGenerator.call
     end
 
     def success_hash

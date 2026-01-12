@@ -77,7 +77,7 @@ RSpec.describe "POST /api/accounts/transfers" do
       {
         transfer: {
           amount: rand(100_00),
-          from_account_key: SecureRandom.hex(6),
+          from_account_key: KeyGenerator.call,
           to_account_key: to_account.key,
         },
       }
@@ -101,7 +101,7 @@ RSpec.describe "POST /api/accounts/transfers" do
         transfer: {
           amount: rand(100_00),
           from_account_key: from_account.key,
-          to_account_key: SecureRandom.hex(6),
+          to_account_key: KeyGenerator.call,
         },
       }
     end
@@ -145,8 +145,8 @@ RSpec.describe "POST /api/accounts/transfers" do
       {
         transfer: {
           amount: rand(100_00),
-          from_account_key: SecureRandom.hex(6),
-          to_account_key: SecureRandom.hex(6),
+          from_account_key: KeyGenerator.call,
+          to_account_key: KeyGenerator.call,
         },
       }
     end
@@ -170,7 +170,7 @@ RSpec.describe "POST /api/accounts/transfers" do
   end
 
   describe "token authentication" do
-    let(:account_key) { SecureRandom.hex(6) }
+    let(:account_key) { KeyGenerator.call }
     let(:month) { rand(1..12) }
     let(:year) { rand(2020..2039) }
     let(:params) { {} }

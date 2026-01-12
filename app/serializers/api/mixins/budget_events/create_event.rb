@@ -32,11 +32,11 @@ module API
         def budget_category_key = budget_item.category.key
 
         def budget_item_key
-          @budget_item_key ||= SecureRandom.hex(6)
+          @budget_item_key ||= KeyGenerator.call
         end
 
         def event_key
-          @event_key ||= SecureRandom.hex(6)
+          @event_key ||= KeyGenerator.call
         end
 
         def data

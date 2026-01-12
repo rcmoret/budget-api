@@ -6,7 +6,7 @@ RSpec.describe "PUT /api/accounts/:key" do
   context "when the account is not found" do
     include_context "with valid token"
 
-    let(:account_key) { SecureRandom.hex(6) }
+    let(:account_key) { KeyGenerator.call }
     let(:params) do
       {
         account: {

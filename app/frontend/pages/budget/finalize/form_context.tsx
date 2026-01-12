@@ -84,8 +84,6 @@ const FinalizeFormProvider = (props: HookProps & { children: ReactNode; }) => {
 
         if (!item) { return }
 
-        console.log(item, item.amountInputRef)
-
         const attemptFocus = () => {
           if (item.amountInputRef?.current) {
             item.amountInputRef.current.focus()

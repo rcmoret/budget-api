@@ -1,4 +1,4 @@
-import { AmountInput } from "@/components/common/AmountInput";
+import { AmountInput, warningOutlineClasses, defaultOutlineClasses as outlineClasses } from "@/components/common/AmountInput";
 import { AmountSpan } from "@/components/common/AmountSpan";
 import { useCategory } from "@/pages/budget/finalize/categories/context_provider";
 import { FinalizeCategoryFormItem } from "@/lib/hooks/useFinalizeEventsForm";
@@ -28,19 +28,7 @@ const ItemAmountForm = (props: { amountInputRef: React.RefObject<HTMLInputElemen
   const {  item, setRolloverAmountForItem } = useItem()
   const { remaining, appliedToExtra, showWarning } = item
 
-  const warningOutlineClasses = {
-    outlineColor: "outline-red-300",
-    outline: "outline",
-    classes: ["p-1", "w-full", "outline-2", "focus:outline-red-300", "focus-visible:outline-red-300", "focus-visible:outline-2", "focus:outline-2"]
-  }
-
   const onChange = setRolloverAmountForItem
-
-  const outlineClasses = {
-    outlineColor: "outline-gray-400",
-    outline: "outline",
-    classes: ["p-1", "w-full", "outline-1", "focus:outline-chartreuse-300", "focus:outline-2", "focus-visible:outline-chartreuse-300", "focus-visible:outline-1"]
-  }
 
   const inputProps = showWarning ? warningOutlineClasses : outlineClasses
 
