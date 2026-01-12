@@ -19,6 +19,7 @@ module Budget
       category_scope.map do |category|
         {
           name: category.name,
+          slug: category.slug,
           events: event_hashes_for(category),
         }
       end
@@ -35,27 +36,20 @@ module Budget
         {
           amount: 0,
           budget_category_key: category.key,
-          budget_item_key: SecureRandom.hex(6),
+          budget_item_key: KeyGenerator.call,
           event_type: event_type,
-          key: SecureRandom.hex(6),
+          key: KeyGenerator.call,
           data: {},
         }
       end
     end
 
-    def items_scope
-      ::Budget::Item
-        .belonging_to(user_group)
-        .where(interval: interval)
-    end
-
     def excluded_category_ids
-      scope = user_group.budget_categories.weekly
-      scope = scope.or(user_group.budget_categories.where.not(key: excluded_keys)) if excluded_keys.any?
+      scope = user_group.budget_categories
 
       scope
-        .joins(:items)
-        .merge(items_scope)
+        .where(id: interval.items.weekly.pluck(:budget_category_id))
+        .or(scope.where(key: excluded_keys))
         .pluck(:id)
     end
 
@@ -71,13 +65,8 @@ module Budget
     def initial_scope
       user_group
         .budget_categories
-        .then do |init_scope|
-          if excluded_category_ids.any?
-            init_scope.where.not(id: excluded_category_ids)
-          else
-            init_scope
-          end
-        end
+        .where
+        .not(id: excluded_category_ids)
     end
 
     def category_scope

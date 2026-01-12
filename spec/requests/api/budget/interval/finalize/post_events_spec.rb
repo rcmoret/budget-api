@@ -23,7 +23,7 @@ RSpec.describe "POST /api/budget/interval/finalize/(:month)/(:year)" do
             {
               amount: amount,
               budget_category_key: category.key,
-              budget_item_key: SecureRandom.hex(6),
+              budget_item_key: KeyGenerator.call,
               event_type: Budget::EventTypes::CREATE_EVENTS.sample,
               month: interval.month,
               year: interval.year,

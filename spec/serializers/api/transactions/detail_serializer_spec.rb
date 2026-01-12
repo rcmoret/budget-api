@@ -16,7 +16,7 @@ RSpec.describe API::Transactions::DetailSerializer do
   let(:budget_item) do
     create(:budget_item, category: category, interval: interval)
   end
-  let(:detail_key) { SecureRandom.hex(6) }
+  let(:detail_key) { KeyGenerator.call }
   let(:amount) { rand(-100..200) }
   let(:transaction_entry) do
     create(

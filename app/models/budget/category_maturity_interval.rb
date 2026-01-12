@@ -17,6 +17,10 @@ module Budget
 
     accepts_nested_attributes_for :interval, reject_if: proc { true }
 
+    def date_hash
+      { month: month, year: year }
+    end
+
     private
 
     def category_accrual?

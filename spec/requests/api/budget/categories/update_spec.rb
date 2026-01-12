@@ -72,7 +72,7 @@ RSpec.describe "PUT /api/budget/category/:category_key" do
 
   context "when passing an invalid token" do
     let(:params) { {} }
-    let(:category_key) { SecureRandom.hex(6) }
+    let(:category_key) { KeyGenerator.call }
 
     it_behaves_like "a token authenticated endpoint"
   end

@@ -71,13 +71,13 @@ User::Group.find_by!(name: "Initial User Group").then do |group|
       key: budget_attrs[:key],
     }.compact)
     Transaction::Entry.create!(
-      key: SecureRandom.hex(6),
+      key: KeyGenerator.call,
       account: checking_account,
       clearance_date: today,
       description: budget_attrs[:description],
       details_attributes: [
         {
-          key: SecureRandom.hex(6),
+          key: KeyGenerator.call,
           budget_item: item,
           amount: budget_attrs[:amount],
         },
@@ -87,18 +87,18 @@ User::Group.find_by!(name: "Initial User Group").then do |group|
   category = Budget::Category.belonging_to(group).by_slug!("groceries")
   item = Budget::Item.find_by!(category: category, interval: interval)
   Transaction::Entry.create!(
-    key: SecureRandom.hex(6),
+    key: KeyGenerator.call,
     account: checking_account,
     clearance_date: today,
     description: "Costco",
     details_attributes: [
       {
-        key: SecureRandom.hex(6),
+        key: KeyGenerator.call,
         budget_item: item,
         amount: -22_00,
       },
       {
-        key: SecureRandom.hex(6),
+        key: KeyGenerator.call,
         amount: -10_44,
       },
     ]

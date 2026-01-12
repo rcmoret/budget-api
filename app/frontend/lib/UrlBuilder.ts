@@ -57,12 +57,29 @@ type BudgetItemEventsProps = {
   anchor?: string;
 }
 
-type BudgetSetUpProps = {
+type BudgetSetupProps = {
   name: "BudgetSetUp";
   month: number | string;
   year: number | string;
   queryParams?: string;
   anchor?: string;
+}
+
+type BudgetSetupPutProps = {
+  name: "BudgetSetupPut";
+  month: number | string;
+  year: number | string;
+  categorySlug: string;
+  queryParams?: string;
+}
+
+type BudgetSetupRemoveEventProps = {
+  name: "BudgetSetupRemoveEvent";
+  month: number | string;
+  year: number | string;
+  categorySlug: string;
+  key: string;
+  queryParams?: string;
 }
 
 type BudgetShowProps = {
@@ -126,7 +143,9 @@ type UrlBuilderProps =
   | BudgetFinalizePostProps
   | BudgetItemDetailsProps
   | BudgetItemEventsProps
-  | BudgetSetUpProps
+  | BudgetSetupProps
+  | BudgetSetupPutProps
+  | BudgetSetupRemoveEventProps
   | BudgetShowProps
   | CategoryCreateEventsProps
   | CategoryIndexProps
@@ -171,6 +190,10 @@ const UrlBuilder = (props: UrlBuilderProps) => {
       return build(`/budget/events/${props.month}/${props.year}`);
     case "BudgetSetUp":
       return build(`/budget/${props.month}/${props.year}/set-up`);
+    case "BudgetSetupPut":
+      return build(`/budget/${props.month}/${props.year}/set-up/${props.categorySlug}`);
+    case "BudgetSetupRemoveEvent":
+      return build(`/budget/${props.month}/${props.year}/set-up/${props.categorySlug}/${props.key}`);
     case "BudgetShow":
       return build(`/budget/${props.month}/${props.year}`);
     case "CategoryCreateEvents":

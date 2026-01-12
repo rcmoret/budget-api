@@ -15,9 +15,10 @@ module API
                      :slug,
                      :default_amount,
                      :icon_class_name
-          attribute :is_accrual, alias_of: :accrual?
-          attribute :is_expense, alias_of: :expense?
-          attribute :is_monthly, aliase_of: :monthly?
+          attribute :is_accrual, &:accrual?
+          attribute :is_expense, &:expense?
+          attribute :is_monthly, &:monthly?
+          # still need to add upcoming...
           attribute :upcoming_maturity_intervals, conditional: :accrual?, on_render: :render
           attribute :events, on_render: :render
 

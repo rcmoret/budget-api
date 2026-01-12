@@ -14,6 +14,7 @@ type TExtraCreateEvent = {
 
 type TExtraCategoryCreateEvent = {
   name: string;
+  slug: string;
   events: Array<TExtraCreateEvent>
 }
 

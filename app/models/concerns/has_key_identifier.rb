@@ -3,12 +3,6 @@
 module HasKeyIdentifier
   extend ActiveSupport::Concern
 
-  module KeyGenerator
-    def self.call
-      SecureRandom.hex(6)
-    end
-  end
-
   included do
     validates :key, uniqueness: true, presence: true, length: { is: 12 }
     validate :key_unchanged!

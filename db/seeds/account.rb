@@ -6,15 +6,15 @@ User::Group.find_by!(name: "Initial User Group").then do |group|
     priority: 100,
   )
 
-  regular_account.update!(key: SecureRandom.hex(6)) if regular_account.new_record?
+  regular_account.update!(key: KeyGenerator.call) if regular_account.new_record?
 
   if regular_account.transactions.none?
     regular_account.transactions.create!(
       clearance_date: 40.days.ago,
       description: "Initial Balance",
-      key: SecureRandom.hex(6),
+      key: KeyGenerator.call,
       details_attributes: [
-        { amount: 1_400_00, key: SecureRandom.hex(6) },
+        { amount: 1_400_00, key: KeyGenerator.call },
       ]
     )
   end
@@ -26,16 +26,16 @@ User::Group.find_by!(name: "Initial User Group").then do |group|
     priority: 200,
   )
 
-  savings_account.update!(key: SecureRandom.hex(6)) if savings_account.new_record?
+  savings_account.update!(key: KeyGenerator.call) if savings_account.new_record?
 
   if savings_account.transactions.none?
     savings_account.transactions.create!(
       clearance_date: 45.days.ago,
       description: "Initial Balance",
-      key: SecureRandom.hex(6),
+      key: KeyGenerator.call,
       budget_exclusion: true,
       details_attributes: [
-        { amount: 2_800_00, key: SecureRandom.hex(6) },
+        { amount: 2_800_00, key: KeyGenerator.call },
       ]
     )
   end
@@ -47,5 +47,5 @@ User::Group.find_by!(name: "Initial User Group").then do |group|
     priority: 300,
   )
 
-  archived_account.update!(key: SecureRandom.hex(6), archived_at: 1.day.ago) if archived_account.new_record?
+  archived_account.update!(key: KeyGenerator.call, archived_at: 1.day.ago) if archived_account.new_record?
 end

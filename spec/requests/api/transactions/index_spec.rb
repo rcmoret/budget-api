@@ -131,7 +131,7 @@ RSpec.describe "GET /api/accounts/:account_key/transactions/:month/:year" do
   context "when the account is not found" do
     subject { get(api_account_transactions_path(account_key, month, year), headers: headers) }
 
-    let(:account_key) { SecureRandom.hex(6) }
+    let(:account_key) { KeyGenerator.call }
 
     include_context "with valid token"
     include_examples "endpoint requires account"
@@ -142,7 +142,7 @@ RSpec.describe "GET /api/accounts/:account_key/transactions/:month/:year" do
 
     include_context "with valid token"
     include_context "with an account belonging to a different user group"
-    let(:account_key) { SecureRandom.hex(6) }
+    let(:account_key) { KeyGenerator.call }
 
     include_examples "endpoint requires account"
   end
@@ -157,7 +157,7 @@ RSpec.describe "GET /api/accounts/:account_key/transactions/:month/:year" do
   describe "token authentication" do
     subject { get(api_account_transactions_path(account_key, month, year), headers: headers) }
 
-    let(:account_key) { SecureRandom.hex(6) }
+    let(:account_key) { KeyGenerator.call }
     let(:month) { rand(1..12) }
     let(:year) { rand(2020..2039) }
 

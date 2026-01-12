@@ -84,7 +84,7 @@ RSpec.describe "DELETE /api/budget/category/:category_key/maturity_interals/:mon
   context "when passing invalid month / year params" do
     include_context "with valid token"
     let(:optional_path_args) { [month, year] }
-    let(:category_key) { SecureRandom.hex(6) }
+    let(:category_key) { KeyGenerator.call }
 
     before do
       allow(Budget::Category).to receive(:fetch).and_return(instance_double(Budget::Category))
@@ -94,7 +94,7 @@ RSpec.describe "DELETE /api/budget/category/:category_key/maturity_interals/:mon
   end
 
   context "when passing an invalid token" do
-    let(:category_key) { SecureRandom.hex(6) }
+    let(:category_key) { KeyGenerator.call }
 
     it_behaves_like "a token authenticated endpoint"
   end

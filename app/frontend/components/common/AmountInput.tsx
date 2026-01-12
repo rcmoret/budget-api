@@ -1,6 +1,18 @@
 import { decimalToInt, moneyFormatter } from "@/lib/MoneyFormatter";
 import { forwardRef } from "react";
 
+const warningOutlineClasses = {
+  outlineColor: "outline-red-300",
+  outline: "outline",
+  classes: ["p-1", "w-full", "outline-2", "focus:outline-red-300", "focus-visible:outline-red-300", "focus-visible:outline-1", "focus:outline-1"]
+}
+
+const defaultOutlineClasses = {
+  outlineColor: "outline-gray-400",
+  outline: "outline",
+  classes: ["p-1", "w-full", "outline-1", "focus:outline-chartreuse-300", "focus:outline-2", "focus-visible:outline-chartreuse-300", "focus-visible:outline-2"]
+}
+
 const handleInputIncrement = (event: React.KeyboardEvent<HTMLInputElement>) => {
   const target = event.target as HTMLInputElement;
   if (!target.classList.contains("numericInput")) { return null }
@@ -29,7 +41,8 @@ type AmountInputProps = {
   style?: {
     height?: string;
     width?: string;
-  }
+  };
+  tabindex?: number;
   textAlign?: "left" | "right";
 }
 
@@ -76,6 +89,7 @@ const AmountInput = forwardRef<HTMLInputElement, AmountInputProps>((props, ref) 
       ref={ref}
       name={name}
       step="1.0"
+      tabIndex={props.tabindex}
       onChange={onChange}
       onKeyDown={handleKeyDown}
       value={amount.display}
@@ -120,4 +134,9 @@ const inputAmount = (props: InputAmountProps): TInputAmountReturn => {
   }
 }
 
-export { AmountInput, inputAmount }
+export {
+  AmountInput,
+  defaultOutlineClasses,
+  inputAmount,
+  warningOutlineClasses
+}

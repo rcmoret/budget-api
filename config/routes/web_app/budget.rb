@@ -19,8 +19,24 @@ namespace :budget do
     put "/", to: "update#call"
     post "/", to: "edit#call"
     get "/edit", to: "edit#call"
-    get "/set-up", to: "set_up/form#call", as: :set_up_form
-    post "/set-up", to: "set_up/create#call"
+
+
+    scope "/set-up" do
+      get "(/:slug)",
+          to: WebApp::Budget::Setup::CategoryFormController.action(:call),
+          as: :setup_form
+      post "/",
+        to: WebApp::Budget::Setup::CreateEventsController.action(:call)
+      post "/:slug/new-event",
+           to: WebApp::Budget::Setup::AddEventController.action(:call)
+      put "/:slug",
+          to: WebApp::Budget::Setup::UpdateEventController.action(:call)
+      delete "/:slug/:key",
+             to: WebApp::Budget::Setup::RemoveEventController.action(:call)
+      # reset
+      delete "/",
+        to: WebApp::Budget::Setup::CategoryFormResetController.action(:call)
+    end
     get "/finalize", to: "finalize/form#call", as: :finalize_form
     post "/finalize", to: "finalize/create_events#call"
   end

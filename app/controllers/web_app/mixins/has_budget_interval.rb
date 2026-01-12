@@ -20,11 +20,11 @@ module WebApp
       end
 
       def month
-        params[:month]
+        params.permit(:month)[:month]
       end
 
       def year
-        params[:year]
+        params.permit(:year)[:year]
       end
 
       def redirect_if_blank!

@@ -5,15 +5,16 @@ module Forms
         include ActiveModel::Model
         include ::Budget::EventTypes
 
-        def initialize(current_user, params)
+        def initialize(current_user, change_set, params)
           @current_user = current_user
           @event_type = params[:event_type]
           @budget_item_key = params[:budget_item_key]
           @data = params[:data]
-          @key = params.fetch(:key) { SecureRandom.hex(6) }
+          @key = params.fetch(:key) { KeyGenerator.call }
+          @change_set = change_set
         end
 
-        attr_reader :key
+        attr_reader :key, :change_set
 
         private
 
@@ -23,6 +24,7 @@ module Forms
             item: budget_item,
             type: budget_item_event_type,
             data: data,
+            change_set: change_set,
             key: key,
             amount: event_amount,
           )

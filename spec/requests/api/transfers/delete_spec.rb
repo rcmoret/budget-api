@@ -8,7 +8,7 @@ RSpec.describe "DELETE /api/accounts/transfer/:key/(:month)/(:year)" do
   context "when deleting a transfer" do
     include_context "with valid token"
 
-    let(:transfer_key) { SecureRandom.hex(6) }
+    let(:transfer_key) { KeyGenerator.call }
 
     let!(:transfer) { create_transfer_for(user, key: transfer_key) }
 
@@ -30,7 +30,7 @@ RSpec.describe "DELETE /api/accounts/transfer/:key/(:month)/(:year)" do
   context "when the transfer is not found" do
     include_context "with valid token"
 
-    let(:transfer_key) { SecureRandom.hex(6) }
+    let(:transfer_key) { KeyGenerator.call }
 
     it "returns a not found status" do
       subject
@@ -39,7 +39,7 @@ RSpec.describe "DELETE /api/accounts/transfer/:key/(:month)/(:year)" do
   end
 
   describe "token authentication" do
-    let(:transfer_key) { SecureRandom.hex(6) }
+    let(:transfer_key) { KeyGenerator.call }
     let(:month) { rand(1..12) }
     let(:year) { rand(2020..2039) }
     let(:params) { {} }
@@ -61,7 +61,7 @@ RSpec.describe "DELETE /api/accounts/transfer/:key/(:month)/(:year)" do
 
     {
       amount: options.fetch(:amount) { rand(100_00) },
-      key: options.fetch(:key) { SecureRandom.hex(6) },
+      key: options.fetch(:key) { KeyGenerator.call },
       from_account_key: from_account.key,
       to_account_key: to_account.key,
     }

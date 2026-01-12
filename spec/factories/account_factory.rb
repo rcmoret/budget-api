@@ -4,7 +4,7 @@ FactoryBot.define do
     sequence(:name) { |n| "#{n.ordinalize} City Bank" }
     sequence(:slug) { |n| "slug-#{n.ordinalize}" }
     sequence :priority
-    key { SecureRandom.hex(6) }
+    key { KeyGenerator.call }
 
     trait :cash_flow do
       cash_flow { true }

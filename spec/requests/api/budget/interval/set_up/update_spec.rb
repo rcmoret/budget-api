@@ -18,8 +18,8 @@ RSpec.describe "PUT /api/budget/intervals/set_up/:month/:year" do
     let(:category) { create(:category, :expense, user_group: user.group) }
     let(:amount) { rand(-100_00..-100) }
     let(:event_type) { "setup_item_create" }
-    let(:event_key) { SecureRandom.hex(6) }
-    let(:item_key) { SecureRandom.hex(6) }
+    let(:event_key) { KeyGenerator.call }
+    let(:item_key) { KeyGenerator.call }
     let(:params) { { interval: event_params } }
     let(:event_params) do
       {

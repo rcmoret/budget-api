@@ -6,6 +6,6 @@ filter_params = %i[
 ]
 
 # Only filter _key parameters in non-development environments
-filter_params << :_key unless Rails.env.development?
+filter_params << :_key unless Rails.env.development? || Rails.env.test?
 
 Rails.application.config.filter_parameters += filter_params

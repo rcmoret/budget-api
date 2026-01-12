@@ -10,6 +10,7 @@ import { AmountSpan } from "@/components/common/AmountSpan";
 import { FinalizeFormCategory, FinalizeCategoryEvent } from "@/lib/hooks/useFinalizeEventsForm";
 import { ExtraEventsSelect } from "../extra_events_select";
 import { FinalizeSubmitButton as SubmitButton } from "../submit_button";
+import { CircleNavButtons } from "@/components/common/NavCircles";
 
 const Circle = (props: { direction: "left" | "right"; children: React.ReactNode }) => {
   const scaleVal = props.direction === "left" ? "-1" : "1"
@@ -106,22 +107,10 @@ const CategoryShow = (props: { category: FinalizeFormCategory; }) => {
           _key={category.key}
           id={`category-${category.slug}`}
         />
-        <div className="w-full flex flex-row justify-between px-4">
-          <div>
-            <button type="button" onClick={setPrevReviewingCategoryKey}>
-              <Circle direction="left">
-                &#10142;
-              </Circle>
-            </button>
-          </div>
-          <div>
-            <button type="button" onClick={setNextReviewingCategoryKey}>
-              <Circle direction="right">
-                &#10142;
-              </Circle>
-            </button>
-          </div>
-        </div>
+        <CircleNavButtons
+          leftButtonHandler={setPrevReviewingCategoryKey}
+          rightButtonHandler={setNextReviewingCategoryKey}
+        />
         <div className="text-lg">
           {category.name}
           {category.isAccrual && <div className="text-sm text-gray-700">{" "}(accrual)</div>}

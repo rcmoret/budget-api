@@ -74,7 +74,7 @@ RSpec.describe User::EventForm do
             )
           end
 
-          let(:data) { { key: SecureRandom.hex(6), time: Time.current } }
+          let(:data) { { key: KeyGenerator.call, time: Time.current } }
           let(:transient_data) { { password: SecureRandom.hex(10) } }
 
           it "creates an event with the data and transient data but where the values are filtered" do
@@ -128,7 +128,7 @@ RSpec.describe User::EventForm do
 
           let(:event_type) { User::EventType.for(event_type_name) }
           let(:event_type_name) { :user_update_requested }
-          let(:data) { { key: SecureRandom.hex(6), time: Time.current } }
+          let(:data) { { key: KeyGenerator.call, time: Time.current } }
           let(:transient_data) { { password: SecureRandom.hex(10) } }
 
           it "creates an event with the data and transient data but where the values are filtered" do

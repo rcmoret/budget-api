@@ -5,7 +5,7 @@ RSpec.shared_examples "endpoint requires transaction entry" do
   let(:year) { interval.year }
   let(:account) { create(:account, user_group: user.group) }
   let(:account_key) { account.key }
-  let(:transaction_key) { SecureRandom.hex(6) }
+  let(:transaction_key) { KeyGenerator.call }
 
   it "returns a non found status" do
     subject

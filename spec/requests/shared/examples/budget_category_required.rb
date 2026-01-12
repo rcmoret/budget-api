@@ -1,7 +1,7 @@
 RSpec.shared_examples "endpoint requires budget category" do
   let(:user) { create(:user) }
   let(:category) { create(:category, user_group: user.group) }
-  let(:category_key) { SecureRandom.hex(6) }
+  let(:category_key) { KeyGenerator.call }
 
   it "response with a 404, budget category not found" do
     subject

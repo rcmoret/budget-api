@@ -4,6 +4,6 @@ FactoryBot.define do
     target_user { actor }
     user_event_type { User::EventType.for(Faker::Lorem.words(number: 3).join("_")) }
     data { {} }
-    key { SecureRandom.hex(6) }
+    key { KeyGenerator.call }
   end
 end

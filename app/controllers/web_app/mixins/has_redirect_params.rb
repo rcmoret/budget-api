@@ -41,8 +41,10 @@ module WebApp
 
       def resolve_budget_path(month, year, *args)
         case args
-        in ["set-up", *]
-          budget_set_up_form_path(month, year)
+        in ["set-up", slug]
+          budget_setup_form_path(month, year, slug)
+        in ["set-up"]
+          budget_setup_form_path(month, year)
         in []
           budget_index_path(month, year)
         end

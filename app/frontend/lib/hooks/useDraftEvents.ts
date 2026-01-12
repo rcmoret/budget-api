@@ -167,7 +167,6 @@ const useDraftEvents = (props: HookProps) => {
     if (!item) { return change }
 
     if (!!adjustment) {
-      console.log(item.amount + inputAmount({ display: adjustment }).cents)
       return {
         ...change,
         amount: inputAmount({ display: adjustment }),

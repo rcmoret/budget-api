@@ -86,6 +86,10 @@ export type BudgetCategory = {
   isExpense: boolean;
   isMonthly: boolean;
   isPerDiemEnabled: boolean;
+  upcomingMaturityIntervals?: Array<{
+    month: number;
+    year: number;
+  }>
   maturityIntervals?: Array<{
     month: number;
     year: number;

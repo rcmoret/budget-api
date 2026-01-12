@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_11_10_141019) do
+ActiveRecord::Schema[7.0].define(version: 2026_01_04_220326) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -95,6 +95,19 @@ ActiveRecord::Schema[7.0].define(version: 2025_11_10_141019) do
     t.index ["budget_category_id", "budget_interval_id"], name: "index_category_interval_uniqueness", unique: true
   end
 
+  create_table "budget_change_sets", force: :cascade do |t|
+    t.bigint "budget_interval_id"
+    t.integer "type_key", null: false
+    t.string "key", limit: 12, null: false
+    t.datetime "effective_at", precision: nil
+    t.json "events_data", default: {}
+    t.virtual "type", type: :string, as: "\nCASE\n    WHEN (type_key = 10) THEN 'Budget::Changes::Adjust'::text\n    WHEN (type_key = '-10'::integer) THEN 'Budget::Changes::PreSetup'::text\n    WHEN (type_key = 20) THEN 'Budget::Changes::Rollover'::text\n    WHEN (type_key = 0) THEN 'Budget::Changes::Setup'::text\n    ELSE 'Undetermined'::text\nEND", stored: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["budget_interval_id"], name: "index_budget_change_sets_on_budget_interval_id"
+    t.index ["key"], name: "index_budget_change_sets_on_key", unique: true
+  end
+
   create_table "budget_intervals", force: :cascade do |t|
     t.integer "month", null: false
     t.integer "year", null: false
@@ -126,6 +139,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_11_10_141019) do
     t.datetime "updated_at", null: false
     t.string "key", limit: 12
     t.integer "user_id", null: false
+    t.bigint "budget_change_set_id"
+    t.index ["budget_change_set_id"], name: "index_budget_item_events_on_budget_change_set_id"
     t.index ["budget_item_event_type_id"], name: "index_budget_item_events_on_budget_item_event_type_id"
     t.index ["budget_item_id"], name: "index_budget_item_events_on_budget_item_id"
     t.index ["key"], name: "index_budget_item_events_on_key", unique: true
@@ -263,6 +278,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_11_10_141019) do
   add_foreign_key "budget_category_maturity_intervals", "budget_categories"
   add_foreign_key "budget_category_maturity_intervals", "budget_intervals"
   add_foreign_key "budget_intervals", "user_groups"
+  add_foreign_key "budget_item_events", "budget_change_sets"
   add_foreign_key "budget_item_events", "budget_item_event_types"
   add_foreign_key "budget_item_events", "budget_items"
   add_foreign_key "budget_item_events", "user_profiles", column: "user_id"

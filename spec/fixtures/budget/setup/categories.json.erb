@@ -1,0 +1,44 @@
+{
+  "categories": [
+    <% options[:categories].map do |category_pair| %>
+      <% category = category_pair.category %>
+      <% events = Array.wrap(category_pair.events) %>
+      {
+        "key": "<%= category.key %>",
+        "name": "<%= category.name %>",
+        "slug": "<%= category.slug %>",
+        "default_amount": <%= category.default_amount.to_i %>,
+        "icon_class_name": "<%= category.icon_class_name %>",
+        "icon_key": "<%= category.icon_key %>",
+        "is_accrual": <%= category.accrual? %>,
+        "is_expense": <%= category.expense? %>,
+        "is_monthly": <%= category.monthly? %>,
+        "is_per_diem_enabled": <%= category.per_diem_enabled? %>,
+        "archived_at": null,
+        <% default_flags = {
+          eq_prev_budgeted: false,
+          eq_prev_spent: true,
+          show_default_suggestion: false,
+          unreviewed: true,
+          is_valid: true
+        } %>
+        "events":
+          <%= events.map do |event_data|
+            {
+              amount: event_data.fetch(:amount),
+              flags: default_flags,
+              budget_item_key: event_data.fetch(:key),
+              event_type: event_data.fetch(:event_type, "setup_item_create"),
+              previously_budgeted: event_data.fetch(:previously_budgeted, 0),
+              spent: event_data.fetch(:spent, 0),
+              updated_amount: event_data.fetch(:spent, 0) + event_data.dig(:adjustment, :cents).to_i,
+              adjustment: {
+                display: (event_data.dig(:adjustment, :cents).to_i / 100.0).round(2).to_s,
+                cents: event_data.dig(:adjustment, :cents).to_i
+              }
+            }
+          end.to_json %>
+      }
+    <% end.join(", ") %>
+  ]
+}

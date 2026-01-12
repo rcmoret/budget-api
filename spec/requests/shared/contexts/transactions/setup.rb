@@ -8,11 +8,11 @@ RSpec.shared_context "when the user posts transaction with a single detail" do
       "transaction" => {
         "description" => "Publix",
         "clearance_date" => nil,
-        "key" => SecureRandom.hex(6),
+        "key" => KeyGenerator.call,
         "is_budget_exclusion" => budget_exclusion,
         "details_attributes" => [
           {
-            "key" => SecureRandom.hex(6),
+            "key" => KeyGenerator.call,
             "budget_item_key" => budget_item&.key,
             "amount" => amount,
           },
@@ -30,11 +30,11 @@ RSpec.shared_context "when the user posts transaction with a single detail and a
       "transaction" => {
         "description" => "Publix",
         "clearance_date" => clearance_date,
-        "key" => SecureRandom.hex(6),
+        "key" => KeyGenerator.call,
         "is_budget_exclusion" => budget_exclusion,
         "details_attributes" => [
           {
-            "key" => SecureRandom.hex(6),
+            "key" => KeyGenerator.call,
             "budget_item_key" => budget_item&.key,
             "amount" => amount,
           },
@@ -55,15 +55,15 @@ RSpec.shared_context "when user posts transaction with multiple details" do
       "transaction" => {
         "description" => "Publix",
         "clearance_date" => nil,
-        "key" => SecureRandom.hex(6),
+        "key" => KeyGenerator.call,
         "details_attributes" => [
           {
-            "key" => SecureRandom.hex(6),
+            "key" => KeyGenerator.call,
             "budget_item_key" => budget_item.key,
             "amount" => first_amount,
           },
           {
-            "key" => SecureRandom.hex(6),
+            "key" => KeyGenerator.call,
             "amount" => second_amount,
           },
         ],
@@ -81,7 +81,7 @@ RSpec.shared_context "when user posts transaction with no details" do
       "transaction" => {
         "description" => "Publix",
         "clearance_date" => nil,
-        "key" => SecureRandom.hex(6),
+        "key" => KeyGenerator.call,
         "details_attributes" => {},
       },
     }

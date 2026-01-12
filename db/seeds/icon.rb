@@ -335,6 +335,6 @@ ICONS = [
 
 ICONS.each do |icon_attributes|
   Icon.find_or_initialize_by(icon_attributes).then do |icon|
-    icon.update(key: SecureRandom.hex(6)) if icon.new_record?
+    icon.update(key: KeyGenerator.call) if icon.new_record?
   end
 end
