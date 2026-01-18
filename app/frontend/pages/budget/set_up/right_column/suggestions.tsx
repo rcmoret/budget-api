@@ -224,9 +224,9 @@ const DefaultAmountForm = (props: { toggleEditForm: () => void; }) => {
             styling={{}}
             isEnabled={!processing}
           >
-          <div className="p-1 text-lg text-green-400 rounded">
-            <Icon name="check-circle" />
-          </div>
+            <div className="p-1 text-lg text-green-400 rounded">
+              <Icon name="check-circle" />
+            </div>
           </SubmitButton>
         </div>
         <div>
@@ -243,11 +243,20 @@ const DefaultAmountForm = (props: { toggleEditForm: () => void; }) => {
 
 const Suggestions = () => {
   const { event, selectedSuggestion } = useSetupEventContext()
+  const { category } = useSetUpCategoryShowContext()
   const { flags, eventType } = event
 
+
   if (eventType === "setup_item_create") {
+    const className = [
+      "w-72",
+      "flex",
+      category.isAccrual ? "flex-col-reverse" : "flex-col",
+      "gap-2",
+    ].join(" ")
+
     return (
-      <div className="flex flex-col gap-2 w-72">
+      <div className={className}>
         <BudgetedSuggestion />
         {!flags.eqPrevSpent && <SpentSuggestion />}
         {flags.showDefaultSuggestion && <DefaultSuggestion />}

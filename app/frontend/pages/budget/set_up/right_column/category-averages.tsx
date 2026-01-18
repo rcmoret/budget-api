@@ -3,12 +3,20 @@ import { useState } from "react";
 import { AmountSpan } from "@/components/common/AmountSpan";
 import { UrlBuilder } from "@/lib/UrlBuilder";
 import { useSetUpCategoryShowContext } from "@/pages/budget/set_up/categories";
+import { useSetupEventsFormContext } from "@/lib/hooks/useSetUpEventsForm";
+import { MonthlyDataChart } from "./category-chart";
 
 type TBudgetCategorySummary = {
   id: number;
   budgetedAverage: number;
   transactionsTotalAverage: number;
   limit: number;
+  data: Array<{
+    month: number;
+    year: number;
+    budgeted: number;
+    transactionsTotal: number;
+  }>
 }
 
 
@@ -38,6 +46,7 @@ const SummaryLine = (props: { label: string; children: React.ReactNode }) => {
 }
 
 const CategoryAverages = () => {
+  const { metadata: { previousYear: year, previousMonth: month } } = useSetupEventsFormContext()
   const { category } = useSetUpCategoryShowContext()
 
   const [summaryData, setSummaryData] = useState<Record<string, TBudgetCategorySummary> | null>(null);
@@ -49,8 +58,13 @@ const CategoryAverages = () => {
     })
   }
 
-  const getSummaryData = async () => {
-    const summaryUrl = UrlBuilder({ name: "CategorySummary", key: category.key })
+  const getSummaryData = async (props?: { limit: number }) => {
+    const summaryUrl = UrlBuilder({
+      name: "CategorySummary",
+      key: category.key,
+      limit: props?.limit,
+      queryParams: `before[month]=${month}&before[year]=${year}`
+    })
 
     axios.get(summaryUrl)
       .then(response => {
@@ -62,20 +76,31 @@ const CategoryAverages = () => {
       })
   }
 
+  const spentOrDeposited = category.isExpense ? "Spent" : "Deposited"
   const currentSummary = summaryData?.[category.key];
 
   if (currentSummary) {
+    const onChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
+      getSummaryData({ limit: Number(ev.target.value) })
+    }
+
     return (
       <div className="w-72 py-4 px-2 bg-blue-60 rounded-lg flex flex-col gap-1">
         <SummaryLine label="Average Budgeted">
           <AmountSpan amount={currentSummary.budgetedAverage} />
         </SummaryLine>
-        <SummaryLine label="Average Total">
+        <SummaryLine label={`Average ${spentOrDeposited}`}>
           <AmountSpan amount={currentSummary.transactionsTotalAverage} />
         </SummaryLine>
-        <SummaryLine label="Over">
-          {currentSummary.limit} months
+        <SummaryLine label="(months)">
+          <input
+            className="text-right"
+            type="number"
+            value={currentSummary.limit}
+            onChange={onChange}
+          />
         </SummaryLine>
+        <MonthlyDataChart data={currentSummary.data} />
       </div>
     )
   } else {
