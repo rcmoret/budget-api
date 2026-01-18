@@ -3,6 +3,7 @@ import { useState } from "react";
 import { AmountSpan } from "@/components/common/AmountSpan";
 import { UrlBuilder } from "@/lib/UrlBuilder";
 import { useSetUpCategoryShowContext } from "@/pages/budget/set_up/categories";
+import { useSetupEventsFormContext } from "@/lib/hooks/useSetUpEventsForm";
 
 type TBudgetCategorySummary = {
   id: number;
@@ -38,6 +39,7 @@ const SummaryLine = (props: { label: string; children: React.ReactNode }) => {
 }
 
 const CategoryAverages = () => {
+  const { metadata: { previousYear: year, previousMonth: month } } = useSetupEventsFormContext()
   const { category } = useSetUpCategoryShowContext()
 
   const [summaryData, setSummaryData] = useState<Record<string, TBudgetCategorySummary> | null>(null);
@@ -50,7 +52,11 @@ const CategoryAverages = () => {
   }
 
   const getSummaryData = async () => {
-    const summaryUrl = UrlBuilder({ name: "CategorySummary", key: category.key })
+    const summaryUrl = UrlBuilder({
+      name: "CategorySummary",
+      key: category.key,
+      queryParams: `before[month]=${month}&before[year]=${year}`
+    })
 
     axios.get(summaryUrl)
       .then(response => {

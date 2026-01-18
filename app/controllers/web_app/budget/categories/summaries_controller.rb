@@ -15,9 +15,9 @@ module WebApp
           {
             category: {
               id: category.id,
-              budgeted_average: summaries.average(:budgeted),
-              transactions_total_average: summaries.average(:transactions_total),
-              limit: limit,
+              budgeted_average: budgeted_average,
+              transactions_total_average: transactions_total_average,
+              limit: count,
             },
           }
         end
@@ -25,11 +25,21 @@ module WebApp
         private
 
         def summaries
-          @summaries ||= category.summaries.most_recent(limit)
+          @summaries ||= summaries_scope.most_recent(limit)
         end
 
         def limit
-          params.fetch(:limit, 3)
+          permitted_params.fetch(:limit, 3)
+        end
+
+        def summaries_scope
+          category
+            .summaries
+            .then do |scope|
+              scope = scope.before(**before_params.to_h.symbolize_keys) unless before_params.empty?
+
+              scope.most_recent(limit)
+            end
         end
 
         def category
@@ -38,6 +48,31 @@ module WebApp
               current_user_profile,
               key: params.fetch(:key)
             )
+        end
+
+        def transactions_total_average
+          return 0 if count.zero?
+
+          summaries.sum(&:transactions_total) / summaries.count
+        end
+
+        def budgeted_average
+          return 0 if count.zero?
+
+          summaries.sum(&:budgeted) / summaries.count
+        end
+
+        def count
+          @count ||= summaries.count
+        end
+
+        def permitted_params
+          params
+            .permit(:limit, :key, before: %i[month year])
+        end
+
+        def before_params
+          permitted_params.fetch(:before, {})
         end
       end
     end

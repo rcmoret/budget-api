@@ -20,6 +20,8 @@ module Budget
                        :previous_category_slug,
                        :month,
                        :year
+            attribute(:previous_month) { |object| object.base_interval.month }
+            attribute(:previous_year) { |object| object.base_interval.year }
 
             transform_keys :lower_camel
           end

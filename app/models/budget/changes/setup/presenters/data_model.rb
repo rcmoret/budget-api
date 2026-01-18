@@ -115,7 +115,8 @@ module Budget
             :selected_category,
             :next_category_slug,
             :previous_category_slug,
-            :is_submittable
+            :is_submittable,
+            :base_interval
           )
 
           def index_serializer
@@ -129,7 +130,8 @@ module Budget
               selected_category: selected_category_data,
               next_category_slug: next_category_slug,
               previous_category_slug: previous_category_slug,
-              is_submittable: categories.all?(&:reviewed?)
+              is_submittable: categories.all?(&:reviewed?),
+              base_interval: change.interval.prev
             )
           end
 
