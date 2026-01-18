@@ -4,7 +4,7 @@ import { BudgetCategory } from "@/types/budget";
 import { createContext, useContext, useEffect, useRef } from "react";
 import { TInputAmount } from "@/components/common/AmountInput";
 import { UrlBuilder } from "@/lib/UrlBuilder";
-import { ComponentProps } from "@/pages/budget/set_up/index2";
+import { ComponentProps } from "@/pages/budget/set_up/index";
 import { useToggle } from "./useToogle";
 
 type TCategoryListItem =

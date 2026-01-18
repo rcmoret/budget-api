@@ -16,6 +16,8 @@ export type ComponentProps = {
     isSubmittable: boolean;
     nextCategorySlug: string;
     previousCategorySlug: string;
+    previousMonth: number;
+    previousYear: number;
     month: number;
     year: number;
   };

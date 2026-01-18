@@ -20,7 +20,7 @@ module WebApp
 
         def call
           render(
-            inertia: "budget/set_up/index2",
+            inertia: "budget/set_up/index",
             props: ::Budget::Changes::Setup::Resources::IndexResource.new(
               data_model
               .with(slug: category_slug || data_model.slugs.first)
