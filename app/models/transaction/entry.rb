@@ -2,6 +2,7 @@ module Transaction
   class Entry < ApplicationRecord
     include HasKeyIdentifier
     include Fetchable
+    include BelongsToUserGroup::Through[:account]
 
     belongs_to :account
     has_one :debit_transfer,
@@ -27,8 +28,6 @@ module Transaction
     alias_attribute :is_budget_exclusion, :budget_exclusion
 
     has_one_attached :receipt
-
-    scope :belonging_to, ->(user_or_group) { joins(:account).merge(Account.belonging_to(user_or_group)) }
 
     scope :cleared, -> { where.not(clearance_date: nil) }
     scope :pending, -> { where(clearance_date: nil) }

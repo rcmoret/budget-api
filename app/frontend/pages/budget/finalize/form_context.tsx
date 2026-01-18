@@ -84,8 +84,6 @@ const FinalizeFormProvider = (props: HookProps & { children: ReactNode; }) => {
 
         if (!item) { return }
 
-        console.log(item, item.amountInputRef)
-
         const attemptFocus = () => {
           if (item.amountInputRef?.current) {
             item.amountInputRef.current.focus()
@@ -106,11 +104,11 @@ const FinalizeFormProvider = (props: HookProps & { children: ReactNode; }) => {
   }, [viewingCategoryKey, groups])
 
   const setPrevReviewingCategoryKey = () => {
-    const nextKey = indexAt === 0 ?
+    const prevKey = indexAt === 0 ?
       (keyList.at(-1) ?? "") :
       (keyList[indexAt - 1])
 
-    setViewingCategoryKey(nextKey)
+    setViewingCategoryKey(prevKey)
   }
 
   const setNextReviewingCategoryKey = () => {

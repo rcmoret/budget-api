@@ -26,7 +26,7 @@ module Forms
         validates :budget_item_key, presence: true, length: { is: 12 }
         validate :new_item
 
-        def initialize(current_user, params)
+        def initialize(current_user, change_set, params)
           super
           @amount = params[:amount]
           @month = params[:month].to_i

@@ -3,11 +3,11 @@ FactoryBot.define do
     association :account
     budget_exclusion { false }
     clearance_date { (2..5).to_a.sample.days.ago }
-    key { SecureRandom.hex(6) }
+    key { KeyGenerator.call }
     details_attributes do
       [
         {
-          key: SecureRandom.hex(6),
+          key: KeyGenerator.call,
           amount: rand(-1000..1000),
           budget_item: create(:weekly_item),
         },
@@ -32,7 +32,7 @@ FactoryBot.define do
       details_attributes do
         [
           {
-            key: SecureRandom.hex(6),
+            key: KeyGenerator.call,
             amount: rand(-1000..1000),
             budget_item_id: nil,
           },

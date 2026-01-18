@@ -7,6 +7,7 @@ import { AdjustForm } from "@/pages/budget/item_components/AdjustForm";
 import { FilterComponent as BaseFilterComponent } from "@/pages/budget/filter"
 import { AccountSummary } from "@/types/account";
 import { DayToDayColumn, MonthlyColumn } from "@/pages/budget/dashboard/columns";
+import { KeyboardNav } from "@/components/layout/ApplicationListners";
 
 const FilterComponent = () => {
   const { itemFilter }  = useBudgetDashboardContext()
@@ -78,6 +79,7 @@ const BudgetComponent = (props: ComponentProps) => {
       items={items}
       form={{ ...form, items }}
     >
+      <KeyboardNav />
       <AdjustForm />
       <FilterComponent />
       <DayToDayColumn />

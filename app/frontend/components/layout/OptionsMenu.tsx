@@ -67,7 +67,7 @@ const AccountLinks = (props: { accounts: AccountSummary[] }) => {
         Visit Account:
       </Point>
       {props.accounts.sort(sortByPriority).map((account) => (
-        <div className="ml-4">
+        <div className="ml-4" key={account.key}>
           <InertiaLink href={`/accounts/${account.slug}`}>
             <Point>
               {account.name}

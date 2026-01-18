@@ -34,7 +34,6 @@ module WebApp
 
         def redirect_to_budget_index = redirect_to budget_index_path
 
-        # rubocop:disable Metrics/MethodLength
         def update_params
           params
             .require(:category)
@@ -49,7 +48,6 @@ module WebApp
               maturity_intervals: %i[month year _destroy]
             )
         end
-        # rubocop:enable Metrics/MethodLength
       end
     end
   end

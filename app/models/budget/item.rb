@@ -2,6 +2,7 @@
 
 module Budget
   class Item < ApplicationRecord
+    include BelongsToUserGroup::Through[association: :category, class_name: "Budget::Category"]
     include HasKeyIdentifier
     include Fetchable
 
@@ -34,7 +35,6 @@ module Budget
     scope :weekly, -> { joins(:category).merge(Category.weekly) }
     scope :accruals, -> { joins(:category).merge(Category.accruals) }
     scope :non_accruals, -> { joins(:category).merge(Category.non_accruals) }
-    scope :belonging_to, ->(user_or_group) { joins(:category).merge(Category.belonging_to(user_or_group)) }
 
     delegate :accrual,
              :expense?,
@@ -76,6 +76,15 @@ module Budget
 
     def decorated
       decorator_class.new(self)
+    end
+
+    def budget_category_key=(category_key)
+      self.budget_category_id =
+        if category_key.blank?
+          nil
+        else
+          Category.by_key(category_key)&.id
+        end
     end
 
     NonDeleteableError = Class.new(StandardError)

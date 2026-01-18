@@ -17,7 +17,6 @@ module API
 
         private
 
-        # rubocop:disable Metrics/MethodLength
         def result
           case transfer_form.call
           in [:ok, success_body]
@@ -37,7 +36,6 @@ module API
             end
           end
         end
-        # rubocop:enable Metrics/MethodLength
 
         def transfer_form
           @transfer_form ||= Forms::TransferForm.new(

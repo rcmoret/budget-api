@@ -212,7 +212,7 @@ RSpec.describe Forms::Budget::Events::CreateItemForm do
       month: interval.month,
       year: interval.year,
       budget_category_key: category.key,
-      budget_item_key: SecureRandom.hex(6),
+      budget_item_key: KeyGenerator.call,
       data: {},
     }.merge(overrides)
   end

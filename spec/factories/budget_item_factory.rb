@@ -3,7 +3,7 @@ FactoryBot.define do
     association :category
     association :interval, factory: :budget_interval
 
-    key { SecureRandom.hex(6) }
+    key { KeyGenerator.call }
 
     trait :expense do
       association :category, factory: %i[category expense]

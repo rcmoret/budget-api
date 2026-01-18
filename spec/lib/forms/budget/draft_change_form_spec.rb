@@ -43,8 +43,8 @@ RSpec.describe Forms::Budget::DraftChangeForm do
       allow(Budget::Category).to receive(:fetch).and_return(nil)
     end
 
-    let(:budget_category_key) { SecureRandom.hex(6) }
-    let(:budget_item_key) { SecureRandom.hex(6) }
+    let(:budget_category_key) { KeyGenerator.call }
+    let(:budget_item_key) { KeyGenerator.call }
     let(:amount) { 20_00 }
 
     it "is invalid; returns an error" do

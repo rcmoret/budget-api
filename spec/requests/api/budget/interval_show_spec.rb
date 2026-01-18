@@ -14,7 +14,7 @@ RSpec.describe "GET /api/budget/:month/:year" do
     let!(:transaction_entry) do
       create(:transaction_entry, :discretionary, clearance_date: interval.first_date, account: account)
     end
-    let(:detail_key) { SecureRandom.hex(6) }
+    let(:detail_key) { KeyGenerator.call }
     let!(:item_transaction_entry) do
       create(
         :transaction_entry,

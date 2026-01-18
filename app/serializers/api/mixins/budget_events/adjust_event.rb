@@ -21,7 +21,7 @@ module API
         def data = {}
 
         def event_key
-          @event_key ||= SecureRandom.hex(6)
+          @event_key ||= KeyGenerator.call
         end
 
         def budget_item_key = item.key

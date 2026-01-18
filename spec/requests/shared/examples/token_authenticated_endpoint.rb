@@ -11,8 +11,8 @@ RSpec.shared_examples "a token authenticated endpoint" do
     let(:token) do
       Auth::Token::JWT.encode(
         payload: {
-          user_key: SecureRandom.hex(6),
-          token_identifier: SecureRandom.hex(6),
+          user_key: KeyGenerator.call,
+          token_identifier: KeyGenerator.call,
         }
       )
     end

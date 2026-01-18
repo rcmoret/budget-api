@@ -7,11 +7,12 @@ def amount_handler(amount)
   end
 end
 
-# rubocop:disable Metrics/MethodLength
-def event_form(user, interval, amount, category_key, budget_item_key: SecureRandom.hex(6))
+def event_form(user, interval, amount, category_key, budget_item_key: KeyGenerator.call)
+  @adjustment ||= Budget::Changes::Adjust.where(interval: interval).create!(key: KeyGenerator.call, type_key: "setup")
   Forms::Budget::EventsForm.new(
     user,
     events: [{
+      adjustment: @adjustment,
       amount: amount,
       month: interval.month,
       year: interval.year,
@@ -21,8 +22,8 @@ def event_form(user, interval, amount, category_key, budget_item_key: SecureRand
     }]
   )
 end
-# rubocop:enable Metrics/MethodLength
 
+# rubocop:disable Metrics/AbcSize
 def create_budget(user, interval, description: :base)
   ITEM_AMOUNTS.each_pair do |category_slug, attributes|
     Budget::Category.by_slug(category_slug).then do |category|
@@ -30,13 +31,19 @@ def create_budget(user, interval, description: :base)
         next if item_attrs[description.to_s].nil?
 
         amount = amount_handler(item_attrs[description.to_s])
-        form = event_form(user, interval, amount, category.key,
-                          **{ budget_item_key: item_attrs["key"] }.compact)
+        form = event_form(
+          user,
+          interval,
+          amount,
+          category.key,
+          **{ budget_item_key: item_attrs["key"] }.compact
+        )
         form.save.then { |result| binding.pry if result != true }
       end
     end
   end
 end
+# rubocop:enable Metrics/AbcSize
 
 Budget::ItemEvent.create_events.find_each do |ev|
   ev.update(created_at: 1.month.ago)

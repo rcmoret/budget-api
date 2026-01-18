@@ -46,7 +46,7 @@ RSpec.describe "GET /api/budget/item/:key/details" do
     end
 
     context "when the item is not found" do
-      let(:item_key) { SecureRandom.hex(6) }
+      let(:item_key) { KeyGenerator.call }
 
       it "returns a 404, errors" do
         subject
@@ -59,7 +59,7 @@ RSpec.describe "GET /api/budget/item/:key/details" do
   end
 
   context "with an invalid token" do
-    let(:item_key) { SecureRandom.hex(6) }
+    let(:item_key) { KeyGenerator.call }
 
     it_behaves_like "a token authenticated endpoint"
   end

@@ -20,6 +20,10 @@ module HasKeyIdentifier
     def by_keys(keys)
       where(arel_table[:key].lower.in(keys.map(&:to_s).map(&:strip).map(&:downcase)))
     end
+
+    def generate_key
+      KeyGenerator.call
+    end
   end
 
   private
@@ -28,5 +32,9 @@ module HasKeyIdentifier
     return unless persisted? && key_changed?
 
     errors.add(:key, "cannot change an existing key")
+  end
+
+  def generate_key
+    self.class.generate_key
   end
 end

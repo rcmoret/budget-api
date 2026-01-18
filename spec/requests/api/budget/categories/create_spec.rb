@@ -15,7 +15,7 @@ RSpec.describe "POST /api/budget/categories" do
     let(:icon) { create(:icon) }
     let(:name) { Faker::Music::GratefulDead.song }
     let(:slug) { Faker::Lorem.word.downcase }
-    let(:key) { SecureRandom.hex(6) }
+    let(:key) { KeyGenerator.call }
     let(:params) do
       {
         budget_category: {
@@ -130,7 +130,7 @@ RSpec.describe "POST /api/budget/categories" do
     let(:icon) { create(:icon) }
     let(:name) { Faker::Music::GratefulDead.song }
     let(:slug) { Faker::Lorem.word.downcase }
-    let(:key) { SecureRandom.hex(6) }
+    let(:key) { KeyGenerator.call }
     let(:params) do
       {
         budget_category: {
@@ -161,7 +161,7 @@ RSpec.describe "POST /api/budget/categories" do
     include_context "with valid token"
     let(:params) do
       {
-        key: SecureRandom.hex(6),
+        key: KeyGenerator.call,
         default_amount: 100_00,
         is_accrual: false,
         is_expense: true,

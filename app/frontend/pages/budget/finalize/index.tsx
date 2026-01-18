@@ -4,8 +4,6 @@ import { CategoryIndex as RightColumn } from "./categories";
 import { Summary } from "./summary";
 import { FinalizeFormProvider, useFinalizeFormContext } from "./form_context";
 import { LeftColumn } from "./left_column";
-import { useEffect } from "react";
-import { useAppConfigContext } from "@/components/layout/Provider";
 import { KeyboardNav } from "./keyboard_nav";
 
 type IndexComponentProps = {

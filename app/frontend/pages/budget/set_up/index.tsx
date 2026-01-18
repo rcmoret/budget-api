@@ -1,9 +1,11 @@
-import { useState } from "react";
-import { useSetUpEventsForm, ResponseSetUpCategory, SetUpCategory } from "@/lib/hooks/useSetUpEventsForm";
+import { useEffect, useState } from "react";
+import { useSetupCategoryGroupContext } from "@/pages/budget/set_up/categories/group_context";
+import { useSetUpEventsForm, SetUpCategory, useSetupEventsFormContext } from "@/lib/hooks/useSetUpEventsForm";
 import { dayToDayItems, expenseItems, monthlyItems, revenueItems } from "@/lib/models/budget-items";
 import { isCreate, isDelete } from "@/lib/hooks/useEventsForm";
 import { AmountInput, inputAmount, TInputAmount } from "@/components/common/AmountInput";
 import Select, { SingleValue } from "react-select";
+import axios from "axios";
 import { Button, SubmitButton } from "@/components/common/Button";
 import { SummaryComponent } from "@/pages/budget/set_up/Summary";
 import { CategoryComponent } from "@/pages/budget/set_up/Category";
@@ -11,6 +13,7 @@ import { Point } from "@/components/common/Symbol";
 import { Icon } from "@/components/common/Icon";
 import { UrlBuilder } from "@/lib/UrlBuilder";
 import { buildQueryParams } from "@/lib/redirect_params";
+import { useAppConfigContext } from "@/components/layout/Provider";
 
 type TabName = "revenues" | "monthlyExpenses" | "dayToDayExpense"
 
@@ -84,6 +87,36 @@ const GroupTabComponent = ({ title, isSelected, incompleteCount, onClick }: Grou
   }
 }
 
+const getEvents = async () => {
+  const { scopes } = useSetupCategoryGroupContext()
+  const { groups, metadata } = useSetupEventsFormContext()
+  const { month, year } = metadata
+
+  const queryParams = { event_context: "setup" }
+
+  const excludedKeys = Object.values(groups).flatMap((group) => group.categories.map(({ key }) => key))
+  const queryParamString = [
+    ...Object.entries(queryParams).map((tuple) => tuple.join("=")),
+    ...excludedKeys.map((key) => `excluded_keys[]=${key}`),
+    ...scopes.map((scope) => `scopes[]=${scope}`)
+  ].join("&")
+
+  const summaryUrl = UrlBuilder({
+    name: "CategoryCreateEvents",
+    month,
+    year,
+    queryParams: queryParamString
+  })
+  return axios.get(summaryUrl)
+    .then((response) => {
+      return response.data.events
+    })
+    .catch(error => {
+      console.error('Error fetching events:', error)
+      return []
+    })
+}
+
 const AddItemComponent = (props: {
   addCreateEvent: (_: { key: string, amount: TInputAmount }) => void;
   collectionName: string;
@@ -96,7 +129,7 @@ const AddItemComponent = (props: {
     return { value: category.key, label: category.name }
   })
   const value = options.find((option) => option.value === key) || { label: "", value: null }
-  const onChange = (ev:  SingleValue<{ value: string; label: string; } | { label: string; value: null; }>) => {
+  const onChange = (ev: SingleValue<{ value: string; label: string; } | { label: string; value: null; }>) => {
     setKey(String(ev?.value))
   }
   const handleAmountChange = (amt: string) => {
@@ -161,7 +194,7 @@ const AddItemComponent = (props: {
               color: "text-white",
               rounded: "rounded",
             }}
-            disabledStyling={{ 
+            disabledStyling={{
               backgroundColor: "bg-gray-400",
               border: "border border-gray-500",
               cursor: "cursor-not-allowed"
@@ -185,7 +218,7 @@ type ComponentProps = {
   month: number;
   year: number;
   errors?: Array<{
-    [key:string]: {
+    [key: string]: {
       amount?: string[];
       category?: string[];
       budgetItem?: string[];
@@ -207,7 +240,6 @@ const SetUpComponent = (props: ComponentProps) => {
       }
     })
   }, [])
-
 
   const {
     addCreateEvent,

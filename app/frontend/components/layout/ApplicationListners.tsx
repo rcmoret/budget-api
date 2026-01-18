@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { router } from "@inertiajs/react";
-import { useAppConfigContext } from "@/components/layout/Provider";
 
 const KeyboardNav = () => {
   useEffect(() => {
@@ -61,13 +60,4 @@ const KeyboardNav = () => {
   return null; // This component doesn't render anything
 };
 
-const KeyboardNavContainer = () => {
-  const { appConfig } = useAppConfigContext()
-  if (appConfig.metadata?.page?.name === "budget/finalize") {
-    return null
-  } else {
-    return <KeyboardNav />
-  }
-}
-
-export { KeyboardNavContainer as KeyboardNav };
+export { KeyboardNav };

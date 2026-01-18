@@ -21,7 +21,7 @@ Layout/LineLength:
     - config/initializers/devise.rb
 
 Metrics/BlockLength:
-  Max: 10
+  Max: 15
   AllowedMethods:
     - included
     - class_methods
@@ -34,6 +34,7 @@ Metrics/BlockLength:
     - db/seeds/*.rb
     - db/seeds.rb
     - spec/*_helper.rb
+    - spec/models/budget/change_set/setup_spec.rb
     - spec/requests/**/*
 
 Lint/Debugger:
@@ -41,9 +42,10 @@ Lint/Debugger:
     - db/seeds/*.rb
 
 Metrics/MethodLength:
-  Max: 10
+  Max: 18
   Exclude:
     - app/models/user/session/data.rb
+    - db/seeds/budget_interval.rb
 
 Style/Documentation:
   Enabled: false
@@ -88,6 +90,7 @@ RSpec/ExampleLength:
   Exclude:
     - spec/requests/api/**/*
     - spec/serializers/**/*
+    - spec/models/budget/change_set/setup_spec.rb
 
 RSpec/ExpectChange:
   EnforcedStyle: block
@@ -112,6 +115,7 @@ RSpec/MultipleMemoizedHelpers:
     - spec/lib/forms/**/*
     - spec/requests/api/**/*
     - spec/serializers/**/*
+    - spec/models/budget/**/*
 
 RSpec/MessageSpies:
   EnforcedStyle: receive

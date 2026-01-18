@@ -11,8 +11,8 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
     context "when the account is not found" do
       include_context "with valid token"
 
-      let(:account_key) { SecureRandom.hex(6) }
-      let(:transaction_key) { SecureRandom.hex(6) }
+      let(:account_key) { KeyGenerator.call }
+      let(:transaction_key) { KeyGenerator.call }
       let(:params) { {} }
 
       include_examples "endpoint requires account"
@@ -23,7 +23,7 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
       include_context "with an account belonging to a different user group"
 
       let(:account_key) { other_groups_account.key }
-      let(:transaction_key) { SecureRandom.hex(6) }
+      let(:transaction_key) { KeyGenerator.call }
       let(:params) { {} }
 
       include_examples "endpoint requires account"
@@ -38,7 +38,7 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
     end
 
     context "when providing invalid month/year combination" do
-      let(:transaction_key) { SecureRandom.hex(6) }
+      let(:transaction_key) { KeyGenerator.call }
       let(:params) { {} }
 
       include_context "with valid token"
@@ -216,7 +216,7 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
         "transaction" => {
           "details_attributes" => [
             {
-              "key" => SecureRandom.hex(6),
+              "key" => KeyGenerator.call,
               "budget_item_key" => budget_item.key,
               "amount" => rand(100_00),
             },
@@ -267,7 +267,7 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
         "transaction" => {
           "details_attributes" => [
             {
-              "key" => SecureRandom.hex(6),
+              "key" => KeyGenerator.call,
               "budget_item_key" => budget_item.key,
               "amount" => rand(100_00),
             },
@@ -425,8 +425,8 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
   end
 
   describe "token authentication" do
-    let(:account_key) { SecureRandom.hex(6) }
-    let(:transaction_key) { SecureRandom.hex(6) }
+    let(:account_key) { KeyGenerator.call }
+    let(:transaction_key) { KeyGenerator.call }
     let(:month) { rand(1..12) }
     let(:year) { rand(2020..2039) }
     let(:params) { {} }

@@ -11,7 +11,7 @@ User::Group.find_by!(name: "Initial User Group").then do |group|
   if mortgage.new_record?
     mortgage.update(
       default_amount: 0,
-      key: SecureRandom.hex(6),
+      key: KeyGenerator.call,
       accrual: false,
     )
   end
@@ -28,7 +28,7 @@ User::Group.find_by!(name: "Initial User Group").then do |group|
   if cell_phone.new_record?
     cell_phone.update(
       default_amount: 0,
-      key: SecureRandom.hex(6),
+      key: KeyGenerator.call,
       accrual: false,
     )
   end
@@ -45,7 +45,7 @@ User::Group.find_by!(name: "Initial User Group").then do |group|
   if salary.new_record?
     salary.update(
       default_amount: 0,
-      key: SecureRandom.hex(6),
+      key: KeyGenerator.call,
       accrual: false,
     )
   end
@@ -62,7 +62,7 @@ User::Group.find_by!(name: "Initial User Group").then do |group|
   if groceries.new_record?
     groceries.update(
       default_amount: 0,
-      key: SecureRandom.hex(6),
+      key: KeyGenerator.call,
       accrual: false,
     )
   end
@@ -79,7 +79,7 @@ User::Group.find_by!(name: "Initial User Group").then do |group|
   if gas.new_record?
     gas.update(
       default_amount: 0,
-      key: SecureRandom.hex(6),
+      key: KeyGenerator.call,
       accrual: false,
     )
   end
@@ -95,7 +95,7 @@ User::Group.find_by!(name: "Initial User Group").then do |group|
   if misc_income.new_record?
     misc_income.update(
       default_amount: 0,
-      key: SecureRandom.hex(6),
+      key: KeyGenerator.call,
       accrual: false
     )
   end
@@ -110,8 +110,8 @@ User::Group.find_by!(name: "Initial User Group").then do |group|
 
   if car_insurance.new_record?
     car_insurance.update(
-      default_amount: 0,
-      key: SecureRandom.hex(6),
+      default_amount: -20_00,
+      key: KeyGenerator.call,
       accrual: true
     )
   end
@@ -127,7 +127,7 @@ User::Group.find_by!(name: "Initial User Group").then do |group|
   if cleaning_supplies.new_record?
     cleaning_supplies.update(
       default_amount: 0,
-      key: SecureRandom.hex(6),
+      key: KeyGenerator.call,
     )
   end
 
@@ -142,7 +142,7 @@ User::Group.find_by!(name: "Initial User Group").then do |group|
   if electric_bill.new_record?
     electric_bill.update(
       default_amount: 0,
-      key: SecureRandom.hex(6),
+      key: KeyGenerator.call,
     )
   end
 
@@ -154,7 +154,7 @@ User::Group.find_by!(name: "Initial User Group").then do |group|
     expense: true,
   )
 
-  extra_liability.update(default_amount: 0, key: SecureRandom.hex(6)) if extra_liability.new_record?
+  extra_liability.update(default_amount: 0, key: KeyGenerator.call) if extra_liability.new_record?
 
   extra_income = Budget::Category.find_or_initialize_by(
     name: "Extra Income",
@@ -164,7 +164,7 @@ User::Group.find_by!(name: "Initial User Group").then do |group|
     expense: false,
   )
 
-  extra_income.update(default_amount: 0, key: SecureRandom.hex(6)) if extra_liability.new_record?
+  extra_income.update(default_amount: 0, key: KeyGenerator.call) if extra_liability.new_record?
 
   rolled_change = Budget::Category.find_or_initialize_by(
     name: "Rolled Change",
@@ -174,5 +174,5 @@ User::Group.find_by!(name: "Initial User Group").then do |group|
     expense: false,
   )
 
-  rolled_change.update(default_amount: 0, key: SecureRandom.hex(6)) if rolled_change.new_record?
+  rolled_change.update(default_amount: 0, key: KeyGenerator.call) if rolled_change.new_record?
 end

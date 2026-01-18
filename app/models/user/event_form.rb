@@ -21,7 +21,7 @@ module User
         actor: actor,
         target_user: target_user,
         event_type: event_type,
-        key: SecureRandom.hex(6),
+        key: KeyGenerator.call,
         data: event_data,
       )
     end
