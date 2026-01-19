@@ -8,6 +8,7 @@ interface ComponentProps {
   color?: TextColor;
   decorate?: boolean;
   negativeColor?: TextColor;
+  showCents?: boolean;
   prefix?: string;
   zeroColor?: TextColor;
 }
@@ -46,6 +47,7 @@ const AmountSpan = (suppliedProps: ComponentProps) => {
       {moneyFormatter(amount, {
         absolute,
         decorate,
+        showCents: props.showCents ?? true
       })}
     </span>
   );

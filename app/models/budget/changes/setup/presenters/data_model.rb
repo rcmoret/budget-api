@@ -79,6 +79,10 @@ module Budget
               adjustment[:cents].zero?
             end
 
+            def create_event?
+              Budget::EventTypes::CREATE_EVENTS.include?(event_type)
+            end
+
             def adjust_event?
               Budget::EventTypes::ADJUST_EVENTS.include?(event_type)
             end
@@ -114,7 +118,9 @@ module Budget
             :year,
             :selected_category,
             :next_category_slug,
+            :next_unreviewed_category_slug,
             :previous_category_slug,
+            :previous_unreviewed_category_slug,
             :is_submittable,
             :base_interval
           )
@@ -130,7 +136,9 @@ module Budget
               selected_category: selected_category_data,
               next_category_slug: next_category_slug,
               previous_category_slug: previous_category_slug,
-              is_submittable: categories.all?(&:reviewed?),
+              next_unreviewed_category_slug: next_unreviewed_category_slug,
+              previous_unreviewed_category_slug: previous_unreviewed_category_slug,
+              is_submittable: submittable?,
               base_interval: change.interval.prev
             )
           end
@@ -140,17 +148,41 @@ module Budget
           end
 
           def next_category_slug
-            index = (slugs.index(slug).to_i + 1).then do |ndx|
-              [ndx, (0 if ndx == slugs.size)].compact.min
-            end
+            slugs.rotate(next_index).first
+          end
 
-            slugs.rotate(index).first
+          def next_unreviewed_category_slug
+            categories.rotate(next_index).reduce("") do |memo, category_data|
+              next memo if category_data.reviewed?
+
+              memo.presence || category_data.slug
+            end
+          end
+
+          def previous_unreviewed_category_slug
+            categories.rotate(previous_index).reduce("") do |memo, category_data|
+              next memo if category_data.reviewed?
+
+              memo.presence || category_data.slug
+            end
           end
 
           def previous_category_slug
-            index = (slugs.index(slug).to_i - 1)
+            slugs.rotate(previous_index).first
+          end
 
-            slugs.rotate(index).first
+          def current_index
+            slugs.index(slug).to_i
+          end
+
+          def next_index
+            (current_index + 1).then do |index|
+              [index, (0 if index == slugs.size)].compact.min
+            end
+          end
+
+          def previous_index
+            current_index - 1
           end
 
           def category
@@ -196,6 +228,10 @@ module Budget
               is_selected: collection.map(&:slug).include?(slug),
               scopes: %i[monthly expenses]
             )
+          end
+
+          def submittable?
+            categories.all?(&:reviewed?)
           end
         end
       end

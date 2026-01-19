@@ -55,7 +55,9 @@ type SetupCategory = BudgetCategory & {
 type HookProps = ComponentProps & {
   putCategory: (slug?: string) => void;
   changePreviousCategory: () => void;
+  changePreviousUnreviewedCategory: () => void;
   changeNextCategory: () => void;
+  changeNextUnreviewedCategory: () => void;
   processing: boolean;
   removeEvent: (p: { slug: string, key: string }) => void;
   updateEvents: (events: Array<{ key: string; amount: string }>) => void;
@@ -172,6 +174,14 @@ const useSetUpEventsForm = (props: ComponentProps): HookProps => {
     putCategory(props.metadata.nextCategorySlug)
   }
 
+  const changeNextUnreviewedCategory = () => {
+    putCategory(props.metadata.nextUnreviewedCategorySlug)
+  }
+
+  const changePreviousUnreviewedCategory = () => {
+    putCategory(props.metadata.previousUnreviewedCategorySlug)
+  }
+
   const changePreviousCategory = () => {
     putCategory(props.metadata.previousCategorySlug)
   }
@@ -181,7 +191,9 @@ const useSetUpEventsForm = (props: ComponentProps): HookProps => {
     budgetCategory: props.budgetCategory,
     putCategory,
     changeNextCategory,
+    changeNextUnreviewedCategory,
     changePreviousCategory,
+    changePreviousUnreviewedCategory,
     processing,
     removeEvent,
     updateEvents

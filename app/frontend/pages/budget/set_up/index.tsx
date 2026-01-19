@@ -15,7 +15,9 @@ export type ComponentProps = {
     budgetTotal: number;
     isSubmittable: boolean;
     nextCategorySlug: string;
+    nextUnreviewedCategorySlug: string;
     previousCategorySlug: string;
+    previousUnreviewedCategorySlug: string;
     previousMonth: number;
     previousYear: number;
     month: number;

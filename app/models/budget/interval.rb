@@ -1,8 +1,8 @@
 module Budget
-  # rubocop:disable Metrics:ClassLength
   class Interval < ApplicationRecord
     include BelongsToUserGroup
     include Fetchable
+    include Intervals::DateScopes
 
     has_many :items, foreign_key: :budget_interval_id, inverse_of: :interval, dependent: :restrict_with_exception
     has_many :change_sets,
@@ -23,34 +23,8 @@ module Budget
               comparison: { less_than_or_equal_to: proc { Time.current } },
               allow_nil: true
 
-    # before_create :do_callback
-
-    scope :ordered, -> { order(year: :asc).order(month: :asc) }
-
-    scope :prior_to, lambda { |date_hash|
-      month, year = date_hash.symbolize_keys.values_at(:month, :year)
-      where(year: ...year).or(where(year: year, month: ...month))
-    }
-
-    # there's some wierdness where I would expect (year: year...)
-    # to produce year > $1 in the sql it does not ( >= instead) thus + 1
-    scope :on_or_after, lambda { |month:, year:|
-      where(year: (year + 1)..).or(where(year: year, month: month..))
-    }
+    scope :ordered, -> { order_asc }
     scope :unclosed, -> { where(close_out_completed_at: nil) }
-
-    scope :in_range, lambda { |beginning_month:, beginning_year:, ending_month:, ending_year:|
-      raise QueryError if beginning_year > ending_year
-      raise QueryError if beginning_year == ending_year && beginning_month > ending_month
-
-      if ending_year == beginning_year
-        where(year: beginning_year, month: beginning_month..ending_month)
-      else
-        on_or_after(month: beginning_month, year: beginning_year)
-          .prior_to(month: ending_month, year: ending_year)
-          .or(where(month: ending_month, year: ending_year))
-      end
-    }
     scope :started, -> { where.not(effective_start: nil) }
 
     class << self
@@ -59,9 +33,15 @@ module Budget
       end
       alias by_key for
 
+      alias prior_to before
+
       def current
         started.order(effective_start: :desc).take.presence ||
           determine_current
+      end
+
+      def today
+        Date.current.to_date
       end
 
       private
@@ -72,10 +52,6 @@ module Budget
         return potential_interval.prev if potential_interval.first_date > today
 
         potential_interval
-      end
-
-      def today
-        Date.current.to_date
       end
     end
 
@@ -159,10 +135,7 @@ module Budget
     end
 
     def today
-      Time.current.to_date
+      self.class.today
     end
-
-    QueryError = Class.new(StandardError)
   end
-  # rubocop:enable Metrics:ClassLength
 end

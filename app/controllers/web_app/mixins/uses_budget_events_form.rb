@@ -7,6 +7,12 @@ module WebApp
       include Mixins::HasBudgetInterval
       include Mixins::HasRedirectParams
 
+      included do
+        before_action -> { @effective_timestamp = Time.current }
+        after_action -> { change_set.update(effective_at: @effective_timestamp) },
+                     if: -> { form.errors.none? }
+      end
+
       def call
         if form.save
           redirect_to redirect_path
@@ -30,7 +36,11 @@ module WebApp
       end
 
       def form
-        @form ||= Forms::Budget::EventsForm.new(current_user_profile, events: events_params)
+        @form ||= Forms::Budget::EventsForm.new(
+          current_user_profile,
+          change_set,
+          events: events_params
+        )
       end
 
       def events_params

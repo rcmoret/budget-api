@@ -63,6 +63,7 @@ const EventCard = () => {
     setters,
     updateEvent,
   } = useSetUpEventContext()
+
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const onChange = (inputamount: string) => {

@@ -30,7 +30,6 @@ module WebApp
               memo.merge(
                 ev["budget_item_key"] => {
                   display: ev["adjustment"]["display"],
-                  cents: numeric_string_to_cents(ev["adjustment"]["display"]),
                 }
               )
             end

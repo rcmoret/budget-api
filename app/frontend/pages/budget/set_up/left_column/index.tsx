@@ -76,9 +76,9 @@ const GroupLabel = () => {
   const innerProgressClassName = [
     "h-[9px]",
     ...(!metadata.unreviewed ?
-        ["bg-chartreuse-400"] :
-        ["bg-chartreuse-300"]
-       )
+      ["bg-chartreuse-400"] :
+      ["bg-chartreuse-300"]
+    )
   ].join(" ")
 
   return (
@@ -90,7 +90,7 @@ const GroupLabel = () => {
       </button>
       {" "}
       <div className={outterProgressClassName}>
-        <div className={innerProgressClassName} style={{width: `${widthPercentage}%`}}>
+        <div className={innerProgressClassName} style={{ width: `${widthPercentage}%` }}>
         </div>
       </div>
     </div>
@@ -99,11 +99,11 @@ const GroupLabel = () => {
 
 const SelectedGroupWrapper = (props: { children: React.ReactNode }) => {
   const boxShadowProp = {
-   boxShadow: [
-     "3px -3px 3px -1px rgba(0, 0, 0, 0.2)",
-     "2px 1px 4px -1px rgba(0, 0, 0, 0.2)",
-     "-1px 0px 4px -1px rgba(0, 0, 0, 0.2)",
-   ].join(", ")
+    boxShadow: [
+      "3px -3px 3px -1px rgba(0, 0, 0, 0.2)",
+      "2px 1px 4px -1px rgba(0, 0, 0, 0.2)",
+      "-1px 0px 4px -1px rgba(0, 0, 0, 0.2)",
+    ].join(", ")
   }
 
   const style = {
@@ -126,13 +126,11 @@ const UnselectedGroupWrapper = (props: { children: React.ReactNode }) => {
 }
 
 const GroupWrapper = (props: {
-  isSelected: boolean;
-  groups: Array<TCategoryGroup>;
+  group: TCategoryGroup;
   children: React.ReactNode
 }) => {
-  if (!props.groups.length) { return null }
 
-  if (props.isSelected) {
+  if (props.group.metadata.isSelected) {
     return <SelectedGroupWrapper>{props.children}</SelectedGroupWrapper>
   } else {
     return <UnselectedGroupWrapper>{props.children}</UnselectedGroupWrapper>
@@ -142,38 +140,14 @@ const GroupWrapper = (props: {
 const LeftColumn = () => {
   const { groups } = useSetupEventsFormContext()
 
-  let groupedGroups: Array<{ groups: Array<TCategoryGroup>; isSelected: boolean; }> = []
-
-  if (groups.revenues.metadata.isSelected) {
-    groupedGroups = [
-      { groups: [groups.revenues], isSelected: true },
-      { groups: [groups.monthlyExpenses, groups.dayToDayExpenses], isSelected: false },
-    ]
-  }
-  if (groups.monthlyExpenses.metadata.isSelected) {
-    groupedGroups = [
-      { groups: [groups.revenues], isSelected: false },
-      { groups: [groups.monthlyExpenses], isSelected: true },
-      { groups: [groups.dayToDayExpenses], isSelected: false }
-    ]
-  }
-  if (groups.dayToDayExpenses.metadata.isSelected) {
-    groupedGroups = [
-      { groups: [groups.revenues, groups.monthlyExpenses], isSelected: false },
-      { groups: [groups.dayToDayExpenses], isSelected: true }
-    ]
-  }
-
   return (
     <div className="flex flex-col gap-1">
-      {groupedGroups.map(({ groups, isSelected }, index) => (
-        <GroupWrapper key={index} isSelected={isSelected} groups={groups}>
-          {groups.map((group, index) => (
-            <CategoryGroup group={group} key={index}>
-              <GroupLabel />
-              <CategoryList />
-            </CategoryGroup>
-          ))}
+      {Object.values(groups).map((group, index) => (
+        <GroupWrapper key={index} group={group}>
+          <CategoryGroup group={group} key={index}>
+            <GroupLabel />
+            <CategoryList />
+          </CategoryGroup>
         </GroupWrapper>
       ))}
     </div>

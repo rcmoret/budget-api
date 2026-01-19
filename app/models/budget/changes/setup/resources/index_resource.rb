@@ -17,7 +17,9 @@ module Budget
             attributes :budget_total,
                        :is_submittable,
                        :next_category_slug,
+                       :next_unreviewed_category_slug,
                        :previous_category_slug,
+                       :previous_unreviewed_category_slug,
                        :month,
                        :year
             attribute(:previous_month) { |object| object.base_interval.month }

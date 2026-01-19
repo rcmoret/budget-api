@@ -26,7 +26,6 @@ module Budget
     validates :budget_category_id, uniqueness: { scope: :budget_interval_id, if: -> { weekly? && active? } }
     alias_attribute :category_id, :budget_category_id
     scope :prior_to, ->(date_hash) { joins(:interval).merge(Interval.prior_to(date_hash)) }
-    scope :in_range, ->(date_args) { joins(:interval).merge(Interval.in_range(date_args)) }
     scope :active, -> { where(deleted_at: nil) }
     scope :deleted, -> { where.not(deleted_at: nil) }
     scope :revenues, -> { joins(:category).merge(Category.revenues) }

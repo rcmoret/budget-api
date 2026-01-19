@@ -33,20 +33,25 @@ module Budget
           end
 
           def attributes_for(category_key, event_data)
+            base_attributes_for(event_data).tap do |attrs|
+              if event_data.create_event?
+                attrs[:budget_item_key] = KeyGenerator.call
+                attrs[:budget_category_key] = category_key
+              else
+                attrs[:budget_item_key] = event_data.budget_item_key
+                attrs[:event_type] = EventTypes::SETUP_ITEM_DELETE if updated_amount.zero?
+              end
+            end
+          end
+
+          def base_attributes_for(event_data)
             {
               event_type: event_data.event_type,
               amount: event_data.updated_amount,
               month: interval.month,
               year: interval.year,
               data: {},
-            }.tap do |attrs|
-              if event_data.adjust_event?
-                attrs[:budget_item_key] = event_data.budget_item_key
-              else
-                attrs[:budget_item_key] = KeyGenerator.call
-                attrs[:budget_category_key] = category_key
-              end
-            end
+            }
           end
 
           attr_reader :data_model, :interval

@@ -28,6 +28,8 @@ module Budget
              inverse_of: :change_set,
              class_name: "ItemEvent"
 
+    scope :incomplete, -> { where(effective_at: nil) }
+
     def self.start_setup!
       setup.start!
     end
@@ -40,6 +42,10 @@ module Budget
           memo
         end
       end
+    end
+
+    def incomplete?
+      effective_at.nil?
     end
 
     delegate :month, :year, to: :interval

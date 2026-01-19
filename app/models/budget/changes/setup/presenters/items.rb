@@ -11,7 +11,7 @@ module Budget
               @item = item
               @budget_item_key = item.key
               @adjustment = adjustment[:display] || ""
-              @adjustment_cents = adjustment[:cents] || numeric_string_to_cents(@adjustment)
+              @adjustment_cents = adjustment[:cents] || numeric_string_to_cents(@adjustment).to_i
             end
 
             attr_reader :item, :adjustment, :adjustment_cents, :budget_item_key
@@ -68,6 +68,7 @@ module Budget
 
             def valid?
               return true if adjusted_total.zero?
+              return false unless numeric_string_to_cents(adjustment).valid?
 
               (adjusted_total.positive? && revenue?) ||
                 (adjusted_total.negative? && expense?)

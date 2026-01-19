@@ -6,6 +6,8 @@ const KeyboardNav = () => {
   const {
     changePreviousCategory,
     changeNextCategory,
+    changePreviousUnreviewedCategory,
+    changeNextUnreviewedCategory,
     budgetCategory
   } = useSetupEventsFormContext()
 
@@ -25,6 +27,16 @@ const KeyboardNav = () => {
       if (event.shiftKey && event.key === 'ArrowRight') {
         event.preventDefault();
         changeNextCategory()
+      }
+
+      if (event.shiftKey && event.key === 'ArrowUp') {
+        event.preventDefault();
+        changePreviousUnreviewedCategory()
+      }
+
+      if (event.shiftKey && event.key === 'ArrowDown') {
+        event.preventDefault();
+        changeNextUnreviewedCategory()
       }
     }
 

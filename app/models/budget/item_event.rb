@@ -22,7 +22,6 @@ module Budget
     validate :validate_json_data, if: :data_present?
 
     scope :prior_to, ->(date_hash) { joins(:item).merge(Item.prior_to(date_hash)) }
-    scope :in_range, ->(range) { joins(:item).merge(Item.in_range(range)) }
     scope :adjust_events, -> { where(type: ItemEventType.where(name: ADJUST_EVENTS)) }
     scope :create_events, -> { where(type: ItemEventType.where(name: CREATE_EVENTS)) }
     scope :delete_events, -> { where(type: ItemEventType.where(name: DELETE_EVENTS)) }
