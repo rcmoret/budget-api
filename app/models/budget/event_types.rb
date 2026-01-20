@@ -2,10 +2,16 @@
 
 module Budget
   module EventTypes
+    ROLLOVER_EVENTS = [
+      ROLLOVER_EXTRA_TARGET_CREATE = "rollover_extra_target_create",
+      ROLLOVER_ITEM_CREATE = "rollover_item_create",
+      ROLLOVER_ITEM_ADJUST = "rollover_item_adjust",
+    ].freeze
+
     ADJUST_EVENTS = [
       ITEM_ADJUST = "item_adjust",
       MULTI_ITEM_ADJUST = "multi_item_adjust",
-      ROLLOVER_ITEM_ADJUST = "rollover_item_adjust",
+      ROLLOVER_ITEM_ADJUST,
       SETUP_ITEM_ADJUST = "setup_item_adjust",
     ].freeze
 
@@ -15,8 +21,8 @@ module Budget
       MULTI_ITEM_ADJUST_CREATE = "multi_item_adjust_create",
       PRE_SETUP_ITEM_CREATE = "pre_setup_item_create",
       PRE_SETUP_MULTI_ITEM_ADJUST_CREATE = "pre_setup_multi_item_adjust_create",
-      ROLLOVER_EXTRA_TARGET_CREATE = "rollover_extra_target_create",
-      ROLLOVER_ITEM_CREATE = "rollover_item_create",
+      ROLLOVER_EXTRA_TARGET_CREATE,
+      ROLLOVER_ITEM_CREATE,
       SETUP_ITEM_CREATE = "setup_item_create",
     ].freeze
 
@@ -31,5 +37,7 @@ module Budget
       *ADJUST_EVENTS,
       *DELETE_EVENTS,
     ].freeze
+
+    NON_ROLLOVER_EVENTS = (VALID_EVENT_TYPES - ROLLOVER_EVENTS).freeze
   end
 end

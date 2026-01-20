@@ -61,6 +61,14 @@ module Budget
       events.sum(&:amount)
     end
 
+    def previously_budgeted
+      events.previously_budgeted.sum(&:amount)
+    end
+
+    def currently_budgeted
+      events.currently_budgeted.sum(&:amount)
+    end
+
     def spent
       transaction_details.sum(:amount)
     end
