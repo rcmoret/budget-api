@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 
 import { Link } from "@inertiajs/react";
+import { AmountInput, TInputAmount } from "@/components/common/AmountInput";
 import { BudgetItem, BudgetItemEvent, BudgetItemTransaction } from "@/types/budget";
 import { Row } from "@/components/common/Row";
 import { Cell } from "@/components/common/Cell";
@@ -12,18 +13,18 @@ import { Point } from "@/components/common/Symbol";
 import { useAppConfigContext } from "@/components/layout/Provider";
 import { clearedItems } from "@/lib/models/budget-items"
 import { byComparisonDate as sortDetails } from "@/lib/sort_functions";
-import { dateParse } from "@/lib/DateFormatter";
 import { useEventForm } from "@/lib/hooks/useEventsForm";
 import { generateKeyIdentifier } from "@/lib/KeyIdentifier";
 import { UrlBuilder } from "@/lib/UrlBuilder";
 import { buildQueryParams } from "@/lib/redirect_params";
-import { inputAmount, AmountInput } from "@/components/common/AmountInput";
+import { inputAmount } from "@/components/common/AmountInput";
 import { useToggle } from "@/lib/hooks/useToogle";
 import { TextColor } from "@/types/components/text-classes"
 import { useBudgetDashboardContext } from "@/pages/budget/dashboard/context_provider";
 import { useBudgetDashboardItemContext } from "@/pages/budget/dashboard/items/context_provider";
 import { ItemDetailHistory } from "./details";
-import { AccrualFormComponent, DayToDayItemForm, PendingItemForm } from "./form";
+import { AccrualFormComponent } from "./form";
+import { CategoryAverages, CategoryAveragesProvider, useCategoryAveragesContext } from "@/components/common/budget/category-chart";
 
 const PerDayLineItem = (props: { title: string; children: React.ReactNode }) => {
   return (
@@ -135,6 +136,59 @@ const ItemDetails = ({ item, showDetails }: DetailProps) => {
   )
 }
 
+const SummaryUpdateButton = () => {
+  const { currentSummary, hideAverages, isLoading, fetchSummaries } = useCategoryAveragesContext()
+
+  const isHidden = !currentSummary
+
+  const className = [
+    "text-blue-300",
+    "font-semibold",
+    "rounded",
+    isLoading ? "opacity-50 cursor-not-allowed" : ""
+  ].join(" ")
+
+  const onClick = () => {
+    if (isHidden) {
+      fetchSummaries()
+    } else {
+      hideAverages()
+    }
+  }
+
+  return (
+    <div className="text-xs">
+      <button
+        type="button"
+        onClick={onClick}
+        className={className}
+        disabled={isLoading && !isHidden}
+      >
+        {[(isHidden ? "Show" : "Hide"), "Averages"].join(" ")}
+      </button>
+    </div>
+  )
+}
+
+const CategoryAveragesComponent = () => {
+  const { appConfig } = useAppConfigContext()
+  const { month, year } = appConfig.budget.data
+  const { item } = useBudgetDashboardItemContext()
+
+  return (
+    <CategoryAveragesProvider
+      category={{ key: item.budgetCategoryKey, isExpense: item.isExpense }}
+      month={month}
+      year={year}
+    >
+      <div className="flex flex-col">
+        <CategoryAverages />
+        <SummaryUpdateButton />
+      </div>
+    </CategoryAveragesProvider>
+  )
+}
+
 const ItemContainer = (props: { children?: React.ReactNode; }) => {
   const { children } = props
   const { item, isHidden } = useBudgetDashboardItemContext()
@@ -157,6 +211,7 @@ const ItemContainer = (props: { children?: React.ReactNode; }) => {
         toggleDetails={toggleDetails}
       />
       {children}
+      <CategoryAveragesComponent />
       {item.isAccrual && <AccrualRow item={item} />}
       <ActionableIcons />
       <ItemDetails item={item} showDetails={showDetails} />
@@ -378,64 +433,6 @@ const NameRow = (props: NameRowProps) => {
   )
 }
 
-const ClearedMonthItem = () => {
-  const { item } = useBudgetDashboardItemContext()
-  const transactionDetail = item.transactionDetails[0]
-
-  if (!transactionDetail) { return }
-
-  const dateString = transactionDetail.clearanceDate ? 
-    dateParse(transactionDetail.clearanceDate) :
-    "pending"
-
-  const difference = transactionDetail.amount - item.amount
-
-  return (
-    <ItemContainer>
-      <Row styling={{
-        flexAlign: "justify-between",
-        fontSize: "text-sm",
-        padding: "px-8 pb-2",
-        border: "border-b gray-800 border-solid"
-      }}>
-        <Cell styling={{ width: "w-6/12" }}>
-          <div>{dateString}</div>
-          <div>{transactionDetail.accountName}</div>
-        </Cell>
-        <div className="font-bold">
-          <AmountSpan color="text-gray-800" amount={transactionDetail.amount} />
-        </div>
-      </Row>
-      <Row styling={{
-        flexAlign: "justify-between",
-        fontSize: "text-sm",
-        padding: "px-8 pt-2",
-      }}>
-        <Cell styling={{ width: "w-6/12" }}>
-          Difference
-        </Cell>
-        <Cell styling={{ fontWeight: "font-bold", width: "w-6/12", textAlign: "text-right" }}>
-          <AmountSpan
-            amount={difference}
-            absolute={true}
-            color="text-gray-800"
-            negativeColor="text-red-400"
-            zeroColor="text-black"
-          />
-        </Cell>
-      </Row>
-    </ItemContainer>
-  )
-}
-
-const PendingMonthItem = () => {
-  return (
-    <ItemContainer>
-      <PendingItemForm />
-    </ItemContainer>
-  )
-}
-
 const DifferenceLineItem = () => {
   const { item } = useBudgetDashboardItemContext()
   const { spent, amount, isExpense, difference } = item
@@ -462,38 +459,30 @@ const DifferenceLineItem = () => {
   )
 }
 
-const DayToDayItem = () => {
-  const { item } = useBudgetDashboardItemContext()
-
-  if (!!item.draftItem) {
+const LocalAmountInput = (props: {
+  amount: TInputAmount;
+  isInputShown: boolean;
+  itemKey: string;
+  onChange: (s: string) => void;
+  toggleInput: () => void;
+  children: React.ReactNode;
+}) => {
+  if (props.isInputShown) {
     return (
-      <ItemContainer>
-        <DayToDayItemForm />
-      </ItemContainer>
+      <AmountInput
+        name={`item-form-${props.itemKey}`}
+        amount={props.amount}
+        onChange={props.onChange}
+        classes={["font-normal", "border", "border-gray-500"]}
+      />
     )
   } else {
     return (
-      <ItemContainer>
-        <Row styling={{ padding: "p-2", flexAlign: "justify-between" }}>
-          <Cell styling={{ width: "w-6/12" }}>
-            Spent/Deposited
-          </Cell>
-          <Cell styling={{ fontWeight: "font-bold", textAlign: "text-right", width: "w-4/12" }}>
-            <AmountSpan amount={item.spent} absolute={true} />
-          </Cell>
-        </Row>
-        <Row styling={{ padding: "p-2", flexAlign: "justify-between", border: "border-b border-gray-100" }}>
-          <Cell styling={{ width: "w-6/12" }}>
-            Remaining/Difference
-          </Cell>
-          <Cell styling={{ fontWeight: "font-bold", textAlign: "text-right", width: "w-4/12" }}>
-            <AmountSpan amount={item.remaining} absolute={true} />
-          </Cell>
-        </Row>
-        <DifferenceLineItem />
-      </ItemContainer>
+      <Button type="button" onClick={props.toggleInput}>
+        {props.children}
+      </Button>
     )
   }
 }
 
-export { ClearedMonthItem, DayToDayItem, PendingMonthItem }
+export { DifferenceLineItem, ItemContainer, LocalAmountInput }

@@ -67,8 +67,8 @@ module Budget
             end
 
             def valid?
-              return true if adjusted_total.zero?
               return false unless numeric_string_to_cents(adjustment).valid?
+              return true if adjusted_total.zero?
 
               (adjusted_total.positive? && revenue?) ||
                 (adjusted_total.negative? && expense?)

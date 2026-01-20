@@ -1,5 +1,7 @@
 module NumericStringToCents
   CentsStruct = Data.define(:string) do
+    def to_s = string
+
     def negative?
       string.starts_with?("-")
     end

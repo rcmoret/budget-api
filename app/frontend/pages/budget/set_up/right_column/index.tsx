@@ -9,9 +9,19 @@ import { BudgetSummary } from "@/pages/budget/set_up/right_column/budget-summary
 import { CircleNavButtons } from "@/components/common/NavCircles";
 import { AccrualComponent } from "./accrual-component";
 import { EventCard } from "./event-card";
-import { CategoryAverages } from "./category-averages";
+import { CategoryAverages, CategoryAveragesProvider, SummaryUpdateButton, useCategoryAveragesContext } from "@/components/common/budget/category-chart";
 import { DateFormatter } from "@/lib/DateFormatter";
 import { UrlBuilder } from "@/lib/UrlBuilder";
+
+const CategoryAveragesContainer = () => {
+  const { isHidden } = useCategoryAveragesContext()
+
+  if (isHidden) {
+    return <SummaryUpdateButton />
+  } else {
+    return <CategoryAverages />
+  }
+}
 
 const SubmitChangeButton = () => {
   const { metadata: { month, year, isSubmittable } } = useSetupEventsFormContext()
@@ -122,7 +132,13 @@ const RightColumn = () => {
             </EventShow>
           ))}
           <div className="flex flex-row-reverse justify-between">
-            <CategoryAverages />
+            <CategoryAveragesProvider
+              category={category}
+              month={metadata.month}
+              year={metadata.year}
+            >
+              <CategoryAveragesContainer />
+            </CategoryAveragesProvider>
             {category.isAccrual && <AccrualComponent />}
           </div>
         </CategoryShow>
