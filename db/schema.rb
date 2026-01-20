@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2026_01_04_220326) do
+ActiveRecord::Schema[7.0].define(version: 2026_01_20_011926) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -298,15 +298,25 @@ ActiveRecord::Schema[7.0].define(version: 2026_01_04_220326) do
       SELECT c.id AS budget_category_id,
       intervals.month,
       intervals.year,
-      sum(events.amount) AS budgeted,
+      sum(
+          CASE
+              WHEN ((event_types.name)::text = ANY ((ARRAY['rollover_extra_target_create'::character varying, 'rollover_item_create'::character varying, 'rollover_item_adjust'::character varying])::text[])) THEN events.amount
+              ELSE 0
+          END) AS previously_budgeted,
+      sum(
+          CASE
+              WHEN ((event_types.name)::text <> ALL ((ARRAY['rollover_extra_target_create'::character varying, 'rollover_item_create'::character varying, 'rollover_item_adjust'::character varying])::text[])) THEN events.amount
+              ELSE 0
+          END) AS currently_budgeted,
       COALESCE(( SELECT sum(td.amount) AS sum
              FROM transaction_details td
             WHERE (td.budget_item_id IN ( SELECT budget_items.id
                      FROM budget_items
                     WHERE ((budget_items.budget_category_id = c.id) AND (budget_items.budget_interval_id = intervals.id))))), (0)::bigint) AS transactions_total
-     FROM (((budget_categories c
+     FROM ((((budget_categories c
        JOIN budget_items items ON ((items.budget_category_id = c.id)))
        JOIN budget_item_events events ON ((events.budget_item_id = items.id)))
+       JOIN budget_item_event_types event_types ON ((event_types.id = events.budget_item_event_type_id)))
        JOIN budget_intervals intervals ON ((intervals.id = items.budget_interval_id)))
     GROUP BY c.id, intervals.id;
   SQL

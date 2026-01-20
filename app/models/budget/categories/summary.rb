@@ -24,6 +24,10 @@ module Budget
         end
       end
 
+      def budgeted
+        previously_budgeted + currently_budgeted
+      end
+
       def as_resource
         SummaryResource.new(self)
       end

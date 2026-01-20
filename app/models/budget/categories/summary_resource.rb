@@ -6,6 +6,8 @@ module Budget
       attributes :month,
                  :year,
                  :budgeted,
+                 :currently_budgeted,
+                 :previously_budgeted,
                  :transactions_total
 
       transform_keys :lower_camel

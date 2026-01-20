@@ -8,6 +8,8 @@ type MonthlyData = {
   month: number;
   year: number;
   budgeted: number;
+  currentlyBudgeted: number;
+  previouslyBudgeted: number;
   transactionsTotal: number;
 };
 
@@ -19,25 +21,47 @@ type GenericCategory = {
 const Bar = (props: MonthlyData & { maxAmount: number }) => {
   const budgetedWidth = 100 * Math.abs(props.budgeted) / props.maxAmount
   const spentWidth = 100 * Math.abs(props.transactionsTotal) / props.maxAmount
+  const previousShare = 100 * Math.abs(props.previouslyBudgeted / props.budgeted)
+  const currentShare = 100 * Math.abs(props.currentlyBudgeted / props.budgeted)
 
   return (
-    <div className="w-full text-xs flex flex-row items-center justify-between border-b border-blue-200">
+    <div className="w-full text-xs flex flex-row items-center justify-between border-b border-blue-200 py-2">
       <div className="w-2/12">
         {props.month}/{props.year}
       </div>
-      <div className="w-7/12 flex flex-col gap-0.5">
+      <div className="w-7/12 flex flex-col gap-2">
+        <div className="h-2 rounded-lg overflow-hidden flex flex-row" style={{ width: budgetedWidth.toFixed(2) + "%" }}>
+          <div className="h-2 bg-purple-300" style={{ width: (previousShare).toFixed(2) + "%" }}>
+          </div>
+          <div className="h-2 bg-sky-300" style={{ width: currentShare.toFixed(2) + "%" }}>
+          </div>
+        </div>
         <div className="h-2 bg-red-300 rounded-lg" style={{ width: spentWidth.toFixed(2) + "%" }}>
         </div>
-        <div className="h-2 bg-green-300 rounded-lg" style={{ width: budgetedWidth.toFixed(2) + "%" }}>
-        </div>
       </div>
-      <div className="w-2/12 flex flex-col gap-0.5 items-end">
+      <div className="w-2/12 flex flex-col gap-2 items-end">
         <div className="text-xs">
-          <AmountSpan amount={props.transactionsTotal} absolute={true} showCents={false} />
+          <AmountSpan amount={props.currentlyBudgeted} absolute={true} showCents={false} />
         </div>
         <div className="text-xs">
           <AmountSpan amount={props.budgeted} absolute={true} showCents={false} />
         </div>
+      </div>
+    </div>
+  )
+}
+
+const BarLabel = (props: { children: React.ReactNode; color: string; bgColor: string }) => {
+  const className = [
+    props.bgColor,
+    props.color,
+    "rounded",
+  ].join(" ")
+
+  return (
+    <div className="w-4/12 p-0.5">
+      <div className={className}>
+        {props.children}
       </div>
     </div>
   )
@@ -54,6 +78,17 @@ const MonthlyDataChart = (props: { data: Array<MonthlyData> }): JSX.Element | nu
 
   return (
     <div className="w-full flex flex-col gap-1">
+      <div className="w-full text-center flex flex-row justify-between text-xs items-center">
+        <BarLabel bgColor="bg-purple-300" color="text-white">
+          Previous
+        </BarLabel>
+        <BarLabel bgColor="bg-sky-300" color="text-white">
+          Current
+        </BarLabel>
+        <BarLabel bgColor="bg-red-300" color="text-white">
+          Spent
+        </BarLabel>
+      </div>
       <div className="w-full flex flex-row justify-between">
         <div className="w-2/12">
         </div>
@@ -134,7 +169,7 @@ const getSummaryData = async (props: {
 const MonthsInput = (props: {
   limit: number;
   isLoading: boolean;
-  fetchSummaries: (l: number) => void;
+  fetchSummaries: () => void;
   setNumberOfMonths: (n: number) => void;
 }) => {
 
@@ -142,10 +177,11 @@ const MonthsInput = (props: {
 
   const onKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
+      props.setNumberOfMonths(Number(event.target.value))
+      props.fetchSummaries()
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current)
       }
-      props.fetchSummaries(props.limit)
     }
   }
 
@@ -159,8 +195,8 @@ const MonthsInput = (props: {
       clearTimeout(timeoutRef.current)
     }
     timeoutRef.current = setTimeout(() => {
-      props.fetchSummaries(props.limit)
-    }, 400)
+      props.fetchSummaries()
+    }, 1200)
   }
 
   return (
