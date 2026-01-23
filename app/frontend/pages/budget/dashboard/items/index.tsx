@@ -75,14 +75,14 @@ const PerDayDetails = () => {
         <PerDayLineItem title="Remaining per week">
           <AmountSpan amount={remainingPerWeek} absolute={true} />
         </PerDayLineItem>
-         <PerDayLineItem title={label}>
-            <PercentSpan
-              prefix={prefix}
-              amount={percentOfBudget * 100}
-              absolute={true}
-              color={color}
-              classes={["font-semibold"]}
-            />
+        <PerDayLineItem title={label}>
+          <PercentSpan
+            prefix={prefix}
+            amount={percentOfBudget * 100}
+            absolute={true}
+            color={color}
+            classes={["font-semibold"]}
+          />
         </PerDayLineItem>
       </div>
     </div>
@@ -102,13 +102,13 @@ const ItemDetails = ({ item, showDetails }: DetailProps) => {
   if (showDetails && !events.length) {
     const detailsUrl = UrlBuilder({ name: "BudgetItemDetails", key })
     axios.get(detailsUrl)
-    .then(response => {
-      const { budgetItem } = response.data
-      setEvents(budgetItem.events)
-    })
-    .catch(error => {
-      console.error('Error fetching summary data:', error)
-    })
+      .then(response => {
+        const { budgetItem } = response.data
+        setEvents(budgetItem.events)
+      })
+      .catch(error => {
+        console.error('Error fetching summary data:', error)
+      })
   }
 
   let details: Array<BudgetItemEvent | BudgetItemTransaction> = []
@@ -189,6 +189,51 @@ const CategoryAveragesComponent = () => {
   )
 }
 
+const PrevVsCurrentlyBudgetedIndicator = () => {
+  const { item } = useBudgetDashboardItemContext()
+  const { amount: totalBudgeted, currentlyBudgeted, previouslyBudgeted } = item
+
+  if (!totalBudgeted || totalBudgeted === currentlyBudgeted) { return null }
+
+  const currentlyBudgetedWidth = Math.min(
+    Math.abs((100 * currentlyBudgeted) / totalBudgeted),
+    100
+  )
+  const currentlyBudgetedColor = "chartreuse-200"
+  const previouslyBudgetedWidth = Math.min(
+    Math.abs((100 * previouslyBudgeted) / totalBudgeted),
+    100
+  )
+  const previouslyBudgetedColor = "sky-200"
+
+  return (
+    <div className="w-full px-4 flex flex-col gap-0">
+      <div className="flex flex-row gap-2 items-center">
+        <div className={`text-2xl text-${previouslyBudgetedColor}`}>
+          &bull;
+        </div>
+        <div className="text-sm">
+          Previously Budgeted
+        </div>
+      </div>
+      <div className="flex flex-row gap-2 items-center">
+        <div className={`text-2xl text-${currentlyBudgetedColor}`}>
+          &bull;
+        </div>
+        <div className="text-sm">
+          Currently Budgeted
+        </div>
+      </div>
+      <div className="h-2 w-full overflow-hidden rounded-lg flex flex-row">
+        <div className={`h-2 bg-${previouslyBudgetedColor}`} style={{ width: previouslyBudgetedWidth + "%" }}>
+        </div>
+        <div className={`h-2 bg-${currentlyBudgetedColor}`} style={{ width: currentlyBudgetedWidth + "%" }}>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 const ItemContainer = (props: { children?: React.ReactNode; }) => {
   const { children } = props
   const { item, isHidden } = useBudgetDashboardItemContext()
@@ -210,6 +255,7 @@ const ItemContainer = (props: { children?: React.ReactNode; }) => {
         showDetails={showDetails}
         toggleDetails={toggleDetails}
       />
+      <PrevVsCurrentlyBudgetedIndicator />
       {children}
       <CategoryAveragesComponent />
       {item.isAccrual && <AccrualRow item={item} />}
@@ -408,7 +454,7 @@ const NameRow = (props: NameRowProps) => {
       <Row styling={{ padding: "p-2", flexAlign: "justify-between" }}>
         <Cell styling={{ width: "w-6/12" }}>
           <div className="hidden">{item.key}</div>
-          <Button 
+          <Button
             type="button"
             onClick={toggleDetails}
             styling={{
