@@ -8,9 +8,9 @@ module WebApp
       def change_set
         @change_set ||=
           if interval.set_up?
-            Budget::ChangeSet.adjust.create(interval: interval)
+            ::Budget::ChangeSet.adjust.create(interval: interval)
           else
-            Budget::ChangeSet.pre_setup.create(interval: interval)
+            ::Budget::ChangeSet.pre_setup.create(interval: interval)
           end
       end
     end
