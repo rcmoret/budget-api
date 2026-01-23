@@ -36,7 +36,7 @@ module Budget
 
     def set_type_key!
       self.type_key = TYPE_MAP.reduce(nil) do |memo, hash|
-        if hash[:type] == self.class.to_s.split("::").last.downcase.to_sym
+        if hash[:type] == self.class.to_s.split("::").last.underscore.to_sym
           hash[:key]
         else
           memo
