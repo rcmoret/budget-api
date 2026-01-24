@@ -1,4 +1,4 @@
-import { TCategoryGroup, TCategoryListItem, TGroupScopes } from "@/lib/hooks/useSetUpEventsForm";
+import { TCategoryGroup, TCategoryListItem, TGroupScopes } from "@/pages/budget/set_up";
 import { createContext, useContext } from "react";
 import { useToggle } from "@/lib/hooks/useToogle";
 

@@ -1,5 +1,5 @@
 import { useSetupCategoryGroupContext } from "@/pages/budget/set_up/categories/group_context";
-import { useSetupEventsFormContext, TEventFlags } from "@/lib/hooks/useSetUpEventsForm";
+import { useSetupEventsFormContext, TEventFlags } from "@/pages/budget/set_up";
 import { useSetupCategoryListItemContext } from "../categories";
 
 const buttonClassName = (isCurrentlyViewing: boolean = false) => {

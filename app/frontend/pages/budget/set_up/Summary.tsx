@@ -1,4 +1,4 @@
-import { SetupCategory } from "@/lib/hooks/useSetUpEventsForm";
+import { SetupCategory } from "@/pages/budget/set_up";
 import { AmountSpan } from "@/components/common/AmountSpan";
 
 type SummaryProps = {

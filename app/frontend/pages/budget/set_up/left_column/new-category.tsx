@@ -1,6 +1,6 @@
 import { useSetupCategoryGroupContext } from "@/pages/budget/set_up/categories/group_context";
 import { useEffect, useState } from "react";
-import { useSetupEventsFormContext } from "@/lib/hooks/useSetUpEventsForm";
+import { useSetupEventsFormContext } from "@/pages/budget/set_up";
 import Select, { SingleValue } from "react-select";
 import { useForm } from "@inertiajs/react";
 import { UrlBuilder } from "@/lib/UrlBuilder";

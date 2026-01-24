@@ -1,4 +1,4 @@
-import { TCategoryGroup, useSetupEventsFormContext } from "@/lib/hooks/useSetUpEventsForm";
+import { TCategoryGroup, useSetupEventsFormContext } from "@/pages/budget/set_up";
 import { CategoryButton } from "./category_button";
 import { CategoryListItemShow as CategoryShow } from "@/pages/budget/set_up/categories";
 import { CategoryGroup, useSetupCategoryGroupContext } from "@/pages/budget/set_up/categories/group_context";

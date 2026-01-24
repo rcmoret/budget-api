@@ -1,5 +1,5 @@
 import { AmountSpan } from "@/components/common/AmountSpan";
-import { useSetupEventsFormContext } from "@/lib/hooks/useSetUpEventsForm";
+import { useSetupEventsFormContext } from "@/pages/budget/set_up";
 
 type FontSizeType = "sm" | "base" | "xl"
 

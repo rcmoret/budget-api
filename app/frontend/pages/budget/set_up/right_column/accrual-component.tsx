@@ -5,7 +5,7 @@ import { UrlBuilder } from "@/lib/UrlBuilder";
 import { buildQueryParams } from "@/lib/redirect_params";
 import { DateFormatter } from "@/lib/DateFormatter";
 import { SubmitButton } from "@/components/common/Button";
-import { useSetupEventsFormContext } from "@/lib/hooks/useSetUpEventsForm";
+import { useSetupEventsFormContext } from "@/pages/budget/set_up";
 
 const AccrualFormComponent = () => {
   const { category } = useSetUpCategoryShowContext()

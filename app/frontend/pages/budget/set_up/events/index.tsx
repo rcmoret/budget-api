@@ -1,10 +1,9 @@
 import { useState, useRef } from "react";
 import { createContext, useContext } from "react"
-import { SetupEvent, TEventFlags } from "@/lib/hooks/useSetUpEventsForm";
+import { SetupEvent, TEventFlags, useSetupEventsFormContext } from "@/pages/budget/set_up";
 import { KeySpan } from "@/components/common/KeySpan";
 import { i18n } from "@/lib/i18n";
 import { useSetUpCategoryShowContext } from "@/pages/budget/set_up/categories";
-import { useSetupEventsFormContext } from "@/lib/hooks/useSetUpEventsForm";
 import { TInputAmount, inputAmount } from "@/components/common/AmountInput";
 
 type TSuggestionName = "budgeted" | "spent" | "default" | "delete" | "unchanged" | null

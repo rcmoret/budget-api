@@ -6,7 +6,7 @@ import { useSetUpCategoryShowContext } from "@/pages/budget/set_up/categories";
 import { Icon } from "@/components/common/Icon";
 import { UrlBuilder } from "@/lib/UrlBuilder";
 import { buildQueryParams } from "@/lib/redirect_params"
-import { useSetUpEventsFormContext } from "@/lib/hooks/useSetUpEventsForm";
+import { useSetUpEventsFormContext } from "@/pages/budget/set_up";
 import { useSetupEventContext } from "@/pages/budget/set_up/events";
 import { AmountInput, inputAmount } from "@/components/common/AmountInput";
 

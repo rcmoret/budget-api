@@ -1,7 +1,7 @@
 import { useForm, Link } from "@inertiajs/react";
 import { SubmitButton } from "@/components/common/Button";
 import { Icon } from "@/components/common/Icon";
-import { useSetupEventsFormContext } from "@/lib/hooks/useSetUpEventsForm";
+import { useSetupEventsFormContext } from "@/pages/budget/set_up";
 import { CategoryShow } from "@/pages/budget/set_up/categories";
 import { EventShow } from "@/pages/budget/set_up/events";
 import { Point } from "@/components/common/Symbol";
