@@ -24,7 +24,7 @@ module Forms
                   },
                   if: :revenue?
 
-        def initialize(current_user, params)
+        def initialize(current_user, change_set, params)
           super
           @amount = params[:amount]
         end

@@ -4,7 +4,7 @@ User::Group.find_by!(name: "Initial User Group").then do |group|
   )
 
   if profile.new_record?
-    profile.key = SecureRandom.hex(6)
+    profile.key = KeyGenerator.call
     profile.password = "password!234"
     profile.password_confirmation = "password!234"
     profile.save

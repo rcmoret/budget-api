@@ -8,10 +8,10 @@ RSpec.describe API::Transactions::EntrySerializer do
       let(:user_group) { create(:user_group) }
       let(:account) { create(:account, user_group: user_group) }
       let(:detail_amount) { rand(1..100) }
-      let(:detail_key) { SecureRandom.hex(6) }
+      let(:detail_key) { KeyGenerator.call }
       let(:description) { Faker::Music::GratefulDead.song }
       let(:notes) { Faker::Music::GratefulDead.song }
-      let(:entry_key) { SecureRandom.hex(6) }
+      let(:entry_key) { KeyGenerator.call }
       let(:check_number) { Faker::Number.number(digits: 4) }
       let(:interval) { build(:budget_interval) }
       let(:transaction_entry) do

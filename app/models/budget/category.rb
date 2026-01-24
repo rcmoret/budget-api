@@ -16,7 +16,7 @@ module Budget
              inverse_of: :category,
              foreign_key: :budget_category_id
     has_many :summaries,
-             class_name: "CategorySummary",
+             class_name: "Budget::Categories::Summary",
              inverse_of: :category,
              dependent: nil,
              foreign_key: :budget_category_id

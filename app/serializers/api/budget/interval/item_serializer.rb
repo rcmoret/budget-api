@@ -8,13 +8,15 @@ module API
         end
 
         attributes :key,
-                   :budget_category_key,
-                   :name,
                    :amount,
+                   :budget_category_key,
+                   :currently_budgeted,
                    :difference,
+                   :icon_class_name,
+                   :name,
+                   :previously_budgeted,
                    :remaining,
-                   :spent,
-                   :icon_class_name
+                   :spent
         attribute :is_accrual, alias_of: :accrual?
         attribute :is_deletable, alias_of: :deletable?
         attribute :is_deleted, alias_of: :deleted?

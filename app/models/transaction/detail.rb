@@ -1,6 +1,7 @@
 module Transaction
   class Detail < ApplicationRecord
     include HasKeyIdentifier
+    include BelongsToUserGroup::Through[class_name: "Transaction::Entry", association: :entry]
 
     belongs_to :budget_item, class_name: "Budget::Item", optional: true
     belongs_to :entry,
@@ -25,13 +26,16 @@ module Transaction
     }
     scope :cash_flow, -> { joins(:entry).merge(Entry.cash_flow) }
     scope :non_cash_flow, -> { joins(:entry).merge(Entry.non_cash_flow) }
-    scope :belonging_to, ->(user_or_group) { joins(:entry).merge(Entry.belonging_to(user_or_group)) }
 
     delegate :monthly?, to: :budget_item, allow_nil: true, prefix: true
     delegate :transfer?, to: :entry
 
     def self.total
       sum(:amount)
+    end
+
+    def budget_item_key=(itemkey)
+      self.budget_item_id = Budget::Item.by_key(itemkey)&.id
     end
   end
 end

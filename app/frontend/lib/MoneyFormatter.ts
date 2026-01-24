@@ -1,6 +1,7 @@
 interface MoneyFormatterOptions {
   absolute?: boolean;
   decorate?: boolean;
+  showCents?: boolean;
 }
 
 const moneyFormatter = (
@@ -10,16 +11,25 @@ const moneyFormatter = (
   const options = {
     absolute: false,
     decorate: false,
+    showCents: true,
     ...opts,
   };
 
   const num = options.absolute ? Math.abs(number) : number;
+  let stringNum = ""
+
+  if (options.showCents) {
+    stringNum = (num / 100.0).toFixed(2)
+  } else {
+    stringNum = (num / 100.0).toFixed(0)
+  }
+
   if (options.decorate) {
     return (
-      "$" + (num / 100.0).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+      "$" + stringNum.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
     );
   } else {
-    return (num / 100.0).toFixed(2);
+    return stringNum;
   }
 };
 

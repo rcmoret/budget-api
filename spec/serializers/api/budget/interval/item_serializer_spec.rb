@@ -15,7 +15,7 @@ RSpec.describe API::Budget::Interval::ItemSerializer do
         account: create(:account, user_group: user_group),
         details_attributes: [
           {
-            key: SecureRandom.hex(6),
+            key: KeyGenerator.call,
             amount: rand(-100_00..100_00),
             budget_item_id: budget_item.id,
           },

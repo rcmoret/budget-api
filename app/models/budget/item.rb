@@ -2,6 +2,7 @@
 
 module Budget
   class Item < ApplicationRecord
+    include BelongsToUserGroup::Through[association: :category, class_name: "Budget::Category"]
     include HasKeyIdentifier
     include Fetchable
 
@@ -25,7 +26,6 @@ module Budget
     validates :budget_category_id, uniqueness: { scope: :budget_interval_id, if: -> { weekly? && active? } }
     alias_attribute :category_id, :budget_category_id
     scope :prior_to, ->(date_hash) { joins(:interval).merge(Interval.prior_to(date_hash)) }
-    scope :in_range, ->(date_args) { joins(:interval).merge(Interval.in_range(date_args)) }
     scope :active, -> { where(deleted_at: nil) }
     scope :deleted, -> { where.not(deleted_at: nil) }
     scope :revenues, -> { joins(:category).merge(Category.revenues) }
@@ -34,7 +34,6 @@ module Budget
     scope :weekly, -> { joins(:category).merge(Category.weekly) }
     scope :accruals, -> { joins(:category).merge(Category.accruals) }
     scope :non_accruals, -> { joins(:category).merge(Category.non_accruals) }
-    scope :belonging_to, ->(user_or_group) { joins(:category).merge(Category.belonging_to(user_or_group)) }
 
     delegate :accrual,
              :expense?,
@@ -62,6 +61,14 @@ module Budget
       events.sum(&:amount)
     end
 
+    def previously_budgeted
+      events.previously_budgeted.sum(&:amount)
+    end
+
+    def currently_budgeted
+      events.currently_budgeted.sum(&:amount)
+    end
+
     def spent
       transaction_details.sum(:amount)
     end
@@ -76,6 +83,15 @@ module Budget
 
     def decorated
       decorator_class.new(self)
+    end
+
+    def budget_category_key=(category_key)
+      self.budget_category_id =
+        if category_key.blank?
+          nil
+        else
+          Category.by_key(category_key)&.id
+        end
     end
 
     NonDeleteableError = Class.new(StandardError)

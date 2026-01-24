@@ -42,7 +42,7 @@ RSpec.describe Transaction::Entry do
       build(:transaction_entry,
             details_attributes: [
               {
-                key: SecureRandom.hex(6),
+                key: KeyGenerator.call,
                 amount: rand(10_000),
                 budget_item_id: nil,
               },

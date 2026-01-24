@@ -28,7 +28,6 @@ module WebApp
           @category ||= ::Budget::Category.belonging_to(current_user_profile).new
         end
 
-        # rubocop:disable Metrics/MethodLength
         def create_params
           params
             .require(:category)
@@ -45,7 +44,6 @@ module WebApp
               maturity_intervals: %i[month year _destroy]
             )
         end
-        # rubocop:enable Metrics/MethodLength
       end
     end
   end

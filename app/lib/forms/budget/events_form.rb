@@ -5,9 +5,10 @@ module Forms
 
       validate :all_valid_event_types
 
-      def initialize(current_user, events_data)
+      def initialize(current_user, change_set, events_data)
         @current_user = current_user
         @events_data = events_data.symbolize_keys.fetch(:events, [{}])
+        @change_set = change_set
       end
 
       def save
@@ -40,7 +41,7 @@ module Forms
       end
 
       def forms
-        @forms ||= events_data.map { |event_data| form_gateway.form_for(current_user, event_data) }
+        @forms ||= events_data.map { |event_data| form_gateway.form_for(current_user, change_set, event_data) }
       end
 
       def promote_errors(model)
@@ -56,7 +57,7 @@ module Forms
         Events::FormGateway
       end
 
-      attr_reader :current_user, :events_data
+      attr_reader :current_user, :events_data, :change_set
     end
   end
 end

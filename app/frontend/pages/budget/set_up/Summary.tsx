@@ -1,10 +1,10 @@
-import { SetUpCategory } from "@/lib/hooks/useSetUpEventsForm";
+import { SetupCategory } from "@/pages/budget/set_up";
 import { AmountSpan } from "@/components/common/AmountSpan";
 
 type SummaryProps = {
-  revenueCategories: Array<SetUpCategory>;
-  monthlyCategories: Array<SetUpCategory>;
-  dayToDayCategories: Array<SetUpCategory>;
+  revenueCategories: Array<SetupCategory>;
+  monthlyCategories: Array<SetupCategory>;
+  dayToDayCategories: Array<SetupCategory>;
   totalBudgeted: number;
 }
 
@@ -22,16 +22,14 @@ const AmountComponent = (props: { amount: number }) => {
 }
 
 const SummaryComponent = (props: SummaryProps) => {
-  const { revenueCategories,
+  const {
+    revenueCategories,
     monthlyCategories,
     dayToDayCategories,
     totalBudgeted
   } = props
-  const getTotal = (categories: Array<SetUpCategory>) => {
-    return categories.reduce((sum, category) => {
-      return sum + category.events.reduce((acc, event) => acc + Number(event.amount.cents), 0)
-    }, 0)
-  }
+
+  const getTotal = (_categories: Array<SetupCategory>) => { return 0 }
 
   const revenueTotal = getTotal(revenueCategories)
   const monthlyTotal = getTotal(monthlyCategories)

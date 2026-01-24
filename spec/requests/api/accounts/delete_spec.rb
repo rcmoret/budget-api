@@ -9,7 +9,7 @@ RSpec.describe "DELETE /api/account/:key" do
     include_context "with valid token"
 
     context "when the account is not found" do
-      let(:account_key) { SecureRandom.hex(6) }
+      let(:account_key) { KeyGenerator.call }
 
       include_examples "endpoint requires account"
     end
@@ -46,7 +46,7 @@ RSpec.describe "DELETE /api/account/:key" do
         create(:account, user_group: user.user_group, key: account_key)
       end
 
-      let(:account_key) { SecureRandom.hex(6) }
+      let(:account_key) { KeyGenerator.call }
 
       it "deletes the account" do
         expect { subject }
@@ -56,7 +56,7 @@ RSpec.describe "DELETE /api/account/:key" do
     end
 
     context "when the deletion does not process successfully" do
-      let(:account_key) { SecureRandom.hex(6) }
+      let(:account_key) { KeyGenerator.call }
       let(:account_double) { instance_double(Account, destroy: nil, errors: errors_double, archived_at: nil) }
       let(:errors_double) do
         instance_double(ActiveModel::Errors, any?: true, to_hash: { account: "could not be saved" })

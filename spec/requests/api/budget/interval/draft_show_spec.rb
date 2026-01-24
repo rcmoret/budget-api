@@ -18,13 +18,13 @@ RSpec.describe "GET /api/budget/interval/draft/:month/:year" do
     let(:year) { interval.year }
 
     context "when passing an invalid budget category key" do
-      let(:budget_item_key)  { SecureRandom.hex(6) }
+      let(:budget_item_key)  { KeyGenerator.call }
       let(:params) { { changes: changes } }
       let(:changes) do
         [
           {
             budget_item_key: budget_item_key,
-            budget_category_key: SecureRandom.hex(6),
+            budget_category_key: KeyGenerator.call,
             amount: 20_00,
           },
         ]
@@ -92,7 +92,7 @@ RSpec.describe "GET /api/budget/interval/draft/:month/:year" do
     end
 
     context "when passing valid changes" do
-      let(:salary_key) { SecureRandom.hex(6) }
+      let(:salary_key) { KeyGenerator.call }
       let(:params) { { changes: changes } }
       let(:changes) do
         [

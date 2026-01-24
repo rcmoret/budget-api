@@ -37,7 +37,8 @@ interface RowStylingProps {
   overflow?: OverflowOption;
   padding?: string;
   position?: PositionOption;
-  rounded?: "rounded" | null;
+  rounded?: "rounded" | "rounded-lg" | null;
+  shadow?: string;
   top?: "top-0";
 }
 

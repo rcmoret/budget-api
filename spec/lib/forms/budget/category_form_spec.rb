@@ -9,7 +9,7 @@ describe Forms::Budget::CategoryForm do
       let(:category) { build(:category, user_group: user.group) }
       let(:params) do
         category_params(
-          key: SecureRandom.hex(6),
+          key: KeyGenerator.call,
           expense: true,
           monthly: true,
           accrual: false,
@@ -30,7 +30,7 @@ describe Forms::Budget::CategoryForm do
       let(:category) { build(:category, user_group: user.group) }
       let(:params) do
         category_params(
-          key: SecureRandom.hex(6),
+          key: KeyGenerator.call,
           expense: true,
           monthly: true,
           accrual: true,

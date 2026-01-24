@@ -7,12 +7,14 @@ module WebApp
       end
 
       attributes :key,
-                 :name,
                  :amount,
+                 :currently_budgeted,
                  :icon_class_name,
                  :maturity_month,
                  :maturity_year,
                  :month,
+                 :name,
+                 :previously_budgeted,
                  :remaining,
                  :year
       attribute :is_accrual, alias_of: :accrual?

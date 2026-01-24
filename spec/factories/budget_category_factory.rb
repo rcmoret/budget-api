@@ -4,7 +4,7 @@ FactoryBot.define do
     default_amount { (-100..0).to_a.sample * 100 }
     sequence(:name) { |n| "Stuff - #{n}" }
     sequence(:slug) { |n| "slug-#{n}" }
-    key { SecureRandom.hex(6) }
+    key { KeyGenerator.call }
     accrual { false }
 
     trait :monthly do

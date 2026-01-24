@@ -35,9 +35,9 @@ ITEM_AMOUNTS = {
     "future" => -900_00,
   },
   "salary" => [
-    { "base" => 112_000, "key" => SecureRandom.hex(6) },
-    { "base" => 115_000, "key" => SecureRandom.hex(6) },
-    { "future" => 112_000, "key" => SecureRandom.hex(6) },
-    { "future" => 115_000, "key" => SecureRandom.hex(6) },
+    { "base" => 112_000, "key" => KeyGenerator.call },
+    { "base" => 115_000, "key" => KeyGenerator.call },
+    { "future" => 112_000, "key" => KeyGenerator.call },
+    { "future" => 115_000, "key" => KeyGenerator.call },
   ],
 }.freeze

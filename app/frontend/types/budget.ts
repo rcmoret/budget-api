@@ -53,6 +53,7 @@ export type BudgetItem = {
   name: string,
   amount: number,
   budgetCategoryKey: string,
+  currentlyBudgeted: number;
   difference: number,
   iconClassName: IconName,
   isAccrual: boolean,
@@ -64,6 +65,7 @@ export type BudgetItem = {
   maturityMonth?: number
   maturityYear?: number
   month: number,
+  previouslyBudgeted: number;
   remaining: number,
   spent: number,
   transactionDetails: Array<BudgetItemTransaction>,
@@ -86,6 +88,10 @@ export type BudgetCategory = {
   isExpense: boolean;
   isMonthly: boolean;
   isPerDiemEnabled: boolean;
+  upcomingMaturityIntervals?: Array<{
+    month: number;
+    year: number;
+  }>
   maturityIntervals?: Array<{
     month: number;
     year: number;

@@ -7,6 +7,8 @@ module WebApp
         include Mixins::UsesBudgetEventsForm
         include Mixins::HasBudgetInterval
 
+        before_action -> { @effective_timestamp = Time.current }
+
         after_action :update_close_out_completed_at!, if: -> { form.errors.none? }
         after_action :update_effective_start!, if: -> { form.errors.none? }
 
@@ -23,7 +25,14 @@ module WebApp
         end
 
         def update_effective_start!
-          interval.update(effective_start: Time.current)
+          ApplicationRecord.transaction do
+            interval.update!(effective_start: @effective_timestamp)
+            change_set.update!(effective_at: @effective_timestamp)
+          end
+        end
+
+        def change_set
+          @change_set ||= ::Budget::Changes::Rollover.create(interval: interva)
         end
 
         def metadata

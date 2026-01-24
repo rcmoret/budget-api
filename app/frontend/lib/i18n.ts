@@ -8,8 +8,12 @@ const t_events = (props: { key: string, opts?: I18nTranslateEventOptions }) => {
     ""
 
   switch (key) {
+    case "setup_item_create":
+      return "New Item" + suffix
     case "rollover_item_create":
       return "New Item" + suffix
+    case "setup_item_adjust":
+      return "Adjust Item" + suffix
     case "rollover_item_adjust":
       return "Adjust Item" + suffix
     default:

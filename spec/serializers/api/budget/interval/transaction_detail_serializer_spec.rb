@@ -15,7 +15,7 @@ RSpec.describe API::Budget::Interval::TransactionDetailSerializer do
         interval: interval,
       )
     end
-    let(:detail_key) { SecureRandom.hex(6) }
+    let(:detail_key) { KeyGenerator.call }
     let(:amount) { rand(-60_00..60_00) }
     let(:transaction_description) { Faker::Music::GratefulDead.song }
     let(:transaction_detail) { transaction_entry.details.first }

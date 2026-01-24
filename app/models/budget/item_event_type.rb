@@ -15,6 +15,12 @@ module Budget
       end
     end
 
+    scope :adjust_scope, -> { where(name: ADJUST_EVENTS) }
+    scope :create_scope, -> { where(name: CREATE_EVENTS) }
+    scope :delete_scope, -> { where(name: DELETE_EVENTS) }
+    scope :rollover, -> { where(name: ROLLOVER_EVENTS) }
+    scope :non_rollover, -> { where(name: NON_ROLLOVER_EVENTS) }
+
     def self.for(type_name)
       find_or_create_by!(name: type_name.to_s)
     end
