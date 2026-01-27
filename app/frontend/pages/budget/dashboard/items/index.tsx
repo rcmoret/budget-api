@@ -3,7 +3,11 @@ import axios from "axios";
 
 import { Link } from "@inertiajs/react";
 import { AmountInput, TInputAmount } from "@/components/common/AmountInput";
-import { BudgetItem, BudgetItemEvent, BudgetItemTransaction } from "@/types/budget";
+import {
+  BudgetItem,
+  BudgetItemEvent,
+  BudgetItemTransaction,
+} from "@/types/budget";
 import { Row } from "@/components/common/Row";
 import { Cell } from "@/components/common/Cell";
 import { Icon } from "@/components/common/Icon";
@@ -11,7 +15,7 @@ import { Button, SubmitButton } from "@/components/common/Button";
 import { AmountSpan, PercentSpan } from "@/components/common/AmountSpan";
 import { Point } from "@/components/common/Symbol";
 import { useAppConfigContext } from "@/components/layout/Provider";
-import { clearedItems } from "@/lib/models/budget-items"
+import { clearedItems } from "@/lib/models/budget-items";
 import { byComparisonDate as sortDetails } from "@/lib/sort_functions";
 import { useEventForm } from "@/lib/hooks/useEventsForm";
 import { generateKeyIdentifier } from "@/lib/KeyIdentifier";
@@ -19,45 +23,53 @@ import { UrlBuilder } from "@/lib/UrlBuilder";
 import { buildQueryParams } from "@/lib/redirect_params";
 import { inputAmount } from "@/components/common/AmountInput";
 import { useToggle } from "@/lib/hooks/useToogle";
-import { TextColor } from "@/types/components/text-classes"
+import { TextColor } from "@/types/components/text-classes";
 import { useBudgetDashboardContext } from "@/pages/budget/dashboard/context_provider";
 import { useBudgetDashboardItemContext } from "@/pages/budget/dashboard/items/context_provider";
 import { ItemDetailHistory } from "./details";
 import { AccrualFormComponent } from "./form";
-import { CategoryAverages, CategoryAveragesProvider, useCategoryAveragesContext } from "@/components/common/budget/category-chart";
+import {
+  CategoryAverages,
+  CategoryAveragesProvider,
+  useCategoryAveragesContext,
+} from "@/components/common/budget/category-chart";
 
-const PerDayLineItem = (props: { title: string; children: React.ReactNode }) => {
+const PerDayLineItem = (props: {
+  title: string;
+  children: React.ReactNode;
+}) => {
   return (
     <div className="w-full flex flex-row justify-between">
       <div>{props.title}</div>
       <div>{props.children}</div>
     </div>
-  )
-}
+  );
+};
 
 const PerDayDetails = () => {
-  const { item } = useBudgetDashboardItemContext()
-  const { appConfig } = useAppConfigContext()
-  const budgetedPerDay = item.amount / appConfig.budget.data.totalDays
-  const budgetedPerWeek = budgetedPerDay * 7
-  const remainingPerDay = item.remaining / appConfig.budget.data.daysRemaining
-  const remainingPerWeek = remainingPerDay * 7
-  const percentOfBudget = (remainingPerDay / budgetedPerDay) - 1
-  let prefix: "" | "+" | "-" = ""
-  let label = ""
-  let color: TextColor = "text-black"
-  if (Math.abs(percentOfBudget) < 0.001) { // this will get rounded to 100
-    label = "Percent of prorated budget"
+  const { item } = useBudgetDashboardItemContext();
+  const { appConfig } = useAppConfigContext();
+  const budgetedPerDay = item.amount / appConfig.budget.data.totalDays;
+  const budgetedPerWeek = budgetedPerDay * 7;
+  const remainingPerDay = item.remaining / appConfig.budget.data.daysRemaining;
+  const remainingPerWeek = remainingPerDay * 7;
+  const percentOfBudget = remainingPerDay / budgetedPerDay - 1;
+  let prefix: "" | "+" | "-" = "";
+  let label = "";
+  let color: TextColor = "text-black";
+  if (Math.abs(percentOfBudget) < 0.001) {
+    // this will get rounded to 100
+    label = "Percent of prorated budget";
   } else if (percentOfBudget < 0) {
-    label = "Percent behind prorated budget"
-    prefix = "-"
+    label = "Percent behind prorated budget";
+    prefix = "-";
     if (percentOfBudget < -0.25) {
-      color = "text-red-400"
+      color = "text-red-400";
     }
   } else {
-    label = "Percent ahead of prorated budget"
-    prefix = "+"
-    color = "text-green-600"
+    label = "Percent ahead of prorated budget";
+    prefix = "+";
+    color = "text-green-600";
   }
 
   return (
@@ -86,75 +98,83 @@ const PerDayDetails = () => {
         </PerDayLineItem>
       </div>
     </div>
-  )
-}
+  );
+};
 
 type DetailProps = {
   item: BudgetItem;
-  showDetails: boolean
-}
+  showDetails: boolean;
+};
 
 const ItemDetails = ({ item, showDetails }: DetailProps) => {
-  const { key, isExpense, isPerDiemEnabled, transactionDetails } = item
+  const { key, isExpense, isPerDiemEnabled, transactionDetails } = item;
 
-  const [events, setEvents] = useState<BudgetItemEvent[]>(item.events)
+  const [events, setEvents] = useState<BudgetItemEvent[]>(item.events);
 
   if (showDetails && !events.length) {
-    const detailsUrl = UrlBuilder({ name: "BudgetItemDetails", key })
-    axios.get(detailsUrl)
-      .then(response => {
-        const { budgetItem } = response.data
-        setEvents(budgetItem.events)
+    const detailsUrl = UrlBuilder({ name: "BudgetItemDetails", key });
+    axios
+      .get(detailsUrl)
+      .then((response) => {
+        const { budgetItem } = response.data;
+        setEvents(budgetItem.events);
       })
-      .catch(error => {
-        console.error('Error fetching summary data:', error)
-      })
+      .catch((error) => {
+        console.error("Error fetching summary data:", error);
+      });
   }
 
-  let details: Array<BudgetItemEvent | BudgetItemTransaction> = []
+  let details: Array<BudgetItemEvent | BudgetItemTransaction> = [];
   if (clearedItems(item)) {
-    details = events.sort(sortDetails)
+    details = events.sort(sortDetails);
   } else {
-    details = [...events, ...transactionDetails].sort(sortDetails)
+    details = [...events, ...transactionDetails].sort(sortDetails);
   }
 
-  if (!showDetails) { return null }
+  if (!showDetails) {
+    return null;
+  }
 
   return (
     <>
-      <Row styling={{ flexDirection: "flex-col", padding: "p-2", border: "border-t border-gray-500 border-solid" }}>
+      <Row
+        styling={{
+          flexDirection: "flex-col",
+          padding: "p-2",
+          border: "border-t border-gray-500 border-solid",
+        }}
+      >
         <div>
           <strong>Budget Item Details</strong>
         </div>
-        <div className="text-sm font-medium">
-          Key: {key}
-        </div>
+        <div className="text-sm font-medium">Key: {key}</div>
       </Row>
       {isPerDiemEnabled ? <PerDayDetails /> : null}
       <ItemDetailHistory details={details} isExpense={isExpense} />
     </>
-  )
-}
+  );
+};
 
 const SummaryUpdateButton = () => {
-  const { currentSummary, hideAverages, isLoading, fetchSummaries } = useCategoryAveragesContext()
+  const { currentSummary, hideAverages, isLoading, fetchSummaries } =
+    useCategoryAveragesContext();
 
-  const isHidden = !currentSummary
+  const isHidden = !currentSummary;
 
   const className = [
     "text-blue-300",
     "font-semibold",
     "rounded",
-    isLoading ? "opacity-50 cursor-not-allowed" : ""
-  ].join(" ")
+    isLoading ? "opacity-50 cursor-not-allowed" : "",
+  ].join(" ");
 
   const onClick = () => {
     if (isHidden) {
-      fetchSummaries()
+      fetchSummaries();
     } else {
-      hideAverages()
+      hideAverages();
     }
-  }
+  };
 
   return (
     <div className="text-xs">
@@ -164,16 +184,16 @@ const SummaryUpdateButton = () => {
         className={className}
         disabled={isLoading && !isHidden}
       >
-        {[(isHidden ? "Show" : "Hide"), "Averages"].join(" ")}
+        {[isHidden ? "Show" : "Hide", "Averages"].join(" ")}
       </button>
     </div>
-  )
-}
+  );
+};
 
 const CategoryAveragesComponent = () => {
-  const { appConfig } = useAppConfigContext()
-  const { month, year } = appConfig.budget.data
-  const { item } = useBudgetDashboardItemContext()
+  const { appConfig } = useAppConfigContext();
+  const { month, year } = appConfig.budget.data;
+  const { item } = useBudgetDashboardItemContext();
 
   return (
     <CategoryAveragesProvider
@@ -186,60 +206,60 @@ const CategoryAveragesComponent = () => {
         <SummaryUpdateButton />
       </div>
     </CategoryAveragesProvider>
-  )
-}
+  );
+};
 
 const PrevVsCurrentlyBudgetedIndicator = () => {
-  const { item } = useBudgetDashboardItemContext()
-  const { amount: totalBudgeted, currentlyBudgeted, previouslyBudgeted } = item
+  const { item } = useBudgetDashboardItemContext();
+  const { amount: totalBudgeted, currentlyBudgeted, previouslyBudgeted } = item;
 
-  if (!totalBudgeted || totalBudgeted === currentlyBudgeted) { return null }
+  if (!totalBudgeted || totalBudgeted === currentlyBudgeted) {
+    return null;
+  }
 
   const currentlyBudgetedWidth = Math.min(
     Math.abs((100 * currentlyBudgeted) / totalBudgeted),
-    100
-  )
-  const currentlyBudgetedColor = "chartreuse-200"
+    100,
+  );
+  const currentlyBudgetedColor = "chartreuse-200";
   const previouslyBudgetedWidth = Math.min(
     Math.abs((100 * previouslyBudgeted) / totalBudgeted),
-    100
-  )
-  const previouslyBudgetedColor = "sky-200"
+    100,
+  );
+  const previouslyBudgetedColor = "sky-200";
 
   return (
     <div className="w-full px-4 flex flex-col gap-0">
       <div className="flex flex-row gap-2 items-center">
-        <div className={`text-2xl text-${previouslyBudgetedColor}`}>
-          &bull;
-        </div>
-        <div className="text-sm">
-          Previously Budgeted
-        </div>
+        <div className={`text-2xl text-${previouslyBudgetedColor}`}>&bull;</div>
+        <div className="text-sm">Previously Budgeted</div>
       </div>
       <div className="flex flex-row gap-2 items-center">
-        <div className={`text-2xl text-${currentlyBudgetedColor}`}>
-          &bull;
-        </div>
-        <div className="text-sm">
-          Currently Budgeted
-        </div>
+        <div className={`text-2xl text-${currentlyBudgetedColor}`}>&bull;</div>
+        <div className="text-sm">Currently Budgeted</div>
       </div>
       <div className="h-2 w-full overflow-hidden rounded-lg flex flex-row">
-        <div className={`h-2 bg-${previouslyBudgetedColor}`} style={{ width: previouslyBudgetedWidth + "%" }}>
-        </div>
-        <div className={`h-2 bg-${currentlyBudgetedColor}`} style={{ width: currentlyBudgetedWidth + "%" }}>
-        </div>
+        <div
+          className={`h-2 bg-${previouslyBudgetedColor}`}
+          style={{ width: previouslyBudgetedWidth + "%" }}
+        ></div>
+        <div
+          className={`h-2 bg-${currentlyBudgetedColor}`}
+          style={{ width: currentlyBudgetedWidth + "%" }}
+        ></div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-const ItemContainer = (props: { children?: React.ReactNode; }) => {
-  const { children } = props
-  const { item, isHidden } = useBudgetDashboardItemContext()
-  const [showDetails, toggleDetails] = useToggle(false)
+const ItemContainer = (props: { children?: React.ReactNode }) => {
+  const { children } = props;
+  const { item, isHidden } = useBudgetDashboardItemContext();
+  const [showDetails, toggleDetails] = useToggle(false);
 
-  if (isHidden) { return null }
+  if (isHidden) {
+    return null;
+  }
 
   return (
     <Row
@@ -248,13 +268,10 @@ const ItemContainer = (props: { children?: React.ReactNode; }) => {
         backgroundColor: "even:bg-sky-50 odd:bg-white",
         color: "text-gray-800",
         gap: "gap-px",
-        rounded: "rounded"
+        rounded: "rounded",
       }}
     >
-      <NameRow
-        showDetails={showDetails}
-        toggleDetails={toggleDetails}
-      />
+      <NameRow showDetails={showDetails} toggleDetails={toggleDetails} />
       <PrevVsCurrentlyBudgetedIndicator />
       {children}
       <CategoryAveragesComponent />
@@ -262,12 +279,12 @@ const ItemContainer = (props: { children?: React.ReactNode; }) => {
       <ActionableIcons />
       <ItemDetails item={item} showDetails={showDetails} />
     </Row>
-  )
-}
+  );
+};
 
 const DeleteButton = ({ item }: { item: BudgetItem }) => {
-  const { appConfig } = useAppConfigContext()
-  const { month, year } = appConfig.budget.data
+  const { appConfig } = useAppConfigContext();
+  const { month, year } = appConfig.budget.data;
 
   const { post, processing } = useEventForm({
     events: [
@@ -276,24 +293,24 @@ const DeleteButton = ({ item }: { item: BudgetItem }) => {
         eventType: "item_delete",
         budgetItemKey: item.key,
         amount: { cents: 0, display: "" },
-      }
+      },
     ],
     month,
-    year
-  })
+    year,
+  });
 
   const onSubmit = () => {
     const formUrl = UrlBuilder({
       name: "BudgetItemEvents",
       month,
       year,
-      queryParams: buildQueryParams(["budget", month, year])
-    })
-    post(formUrl)
-  }
+      queryParams: buildQueryParams(["budget", month, year]),
+    });
+    post(formUrl);
+  };
 
   if (!item.isDeletable) {
-    return null
+    return null;
   }
 
   return (
@@ -306,8 +323,8 @@ const DeleteButton = ({ item }: { item: BudgetItem }) => {
         <Icon name="trash" />
       </SubmitButton>
     </form>
-  )
-}
+  );
+};
 
 const EditButton = ({ onClick }: { onClick: () => void }) => {
   return (
@@ -318,8 +335,8 @@ const EditButton = ({ onClick }: { onClick: () => void }) => {
     >
       <Icon name="edit" />
     </Button>
-  )
-}
+  );
+};
 
 const CloseFormButton = ({ onClick }: { onClick: () => void }) => {
   return (
@@ -330,8 +347,8 @@ const CloseFormButton = ({ onClick }: { onClick: () => void }) => {
     >
       <Icon name="times-circle" />
     </Button>
-  )
-}
+  );
+};
 
 const EditSubmitButton = (props: {
   postEvents: () => void;
@@ -345,42 +362,46 @@ const EditSubmitButton = (props: {
         color: "text-gray-600",
       }}
       styling={{
-        color: "text-blue-300"
+        color: "text-blue-300",
       }}
     >
       <Icon name="check-circle" />
     </SubmitButton>
-  )
-}
+  );
+};
 
 const ActionableIcons = () => {
-  const { item } = useBudgetDashboardItemContext()
-  const { form } = useBudgetDashboardContext()
-  const { post: postEvents, processing } = form
-  const { appConfig } = useAppConfigContext()
+  const { item } = useBudgetDashboardItemContext();
+  const { form } = useBudgetDashboardContext();
+  const { post: postEvents, processing } = form;
+  const { appConfig } = useAppConfigContext();
 
-  const openForm = () => form.addChange({
-    budgetItemKey: item.key,
-    budgetCategoryKey: item.budgetCategoryKey,
-    updatedAmount: inputAmount({ cents: item.amount }),
-    amount: inputAmount({ display: "" })
-  })
-  const closeForm = () => form.removeChange(item.key)
+  const openForm = () =>
+    form.addChange({
+      budgetItemKey: item.key,
+      budgetCategoryKey: item.budgetCategoryKey,
+      updatedAmount: inputAmount({ cents: item.amount }),
+      amount: inputAmount({ display: "" }),
+    });
+  const closeForm = () => form.removeChange(item.key);
 
-  const category = appConfig.budget.categories.find((category) => {
-    return category.key === item.budgetCategoryKey
-  }) ?? null
-  const href = !!category ? `/budget/category/${category.slug}` : "#"
+  const category =
+    appConfig.budget.categories.find((category) => {
+      return category.key === item.budgetCategoryKey;
+    }) ?? null;
+  const href = !!category ? `/budget/category/${category.slug}` : "#";
 
-  const isSubmittable = !!item.draftItem && form.changes.length === 1
+  const isSubmittable = !!item.draftItem && form.changes.length === 1;
 
   return (
-    <Row styling={{
-      padding: "p-2",
-      flexAlign: "justify-between",
-      alignItems: "items-center",
-      gap: "gap-2"
-    }}>
+    <Row
+      styling={{
+        padding: "p-2",
+        flexAlign: "justify-between",
+        alignItems: "items-center",
+        gap: "gap-2",
+      }}
+    >
       <div>
         <Link href={href}>
           <span className="text-sm text-blue-300">
@@ -389,65 +410,71 @@ const ActionableIcons = () => {
         </Link>
       </div>
       <div className="flex flex-row gap-2">
-        {!!item.draftItem ? <CloseFormButton onClick={closeForm} /> : <EditButton onClick={openForm} />}
+        {!!item.draftItem ? (
+          <CloseFormButton onClick={closeForm} />
+        ) : (
+          <EditButton onClick={openForm} />
+        )}
         {isSubmittable && (
-          <EditSubmitButton
-            postEvents={postEvents}
-            processing={processing}
-          />
+          <EditSubmitButton postEvents={postEvents} processing={processing} />
         )}
 
         <DeleteButton item={item} />
       </div>
     </Row>
-  )
-}
-
+  );
+};
 
 const AccrualRow = ({ item }: { item: BudgetItem }) => {
-  const { maturityMonth, maturityYear } = item
-  const { appConfig } = useAppConfigContext()
-  const { month, year } = appConfig.budget.data
+  const { maturityMonth, maturityYear } = item;
+  const { appConfig } = useAppConfigContext();
+  const { month, year } = appConfig.budget.data;
 
-  const isMature = month === maturityMonth && year === maturityYear
+  const isMature = month === maturityMonth && year === maturityYear;
 
-  let upcomingMaturityCopy = ""
+  let upcomingMaturityCopy = "";
   if (isMature) {
-    upcomingMaturityCopy = "Currently Mature"
+    upcomingMaturityCopy = "Currently Mature";
   } else if (!!maturityYear && !!maturityMonth) {
-    upcomingMaturityCopy = `Maturing: ${maturityMonth}/${maturityYear}`
+    upcomingMaturityCopy = `Maturing: ${maturityMonth}/${maturityYear}`;
   } else {
-    upcomingMaturityCopy = "No upcoming maturity date"
+    upcomingMaturityCopy = "No upcoming maturity date";
   }
 
   return (
-    <Row styling={{ padding: "p-2", flexWrap: "flex-wrap", flexAlign: "justify-between" }}>
+    <Row
+      styling={{
+        padding: "p-2",
+        flexWrap: "flex-wrap",
+        flexAlign: "justify-between",
+      }}
+    >
       <Cell styling={{ width: "w-6/12" }}>
         <span className="italic text-sm">
-          <Point>
-            Accruing
-          </Point>
+          <Point>Accruing</Point>
         </span>
       </Cell>
       <Cell styling={{ textAlign: "text-right", width: "w-6/12" }}>
         {upcomingMaturityCopy}
       </Cell>
-      {!isMature && <AccrualFormComponent budgetCategoryKey={item.budgetCategoryKey} />}
+      {!isMature && (
+        <AccrualFormComponent budgetCategoryKey={item.budgetCategoryKey} />
+      )}
     </Row>
-  )
-}
+  );
+};
 
 type NameRowProps = {
   showDetails: boolean;
   toggleDetails: () => void;
-}
+};
 
 const NameRow = (props: NameRowProps) => {
-  const { item } = useBudgetDashboardItemContext()
-  const { showDetails, toggleDetails } = props
-  const { name, iconClassName, amount } = item
-  const caretIcon = showDetails ? "caret-down" : "caret-right"
-  const absolute = !item.draftItem
+  const { item } = useBudgetDashboardItemContext();
+  const { showDetails, toggleDetails } = props;
+  const { name, iconClassName, amount } = item;
+  const caretIcon = showDetails ? "caret-down" : "caret-right";
+  const absolute = !item.draftItem;
 
   return (
     <>
@@ -459,40 +486,56 @@ const NameRow = (props: NameRowProps) => {
             onClick={toggleDetails}
             styling={{
               fontWeight: "font-semibold",
-              color: "text-gray-800"
+              color: "text-gray-800",
             }}
           >
             <span className="text-blue-300 text-sm">
               <Icon name={caretIcon} />
-            </span>
-            {" "}
+            </span>{" "}
             {name}
-          </Button>
-          {" "}
+          </Button>{" "}
           <Icon name={iconClassName} />
         </Cell>
-        <Cell styling={{ fontWeight: "font-bold", textAlign: "text-right", width: "w-4/12" }}>
-          <AmountSpan color="text-gray-800" amount={amount} absolute={absolute} />
+        <Cell
+          styling={{
+            fontWeight: "font-bold",
+            textAlign: "text-right",
+            width: "w-4/12",
+          }}
+        >
+          <AmountSpan
+            color="text-gray-800"
+            amount={amount}
+            absolute={absolute}
+          />
         </Cell>
       </Row>
     </>
-  )
-}
+  );
+};
 
 const DifferenceLineItem = () => {
-  const { item } = useBudgetDashboardItemContext()
-  const { spent, amount, isExpense, difference } = item
+  const { item } = useBudgetDashboardItemContext();
+  const { spent, amount, isExpense, difference } = item;
 
-  if (Math.abs(amount) >= Math.abs(spent)) { return null }
+  if (Math.abs(amount) >= Math.abs(spent)) {
+    return null;
+  }
 
-  const copy = isExpense ? "Over Budget" : "Exceeding Budget"
+  const copy = isExpense ? "Over Budget" : "Exceeding Budget";
 
   return (
     <Row styling={{ padding: "p-2", flexAlign: "justify-between" }}>
       <Cell styling={{ width: "w-6/12", fontWeight: "font-semibold" }}>
         {copy}
       </Cell>
-      <Cell styling={{ fontWeight: "font-bold", textAlign: "text-right", width: "w-4/12" }}>
+      <Cell
+        styling={{
+          fontWeight: "font-bold",
+          textAlign: "text-right",
+          width: "w-4/12",
+        }}
+      >
         <AmountSpan
           amount={difference * -1}
           color="text-green-600"
@@ -502,8 +545,8 @@ const DifferenceLineItem = () => {
         />
       </Cell>
     </Row>
-  )
-}
+  );
+};
 
 const LocalAmountInput = (props: {
   amount: TInputAmount;
@@ -521,14 +564,14 @@ const LocalAmountInput = (props: {
         onChange={props.onChange}
         classes={["font-normal", "border", "border-gray-500"]}
       />
-    )
+    );
   } else {
     return (
       <Button type="button" onClick={props.toggleInput}>
         {props.children}
       </Button>
-    )
+    );
   }
-}
+};
 
-export { DifferenceLineItem, ItemContainer, LocalAmountInput }
+export { DifferenceLineItem, ItemContainer, LocalAmountInput };

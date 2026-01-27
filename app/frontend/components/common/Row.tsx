@@ -6,9 +6,7 @@ import type {
   TextColor,
 } from "types/components/text-classes";
 
-import {
-  GapOption
-} from "types/components/spacing-classes";
+import { GapOption } from "types/components/spacing-classes";
 
 import type {
   AlignItemsOption,
@@ -26,7 +24,7 @@ interface RowStylingProps {
   alternatingBgColor?: string;
   backgroundColor?: BgColorOption;
   border?: string;
-  color?: TextColor
+  color?: TextColor;
   flexAlign?: FlexAlignOption;
   flexDirection?: FlexDirectionOption;
   flexWrap?: FlexWrapOption | null;
@@ -68,7 +66,7 @@ interface StripedRowProps {
   styling: {
     alignItems?: AlignItemsOption;
     border?: string;
-    color?: TextColor
+    color?: TextColor;
     flexAlign?: FlexAlignOption;
     flexDirection?: FlexDirectionOption;
     flexWrap?: FlexWrapOption | null;
@@ -88,7 +86,7 @@ const StripedRow = (props: StripedRowProps) => {
 
   const styling = {
     ...props.styling,
-    alternatingBgColor: [oddColor, evenColor].join(" ")
+    alternatingBgColor: [oddColor, evenColor].join(" "),
   };
 
   return <Row styling={styling}>{props.children}</Row>;

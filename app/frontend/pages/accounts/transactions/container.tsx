@@ -13,9 +13,9 @@ interface ContainerProps {
 }
 
 const TransactionContainer = (props: ContainerProps) => {
-  const isEven = props.index % 2 === 0
+  const isEven = props.index % 2 === 0;
 
-  const bgColor = isEven ? "bg-sky-50" : "bg-sky-100"
+  const bgColor = isEven ? "bg-sky-50" : "bg-sky-100";
 
   return (
     <Row
@@ -34,25 +34,25 @@ const TransactionContainer = (props: ContainerProps) => {
             flexAlign: "justify-between",
             display: "flex",
             gap: "gap-2",
-            flexWrap: "flex-wrap md:flex-nowrap"
+            flexWrap: "flex-wrap md:flex-nowrap",
           }}
         >
           {props.clearanceDateComponent}
           <div className="w-4/12">{props.descriptionComponent}</div>
           <div className="w-4/12 flex flex-row justify-end gap-12 text-right">
-            <div className="w-full">
-              {props.transactionAmountComponent}
-            </div>
+            <div className="w-full">{props.transactionAmountComponent}</div>
           </div>
           <div className="w-full md:w-4/12 flex flex-row justify-between mt-4 md:mt-0">
             <div className="text-sm text-gray-700 md:hidden">Balance</div>
-            <div className="w-4/12 md:w-full border-t border-gray-400 text-right text-bold md:border-none">{props.balanceCompnent}</div>
+            <div className="w-4/12 md:w-full border-t border-gray-400 text-right text-bold md:border-none">
+              {props.balanceCompnent}
+            </div>
           </div>
         </Cell>
       </div>
       {props.children}
     </Row>
-  )
+  );
 };
 
 export { TransactionContainer };

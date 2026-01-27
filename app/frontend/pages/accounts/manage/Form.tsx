@@ -11,63 +11,65 @@ const AccountForm = (props: {
   closeForm: () => void;
   isNew?: boolean;
 }) => {
-  const { account, closeForm } = props
-  const { key, createdAt, isArchived, archivedAt, ...formProps } = account
-  const isNew = !!props.isNew
+  const { account, closeForm } = props;
+  const { key, createdAt, isArchived, archivedAt, ...formProps } = account;
+  const isNew = !!props.isNew;
 
-  const { data, setData, transform, processing, post, put } = useForm(formProps)
+  const { data, setData, transform, processing, post, put } =
+    useForm(formProps);
 
   // @ts-ignore
   transform(() => {
-    const { isCashFlow, ...updateProps } = data
+    const { isCashFlow, ...updateProps } = data;
 
     return {
       account: {
         ...updateProps,
         cashFlow: isCashFlow,
-        ...(isNew ? { key: account.key } : {})
-      }
-    }
-  })
+        ...(isNew ? { key: account.key } : {}),
+      },
+    };
+  });
 
   const onChange = (ev: React.ChangeEvent & { target: HTMLInputElement }) => {
-    const { name } = ev.target
+    const { name } = ev.target;
 
     if (name === "isCashFlow") {
-      setData({ ...data, isCashFlow: ev.target.value === "on" })
-      return
+      setData({ ...data, isCashFlow: ev.target.value === "on" });
+      return;
     }
     if (name === "isBudgetExclusion") {
-      setData({ ...data, isCashFlow: !(ev.target.value === "on") })
-      return
+      setData({ ...data, isCashFlow: !(ev.target.value === "on") });
+      return;
     }
 
-    setData({ ...data, [name]: ev.target.value })
-  }
+    setData({ ...data, [name]: ev.target.value });
+  };
 
   const putUpdate = () => {
     const formUrl = UrlBuilder({
-      key, name: "AccountShow",
-      queryParams: buildQueryParams(["accounts", "manage"])
-    })
-    put(formUrl, { onSuccess: closeForm })
-  }
+      key,
+      name: "AccountShow",
+      queryParams: buildQueryParams(["accounts", "manage"]),
+    });
+    put(formUrl, { onSuccess: closeForm });
+  };
 
   const postNew = () => {
     const formUrl = UrlBuilder({
       name: "AccountIndex",
-      queryParams: buildQueryParams(["accounts", "manage"])
-    })
-    post(formUrl, { onSuccess: closeForm })
-  }
+      queryParams: buildQueryParams(["accounts", "manage"]),
+    });
+    post(formUrl, { onSuccess: closeForm });
+  };
 
   const onSumbit = () => {
     if (isNew) {
-      postNew()
+      postNew();
     } else {
-      putUpdate()
+      putUpdate();
     }
-  }
+  };
 
   return (
     <form onSubmit={onSumbit}>
@@ -81,7 +83,7 @@ const AccountForm = (props: {
                 type="button"
                 onClick={closeForm}
                 styling={{ color: "text-blue-300" }}
-                >
+              >
                 <Icon name="times-circle" />
               </Button>
             </div>
@@ -146,7 +148,7 @@ const AccountForm = (props: {
               rounded: "rounded",
               backgroundColor: "bg-green-600",
               color: "text-white",
-              padding: "px-4 py-1"
+              padding: "px-4 py-1",
             }}
             isEnabled={!processing}
           >
@@ -155,11 +157,11 @@ const AccountForm = (props: {
         </div>
       </div>
     </form>
-  )
-}
+  );
+};
 
 const NewForm = (props: { closeForm: () => void }) => {
-  const { closeForm } = props
+  const { closeForm } = props;
 
   const account = {
     key: generateKeyIdentifier(),
@@ -169,13 +171,11 @@ const NewForm = (props: { closeForm: () => void }) => {
     archivedAt: "",
     createdAt: "",
     isArchived: false,
-    isCashFlow: true
-  }
+    isCashFlow: true,
+  };
 
-  return (
-    <AccountForm account={account} closeForm={closeForm} isNew={true} />
-  )
-}
+  return <AccountForm account={account} closeForm={closeForm} isNew={true} />;
+};
 
 const NewButton = (props: { openForm: () => void }) => {
   return (
@@ -187,28 +187,30 @@ const NewButton = (props: { openForm: () => void }) => {
       >
         <div className="w-full flex flex-row gap-2">
           <Icon name="plus-circle" />
-          <div>
-            Add New
-          </div>
+          <div>Add New</div>
         </div>
       </Button>
     </div>
-  )
-}
+  );
+};
 
 const AddNewComponent = (props: {
   isFormShown: boolean;
   setShowFormFor: (id: null | string) => void;
 }) => {
-  const { isFormShown, setShowFormFor } = props
-  const closeForm = () => setShowFormFor(null)
-  const openForm = () => setShowFormFor("__new__")
+  const { isFormShown, setShowFormFor } = props;
+  const closeForm = () => setShowFormFor(null);
+  const openForm = () => setShowFormFor("__new__");
 
   return (
     <div className="w-72 flex flex-row flex-wrap justify-between pb-2">
-      {isFormShown ? <NewForm closeForm={closeForm} /> : <NewButton openForm={openForm} />}
+      {isFormShown ? (
+        <NewForm closeForm={closeForm} />
+      ) : (
+        <NewButton openForm={openForm} />
+      )}
     </div>
-  )
-}
+  );
+};
 
-export { AccountForm, AddNewComponent }
+export { AccountForm, AddNewComponent };

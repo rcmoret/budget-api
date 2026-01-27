@@ -7,33 +7,31 @@ import { LeftColumn } from "./left_column";
 import { KeyboardNav } from "./keyboard_nav";
 
 type IndexComponentProps = {
-  categories: Array<FinalizeCategory>
+  categories: Array<FinalizeCategory>;
   target: BudgetFinalizePageData;
   data: BudgetFinalizePageData;
   metadata: {
     namespace: "budget";
     page: {
       name: string;
-    }
+    };
   };
-}
+};
 
 const SubmitSection = (props: { children: React.ReactNode }) => {
-  const { allItemsReviewed } = useFinalizeFormContext()
+  const { allItemsReviewed } = useFinalizeFormContext();
 
   if (allItemsReviewed) {
     return (
       <div className="my-2 pb-2 border-b border-gray-400">
         <span id="finalize-summary"></span>
-        <div className="flex flex-col gap-2">
-          {props.children}
-        </div>
+        <div className="flex flex-col gap-2">{props.children}</div>
       </div>
-    )
+    );
   } else {
-    return null
+    return null;
   }
-}
+};
 
 const BudgetFinalizeIndex = (props: IndexComponentProps) => {
   return (
@@ -41,16 +39,16 @@ const BudgetFinalizeIndex = (props: IndexComponentProps) => {
       <FinalizeFormProvider {...props}>
         <KeyboardNav />
         <div className="w-full flex md:flex-row flex-col gap-6 mb-6 p-2">
-          <LeftColumn >
+          <LeftColumn>
             <Summary />
-          </LeftColumn >
+          </LeftColumn>
           <div>
             <RightColumn />
           </div>
         </div>
       </FinalizeFormProvider>
     </div>
-  )
-}
+  );
+};
 
 export default BudgetFinalizeIndex;

@@ -6,9 +6,7 @@ import { Button } from "@/components/common/Button";
 import { dateParse } from "@/lib/DateFormatter";
 import { useBudgetDashboardContext } from "@/pages/budget/dashboard/context_provider";
 
-const TransactionButton = (props: {
-  toggleTransactions: () => void;
-}) => {
+const TransactionButton = (props: { toggleTransactions: () => void }) => {
   return (
     <Row styling={{ flexWrap: "flex-wrap", padding: "px-2" }}>
       <Button
@@ -19,8 +17,8 @@ const TransactionButton = (props: {
         Show Transactions
       </Button>
     </Row>
-  )
-}
+  );
+};
 
 const TransactionDetails = (props: {
   toggleTransactions: () => void;
@@ -45,61 +43,65 @@ const TransactionDetails = (props: {
               transaction={transaction}
             />
           </Row>
-        )
+        );
       })}
     </Row>
-  )
-}
+  );
+};
 
-const TransactionDetailLineItem = (props: { transaction: BudgetItemTransaction }) => {
-  const { transaction } = props
+const TransactionDetailLineItem = (props: {
+  transaction: BudgetItemTransaction;
+}) => {
+  const { transaction } = props;
 
-  const dateString = transaction.clearanceDate ? 
-    dateParse(transaction.clearanceDate) :
-    "pending"
+  const dateString = transaction.clearanceDate
+    ? dateParse(transaction.clearanceDate)
+    : "pending";
 
   return (
-    <Row styling={{
-      flexAlign: "justify-between",
-      border: "border-t border-gray-400",
-      alignItems: "items-end",
-      padding: "px-2 py-1"
-    }}>
+    <Row
+      styling={{
+        flexAlign: "justify-between",
+        border: "border-t border-gray-400",
+        alignItems: "items-end",
+        padding: "px-2 py-1",
+      }}
+    >
       <div>
         <div className="hidden">{transaction.key}</div>
-        <div className="text-xs">
-          Account
-        </div>
-        <div>
-          {transaction.accountName}
-        </div>
+        <div className="text-xs">Account</div>
+        <div>{transaction.accountName}</div>
       </div>
       <div>
-        <div className="text-xs">
-          {dateString}
-        </div>
+        <div className="text-xs">{dateString}</div>
         <div>
           {transaction.description || <span className="text-gray-600">-</span>}
         </div>
       </div>
       <div>
         <div className="font-bold">
-          <AmountSpan amount={transaction.amount}
+          <AmountSpan
+            amount={transaction.amount}
             zeroColor="text-black"
             color="text-green-600"
             negativeColor="text-red-400"
-           />
+          />
         </div>
       </div>
     </Row>
-  )
-}
+  );
+};
 
 const Discretionary = () => {
-  const { discretionary } = useBudgetDashboardContext()
-  const { amount, overUnderBudget, transactionsTotal, transactionDetails: transactions } = discretionary;
+  const { discretionary } = useBudgetDashboardContext();
+  const {
+    amount,
+    overUnderBudget,
+    transactionsTotal,
+    transactionDetails: transactions,
+  } = discretionary;
 
-  const [transactionsShown, toggleTransactions] = useToggle(false)
+  const [transactionsShown, toggleTransactions] = useToggle(false);
 
   const total = amount - transactionsTotal - overUnderBudget;
 
@@ -164,12 +166,14 @@ const Discretionary = () => {
           />
         </div>
       </Row>
-      {!transactionsShown ?
-        <TransactionButton toggleTransactions={toggleTransactions} /> :
+      {!transactionsShown ? (
+        <TransactionButton toggleTransactions={toggleTransactions} />
+      ) : (
         <TransactionDetails
           toggleTransactions={toggleTransactions}
           transactions={transactions}
-        />}
+        />
+      )}
     </>
   );
 };

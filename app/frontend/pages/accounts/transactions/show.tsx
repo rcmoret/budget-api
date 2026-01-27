@@ -12,8 +12,8 @@ import {
 } from "@/pages/accounts/transactions/common";
 import { TransactionWithBalance } from "@/pages/accounts/transactions";
 
-const KeyComponent = (props: { transaction: TransactionWithBalance}) => {
-  const { key, transferKey, details } = props.transaction
+const KeyComponent = (props: { transaction: TransactionWithBalance }) => {
+  const { key, transferKey, details } = props.transaction;
   return (
     <div id={key}>
       <span className="hidden">{key}</span>
@@ -22,8 +22,8 @@ const KeyComponent = (props: { transaction: TransactionWithBalance}) => {
       ))}
       {transferKey && <div data-name="transfer-key" id={transferKey}></div>}
     </div>
-  )
-}
+  );
+};
 
 const TransactionShow = (props: {
   transaction: TransactionWithBalance;
@@ -54,7 +54,7 @@ const TransactionShow = (props: {
   if (notes) {
     noteLines = notes.replace(/^!!!\s/, "").split("<br>");
   }
-  const toggleForm = () => showFormFn(key)
+  const toggleForm = () => showFormFn(key);
 
   return (
     <TransactionContainer
@@ -67,10 +67,12 @@ const TransactionShow = (props: {
           toggleForm={toggleForm}
         />
       }
-      descriptionComponent={<DescriptionComponent
-        transaction={transaction}
-        toggleForm={toggleForm}
-      />}
+      descriptionComponent={
+        <DescriptionComponent
+          transaction={transaction}
+          toggleForm={toggleForm}
+        />
+      }
       transactionAmountComponent={
         <BudgetItemAmounts
           details={details}
@@ -79,9 +81,14 @@ const TransactionShow = (props: {
         />
       }
       balanceCompnent={
-        transaction.balance === null ?
-          "" :
-          <AmountSpan amount={transaction.balance} negativeColor="text-red-400" />
+        transaction.balance === null ? (
+          ""
+        ) : (
+          <AmountSpan
+            amount={transaction.balance}
+            negativeColor="text-red-400"
+          />
+        )
       }
     >
       <Cell
@@ -120,9 +127,7 @@ const TransactionShow = (props: {
         }}
       >
         <div className="w-full flex flex-row-reverse">
-          <DeleteIcon
-            transaction={transaction}
-          />
+          <DeleteIcon transaction={transaction} />
           <Button
             type="button"
             onClick={toggleForm}

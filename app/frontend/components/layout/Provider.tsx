@@ -1,5 +1,9 @@
 import { ReactNode, useContext, createContext, useState } from "react";
-import { BudgetData, SelectBudgetCategory, DiscretionaryData } from "@/types/budget";
+import {
+  BudgetData,
+  SelectBudgetCategory,
+  DiscretionaryData,
+} from "@/types/budget";
 
 type TAppConfig = {
   showConfigMenu: boolean;
@@ -23,7 +27,7 @@ type TAppConfig = {
     data: BudgetData;
     discretionary: DiscretionaryData;
   };
-}
+};
 
 const initialConfig: TAppConfig = {
   showConfigMenu: false,
@@ -50,44 +54,48 @@ const initialConfig: TAppConfig = {
       year: 2000,
       isClosedOut: false,
       isSetUp: false,
-      items: []
+      items: [],
     },
     discretionary: {
       amount: 0,
       overUnderBudget: 0,
       transactionsTotal: 0,
-      transactionDetails: []
-    }
+      transactionDetails: [],
+    },
   },
-}
+};
 
 type TConfigContext = {
   appConfig: TAppConfig;
   setAppConfig: (props: TAppConfig) => void;
-}
+};
 
 const AppConfigContext = createContext<TConfigContext>({
   appConfig: initialConfig,
-  setAppConfig: (props: TAppConfig): TAppConfig => { return props },
-})
+  setAppConfig: (props: TAppConfig): TAppConfig => {
+    return props;
+  },
+});
 
 const Provider = ({ children }: { children: ReactNode }) => {
-  const [appConfig, setAppConfig] = useState<TAppConfig>(initialConfig)
+  const [appConfig, setAppConfig] = useState<TAppConfig>(initialConfig);
 
   return (
     <AppConfigContext.Provider value={{ appConfig, setAppConfig }}>
       {children}
     </AppConfigContext.Provider>
-  )
-}
+  );
+};
 
 const useAppConfigContext = () => {
   const context = useContext(AppConfigContext);
   if (!context) {
-    throw new Error("useAppConfigContext must be used within a Budget Dashboard Item Context Provider")
+    throw new Error(
+      "useAppConfigContext must be used within a Budget Dashboard Item Context Provider",
+    );
   }
 
   return context;
-}
+};
 
-export { useAppConfigContext, AppConfigContext, Provider, TAppConfig }
+export { useAppConfigContext, AppConfigContext, Provider, TAppConfig };

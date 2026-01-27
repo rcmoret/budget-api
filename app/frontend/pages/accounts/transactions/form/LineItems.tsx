@@ -4,16 +4,20 @@ import { Label } from "@/pages/accounts/transactions/form/Shared";
 import { TFormDetail } from "@/pages/accounts/transactions/form";
 import { Icon } from "@/components/common/Icon";
 import Select, { SingleValue, createFilter } from "react-select";
-import { accrualFilter, } from "@/lib/models/budget-items"
-import { AmountInput, inputAmount, TInputAmount } from "@/components/common/AmountInput";
+import { accrualFilter } from "@/lib/models/budget-items";
+import {
+  AmountInput,
+  inputAmount,
+  TInputAmount,
+} from "@/components/common/AmountInput";
 import { Button } from "@/components/common/Button";
 import { moneyFormatter } from "@/lib/MoneyFormatter";
 import { byNameAndAmount as sortByName } from "@/lib/sort_functions";
 
 type RemoveButtonProps = {
-  detailKey: string,
-  removeDetail: (key: string) => void,
-}
+  detailKey: string;
+  removeDetail: (key: string) => void;
+};
 
 const RemoveButton = (props: RemoveButtonProps) => {
   return (
@@ -22,8 +26,8 @@ const RemoveButton = (props: RemoveButtonProps) => {
         <Icon name="times-circle" />
       </span>
     </Button>
-  )
-}
+  );
+};
 const AddButton = (props: { addDetail: () => void }) => {
   return (
     <Button type="button" onClick={props.addDetail}>
@@ -31,61 +35,71 @@ const AddButton = (props: { addDetail: () => void }) => {
         <Icon name="plus-circle" />
       </span>
     </Button>
-  )
-}
+  );
+};
 
 const LineItemComponent = (props: {
-  index: number,
-  detailCount: number,
-  detail: { key: string, budgetItemKey: string | null, amount: TInputAmount },
-  addDetail: () => void,
-  isBudgetExclusion: boolean,
-  removeDetail: (key: string) => void,
-  updateDetailItem: (props: { index: number, value: string, amount?: TInputAmount }) => void,
-  updateDetailAmount: (props: { index: number, value: TInputAmount }) => void,
+  index: number;
+  detailCount: number;
+  detail: { key: string; budgetItemKey: string | null; amount: TInputAmount };
+  addDetail: () => void;
+  isBudgetExclusion: boolean;
+  removeDetail: (key: string) => void;
+  updateDetailItem: (props: {
+    index: number;
+    value: string;
+    amount?: TInputAmount;
+  }) => void;
+  updateDetailAmount: (props: { index: number; value: TInputAmount }) => void;
 }) => {
-  const { appConfig } = useAppConfigContext()
-  const { items, month, year } = appConfig.budget.data
-  const { showAccruals } = appConfig.budget
-  const { detail, index, addDetail, removeDetail } = props
-  const { key, amount, budgetItemKey  } = detail
+  const { appConfig } = useAppConfigContext();
+  const { items, month, year } = appConfig.budget.data;
+  const { showAccruals } = appConfig.budget;
+  const { detail, index, addDetail, removeDetail } = props;
+  const { key, amount, budgetItemKey } = detail;
 
   const availableItems = [...items].filter((item) => {
     if (item.key === budgetItemKey) {
-      return true
+      return true;
     } else if (item.isDeleted) {
-      return false 
+      return false;
     } else if (item.month !== month || item.year !== year) {
-      return false
+      return false;
     } else if (item.isMonthly && item.transactionDetails.length) {
-      return false
+      return false;
     } else {
-      return accrualFilter({ item, showAccruals, month, year })
+      return accrualFilter({ item, showAccruals, month, year });
     }
-  })
+  });
 
   const options = availableItems.sort(sortByName).map((item) => {
     return {
       label: `${item.name} (${moneyFormatter(item.remaining, { decorate: true })})`,
-      value: item.key
+      value: item.key,
+    };
+  });
+
+  const handleSelectChange = (
+    ev: SingleValue<{ value: string | null; label: string }>,
+  ) => {
+    const item = items.find((item) => item.key === ev?.value) || null;
+
+    if (!!item && amount.cents === 0 && item.isMonthly) {
+      props.updateDetailItem({
+        index,
+        value: String(ev?.value),
+        amount: inputAmount({ cents: item.remaining }),
+      });
+    } else {
+      props.updateDetailItem({ index, value: String(ev?.value) });
     }
-  })
-
-  const handleSelectChange = (ev: SingleValue<{ value: string | null; label: string }>) => {
-    const item = items.find((item) => item.key === ev?.value) || null
-
-   if (!!item && amount.cents === 0 && item.isMonthly) {
-     props.updateDetailItem({ index, value: String(ev?.value), amount: inputAmount({ cents: item.remaining }) })
-   } else {
-     props.updateDetailItem({ index, value: String(ev?.value) })
-   }
-  }
+  };
 
   const handleAmountChange = (amt: string) => {
-    props.updateDetailAmount({ index, value: inputAmount({ display: amt }) })
-  }
+    props.updateDetailAmount({ index, value: inputAmount({ display: amt }) });
+  };
 
-  const value = options.find((item) => item.value === budgetItemKey) || ""
+  const value = options.find((item) => item.value === budgetItemKey) || "";
 
   return (
     <div className="w-full flex flex-row justify-between">
@@ -111,21 +125,30 @@ const LineItemComponent = (props: {
         />
       </div>
       <div className="w-1/12 text-right">
-        {props.detailCount > 1 ?
-          <RemoveButton detailKey={detail.key} removeDetail={removeDetail} /> :
+        {props.detailCount > 1 ? (
+          <RemoveButton detailKey={detail.key} removeDetail={removeDetail} />
+        ) : (
           <AddButton addDetail={addDetail} />
-        }
+        )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-const Total = ({ details, addDetail }: { details: Array<TFormDetail>, addDetail: () => void }) => {
-  if (details.length === 1) { return }
+const Total = ({
+  details,
+  addDetail,
+}: {
+  details: Array<TFormDetail>;
+  addDetail: () => void;
+}) => {
+  if (details.length === 1) {
+    return;
+  }
 
   const total = details.reduce((sum, detail) => {
-    return Number(detail.amount.cents) + sum
-  }, 0)
+    return Number(detail.amount.cents) + sum;
+  }, 0);
 
   return (
     <div className="flex flex-row justify-between">
@@ -137,23 +160,33 @@ const Total = ({ details, addDetail }: { details: Array<TFormDetail>, addDetail:
         <AddButton addDetail={addDetail} />
       </div>
     </div>
-  )
-}
+  );
+};
 
 const BudgetItemsComponent = (props: {
-  addDetail: () => void,
-  updateDetailItem: (props: { index: number, value: string, amount?: TInputAmount }) => void,
-  updateDetailAmount: (props: { index: number, value:  TInputAmount }) => void,
-  removeDetail: (key: string) => void,
-  isBudgetExclusion: boolean,
+  addDetail: () => void;
+  updateDetailItem: (props: {
+    index: number;
+    value: string;
+    amount?: TInputAmount;
+  }) => void;
+  updateDetailAmount: (props: { index: number; value: TInputAmount }) => void;
+  removeDetail: (key: string) => void;
+  isBudgetExclusion: boolean;
   details: Array<{
     key: string;
     budgetItemKey: string | null;
     amount: TInputAmount;
     _destroy: boolean;
-  }>
+  }>;
 }) => {
-  const { details, addDetail, removeDetail, updateDetailItem, updateDetailAmount } = props
+  const {
+    details,
+    addDetail,
+    removeDetail,
+    updateDetailItem,
+    updateDetailAmount,
+  } = props;
 
   return (
     <div className="flex flex-col w-full md:w-[450px] md:mr-8">
@@ -176,11 +209,11 @@ const BudgetItemsComponent = (props: {
               updateDetailAmount={updateDetailAmount}
               updateDetailItem={updateDetailItem}
             />
-          )
+          );
         })}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export { BudgetItemsComponent }
+export { BudgetItemsComponent };

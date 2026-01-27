@@ -50,7 +50,7 @@ const MonthYearSelect = (props: ComponentProps) => {
         type="button"
         onClick={toggleForm}
         styling={{
-          color: "text-blue-700"
+          color: "text-blue-700",
         }}
       >
         <Icon name="calendar" />

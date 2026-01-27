@@ -8,29 +8,37 @@ import { SubmitButton } from "@/components/common/Button";
 import { useSetupEventsFormContext } from "@/pages/budget/set_up";
 
 const AccrualFormComponent = () => {
-  const { category } = useSetUpCategoryShowContext()
-  const { metadata: { month, year } } = useSetupEventsFormContext()
+  const { category } = useSetUpCategoryShowContext();
+  const {
+    metadata: { month, year },
+  } = useSetupEventsFormContext();
   const { put, processing } = useForm({
     category: {
       maturityIntervals: [
         {
           month,
-          year
-        }
-      ]
-    }
-  })
+          year,
+        },
+      ],
+    },
+  });
 
   const onSubmit = (ev: React.MouseEvent) => {
-    ev.preventDefault()
+    ev.preventDefault();
     const formUrl = UrlBuilder({
       name: "CategoryShow",
       key: category.key,
-      queryParams: buildQueryParams(["budget", month, year, "set-up", category.slug])
-    })
-    console.log(formUrl)
-    put(formUrl)
-  }
+      queryParams: buildQueryParams([
+        "budget",
+        month,
+        year,
+        "set-up",
+        category.slug,
+      ]),
+    });
+    console.log(formUrl);
+    put(formUrl);
+  };
 
   return (
     <div>
@@ -42,38 +50,41 @@ const AccrualFormComponent = () => {
           padding: "px-2 py-1",
           rounded: "rounded",
           color: "text-white",
-          shadow: "shadow-sm"
+          shadow: "shadow-sm",
         }}
       >
         Maturing in {month}/{year}?
       </SubmitButton>
     </div>
-  )
-}
+  );
+};
 
 const AccrualComponent = () => {
-  const { category } = useSetUpCategoryShowContext()
-  const { metadata: { month, year } } = useSetupEventsFormContext()
+  const { category } = useSetUpCategoryShowContext();
+  const {
+    metadata: { month, year },
+  } = useSetupEventsFormContext();
 
-  const intervals = category.upcomingMaturityIntervals || []
+  const intervals = category.upcomingMaturityIntervals || [];
 
-  const isMaturing = intervals[0]?.month === month && (intervals)[0]?.year === year
+  const isMaturing =
+    intervals[0]?.month === month && intervals[0]?.year === year;
 
-  const anyIntervals = !!intervals.length
+  const anyIntervals = !!intervals.length;
 
-  const iconColor = anyIntervals ? "text-purple-100" : "text-gray-300"
+  const iconColor = anyIntervals ? "text-purple-100" : "text-gray-300";
 
-  let accrualInfoMessage = ""
+  let accrualInfoMessage = "";
   if (!anyIntervals) {
-    accrualInfoMessage = "No Upcoming Maturity Intervals"
+    accrualInfoMessage = "No Upcoming Maturity Intervals";
   } else if (isMaturing) {
-    accrualInfoMessage = `Mature in ${DateFormatter({ month, year, format: "monthYear" })}`
+    accrualInfoMessage = `Mature in ${DateFormatter({ month, year, format: "monthYear" })}`;
   } else {
     accrualInfoMessage = `Maturing next in ${DateFormatter({
       month: intervals[0].month,
       year: intervals[0].year,
-      format: "monthYear"
-    })}`
+      format: "monthYear",
+    })}`;
   }
 
   return (
@@ -91,7 +102,7 @@ const AccrualComponent = () => {
       </div>
       {!isMaturing && <AccrualFormComponent />}
     </div>
-  )
-}
+  );
+};
 
-export { AccrualComponent }
+export { AccrualComponent };

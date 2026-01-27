@@ -1,33 +1,33 @@
-import { useEffect } from "react"
-import { useFinalizeFormContext } from "./form_context"
+import { useEffect } from "react";
+import { useFinalizeFormContext } from "./form_context";
 
 const KeyboardNav = () => {
   const {
     viewingCategoryKey,
     setNextReviewingCategoryKey,
     setPrevReviewingCategoryKey,
-  } = useFinalizeFormContext()
+  } = useFinalizeFormContext();
   useEffect(() => {
     const handleKeyUp = (event: KeyboardEvent) => {
-      if (event.key === 'ArrowLeft')  {
+      if (event.key === "ArrowLeft") {
         event.preventDefault();
-        setPrevReviewingCategoryKey()
+        setPrevReviewingCategoryKey();
       }
 
-      if (event.key === 'ArrowRight') {
+      if (event.key === "ArrowRight") {
         event.preventDefault();
-        setNextReviewingCategoryKey()
+        setNextReviewingCategoryKey();
       }
-    }
+    };
 
-    document.addEventListener('keyup', handleKeyUp);
+    document.addEventListener("keyup", handleKeyUp);
 
     return () => {
-      document.removeEventListener('keyup', handleKeyUp);
+      document.removeEventListener("keyup", handleKeyUp);
     };
-  }, [viewingCategoryKey])
+  }, [viewingCategoryKey]);
 
-  return null
-}
+  return null;
+};
 
-export { KeyboardNav }
+export { KeyboardNav };

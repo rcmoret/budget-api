@@ -54,7 +54,12 @@ const MonthYearNav = (props: ComponentProps) => {
         <Icon name="calendar" />
       </Button>
       {isFormShown && (
-        <Form baseUrl={props.baseUrl} month={month} update={update} year={year} />
+        <Form
+          baseUrl={props.baseUrl}
+          month={month}
+          update={update}
+          year={year}
+        />
       )}
     </div>
   );

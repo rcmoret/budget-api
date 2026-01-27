@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import * as d3 from 'd3';
+import React, { useEffect, useRef } from "react";
+import * as d3 from "d3";
 
 interface BudgetSummary {
   transactionsTotal: number;
@@ -12,7 +12,9 @@ interface BudgetSummaryChartProps {
   summaries: BudgetSummary[];
 }
 
-const BudgetSummaryChart: React.FC<BudgetSummaryChartProps> = ({ summaries }) => {
+const BudgetSummaryChart: React.FC<BudgetSummaryChartProps> = ({
+  summaries,
+}) => {
   const svgRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
@@ -37,144 +39,164 @@ const BudgetSummaryChart: React.FC<BudgetSummaryChartProps> = ({ summaries }) =>
     const data = summaries.map((d: BudgetSummary) => ({
       ...d,
       monthYear: `${d.month}/${d.year}`,
-      monthName: new Date(d.year, d.month - 1).toLocaleDateString('en-US', { month: 'short' })
+      monthName: new Date(d.year, d.month - 1).toLocaleDateString("en-US", {
+        month: "short",
+      }),
     }));
 
     // Set up scales
-    const x0 = d3.scaleBand()
-      .domain(data.map(d => d.monthYear))
+    const x0 = d3
+      .scaleBand()
+      .domain(data.map((d) => d.monthYear))
       .range([0, width])
       .padding(0.1);
 
-    const x1 = d3.scaleBand()
-      .domain(['budgeted', 'transactionsTotal'])
+    const x1 = d3
+      .scaleBand()
+      .domain(["budgeted", "transactionsTotal"])
       .range([0, x0.bandwidth()])
       .padding(0.05);
 
-    const y = d3.scaleLinear()
-      .domain([0, d3.max(data, (d: any) => Math.max(d.budgeted, d.transactionsTotal)) || 0])
+    const y = d3
+      .scaleLinear()
+      .domain([
+        0,
+        d3.max(data, (d: any) => Math.max(d.budgeted, d.transactionsTotal)) ||
+          0,
+      ])
       .nice()
       .range([height, 0]);
 
-    const chartBlue = '#001ddb'
-    const chartGreen = '#619d58'
+    const chartBlue = "#001ddb";
+    const chartGreen = "#619d58";
 
     // Create color scale
-    const color = d3.scaleOrdinal()
-      .domain(['budgeted', 'transactionsTotal'])
+    const color = d3
+      .scaleOrdinal()
+      .domain(["budgeted", "transactionsTotal"])
       .range([chartBlue, chartGreen]); // Blue for budgeted, red for transactions
 
     // Create bars
-    const barGroup = g.selectAll('.bar-group')
+    const barGroup = g
+      .selectAll(".bar-group")
       .data(data)
       .enter()
-      .append('g')
-      .attr('class', 'bar-group')
-      .attr('transform', (d: any) => `translate(${x0(d.monthYear)},0)`);
+      .append("g")
+      .attr("class", "bar-group")
+      .attr("transform", (d: any) => `translate(${x0(d.monthYear)},0)`);
 
     // Add budgeted bars
-    barGroup.append('rect')
-      .attr('x', x1('budgeted') || 0)
-      .attr('y', (d: any) => y(d.budgeted))
-      .attr('width', x1.bandwidth())
-      .attr('height', (d: any) => height - y(d.budgeted))
-      .attr('fill', color('budgeted') as string)
-      .attr('class', 'bar budgeted');
+    barGroup
+      .append("rect")
+      .attr("x", x1("budgeted") || 0)
+      .attr("y", (d: any) => y(d.budgeted))
+      .attr("width", x1.bandwidth())
+      .attr("height", (d: any) => height - y(d.budgeted))
+      .attr("fill", color("budgeted") as string)
+      .attr("class", "bar budgeted");
 
     // Add transactions total bars
-    barGroup.append('rect')
-      .attr('x', x1('transactionsTotal') || 0)
-      .attr('y', (d: any) => y(d.transactionsTotal))
-      .attr('width', x1.bandwidth())
-      .attr('height', (d: any) => height - y(d.transactionsTotal))
-      .attr('fill', color('transactionsTotal') as string)
-      .attr('class', 'bar transactions');
+    barGroup
+      .append("rect")
+      .attr("x", x1("transactionsTotal") || 0)
+      .attr("y", (d: any) => y(d.transactionsTotal))
+      .attr("width", x1.bandwidth())
+      .attr("height", (d: any) => height - y(d.transactionsTotal))
+      .attr("fill", color("transactionsTotal") as string)
+      .attr("class", "bar transactions");
 
     // Add X axis
-    g.append('g')
-      .attr('transform', `translate(0,${height})`)
-      .call(d3.axisBottom(x0).tickFormat((d: any) => {
-        const [month, year] = d.split('/');
-        return `${new Date(parseInt(year), parseInt(month) - 1).toLocaleDateString('en-US', { month: 'short' })} ${year}`;
-      }))
-      .selectAll('text')
-      .style('font-size', '12px')
-      .attr('transform', 'rotate(-45)')
-      .style('text-anchor', 'end');
+    g.append("g")
+      .attr("transform", `translate(0,${height})`)
+      .call(
+        d3.axisBottom(x0).tickFormat((d: any) => {
+          const [month, year] = d.split("/");
+          return `${new Date(parseInt(year), parseInt(month) - 1).toLocaleDateString("en-US", { month: "short" })} ${year}`;
+        }),
+      )
+      .selectAll("text")
+      .style("font-size", "12px")
+      .attr("transform", "rotate(-45)")
+      .style("text-anchor", "end");
 
     // Add Y axis
-    g.append('g')
-      .call(d3.axisLeft(y).tickFormat(d3.format('$,.0f')))
-      .selectAll('text')
-      .style('font-size', '12px');
+    g.append("g")
+      .call(d3.axisLeft(y).tickFormat(d3.format("$,.0f")))
+      .selectAll("text")
+      .style("font-size", "12px");
 
     // Add axis labels
-    g.append('text')
-      .attr('transform', 'rotate(-90)')
-      .attr('y', 0 - margin.left)
-      .attr('x', 0 - (height / 2))
-      .attr('dy', '1em')
-      .style('text-anchor', 'middle')
-      .style('font-size', '14px')
-      .text('Amount ($)');
+    g.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.left)
+      .attr("x", 0 - height / 2)
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .style("font-size", "14px")
+      .text("Amount ($)");
 
     // Add legend
-    const legend = g.append('g')
-      .attr('transform', `translate(${width - 180}, -60)`);
+    const legend = g
+      .append("g")
+      .attr("transform", `translate(${width - 180}, -60)`);
 
     const legendItems = [
-      { label: 'Budgeted', color: color('budgeted') },
-      { label: 'Transactions', color: color('transactionsTotal') }
+      { label: "Budgeted", color: color("budgeted") },
+      { label: "Transactions", color: color("transactionsTotal") },
     ];
 
     legendItems.forEach((item, i) => {
-      const legendItem = legend.append('g')
-        .attr('transform', `translate(0, ${i * 20})`);
+      const legendItem = legend
+        .append("g")
+        .attr("transform", `translate(0, ${i * 20})`);
 
-      legendItem.append('rect')
-        .attr('width', 12)
-        .attr('height', 12)
-        .attr('fill', item.color as string);
+      legendItem
+        .append("rect")
+        .attr("width", 12)
+        .attr("height", 12)
+        .attr("fill", item.color as string);
 
-      legendItem.append('text')
-        .attr('x', 18)
-        .attr('y', 9)
-        .style('font-size', '12px')
+      legendItem
+        .append("text")
+        .attr("x", 18)
+        .attr("y", 9)
+        .style("font-size", "12px")
         .text(item.label);
     });
 
     // Add tooltips
-    const tooltip = d3.select('body').append('div')
-      .attr('class', 'tooltip')
-      .style('position', 'absolute')
-      .style('background', 'rgba(0, 0, 0, 0.8)')
-      .style('color', 'white')
-      .style('padding', '8px')
-      .style('border-radius', '4px')
-      .style('font-size', '12px')
-      .style('pointer-events', 'none')
-      .style('opacity', 0);
+    const tooltip = d3
+      .select("body")
+      .append("div")
+      .attr("class", "tooltip")
+      .style("position", "absolute")
+      .style("background", "rgba(0, 0, 0, 0.8)")
+      .style("color", "white")
+      .style("padding", "8px")
+      .style("border-radius", "4px")
+      .style("font-size", "12px")
+      .style("pointer-events", "none")
+      .style("opacity", 0);
 
-    barGroup.selectAll('.bar')
-      .on('mouseover', function(this: any, event: any, d: any) {
-        const barType = d3.select(this).classed('budgeted') ? 'budgeted' : 'transactions';
-        const value = barType === 'budgeted' ? d.budgeted : d.transactionsTotal;
-        const label = barType === 'budgeted' ? 'Budgeted' : 'Transactions';
-        
-        tooltip.transition()
-          .duration(200)
-          .style('opacity', .9);
-        
-        tooltip.html(`${label}: ${d3.format('$,.0f')(value)}`)
-          .style('left', (event.pageX + 10) + 'px')
-          .style('top', (event.pageY - 28) + 'px');
+    barGroup
+      .selectAll(".bar")
+      .on("mouseover", function (this: any, event: any, d: any) {
+        const barType = d3.select(this).classed("budgeted")
+          ? "budgeted"
+          : "transactions";
+        const value = barType === "budgeted" ? d.budgeted : d.transactionsTotal;
+        const label = barType === "budgeted" ? "Budgeted" : "Transactions";
+
+        tooltip.transition().duration(200).style("opacity", 0.9);
+
+        tooltip
+          .html(`${label}: ${d3.format("$,.0f")(value)}`)
+          .style("left", event.pageX + 10 + "px")
+          .style("top", event.pageY - 28 + "px");
       })
-      .on('mouseout', function() {
-        tooltip.transition()
-          .duration(500)
-          .style('opacity', 0);
+      .on("mouseout", function () {
+        tooltip.transition().duration(500).style("opacity", 0);
       });
-
   }, [summaries]);
 
   return (
@@ -182,7 +204,9 @@ const BudgetSummaryChart: React.FC<BudgetSummaryChartProps> = ({ summaries }) =>
       <div className="hidden">
         {summaries.map((s, n) => (
           <div key={n}>
-            <div>month: {s.month} year: {s.year}</div>
+            <div>
+              month: {s.month} year: {s.year}
+            </div>
             <div>budgeted: {s.budgeted}</div>
             <div>total: {s.transactionsTotal}</div>
           </div>

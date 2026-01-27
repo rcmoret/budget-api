@@ -12,15 +12,18 @@ interface AccountSummaryProps {
 
 const IndividualTab = ({ account, isSelected }: AccountSummaryProps) => {
   const bgColor = isSelected ? "bg-sky-200" : "bg-gray-100";
-  const borderColor = isSelected ? "border-sky-600" : "border-gray-400"
+  const borderColor = isSelected ? "border-sky-600" : "border-gray-400";
   const padding = "p-4";
-  const width = "sm:min-w-[30%] md:min-w-[10%] lg:min-w-[12%] whitespace-nowrap";
+  const width =
+    "sm:min-w-[30%] md:min-w-[10%] lg:min-w-[12%] whitespace-nowrap";
   const styles = ["rounded", "shadow-lg", bgColor, padding, width].join(" ");
 
   return (
     <div className={styles}>
       <InertiaLink href={`/account/${account.slug}/transactions`}>
-        <div className={`border-b-2 ${borderColor} border-solid`}>{account.name}</div>
+        <div className={`border-b-2 ${borderColor} border-solid`}>
+          {account.name}
+        </div>
         <div className="text-right">
           <AmountSpan amount={account.balance} />
         </div>
@@ -48,10 +51,17 @@ const AccountTabs = (props: PropType) => {
         flexDirection: "flex-row",
         rounded: "rounded",
         padding: "p-2",
-        position: "relative"
+        position: "relative",
       }}
     >
-      <Row styling={{ position: "relative", overflow: "overflow-scroll", gap: "gap-4", padding: "py-1" }}>
+      <Row
+        styling={{
+          position: "relative",
+          overflow: "overflow-scroll",
+          gap: "gap-4",
+          padding: "py-1",
+        }}
+      >
         {accounts.map((account) => (
           <IndividualTab
             key={account.key}
