@@ -14,23 +14,16 @@ type ComponentProps = {
   openForm: () => void;
   month: number;
   year: number;
-}
+};
 
 const AddNewComponent = (props: ComponentProps) => {
-  const {
-    index,
-    isFormShown,
-    closeForm,
-    openForm,
-    month,
-    year
-  } = props
+  const { index, isFormShown, closeForm, openForm, month, year } = props;
 
-  const { appConfig } = useAppConfigContext()
-  const { isCashFlow, key: accountKey, slug: accountSlug } = appConfig.account
-  const isEven = props.index % 2 === 0
+  const { appConfig } = useAppConfigContext();
+  const { isCashFlow, key: accountKey, slug: accountSlug } = appConfig.account;
+  const isEven = props.index % 2 === 0;
 
-  const bgColor = isEven ? "bg-sky-50" : "bg-sky-100"
+  const bgColor = isEven ? "bg-sky-50" : "bg-sky-100";
 
   if (isFormShown) {
     const transaction: ModeledTransaction = {
@@ -47,34 +40,33 @@ const AddNewComponent = (props: ComponentProps) => {
           amount: 0,
           budgetItemKey: null,
           budgetCategoryName: "",
-          iconClassName: null
-        }
+          iconClassName: null,
+        },
       ],
       isBudgetExclusion: !isCashFlow,
       isCleared: false,
       isPending: false,
       notes: "",
       shortClearanceDate: null,
-      updatedAt: ""
-    }
+      updatedAt: "",
+    };
 
     const onSuccess = () => {
-      closeForm()
-      openForm()
-    }
+      closeForm();
+      openForm();
+    };
 
     return (
       <TransactionForm
         index={index}
-        transaction={{...transaction, balance: 0 }}
+        transaction={{ ...transaction, balance: 0 }}
         onSuccess={onSuccess}
         closeForm={closeForm}
         month={month}
         year={year}
         isNew={true}
       />
-    )
-
+    );
   } else {
     return (
       <Row
@@ -103,8 +95,8 @@ const AddNewComponent = (props: ComponentProps) => {
           </Cell>
         </div>
       </Row>
-    )
+    );
   }
-}
+};
 
-export { AddNewComponent }
+export { AddNewComponent };

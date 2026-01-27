@@ -16,18 +16,16 @@ const moneyFormatter = (
   };
 
   const num = options.absolute ? Math.abs(number) : number;
-  let stringNum = ""
+  let stringNum = "";
 
   if (options.showCents) {
-    stringNum = (num / 100.0).toFixed(2)
+    stringNum = (num / 100.0).toFixed(2);
   } else {
-    stringNum = (num / 100.0).toFixed(0)
+    stringNum = (num / 100.0).toFixed(0);
   }
 
   if (options.decorate) {
-    return (
-      "$" + stringNum.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
-    );
+    return "$" + stringNum.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
   } else {
     return stringNum;
   }
@@ -47,7 +45,7 @@ const decimalToInt = (amount: string): number => {
   } else if (cents.length == 1) {
     return parseInt(`${dollars}${cents}0`);
   } else {
-    return Number(amount)
+    return Number(amount);
   }
 };
 

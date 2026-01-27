@@ -34,7 +34,7 @@ export type CursorOptions =
   | "cursor-text"
   | "cursor-move"
   | "cursor-help"
-  | "cursor-not-allowed"
+  | "cursor-not-allowed";
 
 export type DisplayOption =
   | "block"
@@ -56,7 +56,11 @@ export type FlexAlignOption =
   | "justify-evenly"
   | "justify-stretch";
 
-export type FlexDirectionOption = "flex-row" | "flex-col" | "flex-row-reverse" | "flex-col-reverse"
+export type FlexDirectionOption =
+  | "flex-row"
+  | "flex-col"
+  | "flex-row-reverse"
+  | "flex-col-reverse";
 
 export type FlexWrapOption = "flex-wrap" | "flex-wrap-reverse" | "flex-nowrap";
 
@@ -64,12 +68,7 @@ export type FontSizeOption = "text-xs" | "text-sm" | "text-xl" | "text-3xl";
 
 export type FontWeightOption = "font-semibold";
 
-export type GapOption =
-  | "gap-0"
-  | "gap-1"
-  | "gap-2"
-  | "gap-3"
-  | "gap-4"
+export type GapOption = "gap-0" | "gap-1" | "gap-2" | "gap-3" | "gap-4";
 
 export type OverflowOption =
   | "overflow-auto"
@@ -95,7 +94,7 @@ export type StripedRowColors =
   | "even:bg-gray-400"
   | "even:bg-cyan-100"
   | "even:bg-cyan-200"
-  | "even:bg-white"
+  | "even:bg-white";
 
 export type TextAlignOption =
   | "text-left"
@@ -113,4 +112,4 @@ export type TextColor =
   | "text-green-600"
   | "text-gray-500"
   | "text-red-700"
-  | "text-white"
+  | "text-white";

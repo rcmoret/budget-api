@@ -2,7 +2,7 @@ import { LeftColumn } from "@/pages/budget/set_up/left_column";
 import { RightColumn } from "@/pages/budget/set_up/right_column";
 import { KeyboardNav } from "./keyboard_nav";
 import { useForm } from "@inertiajs/react";
-import { router } from '@inertiajs/react';
+import { router } from "@inertiajs/react";
 import { createContext, useContext, useEffect, useRef } from "react";
 import { UrlBuilder } from "@/lib/UrlBuilder";
 import { useToggle } from "@/lib/hooks/useToogle";
@@ -15,38 +15,37 @@ import type {
   TCategoryGroup,
   TCategoryListItem,
   TEventFlags,
-  TGroupScopes
-} from "./types"
+  TGroupScopes,
+} from "./types";
 
 const useSetUpEventsForm = (props: ComponentProps): HookProps => {
-  const { delete: deleteRequest, processing, setData, } = useForm()
+  const { delete: deleteRequest, processing, setData } = useForm();
 
   const selectedGroup = Object.values(props.groups).reduce((memo, group) => {
     if (group.metadata.isSelected) {
-      return group.label
+      return group.label;
+    } else {
+      return memo;
     }
-    else {
-      return memo
-    }
-  }, "")
+  }, "");
 
-  const [showAddEventForm, toggleShowAddEventForm] = useToggle(false)
+  const [showAddEventForm, toggleShowAddEventForm] = useToggle(false);
 
-  const eventAdjustmentsRef = useRef<Map<string, string>>(new Map())
+  const eventAdjustmentsRef = useRef<Map<string, string>>(new Map());
 
   useEffect(() => {
     if (showAddEventForm) {
-      toggleShowAddEventForm()
+      toggleShowAddEventForm();
     }
-  }, [selectedGroup])
+  }, [selectedGroup]);
 
   useEffect(() => {
-    setData({ events: props.budgetCategory?.events || [] })
-    eventAdjustmentsRef.current.clear()
-  }, [props.budgetCategory?.slug])
+    setData({ events: props.budgetCategory?.events || [] });
+    eventAdjustmentsRef.current.clear();
+  }, [props.budgetCategory?.slug]);
 
   const removeEvent = (args: { key: string; slug: string }) => {
-    const { key, slug } = args
+    const { key, slug } = args;
 
     const url = UrlBuilder({
       name: "BudgetSetupRemoveEvent",
@@ -54,50 +53,59 @@ const useSetUpEventsForm = (props: ComponentProps): HookProps => {
       year: props.metadata.year,
       categorySlug: slug,
       key,
-    })
-    deleteRequest(url, { data: {}, preserveState: true })
-  }
+    });
+    deleteRequest(url, { data: {}, preserveState: true });
+  };
 
   const updateEvents = (events: Array<{ key: string; amount: string }>) => {
     const url = UrlBuilder({
       name: "BudgetSetupPut",
       month: props.metadata.month,
       year: props.metadata.year,
-      categorySlug: props.budgetCategory.slug
-    })
+      categorySlug: props.budgetCategory.slug,
+    });
 
     events.forEach(({ key, amount }) => {
-      eventAdjustmentsRef.current.set(key, amount)
-    })
+      eventAdjustmentsRef.current.set(key, amount);
+    });
 
     router.put(
       url,
-      { events: events.map(({ key, amount }) => ({ budgetItemKey: key, adjustment: { display: amount } })) },
-      { preserveState: true }
-    )
-  }
+      {
+        events: events.map(({ key, amount }) => ({
+          budgetItemKey: key,
+          adjustment: { display: amount },
+        })),
+      },
+      { preserveState: true },
+    );
+  };
 
   const putCategory = (slug?: string) => {
-    const events = props.budgetCategory.events.map(({ budgetItemKey, adjustment }) => {
-      const latestAdjustment = eventAdjustmentsRef.current.get(budgetItemKey)
-      if (latestAdjustment !== undefined) {
-        return {
-          budgetItemKey,
-          adjustment: { display: latestAdjustment }
+    const events = props.budgetCategory.events.map(
+      ({ budgetItemKey, adjustment }) => {
+        const latestAdjustment = eventAdjustmentsRef.current.get(budgetItemKey);
+        if (latestAdjustment !== undefined) {
+          return {
+            budgetItemKey,
+            adjustment: { display: latestAdjustment },
+          };
         }
-      }
-      return { budgetItemKey, adjustment }
-    })
+        return { budgetItemKey, adjustment };
+      },
+    );
 
-    const hasChanges = props.budgetCategory.events.some(({ budgetItemKey, adjustment }) => {
-      const latestAdjustment = eventAdjustmentsRef.current.get(budgetItemKey)
-      if (latestAdjustment === undefined) {
-        return false
-      }
-      const propDisplay = adjustment.display ?? ""
-      const trackedDisplay = latestAdjustment ?? ""
-      return propDisplay !== trackedDisplay
-    })
+    const hasChanges = props.budgetCategory.events.some(
+      ({ budgetItemKey, adjustment }) => {
+        const latestAdjustment = eventAdjustmentsRef.current.get(budgetItemKey);
+        if (latestAdjustment === undefined) {
+          return false;
+        }
+        const propDisplay = adjustment.display ?? "";
+        const trackedDisplay = latestAdjustment ?? "";
+        return propDisplay !== trackedDisplay;
+      },
+    );
 
     if (hasChanges) {
       const url = UrlBuilder({
@@ -105,41 +113,43 @@ const useSetUpEventsForm = (props: ComponentProps): HookProps => {
         month: props.metadata.month,
         year: props.metadata.year,
         ...(!!slug ? { queryParams: `next-category=${slug}` } : {}),
-        categorySlug: props.budgetCategory.slug
-      })
+        categorySlug: props.budgetCategory.slug,
+      });
 
       router.put(
         url,
         { events },
         {
           preserveState: true,
-          onSuccess: () => { eventAdjustmentsRef.current.clear() }
-        }
-      )
+          onSuccess: () => {
+            eventAdjustmentsRef.current.clear();
+          },
+        },
+      );
     } else {
       // No changes, use GET to navigate
-      const targetSlug = slug || props.budgetCategory.slug
-      const url = `/budget/${props.metadata.month}/${props.metadata.year}/set-up/${targetSlug}`
+      const targetSlug = slug || props.budgetCategory.slug;
+      const url = `/budget/${props.metadata.month}/${props.metadata.year}/set-up/${targetSlug}`;
 
-      router.get(url, {}, { preserveState: true })
+      router.get(url, {}, { preserveState: true });
     }
-  }
+  };
 
   const changeNextCategory = () => {
-    putCategory(props.metadata.nextCategorySlug)
-  }
+    putCategory(props.metadata.nextCategorySlug);
+  };
 
   const changeNextUnreviewedCategory = () => {
-    putCategory(props.metadata.nextUnreviewedCategorySlug)
-  }
+    putCategory(props.metadata.nextUnreviewedCategorySlug);
+  };
 
   const changePreviousUnreviewedCategory = () => {
-    putCategory(props.metadata.previousUnreviewedCategorySlug)
-  }
+    putCategory(props.metadata.previousUnreviewedCategorySlug);
+  };
 
   const changePreviousCategory = () => {
-    putCategory(props.metadata.previousCategorySlug)
-  }
+    putCategory(props.metadata.previousCategorySlug);
+  };
 
   return {
     ...props,
@@ -151,30 +161,36 @@ const useSetUpEventsForm = (props: ComponentProps): HookProps => {
     changePreviousUnreviewedCategory,
     processing,
     removeEvent,
-    updateEvents
-  }
-}
+    updateEvents,
+  };
+};
 
-const SetupEventContext = createContext<ReturnType<typeof useSetUpEventsForm> | null>(null);
+const SetupEventContext = createContext<ReturnType<
+  typeof useSetUpEventsForm
+> | null>(null);
 
-const SetupProvider = (props: ComponentProps & { children: React.ReactNode }) => {
-  const { children, ...setupIndex } = props
-  const hook = useSetUpEventsForm(setupIndex)
+const SetupProvider = (
+  props: ComponentProps & { children: React.ReactNode },
+) => {
+  const { children, ...setupIndex } = props;
+  const hook = useSetUpEventsForm(setupIndex);
 
   return (
     <SetupEventContext.Provider value={hook}>
       {children}
     </SetupEventContext.Provider>
-  )
-}
+  );
+};
 
 const useSetUpEventsFormContext = (): ReturnType<typeof useSetUpEventsForm> => {
   const context = useContext(SetupEventContext);
   if (!context) {
-    throw new Error("useSetupEventsFormContext must be used with a Set Up Provider")
+    throw new Error(
+      "useSetupEventsFormContext must be used with a Set Up Provider",
+    );
   }
   return context;
-}
+};
 
 const NewSetUpComponent = (props: ComponentProps) => {
   return (
@@ -187,8 +203,8 @@ const NewSetUpComponent = (props: ComponentProps) => {
         </div>
       </div>
     </SetupProvider>
-  )
-}
+  );
+};
 
 export type {
   SetupEvent,
@@ -201,7 +217,7 @@ export type {
 export {
   SetupCategory,
   useSetUpEventsFormContext,
-  useSetUpEventsFormContext as useSetupEventsFormContext
+  useSetUpEventsFormContext as useSetupEventsFormContext,
 };
 
 export default NewSetUpComponent;

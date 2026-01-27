@@ -22,9 +22,7 @@ import type {
   OverflowOption,
 } from "types/components/display-classes";
 
-import type {
-  GapOption
-} from "types/components/spacing-classes";
+import type { GapOption } from "types/components/spacing-classes";
 
 type StylingProps = {
   alignItems?: AlignItemsOption;
@@ -48,12 +46,12 @@ type StylingProps = {
   rounded?: "rounded" | null;
   textAlign?: TextAlignOption;
   width?: string;
-}
+};
 
 type DisabledButtonProps = {
-  children: React.ReactNode
+  children: React.ReactNode;
   styling: StylingProps;
-}
+};
 
 const DisabledButton = (props: DisabledButtonProps) => {
   return (
@@ -65,8 +63,8 @@ const DisabledButton = (props: DisabledButtonProps) => {
     >
       {props.children}
     </ButtonComponent>
-  )
-}
+  );
+};
 
 type SubmitButtonProps = {
   children: React.ReactNode;
@@ -75,12 +73,12 @@ type SubmitButtonProps = {
   styling: StylingProps;
   title?: string;
   disabledStyling?: StylingProps;
-}
+};
 
 const SubmitButton = (props: SubmitButtonProps) => {
-  const { children, onSubmit, title } = props
+  const { children, onSubmit, title } = props;
 
-  const isEnabled = !!props.isEnabled
+  const isEnabled = !!props.isEnabled;
 
   if (isEnabled) {
     return (
@@ -92,66 +90,62 @@ const SubmitButton = (props: SubmitButtonProps) => {
       >
         {children}
       </ButtonComponent>
-    )
+    );
   } else {
     return (
-      <DisabledButton
-        styling={{ ...props.styling, ...props.disabledStyling }}
-      >
+      <DisabledButton styling={{ ...props.styling, ...props.disabledStyling }}>
         {children}
       </DisabledButton>
-    )
+    );
   }
-}
+};
 
 type ButtonProps = {
-  children: React.ReactNode
+  children: React.ReactNode;
   isDisabled?: boolean;
   onClick: () => void;
   type: "button" | "submit";
   styling?: StylingProps;
   title?: string;
   disabledStyling?: StylingProps;
-}
+};
 
 const Button = (props: ButtonProps) => {
-  const {
-    children,
-    title,
-    type,
-  } = props
+  const { children, title, type } = props;
 
-  const isDisabled = !!props.isDisabled
+  const isDisabled = !!props.isDisabled;
 
   if (isDisabled) {
     return (
-      <DisabledButton styling={{
-        cursor: "cursor-not-allowed",
-        ...props.styling,
-        ...props.disabledStyling
-      }}>
+      <DisabledButton
+        styling={{
+          cursor: "cursor-not-allowed",
+          ...props.styling,
+          ...props.disabledStyling,
+        }}
+      >
         {children}
       </DisabledButton>
-    )
+    );
   } else if (type === "submit") {
     return (
-      <SubmitButton styling={{...props.styling}} onSubmit={props.onClick}>
+      <SubmitButton styling={{ ...props.styling }} onSubmit={props.onClick}>
         {children}
       </SubmitButton>
-    )
+    );
   } else {
     return (
       <ButtonComponent
-        styling={{...props.styling}}
+        styling={{ ...props.styling }}
         type={type}
         onClick={props.onClick}
         title={title}
       >
         {children}
       </ButtonComponent>
-    )
+    );
   }
-}
+};
 
 type ButtonComponentProps = {
   children: React.ReactNode;
@@ -159,18 +153,11 @@ type ButtonComponentProps = {
   onClick: MouseEventHandler<HTMLButtonElement>;
   type: "button" | "submit";
   styling: StylingProps;
-  title?: string
-}
-
+  title?: string;
+};
 
 const ButtonComponent = (props: ButtonComponentProps) => {
-  const {
-    children,
-    onClick,
-    styling,
-    title,
-    type,
-  } = props
+  const { children, onClick, styling, title, type } = props;
 
   const className = Object.values(styling)
     .filter((val) => val !== null && val !== "")
@@ -181,14 +168,10 @@ const ButtonComponent = (props: ButtonComponentProps) => {
     onClick,
     disabled: !!props.isDisabled,
     className,
-    ...(!!title ? { title } : {})
-  }
+    ...(!!title ? { title } : {}),
+  };
 
-  return (
-    <button {...buttonProps}>
-      {children}
-    </button>
-  )
-}
+  return <button {...buttonProps}>{children}</button>;
+};
 
-export { Button, SubmitButton }
+export { Button, SubmitButton };

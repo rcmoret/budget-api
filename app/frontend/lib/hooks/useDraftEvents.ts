@@ -2,18 +2,18 @@ import { useEffect, useState } from "react";
 import { BudgetItem } from "@/types/budget";
 import { DraftItem } from "@/pages/budget/dashboard";
 import { inputAmount, TInputAmount } from "@/components/common/AmountInput";
-import { router, useForm } from '@inertiajs/react'
+import { router, useForm } from "@inertiajs/react";
 import { UrlBuilder } from "@/lib/UrlBuilder";
 import { generateKeyIdentifier } from "../KeyIdentifier";
 import { buildQueryParams } from "../redirect_params";
 import { CreateEventProps, AdjustEventProps } from "./useEventsForm";
 
 export type DraftChange = {
-  budgetCategoryKey: string,
-  budgetItemKey: string,
+  budgetCategoryKey: string;
+  budgetItemKey: string;
   amount: TInputAmount;
   updatedAmount: TInputAmount;
-}
+};
 
 type TChangeForm = {
   changes: DraftChange[];
@@ -21,21 +21,21 @@ type TChangeForm = {
   addChange: (change: DraftChange) => void;
   removeChange: (key: string) => void;
   updateChange: (key: string, amount: string) => void;
-  processing: boolean
-}
+  processing: boolean;
+};
 
 type HookProps = {
   items: BudgetItem[];
   draft?: {
     items: Array<DraftItem>;
     discretionary: {
-      amount: number,
-      overUnderBudget: number,
-    }
-  }
+      amount: number;
+      overUnderBudget: number;
+    };
+  };
   month: number | string;
   year: number | string;
-}
+};
 
 interface MergedItem extends BudgetItem {
   draftItem?: DraftItem;
@@ -47,154 +47,161 @@ const mergeItems = (props: {
   draftItems: DraftItem[];
   changes: DraftChange[];
 }): MergedItem[] => {
-  const { draftItems, changes } = props
+  const { draftItems, changes } = props;
 
   return props.items.map((item) => {
-    const draftItem = draftItems.find((i) => i.key === item.key)
-    const change = changes.find((change) => change.budgetItemKey === item.key)
+    const draftItem = draftItems.find((i) => i.key === item.key);
+    const change = changes.find((change) => change.budgetItemKey === item.key);
 
     if (!!draftItem && !!change) {
-      return { ...item, draftItem, change }
+      return { ...item, draftItem, change };
     } else {
-      return item
+      return item;
     }
-  })
-}
+  });
+};
 
 const useDraftEvents = (props: HookProps) => {
-  const { month, year } = props
-  const [_changes, setChanges] = useState<null|DraftChange[]>(null)
+  const { month, year } = props;
+  const [_changes, setChanges] = useState<null | DraftChange[]>(null);
 
-  const changes: DraftChange[] = _changes || []
+  const changes: DraftChange[] = _changes || [];
 
-  const draftItems: Array<DraftItem> = props.draft?.items || []
-  const newItems = draftItems.filter((item) => item.isNewItem)
+  const draftItems: Array<DraftItem> = props.draft?.items || [];
+  const newItems = draftItems.filter((item) => item.isNewItem);
 
   const items = mergeItems({
-    items: props.items, 
+    items: props.items,
     draftItems,
-    changes
-  })
+    changes,
+  });
 
-  const { transform, setData: setFormData, data, ...form } = useForm({ items })
+  const { transform, setData: setFormData, data, ...form } = useForm({ items });
 
-  const [postingChanges, setPostingChanges] = useState<boolean>(false)
+  const [postingChanges, setPostingChanges] = useState<boolean>(false);
 
   const postChanges = () => {
-    setPostingChanges(true)
-    const url = UrlBuilder({ name: "BudgetEdit", month, year })
+    setPostingChanges(true);
+    const url = UrlBuilder({ name: "BudgetEdit", month, year });
     const payload = {
-      changes: changes.map((change) => ({ ...change, amount: change.amount.cents }))
-    }
+      changes: changes.map((change) => ({
+        ...change,
+        amount: change.amount.cents,
+      })),
+    };
 
-    router.post(
-      url,
-      payload,
-      {
-        onSuccess: (page) => {
-          setPostingChanges(false)
-          setFormData({
-            items: mergeItems({
-              items: page.props.items as BudgetItem[],
-              // @ts-ignore
-              draftItems: page.props.draft.items,
-              changes,
-            })
-          })
-        },
-        only: ["draft"]
+    router.post(url, payload, {
+      onSuccess: (page) => {
+        setPostingChanges(false);
+        setFormData({
+          items: mergeItems({
+            items: page.props.items as BudgetItem[],
+            // @ts-ignore
+            draftItems: page.props.draft.items,
+            changes,
+          }),
+        });
       },
-    )
-  }
+      only: ["draft"],
+    });
+  };
 
   useEffect(() => {
-    if (_changes === null) { return }
+    if (_changes === null) {
+      return;
+    }
 
-    postChanges()
-  }, [changes])
+    postChanges();
+  }, [changes]);
 
   const addChange = (change: DraftChange) => {
-    setChanges([...changes, change])
-  }
+    setChanges([...changes, change]);
+  };
 
   const removeChange = (key: string) => {
-    setChanges(
-      changes.filter((change) => change.budgetItemKey !== key)
-    )
-  }
+    setChanges(changes.filter((change) => change.budgetItemKey !== key));
+  };
 
   const updateChange = (key: string, amount: string) => {
     setChanges(
       changes.map((change) => {
         if (change.budgetItemKey === key) {
-          return { ...change, amount: inputAmount({ display: amount }) }
+          return { ...change, amount: inputAmount({ display: amount }) };
         } else {
-          return change
+          return change;
         }
-      })
-    )
-  }
+      }),
+    );
+  };
 
   const updateChangeV2 = (props: {
     key: string;
     amount?: string;
     adjustment?: string;
   }) => {
-    const { key, ...rest } = props
+    const { key, ...rest } = props;
 
     setChanges(
       changes.map((change) => {
         if (change.budgetItemKey === props.key) {
-          return updatedChange({ change, ...rest })
+          return updatedChange({ change, ...rest });
         } else {
-          return change
+          return change;
         }
-      })
-    )
-  }
+      }),
+    );
+  };
 
   const updatedChange = (props: {
     change: DraftChange;
     amount?: string;
     adjustment?: string;
   }) => {
-    const { change, amount, adjustment } = props
+    const { change, amount, adjustment } = props;
 
-    if ((!!amount && !!adjustment) || (!amount && !adjustment)) { return change }
+    if ((!!amount && !!adjustment) || (!amount && !adjustment)) {
+      return change;
+    }
 
-    const item = items.find((i) => i.key === change.budgetItemKey)
+    const item = items.find((i) => i.key === change.budgetItemKey);
 
-    if (!item) { return change }
+    if (!item) {
+      return change;
+    }
 
     if (!!adjustment) {
       return {
         ...change,
         amount: inputAmount({ display: adjustment }),
-        updatedAmount: (
-          inputAmount({ cents: item.amount + inputAmount({ display: adjustment }).cents })
-        )
-      }
+        updatedAmount: inputAmount({
+          cents: item.amount + inputAmount({ display: adjustment }).cents,
+        }),
+      };
     } else {
-
-      const newAmount = ((-1 * item.amount) + inputAmount({ display: props.amount }).cents)
+      const newAmount =
+        -1 * item.amount + inputAmount({ display: props.amount }).cents;
 
       return {
         ...change,
         amount: inputAmount({ cents: newAmount }),
-        updatedAmount: inputAmount({ display: props.amount })
-      }
+        updatedAmount: inputAmount({ display: props.amount }),
+      };
     }
-  }
+  };
 
-  const eventsUrl = UrlBuilder({ name: "BudgetItemEvents",
+  const eventsUrl = UrlBuilder({
+    name: "BudgetItemEvents",
     month,
     year,
     queryParams: buildQueryParams(["budget", month, year]),
-  })
+  });
 
-  const itemToEvent = (item: DraftItem): CreateEventProps|AdjustEventProps  => {
+  const itemToEvent = (
+    item: DraftItem,
+  ): CreateEventProps | AdjustEventProps => {
     if (item.isNewItem) {
-      const eventType = changes.length === 1 ? "item_create" : "multi_item_adjust_create"
+      const eventType =
+        changes.length === 1 ? "item_create" : "multi_item_adjust_create";
 
       return {
         key: generateKeyIdentifier(),
@@ -204,39 +211,39 @@ const useDraftEvents = (props: HookProps) => {
         month,
         year,
         eventType,
-      }
+      };
     } else {
-      const eventType = changes.length === 1 ? "item_adjust" : "multi_item_adjust"
+      const eventType =
+        changes.length === 1 ? "item_adjust" : "multi_item_adjust";
 
       return {
         eventType,
         key: generateKeyIdentifier(),
         amount: inputAmount({ cents: item.amount }),
         budgetItemKey: item.key,
-      }
+      };
     }
-
-  }
+  };
 
   // @ts-ignore
   transform((data) => {
     // @ts-ignore
-    const events = [...data.items.map((i) => i.draftItem), ...newItems].reduce((acc, item) => {
-      if (item) {
-        const event = itemToEvent(item)
+    const events = [...data.items.map((i) => i.draftItem), ...newItems].reduce(
+      (acc, item) => {
+        if (item) {
+          const event = itemToEvent(item);
 
-        return [
-          ...acc,
-          { ...event, amount: event.amount.cents }
-        ]
-      } else {
-        return acc
-      }
-    }, [])
-    return { events }
-  })
+          return [...acc, { ...event, amount: event.amount.cents }];
+        } else {
+          return acc;
+        }
+      },
+      [],
+    );
+    return { events };
+  });
 
-  const post = () => form.post(eventsUrl, { onSuccess: () => setChanges([]) })
+  const post = () => form.post(eventsUrl, { onSuccess: () => setChanges([]) });
 
   return {
     addChange,
@@ -249,8 +256,8 @@ const useDraftEvents = (props: HookProps) => {
     processing: form.processing || postingChanges,
     removeChange,
     updateChange,
-    updateChangeV2
-  }
-}
+    updateChangeV2,
+  };
+};
 
-export { TChangeForm, useDraftEvents, MergedItem }
+export { TChangeForm, useDraftEvents, MergedItem };

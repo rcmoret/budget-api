@@ -14,9 +14,7 @@ import type {
   OverflowOption,
 } from "types/components/display-classes";
 
-import type {
-  GapOption
-} from "types/components/spacing-classes";
+import type { GapOption } from "types/components/spacing-classes";
 
 interface ComponentProps {
   children: React.ReactNode;

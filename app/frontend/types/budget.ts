@@ -28,7 +28,7 @@ export type SelectedAccount = {
   metadata: AccountBudgetSummary;
   slug: string;
   name: string;
-}
+};
 
 export type BudgetItemTransaction = {
   key: string;
@@ -37,7 +37,7 @@ export type BudgetItemTransaction = {
   description: string;
   comparisonDate: string;
   clearanceDate: null | string;
-}
+};
 
 export type BudgetItemEvent = {
   key: string;
@@ -46,34 +46,34 @@ export type BudgetItemEvent = {
   createdAt: string;
   comparisonDate: string;
   typeName: string;
-}
+};
 
 export type BudgetItem = {
-  key: string,
-  name: string,
-  amount: number,
-  budgetCategoryKey: string,
+  key: string;
+  name: string;
+  amount: number;
+  budgetCategoryKey: string;
   currentlyBudgeted: number;
-  difference: number,
-  iconClassName: IconName,
-  isAccrual: boolean,
-  isDeletable: boolean,
-  isDeleted: boolean,
-  isExpense: boolean,
-  isMonthly: boolean,
-  isPerDiemEnabled: boolean,
-  maturityMonth?: number
-  maturityYear?: number
-  month: number,
+  difference: number;
+  iconClassName: IconName;
+  isAccrual: boolean;
+  isDeletable: boolean;
+  isDeleted: boolean;
+  isExpense: boolean;
+  isMonthly: boolean;
+  isPerDiemEnabled: boolean;
+  maturityMonth?: number;
+  maturityYear?: number;
+  month: number;
   previouslyBudgeted: number;
-  remaining: number,
-  spent: number,
-  transactionDetails: Array<BudgetItemTransaction>,
-  year: number,
-  events: Array<BudgetItemEvent>
-}
+  remaining: number;
+  spent: number;
+  transactionDetails: Array<BudgetItemTransaction>;
+  year: number;
+  events: Array<BudgetItemEvent>;
+};
 
-export type BudgetItemDetail = BudgetItemEvent | BudgetItemTransaction
+export type BudgetItemDetail = BudgetItemEvent | BudgetItemTransaction;
 
 export type BudgetCategory = {
   key: string;
@@ -91,12 +91,12 @@ export type BudgetCategory = {
   upcomingMaturityIntervals?: Array<{
     month: number;
     year: number;
-  }>
+  }>;
   maturityIntervals?: Array<{
     month: number;
     year: number;
-  }>
-}
+  }>;
+};
 
 export interface TEvent {
   key: string;
@@ -118,7 +118,7 @@ export interface TBudgetItemDraftItem {
   difference: number;
   isNewItem: boolean;
   remaining: number;
-  spent: number
+  spent: number;
 }
 
 export interface TBudgetItem extends BudgetItem {
@@ -126,7 +126,7 @@ export interface TBudgetItem extends BudgetItem {
   change?: DraftChange;
 }
 
-export type SelectBudgetCategory ={
+export type SelectBudgetCategory = {
   key: string;
   name: string;
   slug: string;
@@ -134,8 +134,8 @@ export type SelectBudgetCategory ={
   isAccrual: boolean;
   isExpense: boolean;
   isMonthly: boolean;
-}
+};
 
 export type RolloverEventTypes =
-  "rollover_item_create" |
-  "rollover_item_adjust"
+  | "rollover_item_create"
+  | "rollover_item_adjust";

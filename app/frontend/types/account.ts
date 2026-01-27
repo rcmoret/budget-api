@@ -25,12 +25,12 @@ export interface AccountShow {
     daysRemaining: number;
     firstDate: string;
     isCurrent: boolean;
-    items: Array<BudgetItem>
+    items: Array<BudgetItem>;
     lastDate: string;
     month: number;
     totalDays: number;
     year: number;
-  }
+  };
 }
 
 export interface AccountManage {

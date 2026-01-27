@@ -10,47 +10,43 @@ type TExtraCreateEvent = {
   event_type: T_CREATE_EXTRA_EVENT;
   key: string;
   data: any;
-}
+};
 
 type TExtraCategoryCreateEvent = {
   name: string;
   slug: string;
-  events: Array<TExtraCreateEvent>
-}
+  events: Array<TExtraCreateEvent>;
+};
 
 const ExtraEventsSelect = () => {
-  const {
-    extraCategoryOptions,
-    extraEvent,
-    setExtraEventKey
-  } = useFinalizeFormContext()
+  const { extraCategoryOptions, extraEvent, setExtraEventKey } =
+    useFinalizeFormContext();
 
   const options = [
-      ...extraCategoryOptions.flatMap((category) => {
+    ...extraCategoryOptions.flatMap((category) => {
       return category.events.map((ev) => ({
         label: `${category.name}`,
-        value: ev.key
-      }))
-    })
-  ].sort(byLabel)
+        value: ev.key,
+      }));
+    }),
+  ].sort(byLabel);
 
   const onChange = (ev: SingleValue<{ label: string; value: string }>) => {
-    if (!ev) { return }
+    if (!ev) {
+      return;
+    }
 
-    setExtraEventKey(ev.value)
-  }
+    setExtraEventKey(ev.value);
+  };
 
-  const option = options.find((option) => option.value === extraEvent?.key) || null
+  const option =
+    options.find((option) => option.value === extraEvent?.key) || null;
 
   return (
     <div className="w-52">
-      <Select
-        value={option}
-        options={options}
-        onChange={onChange}
-      />
+      <Select value={option} options={options} onChange={onChange} />
     </div>
-  )
-}
+  );
+};
 
-export { ExtraEventsSelect, TExtraCreateEvent, TExtraCategoryCreateEvent }
+export { ExtraEventsSelect, TExtraCreateEvent, TExtraCategoryCreateEvent };

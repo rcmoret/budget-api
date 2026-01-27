@@ -4,7 +4,7 @@ import DatePicker from "react-datepicker";
 import { parseISO as parseIsoDate } from "date-fns";
 import { useAppConfigContext } from "@/components/layout/Provider";
 import { Icon } from "@/components/common/Icon";
-import { buildQueryParams } from "@/lib/redirect_params"
+import { buildQueryParams } from "@/lib/redirect_params";
 import { Label } from "@/pages/accounts/transactions/form/Shared";
 import { BudgetItemsComponent } from "@/pages/accounts/transactions/form/LineItems";
 import { generateKeyIdentifier } from "@/lib/KeyIdentifier";
@@ -12,7 +12,7 @@ import { inputAmount, TInputAmount } from "@/components/common/AmountInput";
 import { UrlBuilder } from "@/lib/UrlBuilder";
 import { Button } from "@/components/common/Button";
 import Select, { SingleValue } from "react-select";
-import { Row } from "@/components/common/Row"
+import { Row } from "@/components/common/Row";
 import { useToggle } from "@/lib/hooks/useToogle";
 import { TransactionWithBalance } from "@/pages/accounts/transactions";
 import { SubmitButton } from "@/components/common/Button";
@@ -21,27 +21,27 @@ import { Cell } from "@/components/common/Cell";
 type InputProps = {
   name: string;
   value: string | number | boolean;
-}
+};
 
 const ClearanceDateComponent = (props: {
-  clearanceDate: string | null,
-  updateFormData: (props: InputProps) => void,
-  month: number,
-  year: number
+  clearanceDate: string | null;
+  updateFormData: (props: InputProps) => void;
+  month: number;
+  year: number;
 }) => {
-  const { month, year, updateFormData } = props
-  const clearanceDate = !!props.clearanceDate ?
-    parseIsoDate(props.clearanceDate) :
-    null
+  const { month, year, updateFormData } = props;
+  const clearanceDate = !!props.clearanceDate
+    ? parseIsoDate(props.clearanceDate)
+    : null;
 
-  const openToDate = clearanceDate || new Date(year, month - 1)
+  const openToDate = clearanceDate || new Date(year, month - 1);
 
   const onChange = (input: Date | null) => {
     updateFormData({
       name: "clearanceDate",
-      value: (input?.toISOString().split("T")[0] || "")
-    })
-  }
+      value: input?.toISOString().split("T")[0] || "",
+    });
+  };
 
   return (
     <div>
@@ -53,18 +53,16 @@ const ClearanceDateComponent = (props: {
         className="border border-gray-300 h-input-lg rounded px-1"
       />
     </div>
-  )
-}
+  );
+};
 
 const DescriptionComponent = (props: {
-  description: string,
-  updateFormData: (props: InputProps) => void
+  description: string;
+  updateFormData: (props: InputProps) => void;
 }) => {
-  const onChange = (
-    ev: React.ChangeEvent & { target: HTMLInputElement },
-  ) => {
-    props.updateFormData({ name: ev.target.name, value: ev.target.value })
-  }
+  const onChange = (ev: React.ChangeEvent & { target: HTMLInputElement }) => {
+    props.updateFormData({ name: ev.target.name, value: ev.target.value });
+  };
 
   return (
     <div className="mr-4 w-full md:w-fit">
@@ -79,19 +77,18 @@ const DescriptionComponent = (props: {
         className="border border-gray-300 h-input-lg px-1 rounded"
       />
     </div>
-  )
-}
+  );
+};
 
 const CheckNumberComponent = (props: {
   updateFormData: (props: InputProps) => void;
-  checkNumber: string | null 
+  checkNumber: string | null;
 }) => {
-  const { checkNumber, updateFormData } = props
-  const [showInput, toggleInput] = useToggle(!!checkNumber)
+  const { checkNumber, updateFormData } = props;
+  const [showInput, toggleInput] = useToggle(!!checkNumber);
 
-  const onChange = (
-    ev: React.ChangeEvent & { target: HTMLInputElement },
-  ) => updateFormData({ name: ev.target.name, value: ev.target.value })
+  const onChange = (ev: React.ChangeEvent & { target: HTMLInputElement }) =>
+    updateFormData({ name: ev.target.name, value: ev.target.value });
 
   if (showInput) {
     return (
@@ -100,8 +97,7 @@ const CheckNumberComponent = (props: {
           <span className="text-gray-600">
             <Icon name="money-check" />
           </span>
-        </Button>
-        {" "}
+        </Button>{" "}
         Check Number
         <div>
           <input
@@ -112,7 +108,7 @@ const CheckNumberComponent = (props: {
           />
         </div>
       </div>
-    )
+    );
   } else {
     return (
       <div>
@@ -122,20 +118,19 @@ const CheckNumberComponent = (props: {
           </span>
         </Button>
       </div>
-    )
+    );
   }
-}
+};
 
 const NotesComponent = (props: {
   updateFormData: (props: InputProps) => void;
-  notes: string | null 
+  notes: string | null;
 }) => {
-  const { notes, updateFormData } = props
-  const [showInput, toggleInput] = useToggle(!!notes)
+  const { notes, updateFormData } = props;
+  const [showInput, toggleInput] = useToggle(!!notes);
 
-  const onChange = (
-    ev: React.ChangeEvent & { target: HTMLTextAreaElement },
-  ) => updateFormData({ name: ev.target.name, value: ev.target.value })
+  const onChange = (ev: React.ChangeEvent & { target: HTMLTextAreaElement }) =>
+    updateFormData({ name: ev.target.name, value: ev.target.value });
 
   // TODO: add a popover
   // to explain <br>
@@ -147,8 +142,7 @@ const NotesComponent = (props: {
           <span className="text-gray-600">
             <Icon name="sticky-note" />
           </span>
-        </Button>
-        {" "}
+        </Button>{" "}
         Notes
         <div>
           <textarea
@@ -159,7 +153,7 @@ const NotesComponent = (props: {
           />
         </div>
       </div>
-    )
+    );
   } else {
     return (
       <div>
@@ -169,50 +163,47 @@ const NotesComponent = (props: {
           </span>
         </Button>
       </div>
-    )
+    );
   }
-}
+};
 
 const BudgetExclusionComponent = (props: {
   updateFormData: (props: InputProps) => void;
   isBudgetExclusion: boolean;
 }) => {
-  const { isBudgetExclusion, updateFormData } = props
-  const { appConfig } = useAppConfigContext()
-  const { isCashFlow } = appConfig.account
+  const { isBudgetExclusion, updateFormData } = props;
+  const { appConfig } = useAppConfigContext();
+  const { isCashFlow } = appConfig.account;
   const onChange = () => {
-    updateFormData({ name: "isBudgetExclusion", value: !isBudgetExclusion })
-  }
+    updateFormData({ name: "isBudgetExclusion", value: !isBudgetExclusion });
+  };
 
   if (isCashFlow) {
-    return null
+    return null;
   }
 
   return (
     <div>
       <div>Budget Exclusion?</div>
-      <input
-        type="checkbox"
-        onChange={onChange}
-        checked={isBudgetExclusion}
-      />
+      <input type="checkbox" onChange={onChange} checked={isBudgetExclusion} />
     </div>
-  )
-}
+  );
+};
 
 const AccountSelectComponent = (props: {
   accountKey: string;
   updateFormData: (props: InputProps) => void;
 }) => {
-  const { appConfig } = useAppConfigContext()
+  const { appConfig } = useAppConfigContext();
   const options = appConfig.accounts.map((account) => {
-    return { label: account.name, value: account.key }
-  })
+    return { label: account.name, value: account.key };
+  });
 
-  const value = options.find((option) => option.value === props.accountKey) || ""
-  const onChange = (ev: SingleValue<{ label: string; value: string; }>) => {
-    props.updateFormData({ name: "accountKey", value: (ev?.value || "") })
-  }
+  const value =
+    options.find((option) => option.value === props.accountKey) || "";
+  const onChange = (ev: SingleValue<{ label: string; value: string }>) => {
+    props.updateFormData({ name: "accountKey", value: ev?.value || "" });
+  };
 
   return (
     <Select
@@ -221,15 +212,15 @@ const AccountSelectComponent = (props: {
       // @ts-ignore
       onChange={onChange}
     />
-  )
-}
+  );
+};
 
 export type TFormDetail = {
   key: string;
   budgetItemKey: string | null;
   amount: TInputAmount;
   _destroy: boolean;
-}
+};
 
 const TransactionForm = (props: {
   transaction: TransactionWithBalance;
@@ -240,7 +231,7 @@ const TransactionForm = (props: {
   onSuccess: () => void;
   closeForm: () => void;
 }) => {
-  const { appConfig } = useAppConfigContext()
+  const { appConfig } = useAppConfigContext();
   const { month, year, transaction } = props;
   const {
     key,
@@ -251,26 +242,23 @@ const TransactionForm = (props: {
     description,
     isBudgetExclusion,
     notes,
-  } = transaction
-  const isNew = !!props.isNew
+  } = transaction;
+  const isNew = !!props.isNew;
 
-  const isEven = props.index % 2 === 0
+  const isEven = props.index % 2 === 0;
 
-  const bgColor = isEven ? "bg-gray-50" : "bg-sky-100"
+  const bgColor = isEven ? "bg-gray-50" : "bg-sky-100";
 
   const details: Array<TFormDetail> = transaction.details.map((detail) => {
     return {
       key: detail.key,
       budgetItemKey: detail.budgetItemKey,
       amount: inputAmount({
-        ...(detail.amount === 0 ?
-             { display: "" } :
-             { cents: detail.amount })
-
+        ...(detail.amount === 0 ? { display: "" } : { cents: detail.amount }),
       }),
-      _destroy: false
-    }
-  })
+      _destroy: false,
+    };
+  });
   const { data, setData, transform, processing, post, put } = useForm({
     key,
     accountKey,
@@ -280,44 +268,48 @@ const TransactionForm = (props: {
     details,
     isBudgetExclusion,
     notes,
-  })
+  });
 
   // @ts-ignore
   transform(() => {
-    const { key, details, accountKey, ...transaction } = data
+    const { key, details, accountKey, ...transaction } = data;
     return {
       transaction: {
         ...transaction,
         ...(isNew ? { key } : { accountKey }),
         detailsAttributes: details.map((detail) => {
           if (!detail._destroy) {
-            return { key: detail.key, budgetItemKey: detail.budgetItemKey, amount: detail.amount.cents }
+            return {
+              key: detail.key,
+              budgetItemKey: detail.budgetItemKey,
+              amount: detail.amount.cents,
+            };
           } else {
-            return { key: detail.key, _destroy: true }
+            return { key: detail.key, _destroy: true };
           }
-        })
-      }
-    }
-  })
+        }),
+      },
+    };
+  });
 
   const updateFormData = (props: InputProps) => {
-    setData({ ...data, [props.name]: props.value })
-  }
+    setData({ ...data, [props.name]: props.value });
+  };
 
   const removeDetail = (key: string) => {
     setData({
       ...data,
       details: data.details.reduce((collection, detail) => {
         if (detail.key !== key) {
-          return [...collection, detail]
+          return [...collection, detail];
         } else if (isNew) {
-          return collection
+          return collection;
         } else {
-          return [...collection, { ...detail, _destroy: true }]
+          return [...collection, { ...detail, _destroy: true }];
         }
-      }, [] as TFormDetail[])
-    })
-  }
+      }, [] as TFormDetail[]),
+    });
+  };
 
   const addDetail = () => {
     setData({
@@ -328,44 +320,48 @@ const TransactionForm = (props: {
           key: generateKeyIdentifier(),
           amount: inputAmount({ display: "" }),
           budgetItemKey: null,
-          _destroy: false
-        }
+          _destroy: false,
+        },
       ],
-    })
-  }
+    });
+  };
 
   const updateDetailItem = (props: {
-    index: number,
-    value: string | null
-    amount?: TInputAmount
+    index: number;
+    value: string | null;
+    amount?: TInputAmount;
   }) => {
-    const { value } = props
+    const { value } = props;
 
     setData({
       ...data,
       details: data.details.map((detail, index) => {
-        return props.index === index ?
-          { ...detail, budgetItemKey: value, amount: (props.amount || detail.amount)} :
-          detail
-      })
-    })
-  }
+        return props.index === index
+          ? {
+              ...detail,
+              budgetItemKey: value,
+              amount: props.amount || detail.amount,
+            }
+          : detail;
+      }),
+    });
+  };
 
   const updateDetailAmount = (props: {
-    index: number,
-    value: TInputAmount
+    index: number;
+    value: TInputAmount;
   }) => {
-    const { value } = props
+    const { value } = props;
 
     setData({
       ...data,
       details: data.details.map((detail, index) => {
-        return props.index === index ? { ...detail, amount: value } : detail
-      })
-    })
-  }
+        return props.index === index ? { ...detail, amount: value } : detail;
+      }),
+    });
+  };
 
-  const formDetails = data.details.filter((detail) => !detail._destroy)
+  const formDetails = data.details.filter((detail) => !detail._destroy);
 
   const queryParams = buildQueryParams([
     "account",
@@ -373,40 +369,52 @@ const TransactionForm = (props: {
     "transactions",
     appConfig.budget.data.month,
     appConfig.budget.data.year,
-  ])
+  ]);
 
   const postCreate = () => {
     const formUrl = UrlBuilder({
       name: "TransactionIndex",
       accountSlug,
-      queryParams
-    })
-    post(formUrl, { onSuccess: () => props.onSuccess() })
-  }
+      queryParams,
+    });
+    post(formUrl, { onSuccess: () => props.onSuccess() });
+  };
 
   const putUpdate = () => {
     const formUrl = UrlBuilder({
       name: "TransactionShow",
       accountSlug,
       key,
-      queryParams
-    })
-    put(formUrl, { onSuccess: () => props.onSuccess() })
-  }
+      queryParams,
+    });
+    put(formUrl, { onSuccess: () => props.onSuccess() });
+  };
 
   const onSubmit = () => {
     if (isNew) {
-      postCreate()
+      postCreate();
     } else {
-      putUpdate()
+      putUpdate();
     }
-  }
+  };
 
   return (
-    <Row styling={{ padding: "px-2 py-1", flexWrap: "flex-wrap", backgroundColor: bgColor }} >
+    <Row
+      styling={{
+        padding: "px-2 py-1",
+        flexWrap: "flex-wrap",
+        backgroundColor: bgColor,
+      }}
+    >
       <form onSubmit={onSubmit} className="w-full">
         <div className="w-full rounded flex flex-row flex-wrap px-2 py-1 gap-2 border border-gray-300">
-          <Cell styling={{ display: "flex", flexAlign: "justify-between md:justify-start", width: "w-full md:w-fit" }}>
+          <Cell
+            styling={{
+              display: "flex",
+              flexAlign: "justify-between md:justify-start",
+              width: "w-full md:w-fit",
+            }}
+          >
             <div className="hidden">{key}</div>
             <div className="mr-4">
               <Button type="button" onClick={props.closeForm}>
@@ -451,11 +459,12 @@ const TransactionForm = (props: {
             />
           </div>
           <div className="w-full md:w-3/12 ">
-            {!isNew &&
+            {!isNew && (
               <AccountSelectComponent
                 updateFormData={updateFormData}
                 accountKey={data.accountKey}
-              />}
+              />
+            )}
           </div>
           <div className="w-full md:w-fit text-right grow self-end text-lg">
             <div>
@@ -476,7 +485,7 @@ const TransactionForm = (props: {
         </div>
       </form>
     </Row>
-  )
+  );
 };
 
-export { TransactionForm }
+export { TransactionForm };

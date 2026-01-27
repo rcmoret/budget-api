@@ -4,11 +4,21 @@ import { FinalizeCategoryEvent } from "./useFinalizeEventsForm";
 import { TInputAmount } from "@/components/common/AmountInput";
 import { inputAmount } from "@/components/common/AmountInput";
 
-type AdjustEvents = "item_adjust" | "multi_item_adjust" | "rollover_item_adjust" | "setup_item_adjust"
+type AdjustEvents =
+  | "item_adjust"
+  | "multi_item_adjust"
+  | "rollover_item_adjust"
+  | "setup_item_adjust";
 
-const ADJUST_EVENTS = ["item_adjust", "multi_item_adjust", "rollover_item_adjust", "setup_item_adjust"]
+const ADJUST_EVENTS = [
+  "item_adjust",
+  "multi_item_adjust",
+  "rollover_item_adjust",
+  "setup_item_adjust",
+];
 
-const isAdjust = (event: EventProps | SetUpEvent | FinalizeCategoryEvent) => ADJUST_EVENTS.includes(event.eventType)
+const isAdjust = (event: EventProps | SetUpEvent | FinalizeCategoryEvent) =>
+  ADJUST_EVENTS.includes(event.eventType);
 
 export type AdjustEventProps = {
   key: string;
@@ -16,16 +26,16 @@ export type AdjustEventProps = {
   amount: TInputAmount;
   budgetItemKey: string;
   data?: string;
-}
+};
 
 type CreateEvents =
-  "item_create" |
-  "multi_item_adjust_create" |
-  "pre_setup_item_create" |
-  "pre_setup_multi_item_adjust_create" |
-  "rollover_item_create" |
-  "rollover_extra_target_create" |
-  "setup_item_create"
+  | "item_create"
+  | "multi_item_adjust_create"
+  | "pre_setup_item_create"
+  | "pre_setup_multi_item_adjust_create"
+  | "rollover_item_create"
+  | "rollover_extra_target_create"
+  | "setup_item_create";
 
 const CREATE_EVENTS = [
   "item_create",
@@ -34,9 +44,10 @@ const CREATE_EVENTS = [
   "pre_setup_multi_item_adjust_create",
   "rollover_item_create",
   "setup_item_create",
-]
+];
 
-const isCreate = (event: EventProps | SetUpEvent | FinalizeCategoryEvent) => CREATE_EVENTS.includes(event.eventType)
+const isCreate = (event: EventProps | SetUpEvent | FinalizeCategoryEvent) =>
+  CREATE_EVENTS.includes(event.eventType);
 
 export type CreateEventProps = {
   key: string;
@@ -47,16 +58,21 @@ export type CreateEventProps = {
   month: string | number;
   year: string | number;
   data?: any;
-}
+};
 
 type DeleteEvents =
-  "item_delete" |
-  "multi_item_adjust_delete" |
-  "setup_item_delete" 
+  | "item_delete"
+  | "multi_item_adjust_delete"
+  | "setup_item_delete";
 
-const DELETE_EVENTS = ["item_delete", "multi_item_adjust_delete", "setup_item_delete"]
+const DELETE_EVENTS = [
+  "item_delete",
+  "multi_item_adjust_delete",
+  "setup_item_delete",
+];
 
-const isDelete = (event: EventProps | SetUpEvent) => DELETE_EVENTS.includes(event.eventType)
+const isDelete = (event: EventProps | SetUpEvent) =>
+  DELETE_EVENTS.includes(event.eventType);
 
 export type DeleteEventProps = {
   key: string;
@@ -64,50 +80,53 @@ export type DeleteEventProps = {
   budgetItemKey: string;
   amount: TInputAmount;
   data?: any;
-}
+};
 
-export type EventProps = AdjustEventProps | CreateEventProps | DeleteEventProps 
+export type EventProps = AdjustEventProps | CreateEventProps | DeleteEventProps;
 
 export type TEventError = {
   key: string;
   amount?: string[];
   category?: string[];
   budgetItem?: string[];
-}
+};
 
 type EventFormProps = {
   events: Array<EventProps>;
   month: number;
   year: number;
   redirectSegments?: Array<string>;
-}
+};
 
 const useEventForm = (props: EventFormProps) => {
   const { data, setData, processing, post, transform } = useForm({
-    events: props.events
-  })
+    events: props.events,
+  });
 
   const addEvent = (event: EventProps) => {
-    setData({ events: [ ...data.events, event ]})
-  }
+    setData({ events: [...data.events, event] });
+  };
 
   const updateEvent = (key: string, amount: number | string) => {
     setData({
       events: data.events.map((event) => {
         if (key !== event.key) {
-          return event
+          return event;
         } else {
-          return { ...event, amount: inputAmount({ display: String(amount) }).cents } as EventProps
+          return {
+            ...event,
+            amount: inputAmount({ display: String(amount) }).cents,
+          } as EventProps;
         }
-      })
-    })
-  }
+      }),
+    });
+  };
 
   const removeEvent = (key: string) => {
     setData({
-      events: data.events.filter((event) => key !== event.key)
-    })
-  }
+      events: data.events.filter((event) => key !== event.key),
+    });
+  };
 
   return {
     addEvent,
@@ -117,15 +136,15 @@ const useEventForm = (props: EventFormProps) => {
     removeEvent,
     setEventsData: setData,
     transform,
-    updateEvent
-  }
-}
+    updateEvent,
+  };
+};
 
 const emptyError = {
   amount: [],
   budgetItem: [],
   category: [],
-}
+};
 
 export {
   useEventForm,
@@ -133,5 +152,5 @@ export {
   isAdjust,
   isCreate,
   isDelete,
-  emptyError
-}
+  emptyError,
+};

@@ -5,11 +5,11 @@ import { FinalizeCategoryFormItem } from "@/lib/hooks/useFinalizeEventsForm";
 type TItemContext = {
   anchorId: string;
   index: number;
-  item: FinalizeCategoryFormItem; 
+  item: FinalizeCategoryFormItem;
   setItemEventKey: (eventKey: string) => void;
   setRolloverAmountForItem: (rolloverAmount: string) => void;
   setRolloverNoneForItem: () => void;
-}
+};
 
 const ItemContext = createContext<TItemContext | null>(null);
 
@@ -17,29 +17,32 @@ const ItemProvider = (props: {
   budgetCategoryKey: string;
   index: number;
   item: FinalizeCategoryFormItem;
-  setRolloverAmountForItem: (props: { itemKey: string; rolloverAmount: string; }) => void;
-  setItemEventKey: (props: { itemKey: string; eventKey: string; }) => void;
+  setRolloverAmountForItem: (props: {
+    itemKey: string;
+    rolloverAmount: string;
+  }) => void;
+  setItemEventKey: (props: { itemKey: string; eventKey: string }) => void;
   setRolloverNoneForItem: (props: { itemKey: string }) => void;
   children: ReactNode;
 }) => {
-  const { item } = props
+  const { item } = props;
 
-  const itemKey = item.key
+  const itemKey = item.key;
 
   const setRolloverAmountForItem = (rolloverAmount: string) => {
     // From the category hook
-    props.setRolloverAmountForItem({ itemKey, rolloverAmount })
-  }
+    props.setRolloverAmountForItem({ itemKey, rolloverAmount });
+  };
 
   const setItemEventKey = (eventKey: string) => {
     // From the category hook
-    props.setItemEventKey({ itemKey, eventKey })
-  }
+    props.setItemEventKey({ itemKey, eventKey });
+  };
 
   const setRolloverNoneForItem = () => {
     // From the category hook
-    props.setRolloverNoneForItem({ itemKey })
-  }
+    props.setRolloverNoneForItem({ itemKey });
+  };
 
   const value = {
     anchorId: `review-item-${item.key}`,
@@ -47,13 +50,11 @@ const ItemProvider = (props: {
     item,
     setItemEventKey,
     setRolloverAmountForItem,
-    setRolloverNoneForItem
-  }
+    setRolloverNoneForItem,
+  };
 
   return (
-    <ItemContext.Provider value={value}>
-      {props.children}
-    </ItemContext.Provider>
+    <ItemContext.Provider value={value}>{props.children}</ItemContext.Provider>
   );
 };
 
@@ -65,4 +66,4 @@ const useItem = () => {
   return context;
 };
 
-export  { useItem, ItemProvider }
+export { useItem, ItemProvider };

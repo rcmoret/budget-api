@@ -14,26 +14,34 @@ const MenuItem = ({ children }: { children: React.ReactNode }) => (
       <span className="text-gray-800">{children}</span>
     </Point>
   </div>
-)
+);
 
-const OptionalMenuItem = ({ isVisible, onClick, copy }: { isVisible: boolean; onClick: () => void, copy: string }) => {
-  if (!isVisible) return
+const OptionalMenuItem = ({
+  isVisible,
+  onClick,
+  copy,
+}: {
+  isVisible: boolean;
+  onClick: () => void;
+  copy: string;
+}) => {
+  if (!isVisible) return;
 
   return (
     <div>
       <Button type="button" onClick={onClick}>
-        <MenuItem>
-          {copy}
-        </MenuItem>
+        <MenuItem>{copy}</MenuItem>
       </Button>
     </div>
-  )
-}
+  );
+};
 
 const SetUpLink = ({ isBudget }: { isBudget: boolean }) => {
-  const { appConfig } = useAppConfigContext()
-  const { isSetUp, month, year } = appConfig.budget.data
-  if (!isBudget || !!isSetUp) { return }
+  const { appConfig } = useAppConfigContext();
+  const { isSetUp, month, year } = appConfig.budget.data;
+  if (!isBudget || !!isSetUp) {
+    return;
+  }
 
   return (
     <InertiaLink href={`/budget/${month}/${year}/set-up`}>
@@ -41,14 +49,15 @@ const SetUpLink = ({ isBudget }: { isBudget: boolean }) => {
         Set up {DateFormatter({ month, year, format: "monthYear" })}
       </MenuItem>
     </InertiaLink>
-
-  )
-}
+  );
+};
 
 const FinalizeLink = ({ isBudget }: { isBudget: boolean }) => {
-  const { appConfig } = useAppConfigContext()
-  const { isSetUp, isClosedOut, month, year } = appConfig.budget.data
-  if (!isSetUp || !isBudget || !!isClosedOut) { return }
+  const { appConfig } = useAppConfigContext();
+  const { isSetUp, isClosedOut, month, year } = appConfig.budget.data;
+  if (!isSetUp || !isBudget || !!isClosedOut) {
+    return;
+  }
 
   return (
     <InertiaLink href={`/budget/${month}/${year}/finalize`}>
@@ -56,92 +65,101 @@ const FinalizeLink = ({ isBudget }: { isBudget: boolean }) => {
         Finalize {DateFormatter({ month, year, format: "monthYear" })}
       </MenuItem>
     </InertiaLink>
-
-  )
-}
+  );
+};
 
 const AccountLinks = (props: { accounts: AccountSummary[] }) => {
   return (
     <>
-      <Point>
-        Visit Account:
-      </Point>
+      <Point>Visit Account:</Point>
       {props.accounts.sort(sortByPriority).map((account) => (
         <div className="ml-4" key={account.key}>
           <InertiaLink href={`/accounts/${account.slug}`}>
-            <Point>
-              {account.name}
-            </Point>
+            <Point>{account.name}</Point>
           </InertiaLink>
         </div>
       ))}
     </>
-  )
-}
+  );
+};
 
-const OptionsMenu = (props: { accounts: AccountSummary[], namespace: string }) => {
-  const { accounts, namespace } = props
-  const { appConfig, setAppConfig } = useAppConfigContext()
+const OptionsMenu = (props: {
+  accounts: AccountSummary[];
+  namespace: string;
+}) => {
+  const { accounts, namespace } = props;
+  const { appConfig, setAppConfig } = useAppConfigContext();
 
-  if (!appConfig.showConfigMenu) return null
+  if (!appConfig.showConfigMenu) return null;
 
-  const toggleAccruals = () => setAppConfig({
-    ...appConfig,
-    budget: { ...appConfig.budget, showAccruals: !appConfig.budget.showAccruals }
-  })
-  const toggleClearedMonthly = () => setAppConfig({
-    ...appConfig,
-    budget: { ...appConfig.budget, showClearedMonthly: !appConfig.budget.showClearedMonthly }
-  })
-  const toggleDeletedItems = () => setAppConfig({
-    ...appConfig,
-    budget: { ...appConfig.budget, showDeletedItems: !appConfig.budget.showDeletedItems }
-  })
+  const toggleAccruals = () =>
+    setAppConfig({
+      ...appConfig,
+      budget: {
+        ...appConfig.budget,
+        showAccruals: !appConfig.budget.showAccruals,
+      },
+    });
+  const toggleClearedMonthly = () =>
+    setAppConfig({
+      ...appConfig,
+      budget: {
+        ...appConfig.budget,
+        showClearedMonthly: !appConfig.budget.showClearedMonthly,
+      },
+    });
+  const toggleDeletedItems = () =>
+    setAppConfig({
+      ...appConfig,
+      budget: {
+        ...appConfig.budget,
+        showDeletedItems: !appConfig.budget.showDeletedItems,
+      },
+    });
 
-  const toggleTransferForm = () => setAppConfig({
-    ...appConfig,
-    account: {
-      ...appConfig.account,
-      showTransferForm: !appConfig.account.showTransferForm
-    }
-  })
+  const toggleTransferForm = () =>
+    setAppConfig({
+      ...appConfig,
+      account: {
+        ...appConfig.account,
+        showTransferForm: !appConfig.account.showTransferForm,
+      },
+    });
 
-  const isBudget = namespace === "budget"
+  const isBudget = namespace === "budget";
 
   return (
-    <Row styling={{
-      rounded: "rounded",
-      padding: "px-2 py-3",
-      flexAlign: "justify-start",
-      flexWrap: "flex-wrap",
-      backgroundColor: "bg-yellow-100",
-      margin: "mb-4",
-      gap: "gap-8",
-      fontSize: "text-sm"
-    }}>
-      <div className="w-full text-2xl">
-        Menu / Options
-      </div>
-      <Cell styling={{ width: "w-full md:w-4/12"}}>
-        <div className="w-full text-lg border-b-2 border-yellow-400">
-          Pages
-        </div>
+    <Row
+      styling={{
+        rounded: "rounded",
+        padding: "px-2 py-3",
+        flexAlign: "justify-start",
+        flexWrap: "flex-wrap",
+        backgroundColor: "bg-yellow-100",
+        margin: "mb-4",
+        gap: "gap-8",
+        fontSize: "text-sm",
+      }}
+    >
+      <div className="w-full text-2xl">Menu / Options</div>
+      <Cell styling={{ width: "w-full md:w-4/12" }}>
+        <div className="w-full text-lg border-b-2 border-yellow-400">Pages</div>
         <InertiaLink href="/budget/categories">
-          <MenuItem>
-            Manage Budget Categories
-          </MenuItem>
+          <MenuItem>Manage Budget Categories</MenuItem>
         </InertiaLink>
         <InertiaLink href="/accounts/manage">
-          <MenuItem>
-            Manage Accounts
-          </MenuItem>
+          <MenuItem>Manage Accounts</MenuItem>
         </InertiaLink>
         {namespace !== "accounts" && <AccountLinks accounts={accounts} />}
         <OptionalMenuItem
           isVisible={!isBudget}
           onClick={toggleTransferForm}
-          copy={appConfig.account.showTransferForm ? "Hide Transfer Form" : "Show Transfer Form"}
-          />
+          copy={
+            appConfig.account.showTransferForm
+              ? "Hide Transfer Form"
+              : "Show Transfer Form"
+          }
+        />
         <div>
           <SetUpLink isBudget={isBudget} />
         </div>
@@ -163,16 +181,24 @@ const OptionsMenu = (props: { accounts: AccountSummary[], namespace: string }) =
         <OptionalMenuItem
           isVisible={isBudget}
           onClick={toggleClearedMonthly}
-          copy={appConfig.budget.showClearedMonthly ? "Hide Cleared Monthly Items" : "Show Cleared Monthly Items"}
+          copy={
+            appConfig.budget.showClearedMonthly
+              ? "Hide Cleared Monthly Items"
+              : "Show Cleared Monthly Items"
+          }
         />
         <OptionalMenuItem
           isVisible={isBudget}
           onClick={toggleDeletedItems}
-          copy={appConfig.budget.showDeletedItems ? "Hide Deleted Items" : "Show Deleted Items"}
+          copy={
+            appConfig.budget.showDeletedItems
+              ? "Hide Deleted Items"
+              : "Show Deleted Items"
+          }
         />
       </Cell>
     </Row>
-  )
-}
+  );
+};
 
-export { OptionsMenu }
+export { OptionsMenu };

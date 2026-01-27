@@ -1,9 +1,9 @@
-import { SubmitButton } from "@/components/common/Button"
-import { useFinalizeFormContext } from "./form_context"
-import { Icon } from "@/components/common/Icon"
+import { SubmitButton } from "@/components/common/Button";
+import { useFinalizeFormContext } from "./form_context";
+import { Icon } from "@/components/common/Icon";
 
 const FinalizeSubmitButton = () => {
-  const { submitHandler, isSubmittable } = useFinalizeFormContext()
+  const { submitHandler, isSubmittable } = useFinalizeFormContext();
 
   return (
     <div className="w-52">
@@ -20,23 +20,25 @@ const FinalizeSubmitButton = () => {
           display: "flex",
           flexAlign: "justify-between",
           gap: "gap-2",
-          width: "w-full"
+          width: "w-full",
         }}
         disabledStyling={{
           color: "text-gray-500",
           backgroundColor: "bg-gray-300",
           hoverColor: "hover:bg-gray-400",
           border: "border border-gray-400",
-          cursor: "cursor-not-allowed"
+          cursor: "cursor-not-allowed",
         }}
       >
         Submit
-        <div className={isSubmittable ? "text-chartreuse-300" : "text-gray-500"}>
+        <div
+          className={isSubmittable ? "text-chartreuse-300" : "text-gray-500"}
+        >
           <Icon name="check-circle" />
         </div>
       </SubmitButton>
     </div>
-  )
-}
+  );
+};
 
-export { FinalizeSubmitButton }
+export { FinalizeSubmitButton };

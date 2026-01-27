@@ -1,18 +1,28 @@
-import { createContext, useContext } from "react"
+import { createContext, useContext } from "react";
 import { BudgetCategory } from "@/types/budget";
 import { KeySpan } from "@/components/common/KeySpan";
-import { useSetupEventsFormContext, SetupEvent, TCategoryListItem } from "@/pages/budget/set_up";
+import {
+  useSetupEventsFormContext,
+  SetupEvent,
+  TCategoryListItem,
+} from "@/pages/budget/set_up";
 
-const CategoryListItemContext = createContext<{ category: TCategoryListItem; currentlyReviewing: boolean; } | null>(null)
+const CategoryListItemContext = createContext<{
+  category: TCategoryListItem;
+  currentlyReviewing: boolean;
+} | null>(null);
 
-const CategoryListItemProvider = (props: { category: TCategoryListItem, children?: React.ReactNode }) => {
-  const { budgetCategory } = useSetupEventsFormContext()
-  const { category } = props
+const CategoryListItemProvider = (props: {
+  category: TCategoryListItem;
+  children?: React.ReactNode;
+}) => {
+  const { budgetCategory } = useSetupEventsFormContext();
+  const { category } = props;
 
   const value = {
     category,
     currentlyReviewing: category.slug === budgetCategory.slug,
-  }
+  };
 
   return (
     <CategoryListItemContext.Provider value={value}>
@@ -20,33 +30,37 @@ const CategoryListItemProvider = (props: { category: TCategoryListItem, children
 
       {props.children}
     </CategoryListItemContext.Provider>
-  )
-
-}
+  );
+};
 
 const useSetupCategoryListItemContext = () => {
-  const context = useContext(CategoryListItemContext)
+  const context = useContext(CategoryListItemContext);
   if (!context) {
-    throw new Error("useSetupCategoryListItemContext must be used with a Set Up Category (list item) Provider")
+    throw new Error(
+      "useSetupCategoryListItemContext must be used with a Set Up Category (list item) Provider",
+    );
   }
-  return context
-}
+  return context;
+};
 
 type TShow = {
   category: BudgetCategory & { events: Array<SetupEvent> };
   currentlyReviewing: boolean;
-}
+};
 
-const CategoryShowContext = createContext<TShow | null>(null)
+const CategoryShowContext = createContext<TShow | null>(null);
 
-const CategoryShowProvider = (props: { category: BudgetCategory & { events: Array<SetupEvent> }, children?: React.ReactNode }) => {
-  const { budgetCategory } = useSetupEventsFormContext()
-  const { category } = props
+const CategoryShowProvider = (props: {
+  category: BudgetCategory & { events: Array<SetupEvent> };
+  children?: React.ReactNode;
+}) => {
+  const { budgetCategory } = useSetupEventsFormContext();
+  const { category } = props;
 
   const value = {
     category,
     currentlyReviewing: category.slug === budgetCategory.slug,
-  }
+  };
 
   return (
     <CategoryShowContext.Provider value={value}>
@@ -54,20 +68,22 @@ const CategoryShowProvider = (props: { category: BudgetCategory & { events: Arra
 
       {props.children}
     </CategoryShowContext.Provider>
-  )
-}
+  );
+};
 
 const useSetUpCategoryShowContext = () => {
-  const context = useContext(CategoryShowContext)
+  const context = useContext(CategoryShowContext);
   if (!context) {
-    throw new Error("useSetUpCategoryShowContext must be used with a Set Up Category Provider")
+    throw new Error(
+      "useSetUpCategoryShowContext must be used with a Set Up Category Provider",
+    );
   }
-  return context
-}
+  return context;
+};
 
 export {
   CategoryShowProvider as CategoryShow,
   CategoryListItemProvider as CategoryListItemShow,
   useSetupCategoryListItemContext,
-  useSetUpCategoryShowContext
-}
+  useSetUpCategoryShowContext,
+};

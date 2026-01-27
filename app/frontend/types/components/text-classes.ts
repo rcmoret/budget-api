@@ -5,7 +5,7 @@ export type FontSizeOption =
   | "text-lg"
   | "text-xl"
   | "text-2xl"
-  | "text-3xl"
+  | "text-3xl";
 
 export type FontWeightOption =
   | "font-thin"
@@ -16,7 +16,7 @@ export type FontWeightOption =
   | "font-semibold"
   | "font-bold"
   | "font-extrabold"
-  | "font-black"
+  | "font-black";
 
 export type TextAlignOption =
   | "text-left"
@@ -24,46 +24,39 @@ export type TextAlignOption =
   | "text-right"
   | "text-justify"
   | "text-start"
-  | "text-end"
+  | "text-end";
 
 type TextBlues =
   | "text-blue-300"
   | "text-blue-400"
   | "text-blue-700"
   | "text-blue-600"
-  | "text-blue-800"
+  | "text-blue-800";
 
-type TextChartreuse =
-  | "text-chartreuse-300"
+type TextChartreuse = "text-chartreuse-300";
 
-type TextGreens =
-  | "text-green-600"
-  | "text-green-600"
+type TextGreens = "text-green-600" | "text-green-600";
 
 type TextGrayScale =
   | "text-black"
   | "text-gray-500"
   | "text-gray-600"
   | "text-gray-800"
-  | "text-white"
+  | "text-white";
 
-type TextReds =
-  | "text-red-400"
-  | "text-red-700"
+type TextReds = "text-red-400" | "text-red-700";
 
 export type TextColor =
   | TextBlues
   | TextChartreuse
   | TextGrayScale
   | TextGreens
-  | TextReds
+  | TextReds;
 
 export type TextDecorationOption =
   | "underline"
-  | "overline" 
+  | "overline"
   | "line-through"
-  | "no-underline"
+  | "no-underline";
 
-export type FontStyleOption =
-  | "italic"
-  | "not-italic"
+export type FontStyleOption = "italic" | "not-italic";

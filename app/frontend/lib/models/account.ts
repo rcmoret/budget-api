@@ -4,6 +4,6 @@ type TSimpleAccount = {
   slug: string;
   priority: number;
   balance: number;
-}
+};
 
-export { TSimpleAccount }
+export { TSimpleAccount };

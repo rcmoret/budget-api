@@ -73,7 +73,8 @@ const MonthDictionary = (monthNumber: number): MonthObject => {
   }
 };
 
-type DateFormatString = "default"
+type DateFormatString =
+  | "default"
   | "m/d/yy"
   | "monthDay"
   | "monthYear"

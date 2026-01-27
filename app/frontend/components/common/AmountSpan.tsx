@@ -47,7 +47,7 @@ const AmountSpan = (suppliedProps: ComponentProps) => {
       {moneyFormatter(amount, {
         absolute,
         decorate,
-        showCents: props.showCents ?? true
+        showCents: props.showCents ?? true,
       })}
     </span>
   );
@@ -81,8 +81,8 @@ const PercentSpan = (suppliedProps: ComponentProps) => {
     textColor = negativeColor;
   }
   const className = [textColor, ...classes].join(" ");
-  const percent = absolute ? Math.abs(amount).toFixed(1) : amount.toFixed(1)
-  const copy = decorate ? `${percent}%` : percent
+  const percent = absolute ? Math.abs(amount).toFixed(1) : amount.toFixed(1);
+  const copy = decorate ? `${percent}%` : percent;
 
   return (
     <span className={className}>
@@ -90,6 +90,6 @@ const PercentSpan = (suppliedProps: ComponentProps) => {
       {copy}
     </span>
   );
-}
+};
 
 export { AmountSpan, PercentSpan };

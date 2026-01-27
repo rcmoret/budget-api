@@ -1,6 +1,5 @@
-import { useEffect } from "react"
+import { useEffect } from "react";
 import { useSetupEventsFormContext } from "@/pages/budget/set_up";
-
 
 const KeyboardNav = () => {
   const {
@@ -8,8 +7,8 @@ const KeyboardNav = () => {
     changeNextCategory,
     changePreviousUnreviewedCategory,
     changeNextUnreviewedCategory,
-    budgetCategory
-  } = useSetupEventsFormContext()
+    budgetCategory,
+  } = useSetupEventsFormContext();
 
   useEffect(() => {
     const handleKeyUp = (event: KeyboardEvent) => {
@@ -17,37 +16,39 @@ const KeyboardNav = () => {
         event.target instanceof HTMLInputElement ||
         event.target instanceof HTMLTextAreaElement ||
         event.target instanceof HTMLSelectElement
-      ) { return; }
-
-      if (event.shiftKey && event.key === 'ArrowLeft') {
-        event.preventDefault();
-        changePreviousCategory()
+      ) {
+        return;
       }
 
-      if (event.shiftKey && event.key === 'ArrowRight') {
+      if (event.shiftKey && event.key === "ArrowLeft") {
         event.preventDefault();
-        changeNextCategory()
+        changePreviousCategory();
       }
 
-      if (event.shiftKey && event.key === 'ArrowUp') {
+      if (event.shiftKey && event.key === "ArrowRight") {
         event.preventDefault();
-        changePreviousUnreviewedCategory()
+        changeNextCategory();
       }
 
-      if (event.shiftKey && event.key === 'ArrowDown') {
+      if (event.shiftKey && event.key === "ArrowUp") {
         event.preventDefault();
-        changeNextUnreviewedCategory()
+        changePreviousUnreviewedCategory();
       }
-    }
 
-    document.addEventListener('keyup', handleKeyUp);
+      if (event.shiftKey && event.key === "ArrowDown") {
+        event.preventDefault();
+        changeNextUnreviewedCategory();
+      }
+    };
+
+    document.addEventListener("keyup", handleKeyUp);
 
     return () => {
-      document.removeEventListener('keyup', handleKeyUp);
+      document.removeEventListener("keyup", handleKeyUp);
     };
-  }, [budgetCategory.slug])
+  }, [budgetCategory.slug]);
 
-  return null
-}
+  return null;
+};
 
-export { KeyboardNav }
+export { KeyboardNav };

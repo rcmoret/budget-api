@@ -4,9 +4,8 @@ import { Provider } from "@/components/layout/Provider";
 import { Row } from "@/components/common/Row";
 
 const Layout = ({ children }: { children: any }) => {
-  const accounts = children.props.dashboard?.accounts ||
-    children.props.accounts ||
-    []
+  const accounts =
+    children.props.dashboard?.accounts || children.props.accounts || [];
   return (
     <Provider>
       <div className="w-11/12 mx-auto h-dvh">
@@ -23,7 +22,10 @@ const Layout = ({ children }: { children: any }) => {
               overflow: "overflow-visible",
             }}
           >
-            <OptionsMenu accounts={accounts} namespace={children.props.metadata.namespace}/>
+            <OptionsMenu
+              accounts={accounts}
+              namespace={children.props.metadata.namespace}
+            />
             {children}
           </Row>
         </div>

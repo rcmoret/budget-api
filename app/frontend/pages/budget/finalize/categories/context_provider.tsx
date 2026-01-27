@@ -5,7 +5,7 @@ import {
   FinalizeFormCategory,
   UpdateCategoryProps,
   decorate as redecorate,
-} from "@/lib/hooks/useFinalizeEventsForm"
+} from "@/lib/hooks/useFinalizeEventsForm";
 
 type TCategoryContext = {
   category: FinalizeFormCategory;
@@ -13,100 +13,111 @@ type TCategoryContext = {
   effectItems: FinalizeCategoryFormItem[];
   rolloverAmountFor: (eventKey: string) => number;
   setItemEventKey: (p: { eventKey: string; itemKey: string }) => void;
-  setRolloverAmountForItem: (props: { itemKey: string; rolloverAmount: string; }) => void;
-  setRolloverNoneForItem: (props: { itemKey: string; }) => void;
-}
+  setRolloverAmountForItem: (props: {
+    itemKey: string;
+    rolloverAmount: string;
+  }) => void;
+  setRolloverNoneForItem: (props: { itemKey: string }) => void;
+};
 
 const CategoryContext = createContext<TCategoryContext | null>(null);
 
 const CategoryProvider = (props: {
   category: FinalizeFormCategory;
-  setCategory: (p: UpdateCategoryProps & { key: string; }) => void;
+  setCategory: (p: UpdateCategoryProps & { key: string }) => void;
   children: ReactNode;
 }) => {
-
-  const { category } = props
+  const { category } = props;
 
   const setCategory = (updateProps: UpdateCategoryProps) => {
     props.setCategory({
       key: category.key,
-      ...updateProps
-    })
-  }
+      ...updateProps,
+    });
+  };
 
-  const setItemEventKey = (props: { eventKey: string, itemKey: string }) => {
-    const { eventKey, itemKey } = props
+  const setItemEventKey = (props: { eventKey: string; itemKey: string }) => {
+    const { eventKey, itemKey } = props;
 
     const items = category.items.map((item) => {
-      if (item.key !== itemKey) { return item }
+      if (item.key !== itemKey) {
+        return item;
+      }
 
       return redecorate({
         item,
         isExpense: category.isExpense,
         rolloverAmount: item.rolloverAmount.display || "",
-        eventKey
-      })
-    })
+        eventKey,
+      });
+    });
 
-    setCategory({ items })
-  }
+    setCategory({ items });
+  };
 
-  const setRolloverAmountForItem = (props: { itemKey: string, rolloverAmount: string; }) => {
-    const { itemKey } = props
+  const setRolloverAmountForItem = (props: {
+    itemKey: string;
+    rolloverAmount: string;
+  }) => {
+    const { itemKey } = props;
 
     const items = category.items.map((item) => {
-      if (item.key !== itemKey) { return item }
+      if (item.key !== itemKey) {
+        return item;
+      }
 
       return redecorate({
         item,
         eventKey: item.eventKey,
         isExpense: category.isExpense,
-        rolloverAmount: props.rolloverAmount
-      })
-    })
+        rolloverAmount: props.rolloverAmount,
+      });
+    });
 
-    setCategory({ items })
-  }
+    setCategory({ items });
+  };
 
-  const setRolloverNoneForItem = (props: { itemKey: string; }) => {
-    const { itemKey } = props
+  const setRolloverNoneForItem = (props: { itemKey: string }) => {
+    const { itemKey } = props;
 
     const items = category.items.map((item) => {
-      if (item.key !== itemKey) { return item }
+      if (item.key !== itemKey) {
+        return item;
+      }
 
       return redecorate({
         item,
         isExpense: category.isExpense,
         rolloverAmount: "0",
-        eventKey: category.events.length > 1 ? "" : item.eventKey
-      })
-    })
+        eventKey: category.events.length > 1 ? "" : item.eventKey,
+      });
+    });
 
-    setCategory({ items })
-  }
+    setCategory({ items });
+  };
 
-  const singleMatched = category.items.length === 1 &&
-    category.events.length === 1
+  const singleMatched =
+    category.items.length === 1 && category.events.length === 1;
 
-  const eventKeys = category.items.map((item) => item.eventKey)
+  const eventKeys = category.items.map((item) => item.eventKey);
 
   const effectiveEvents = category.events.filter(({ key }) => {
-    return singleMatched || eventKeys.includes(key)
-  })
+    return singleMatched || eventKeys.includes(key);
+  });
 
   const effectItems = category.items.filter((item) => {
-    return !item.needsReview && !!item.rolloverAmount.cents
-  })
+    return !item.needsReview && !!item.rolloverAmount.cents;
+  });
 
   const rolloverAmountFor = (eventKey: string) => {
     return effectItems.reduce((sum, item) => {
       if (item.eventKey === eventKey) {
-        return sum + (item.rolloverAmount.cents || 0)
+        return sum + (item.rolloverAmount.cents || 0);
       } else {
-        return sum
+        return sum;
       }
-    }, 0)
-  }
+    }, 0);
+  };
 
   const value = {
     category,
@@ -116,7 +127,7 @@ const CategoryProvider = (props: {
     setItemEventKey,
     setRolloverAmountForItem,
     setRolloverNoneForItem,
-  }
+  };
 
   return (
     <CategoryContext.Provider value={value}>
@@ -133,4 +144,4 @@ const useCategory = () => {
   return context;
 };
 
-export { useCategory, CategoryProvider }
+export { useCategory, CategoryProvider };

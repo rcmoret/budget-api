@@ -14,7 +14,7 @@ interface ComponentProps {
 const AccountShowComponent = (props: ComponentProps) => {
   const { accounts, selectedAccount } = props;
   const { appConfig, setAppConfig } = useAppConfigContext();
-  const { items } = selectedAccount.metadata
+  const { items } = selectedAccount.metadata;
 
   useEffect(() => {
     setAppConfig({
@@ -25,17 +25,19 @@ const AccountShowComponent = (props: ComponentProps) => {
           ...appConfig.budget.data,
           ...selectedAccount.metadata,
           items,
-        }
+        },
       },
-      accounts: accounts.filter((a) => !a.isArchived).map(({ key, name }) => ({ key, name })),
+      accounts: accounts
+        .filter((a) => !a.isArchived)
+        .map(({ key, name }) => ({ key, name })),
       account: {
         ...appConfig.account,
         isCashFlow: selectedAccount.isCashFlow,
         key: selectedAccount.key,
         slug: selectedAccount.slug,
-      }
-    })
-  }, [items])
+      },
+    });
+  }, [items]);
 
   return (
     <>

@@ -9,30 +9,39 @@ import { BudgetSummary } from "@/pages/budget/set_up/right_column/budget-summary
 import { CircleNavButtons } from "@/components/common/NavCircles";
 import { AccrualComponent } from "./accrual-component";
 import { EventCard } from "./event-card";
-import { CategoryAverages, CategoryAveragesProvider, SummaryUpdateButton, useCategoryAveragesContext } from "@/components/common/budget/category-chart";
+import {
+  CategoryAverages,
+  CategoryAveragesProvider,
+  SummaryUpdateButton,
+  useCategoryAveragesContext,
+} from "@/components/common/budget/category-chart";
 import { DateFormatter } from "@/lib/DateFormatter";
 import { UrlBuilder } from "@/lib/UrlBuilder";
 
 const CategoryAveragesContainer = () => {
-  const { isHidden } = useCategoryAveragesContext()
+  const { isHidden } = useCategoryAveragesContext();
 
   if (isHidden) {
-    return <SummaryUpdateButton />
+    return <SummaryUpdateButton />;
   } else {
-    return <CategoryAverages />
+    return <CategoryAverages />;
   }
-}
+};
 
 const SubmitChangeButton = () => {
-  const { metadata: { month, year, isSubmittable } } = useSetupEventsFormContext()
-  const { post, processing } = useForm()
+  const {
+    metadata: { month, year, isSubmittable },
+  } = useSetupEventsFormContext();
+  const { post, processing } = useForm();
 
-  if (!isSubmittable) { return null }
+  if (!isSubmittable) {
+    return null;
+  }
 
   const onSubmit = () => {
-    const url = UrlBuilder({ name: "BudgetSetUp", month, year })
-    post(url)
-  }
+    const url = UrlBuilder({ name: "BudgetSetUp", month, year });
+    post(url);
+  };
 
   return (
     <SubmitButton
@@ -47,13 +56,13 @@ const SubmitChangeButton = () => {
         rounded: "rounded",
         padding: "px-4 py-2",
         display: "flex",
-        gap: "gap-2"
+        gap: "gap-2",
       }}
       disabledStyling={{
         color: "text-black",
         backgroundColor: "bg-gray-300",
         hoverColor: "hover:bg-gray-300",
-        cursor: "cursor-not-allowed"
+        cursor: "cursor-not-allowed",
       }}
     >
       Setup {DateFormatter({ month, year, format: "shortMonthYear" })}
@@ -61,14 +70,11 @@ const SubmitChangeButton = () => {
         <Icon name="check-circle" />
       </div>
     </SubmitButton>
-  )
-}
+  );
+};
 
 const AddNewButton = () => {
-  const {
-    budgetCategory: category,
-    metadata,
-  } = useSetupEventsFormContext()
+  const { budgetCategory: category, metadata } = useSetupEventsFormContext();
 
   const className = [
     "bg-green-400",
@@ -76,8 +82,8 @@ const AddNewButton = () => {
     "py-1",
     "px-3",
     "rounded-xl",
-    "text-sm"
-  ].join(" ")
+    "text-sm",
+  ].join(" ");
 
   if (category.isMonthly) {
     return (
@@ -95,11 +101,11 @@ const AddNewButton = () => {
           </div>
         </Link>
       </div>
-    )
+    );
   } else {
-    return null
+    return null;
   }
-}
+};
 
 const RightColumn = () => {
   const {
@@ -107,10 +113,12 @@ const RightColumn = () => {
     changePreviousCategory,
     changeNextCategory,
     metadata,
-  } = useSetupEventsFormContext()
+  } = useSetupEventsFormContext();
 
   // Build a fall back component I guess
-  if (!category) { return null }
+  if (!category) {
+    return null;
+  }
 
   return (
     <div style={{ width: "650px" }}>
@@ -118,12 +126,13 @@ const RightColumn = () => {
         <BudgetSummary />
         <SubmitChangeButton />
       </div>
-      <div style={{ boxShadow: "inset 0px 3px 6px 0px rgba(56, 92, 56, 0.4)" }} className="my-2 p-4 border-gray-200 rounded-lg">
+      <div
+        style={{ boxShadow: "inset 0px 3px 6px 0px rgba(56, 92, 56, 0.4)" }}
+        className="my-2 p-4 border-gray-200 rounded-lg"
+      >
         <CategoryShow category={category}>
           <div className="w-full flex flex-row justify-between px-4 text-lg mb-4 mt-2">
-            <Point>
-              {category.name}
-            </Point>
+            <Point>{category.name}</Point>
             <AddNewButton />
           </div>
           {category.events.map((event, index) => (
@@ -157,7 +166,7 @@ const RightColumn = () => {
         </Link>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export { RightColumn }
+export { RightColumn };

@@ -7,10 +7,10 @@ const IconDictionary = {
   "caret-down": "fas fa-caret-down",
   "caret-right": "fas fa-caret-right",
   "check-circle": "fas fa-check-circle",
-  "circle": "fas fa-circle",
+  circle: "fas fa-circle",
   "external-arrow": "fas fa-external-link-alt",
   "plus-circle": "fas fa-plus-circle",
-  "plus": "fa fa-plus",
+  plus: "fa fa-plus",
   edit: "fa  fa-edit",
   "folder-open": "far fa-folder-open",
   gears: "fa fa-gears",
@@ -32,7 +32,7 @@ const GreenCheck = () => {
     <div className="p-1 text-xs bg-green-600 text-chartreuse-300 rounded">
       <Icon name="check-circle" />
     </div>
-  )
-}
+  );
+};
 
 export { Icon, IconName, GreenCheck };

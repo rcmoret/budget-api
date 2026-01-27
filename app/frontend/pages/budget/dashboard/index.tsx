@@ -1,28 +1,39 @@
 import { useEffect } from "react";
-import { BudgetDashboardProvider, useBudgetDashboardContext } from "@/pages/budget/dashboard/context_provider";
-import { BudgetData, BudgetItem, DiscretionaryData, SelectBudgetCategory } from "@/types/budget";
+import {
+  BudgetDashboardProvider,
+  useBudgetDashboardContext,
+} from "@/pages/budget/dashboard/context_provider";
+import {
+  BudgetData,
+  BudgetItem,
+  DiscretionaryData,
+  SelectBudgetCategory,
+} from "@/types/budget";
 import { useAppConfigContext } from "@/components/layout/Provider";
 import { useDraftEvents } from "@/lib/hooks/useDraftEvents";
 import { AdjustForm } from "@/pages/budget/item_components/AdjustForm";
-import { FilterComponent as BaseFilterComponent } from "@/pages/budget/filter"
+import { FilterComponent as BaseFilterComponent } from "@/pages/budget/filter";
 import { AccountSummary } from "@/types/account";
-import { DayToDayColumn, MonthlyColumn } from "@/pages/budget/dashboard/columns";
+import {
+  DayToDayColumn,
+  MonthlyColumn,
+} from "@/pages/budget/dashboard/columns";
 import { KeyboardNav } from "@/components/layout/ApplicationListners";
 
 const FilterComponent = () => {
-  const { itemFilter }  = useBudgetDashboardContext()
+  const { itemFilter } = useBudgetDashboardContext();
 
   return (
     <BaseFilterComponent
       filterTerm={itemFilter.term}
       setFilterTerm={itemFilter.setTerm}
     />
-  )
-}
+  );
+};
 
 export type DraftItem = {
   key: string;
-  amount: number; 
+  amount: number;
   budgetCategoryKey: string;
   budgetCategoryName: string;
   isMonthly: boolean;
@@ -31,7 +42,7 @@ export type DraftItem = {
   name: string;
   remaining: number;
   spent: number;
-}
+};
 
 interface ComponentProps {
   data: BudgetData;
@@ -42,22 +53,22 @@ interface ComponentProps {
   draft?: {
     items: Array<DraftItem>;
     discretionary: {
-      amount: number,
-      overUnderBudget: number,
-    }
-  }
+      amount: number;
+      overUnderBudget: number;
+    };
+  };
 }
 
 const BudgetComponent = (props: ComponentProps) => {
-  const { appConfig, setAppConfig } = useAppConfigContext()
-  const { data, discretionary, draft, categories } = props
-  const { month, year } = data
+  const { appConfig, setAppConfig } = useAppConfigContext();
+  const { data, discretionary, draft, categories } = props;
+  const { month, year } = data;
   const { items, ...form } = useDraftEvents({
     items: props.items,
     draft,
     month,
-    year
-  })
+    year,
+  });
 
   useEffect(() => {
     setAppConfig({
@@ -67,10 +78,10 @@ const BudgetComponent = (props: ComponentProps) => {
         ...appConfig.budget,
         data,
         discretionary,
-        categories
-      }
-    })
-  }, [])
+        categories,
+      },
+    });
+  }, []);
 
   return (
     <BudgetDashboardProvider
@@ -85,7 +96,7 @@ const BudgetComponent = (props: ComponentProps) => {
       <DayToDayColumn />
       <MonthlyColumn />
     </BudgetDashboardProvider>
-  )
+  );
 };
 
 export default BudgetComponent;
