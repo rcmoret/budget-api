@@ -49,7 +49,7 @@ const SubmitChangeButton = () => {
       isEnabled={!processing}
       styling={{
         color: "text-white",
-        className: "shadow-md",
+        shadow: "shadow-md",
         backgroundColor: "bg-green-500",
         hoverColor: "hover:bg-green-600",
         fontWeight: "font-semibold",

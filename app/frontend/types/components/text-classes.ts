@@ -44,7 +44,7 @@ type TextGrayScale =
   | "text-gray-800"
   | "text-white";
 
-type TextReds = "text-red-400" | "text-red-700";
+type TextReds = "text-red-400" | "text-red-600" | "text-red-700";
 
 export type TextColor =
   | TextBlues

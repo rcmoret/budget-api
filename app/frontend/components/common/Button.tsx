@@ -45,6 +45,7 @@ type StylingProps = {
   padding?: string;
   rounded?: "rounded" | null;
   textAlign?: TextAlignOption;
+  shadow?: string;
   width?: string;
 };
 
