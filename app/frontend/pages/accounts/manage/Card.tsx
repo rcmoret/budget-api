@@ -1,12 +1,13 @@
 import { Point } from "@/components/common/Symbol";
 import { AccountManage } from "@/types/account";
-import { Button } from "@/components/common/Button";
 import { AccountForm } from "@/pages/accounts/manage/Form";
-import { Icon } from "@/components/common/Icon";
 import { useForm } from "@inertiajs/react";
-import { SubmitButton } from "@/components/common/Button";
 import { UrlBuilder } from "@/lib/UrlBuilder";
 import { buildQueryParams } from "@/lib/redirect_params";
+import {
+  ActionSubmitButton,
+  ActionButton,
+} from "@/lib/theme/buttons/action-button";
 
 const ArchivedAtComponent = ({ account }: { account: AccountManage }) => {
   if (!account.isArchived) {
@@ -27,21 +28,25 @@ const ArchivedAtComponent = ({ account }: { account: AccountManage }) => {
   };
 
   return (
-    <>
+    <div className="w-full flex flex-row items-center justify-between">
       <div className="w-4/12 text-sm">archived:</div>
-      <div className="w-7/12 text-sm italic text-right">
-        {account.archivedAt}
+      <div className="w-8/12 text-sm italic text-right flex flex-row justify-end items-center gap-2">
+        <div>{account.archivedAt}</div>
+        <form>
+          <ActionSubmitButton
+            onSubmit={onSubmit}
+            icon="angle-double-right"
+            title={
+              processing
+                ? "Restoring account..."
+                : `Restore ${account.name} from archive`
+            }
+            isEnabled={!processing}
+            isBusy={processing}
+          />
+        </form>
       </div>
-      <form>
-        <SubmitButton
-          onSubmit={onSubmit}
-          styling={{ color: "text-green-600" }}
-          isEnabled={!processing}
-        >
-          <Icon name="angle-double-right" />
-        </SubmitButton>
-      </form>
-    </>
+    </div>
   );
 };
 
@@ -61,13 +66,16 @@ const ArchiveButton = (props: { account: AccountManage }) => {
 
   return (
     <form>
-      <SubmitButton
+      <ActionSubmitButton
         onSubmit={onSubmit}
-        styling={{ color: "text-red-400" }}
+        icon="trash"
+        title={
+          processing ? "Archiving account..." : `Archive ${props.account.name}`
+        }
         isEnabled={!processing}
-      >
-        <Icon name="trash" />
-      </SubmitButton>
+        isBusy={processing}
+        color="red"
+      />
     </form>
   );
 };
@@ -77,28 +85,39 @@ const AccountCard = (props: {
   showForm: () => void;
 }) => {
   const { account, showForm } = props;
+  const accountHeadingId = `account-heading-${account.key}`;
 
   return (
-    <div className="w-72 border-b border-gray700 flex flex-row flex-wrap justify-between pb-2">
-      <div className="hidden">{account.key}</div>
-      <div className="w-7/12 text-lg">
+    <article
+      aria-labelledby={accountHeadingId}
+      className="w-72 border-b border-gray700 flex flex-row flex-wrap justify-between pb-2"
+    >
+      <h3 id={accountHeadingId} className="text-lg">
         <Point>{account.name}</Point>
-      </div>
-      <div className="w-5/12 text-right text-blue-300">
-        <Button type="button" onClick={showForm}>
-          <Icon name="edit" />
-        </Button>
+      </h3>
+      <div
+        className="text-right flex flex-row justify-end"
+        role="group"
+        aria-label={`Actions for ${account.name}`}
+      >
+        <ActionButton
+          onClick={showForm}
+          icon="edit"
+          title={`Edit ${account.name}`}
+        />
         {!account.isArchived && <ArchiveButton account={account} />}
       </div>
       <div className="w-full text-sm">
         {!!account.isCashFlow ? "cash-flow" : "budget-exempt"}
       </div>
-      <div className="w-4/12 text-sm">created:</div>
-      <div className="w-7/12 text-sm italic text-right">
-        {account.createdAt}
-      </div>
+      <dl className="w-full flex flex-row flex-wrap">
+        <dt className="w-4/12 text-sm">created:</dt>
+        <dd className="w-7/12 text-sm italic text-right">
+          {account.createdAt}
+        </dd>
+      </dl>
       <ArchivedAtComponent account={account} />
-    </div>
+    </article>
   );
 };
 

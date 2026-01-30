@@ -2,6 +2,12 @@ import { createContext, useContext } from "react";
 import { AmountSpan } from "@/components/common/AmountSpan";
 import { useRef, useState } from "react";
 import { UrlBuilder } from "@/lib/UrlBuilder";
+import {
+  bgColorFor,
+  borderColor,
+  backgroundFill,
+  ColorContext,
+} from "@/lib/context-colors";
 import axios from "axios";
 
 type MonthlyData = {
@@ -27,7 +33,9 @@ const Bar = (props: MonthlyData & { maxAmount: number }) => {
   const currentShare = 100 * Math.abs(props.currentlyBudgeted / props.budgeted);
 
   return (
-    <div className="w-full text-xs flex flex-row items-center justify-between border-b border-blue-200 py-2">
+    <div
+      className={`w-full text-xs flex flex-row items-center justify-between border-b ${borderColor("blue", "light")} py-2`}
+    >
       <div className="w-2/12">
         {props.month}/{props.year}
       </div>
@@ -37,16 +45,16 @@ const Bar = (props: MonthlyData & { maxAmount: number }) => {
           style={{ width: budgetedWidth.toFixed(2) + "%" }}
         >
           <div
-            className="h-2 bg-purple-300"
+            className={`h-2 ${bgColorFor("previouslyBudgeted")}`}
             style={{ width: previousShare.toFixed(2) + "%" }}
           ></div>
           <div
-            className="h-2 bg-sky-300"
+            className={`h-2 ${bgColorFor("currentlyBudgeted")}`}
             style={{ width: currentShare.toFixed(2) + "%" }}
           ></div>
         </div>
         <div
-          className="h-2 bg-red-300 rounded-lg"
+          className={`h-2 ${bgColorFor("spent")} rounded-lg`}
           style={{ width: spentWidth.toFixed(2) + "%" }}
         ></div>
       </div>
@@ -73,9 +81,11 @@ const Bar = (props: MonthlyData & { maxAmount: number }) => {
 const BarLabel = (props: {
   children: React.ReactNode;
   color: string;
-  bgColor: string;
+  bgType: ColorContext;
 }) => {
-  const className = [props.bgColor, props.color, "rounded"].join(" ");
+  const className = [bgColorFor(props.bgType), props.color, "rounded"].join(
+    " ",
+  );
 
   return (
     <div className="w-4/12 p-0.5">
@@ -98,19 +108,21 @@ const MonthlyDataChart = (props: {
   return (
     <div className="w-full flex flex-col gap-1">
       <div className="w-full text-center flex flex-row justify-between text-xs items-center">
-        <BarLabel bgColor="bg-purple-300" color="text-white">
+        <BarLabel bgType="previouslyBudgeted" color="text-white">
           Previous
         </BarLabel>
-        <BarLabel bgColor="bg-sky-300" color="text-white">
+        <BarLabel bgType="currentlyBudgeted" color="text-white">
           Current
         </BarLabel>
-        <BarLabel bgColor="bg-red-300" color="text-white">
+        <BarLabel bgType="negativeAmount" color="text-white">
           Spent
         </BarLabel>
       </div>
       <div className="w-full flex flex-row justify-between">
         <div className="w-2/12"></div>
-        <div className="w-7/12 text-xs flex flex-row justify-between border-b border-blue-200">
+        <div
+          className={`w-7/12 text-xs flex flex-row justify-between border-b ${borderColor("blue", "light")}`}
+        >
           <div>
             <AmountSpan amount={0} absolute={true} showCents={false} />
           </div>
@@ -278,7 +290,9 @@ const CategoryAverages = () => {
 
   if (currentSummary) {
     return (
-      <div className="w-72 py-4 px-2 bg-blue-60 rounded-lg flex flex-col gap-1">
+      <div
+        className={`w-72 py-4 px-2 ${backgroundFill("blue", "extra-light")} rounded-lg flex flex-col gap-1`}
+      >
         <SummaryLine label="Average Budgeted">
           <AmountSpan amount={currentSummary.budgetedAverage} />
         </SummaryLine>

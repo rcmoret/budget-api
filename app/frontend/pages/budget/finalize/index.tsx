@@ -1,4 +1,4 @@
-import { BudgetFinalizePageData } from "@/components/layout/Header";
+import { BudgetFinalizePageData } from "@/components/layout/header";
 import { FinalizeCategory } from "@/lib/hooks/useFinalizeEventsForm";
 import { CategoryIndex as RightColumn } from "./categories";
 import { Summary } from "./summary";

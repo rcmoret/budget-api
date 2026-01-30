@@ -9,65 +9,10 @@ import { buildQueryParams } from "@/lib/redirect_params";
 import { useSetUpEventsFormContext } from "@/pages/budget/set_up";
 import { useSetupEventContext } from "@/pages/budget/set_up/events";
 import { AmountInput, inputAmount } from "@/components/common/AmountInput";
-
-const Suggestion = (props: {
-  isSelected: boolean;
-  children: React.ReactNode;
-  onClick: () => void;
-}) => {
-  const sharedClasses = [
-    "rounded",
-    "w-full",
-    "flex",
-    "flex-row",
-    "justify-between",
-    "items-center",
-    "outline",
-    "px-4",
-    "h-12",
-  ];
-
-  const selectedClasses = [
-    "bg-chartreuse-100",
-    "font-semibold",
-    "text-gray-700",
-    "py-1",
-    "outline-2",
-    "outline-chartreuse-300",
-  ];
-
-  const unselectedClasses = [
-    "bg-white",
-    "text-gray-600",
-    "py-2",
-    "outline-1",
-    "outline-gray-200",
-    "hover:outline-chartreuse-300",
-    "hover:bg-chartreuse-50",
-    "hover:text-chartreuse-600",
-    "hover:outline-2",
-  ];
-
-  const buttonClasses = [
-    ...sharedClasses,
-    ...(props.isSelected ? selectedClasses : unselectedClasses),
-  ].join(" ");
-
-  const onClick = () => {
-    props.onClick();
-    // focusInput()
-  };
-
-  return (
-    <div className="w-full">
-      <button type="button" onClick={onClick} className={buttonClasses}>
-        <div className="flex flex-row justify-between w-full">
-          {props.children}
-        </div>
-      </button>
-    </div>
-  );
-};
+import {
+  SelectionGroup,
+  SelectableOption as Suggestion,
+} from "@/lib/theme/options";
 
 const NoAdjustmentSuggestion = (props: { isSelected: boolean }) => {
   const { setters } = useSetupEventContext();
@@ -269,15 +214,15 @@ const Suggestions = () => {
     ].join(" ");
 
     return (
-      <div className={className}>
+      <SelectionGroup role="radio" className={className}>
         <BudgetedSuggestion />
         {!flags.eqPrevSpent && <SpentSuggestion />}
         {flags.showDefaultSuggestion && <DefaultSuggestion />}
-      </div>
+      </SelectionGroup>
     );
   } else {
     return (
-      <div className="flex flex-col gap-2 w-72">
+      <SelectionGroup role="radio" className="flex flex-col gap-2 w-72">
         <NoAdjustmentSuggestion
           isSelected={
             selectedSuggestion === "unchanged" &&
@@ -288,7 +233,7 @@ const Suggestions = () => {
         <DeleteSuggestion
           isSelected={!!event.adjustment.display && event.updatedAmount === 0}
         />
-      </div>
+      </SelectionGroup>
     );
   }
 };

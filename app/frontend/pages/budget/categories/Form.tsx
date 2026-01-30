@@ -1,364 +1,249 @@
-import { UrlBuilder } from "@/lib/UrlBuilder";
-import { BudgetCategory } from "@/types/budget";
-import { useForm } from "@inertiajs/react";
-import { buildQueryParams } from "@/lib/redirect_params";
+import Select from "react-select";
+import { ActionButton } from "@/lib/theme/buttons/action-button";
 import { AmountInput, inputAmount } from "@/components/common/AmountInput";
-import { Button, SubmitButton } from "@/components/common/Button";
+import { useCategoryFormContext } from "@/pages/budget/categories/category-form-context";
+import { useCategoriesIndexContext } from "./CategoriesContext";
+import { FormRow, FormRowContainer } from "@/lib/theme/forms/manage";
+import { FormSubmitButton } from "@/lib/theme/buttons/form-submit-button";
 import { Icon } from "@/components/common/Icon";
-import { TIcon } from "@/pages/budget/categories/Card";
-import Select, { SingleValue } from "react-select";
+import { SelectionGroup, SelectableOption } from "@/lib/theme/options";
+import { ToggleSlider } from "@/lib/theme/input/slider";
 
-const AccrualFormComponent = (props: {
-  value: boolean;
-  handleAccrualChange: () => void;
+const LocalSelectionGroup = (props: {
+  "aria-label": string;
+  children: React.ReactNode;
 }) => {
   return (
-    <div className="w-full">
-      <div>Accrual?</div>
-      <input
-        type="checkbox"
-        checked={props.value}
-        onChange={props.handleAccrualChange}
-        name="isAccrual"
+    <SelectionGroup
+      role="radio"
+      aria-label={props["aria-label"]}
+      optionTheme={{ stature: "slim", showMarker: true }}
+    >
+      <div className="w-full flex flex-row justify-between">
+        {props.children}
+      </div>
+    </SelectionGroup>
+  );
+};
+
+const LocalSelectableOption = (props: {
+  children: React.ReactNode;
+  isSelected: boolean;
+  onClick: () => void;
+}) => {
+  return (
+    <div className="w-5/12">
+      <SelectableOption isSelected={props.isSelected} onClick={props.onClick}>
+        <div className="text-xs">{props.children}</div>
+      </SelectableOption>
+    </div>
+  );
+};
+
+const AccrualFormComponent = () => {
+  const { data, formHeadingId, changeHanlders } = useCategoryFormContext();
+  const { key } = data;
+  const labelId = `category-accrual-label-${key}`;
+
+  return (
+    <div className="w-6/12 flex flex-row justify-between items-center">
+      <span id={labelId}>Accrual?</span>
+      <ToggleSlider
+        toggleValue={data.isAccrual}
+        onClick={changeHanlders.toggleAccrual}
+        id={`category-accrual-${key}`}
+        ariaLabelledby={labelId}
       />
     </div>
   );
 };
 
-const PerDayCalculationsFormComponent = (props: {
-  value: boolean;
-  handlePerDiemChange: () => void;
-}) => {
+const PerDayCalculationsFormComponent = () => {
+  const { data, formHeadingId, changeHanlders } = useCategoryFormContext();
+  const { key } = data;
+  const labelId = `category-per-diem-label-${key}`;
+
   return (
-    <div className="w-full">
-      <div>Per Day Calculations?</div>
-      <input
-        type="checkbox"
-        checked={props.value}
-        onChange={props.handlePerDiemChange}
-        name="isPerDiemEnabled"
+    <div className="w-6/12 flex flex-row justify-between items-center">
+      <span id={labelId}>Per Diem Enabled?</span>
+      <ToggleSlider
+        toggleValue={data.isPerDiemEnabled}
+        onClick={changeHanlders.togglePerDiem}
+        id={`category-per-diem-${key}`}
+        ariaLabelledby={labelId}
       />
     </div>
   );
 };
-const MonthlyFormComponent = (props: {
-  value: boolean | null;
-  updateMonthly: (value: boolean) => void;
-}) => {
-  const onChange = (ev: React.ChangeEvent & { target: HTMLInputElement }) => {
-    if (ev.target.name === "isMonthly[false]" && ev.target.value === "on") {
-      props.updateMonthly(false);
-    }
-    if (ev.target.name === "isMonthly[true]" && ev.target.value === "on") {
-      props.updateMonthly(true);
-    }
-  };
 
-  let checked = "";
-  if (props.value !== null) {
-    checked = !props.value ? "monthly" : "day-to-day";
-  }
+const MonthlyFormComponent = () => {
+  const { changeHanlders, data } = useCategoryFormContext();
+  const setMonthly = () => changeHanlders.updateMonthlyOrDayToDay(true);
+  const setDayToDay = () => changeHanlders.updateMonthlyOrDayToDay(false);
+
+  const isMonthly = data.isMonthly ?? false;
+  const isDayToDay = !(data.isMonthly ?? true);
 
   return (
-    <div className="w-full flex flex-row justify-between">
-      <div className="w-6/12">
-        <div>Day to Day</div>
-        <div>
-          <input
-            type="radio"
-            name="isMonthly[false]"
-            checked={checked === "monthly"}
-            onChange={onChange}
-          />
-        </div>
-      </div>
-      <div className="w-6/12 text-right">
-        <div>Monthly</div>
-        <div>
-          <input
-            type="radio"
-            name="isMonthly[true]"
-            checked={checked === "day-to-day"}
-            onChange={onChange}
-          />
-        </div>
-      </div>
-    </div>
+    <fieldset className="w-full">
+      <legend className="sr-only">Frequency</legend>
+      <LocalSelectionGroup aria-label="Frequency">
+        <LocalSelectableOption isSelected={isMonthly} onClick={setMonthly}>
+          Monthly
+        </LocalSelectableOption>
+        <LocalSelectableOption isSelected={isDayToDay} onClick={setDayToDay}>
+          Day-to-Day
+        </LocalSelectableOption>
+      </LocalSelectionGroup>
+    </fieldset>
   );
 };
 
-const ExpenseFormComponent = (props: {
-  value: boolean | null;
-  updateExpense: (value: boolean) => void;
-}) => {
-  const onChange = (ev: React.ChangeEvent & { target: HTMLInputElement }) => {
-    if (ev.target.name === "isExpense[false]" && ev.target.value === "on") {
-      props.updateExpense(false);
-    }
-    if (ev.target.name === "isExpense[true]" && ev.target.value === "on") {
-      props.updateExpense(true);
-    }
-  };
+const ExpenseFormComponent = () => {
+  const { changeHanlders, data } = useCategoryFormContext();
+  const setExpense = () => changeHanlders.updateExpenseOrRevenue(true);
+  const setRevenue = () => changeHanlders.updateExpenseOrRevenue(false);
 
-  let checked = "";
-  if (props.value !== null) {
-    checked = !props.value ? "revenue" : "expense";
-  }
+  const isExpense = data.isExpense ?? false;
+  const isRevenue = !(data.isExpense ?? true);
 
   return (
-    <div className="w-full flex flex-row justify-between">
-      <div className="w-6/12">
-        <div>Revenue</div>
-        <div>
-          <input
-            type="radio"
-            name="isExpense[false]"
-            checked={checked === "revenue"}
-            onChange={onChange}
-          />
-        </div>
-      </div>
-      <div className="w-6/12 text-right">
-        <div>Expense</div>
-        <div>
-          <input
-            type="radio"
-            name="isExpense[true]"
-            checked={checked === "expense"}
-            onChange={onChange}
-          />
-        </div>
-      </div>
-    </div>
+    <fieldset className="w-full">
+      <legend className="sr-only">Type</legend>
+      <LocalSelectionGroup aria-label="Expense or Revenue">
+        <LocalSelectableOption isSelected={isRevenue} onClick={setRevenue}>
+          Revenue
+        </LocalSelectableOption>
+        <LocalSelectableOption isSelected={isExpense} onClick={setExpense}>
+          Expense
+        </LocalSelectableOption>
+      </LocalSelectionGroup>
+    </fieldset>
   );
 };
 
-export type NewBudgetCategory = {
-  key: string;
-  name: string;
-  slug: string;
-  archivedAt: null;
-  defaultAmount?: number;
-  iconKey: string | null;
-  isAccrual: boolean;
-  isArchived: false;
-  isExpense: boolean | null;
-  isMonthly: boolean | null;
-  isPerDiemEnabled: boolean;
+const DefaultAmountComponent = () => {
+  const { data, changeHanlders } = useCategoryFormContext();
+  const { key, name } = data;
+
+  return (
+    <FormRowContainer
+      id={`category-default-amount-${key}`}
+      name="defaultAmount"
+      label="Default Amount"
+      labelAriaId={`Default Amount for ${name}`}
+    >
+      <AmountInput
+        id={`category-default-amount-${key}`}
+        name="defaultAmount"
+        classes={["h-input-lg"]}
+        amount={data.defaultAmount}
+        onChange={changeHanlders.handleAmount}
+      />
+    </FormRowContainer>
+  );
 };
 
-const CategoryForm = (props: {
-  category: BudgetCategory | NewBudgetCategory;
-  closeForm: () => void;
-  icons: Array<TIcon>;
-  isNew?: boolean;
-}) => {
-  const { category, closeForm } = props;
-  const isNew = !!props.isNew;
+const CategoryForm = () => {
   const {
-    key,
-    name,
-    slug,
-    defaultAmount,
-    iconKey,
-    isAccrual,
-    isExpense,
-    isPerDiemEnabled,
-    isMonthly,
-  } = category;
-
-  const { data, setData, processing, transform, post, put } = useForm({
-    key,
-    name,
-    slug,
-    defaultAmount: inputAmount({ cents: defaultAmount }),
-    iconKey,
-    isAccrual,
-    isExpense,
-    isMonthly,
-    isPerDiemEnabled,
-  });
-
-  const iconOptions = props.icons
+    category,
+    changeHanlders,
+    closeForm,
+    data,
+    isNew,
+    processing,
+    onChange,
+    onSubmit,
+  } = useCategoryFormContext();
+  const { icons } = useCategoriesIndexContext();
+  const { key } = category;
+  const iconOptions = icons
     .map((icon) => {
       return { label: icon.name, value: icon.key };
     })
     .sort((i1, i2) => (i1.label < i2.label ? -1 : 1));
-
   const selectedIcon = iconOptions.find(
     (icon) => icon.value === data.iconKey,
   ) || { label: "", value: "" };
-
-  const onIconSelectChange = (
-    ev: SingleValue<{ label: string; value: string }>,
-  ) => {
-    setData({ ...data, iconKey: String(ev?.value) });
-  };
-
-  // @ts-ignore
-  transform(() => {
-    const newAttributes = {
-      key: data.key,
-      expense: data.isExpense,
-      monthly: data.isMonthly,
-    };
-
-    return {
-      category: {
-        name: data.name,
-        slug: data.slug,
-        defaultAmount: data.defaultAmount.cents,
-        iconKey: data.iconKey,
-        ...(isNew ? newAttributes : {}),
-        ...(data.isExpense ? { accrual: data.isAccrual } : {}),
-        ...(!data.isMonthly ? { isPerDiemEnabled: data.isPerDiemEnabled } : {}),
-      },
-    };
-  });
-
-  const postCreate = () => {
-    const formUrl = UrlBuilder({
-      name: "CategoryIndex",
-      queryParams: buildQueryParams(["budget", "categories"]),
-    });
-    post(formUrl, { onSuccess: closeForm });
-  };
-
-  const putUpdate = () => {
-    const formUrl = UrlBuilder({
-      name: "CategoryShow",
-      key: category.key,
-      queryParams: buildQueryParams(["budget", "categories"]),
-    });
-    put(formUrl, { onSuccess: closeForm });
-  };
-
-  const onSubmit = isNew ? postCreate : putUpdate;
-
-  const onChange = (ev: React.ChangeEvent & { target: HTMLInputElement }) => {
-    setData({ ...data, [ev.target.name]: ev.target.value });
-  };
-
-  const handleAmountChange = (amount: string) => {
-    const amountTuple = inputAmount({ display: amount });
-    setData({ ...data, defaultAmount: amountTuple });
-  };
-
-  const handleAccrualChange = () => {
-    setData({ ...data, isAccrual: !data.isAccrual });
-  };
-
-  const handlePerDiemChange = () => {
-    setData({ ...data, isPerDiemEnabled: !data.isPerDiemEnabled });
-  };
-
-  const updateExpense = (value: boolean) => {
-    setData({ ...data, isExpense: value });
-  };
-
-  const updateMonthly = (value: boolean) => {
-    setData({ ...data, isMonthly: value });
-  };
-  const iconClassName = props.icons.find(
+  const iconClassName = icons.find(
     (icon) => icon.key === selectedIcon.value,
   )?.className;
+  const formHeadingId = `category-form-heading-${key}`;
+  const showDefaultAmount =
+    (data.isExpense && data.isMonthly) || data.isAccrual;
 
   return (
     <div className="w-96 flex flex-row flex-wrap justify-between border-b border-gray-400 pb-2">
-      <form onSubmit={onSubmit}>
+      <form
+        onSubmit={onSubmit}
+        aria-labelledby={formHeadingId}
+        className="w-full"
+      >
         <div className="w-full flex flex-col gap-4">
-          <div className="w-full flex flex-row flex-wrap justify-between">
-            <div className="w-6/12">Name</div>
-            <div className="w-6/12 text-right">
-              <Button
-                type="button"
+          <div className="w-full flex flex-col gap-2">
+            <div>
+              <ActionButton
+                aria-label="Close form"
+                icon="times-circle"
                 onClick={closeForm}
-                styling={{ color: "text-blue-300" }}
-              >
-                <Icon name="times-circle" />
-              </Button>
-            </div>
-            <input
-              type="text"
-              name="name"
-              value={data.name}
-              onChange={onChange}
-              className="border border-gray-300 rounded"
-            />
-          </div>
-          <div className="w-full flex flex-row justify-between flex-wrap">
-            <div className="w-full">Icon</div>
-            <div className="w-8/12">
-              <Select
-                options={iconOptions}
-                value={selectedIcon}
-                onChange={onIconSelectChange}
+                title="Close form"
               />
             </div>
-            <div className="w-4/12 text-right">
-              {!!iconClassName && <Icon name={iconClassName} />}
-            </div>
-          </div>
-          <div className="w-full">
-            <div>Slug</div>
-            <input
-              type="text"
-              name="slug"
-              value={data.slug}
+            <FormRow
+              label="Name"
+              id={`category-name-${key}`}
+              aria-required={true}
+              inputValue={data.name}
+              labelAriaId={formHeadingId}
+              name="name"
               onChange={onChange}
-              className="border border-gray-300 rounded"
+              required={true}
             />
-          </div>
-          {isNew && (
-            <ExpenseFormComponent
-              value={data.isExpense}
-              updateExpense={updateExpense}
+            <FormRow
+              label="Slug"
+              name="slug"
+              inputValue={data.slug}
+              labelAriaId={formHeadingId}
+              required={true}
+              onChange={onChange}
+              id={`category-slug-${key}`}
             />
-          )}
-          {isNew && (
-            <MonthlyFormComponent
-              value={data.isMonthly}
-              updateMonthly={updateMonthly}
-            />
-          )}
-          <div className="w-full">
-            <div>Default Amount</div>
-            <AmountInput
-              name="defaultAmount"
-              amount={data.defaultAmount}
-              onChange={handleAmountChange}
-            />
-          </div>
-          {data.isExpense !== null && data.isExpense && (
-            <AccrualFormComponent
-              value={data.isAccrual}
-              handleAccrualChange={handleAccrualChange}
-            />
-          )}
-          {data.isMonthly !== null && !data.isMonthly && (
-            <PerDayCalculationsFormComponent
-              value={data.isPerDiemEnabled}
-              handlePerDiemChange={handlePerDiemChange}
-            />
-          )}
-          <div className="w-full">
-            <SubmitButton
-              onSubmit={onSubmit}
-              isEnabled={!processing}
-              styling={{
-                backgroundColor: "bg-green-700",
-                color: "text-white",
-                rounded: "rounded",
-                padding: "px-2 py-1",
-              }}
+            {showDefaultAmount && <DefaultAmountComponent />}
+            <FormRowContainer
+              label="Icon"
+              id={`category-icon-${key}`}
+              labelAriaId={formHeadingId}
+              name="icon"
             >
-              <div className="flex flex-row gap-2">
-                <div>{isNew ? "CREATE" : "UPDATE"}</div>
-                <div className="text-chartreuse-300">
-                  <Icon name="check-circle" />
+              <div className="w-8/12 flex flex-row-reverse gap-2 items-center">
+                <Select
+                  inputId={`category-icon-${key}`}
+                  options={iconOptions}
+                  value={selectedIcon}
+                  onChange={changeHanlders.updateIconKey}
+                  className="w-full"
+                  aria-label="Select an icon"
+                />
+                <div className="text-right" aria-hidden="true">
+                  {!!iconClassName && <Icon name={iconClassName} />}
                 </div>
               </div>
-            </SubmitButton>
+            </FormRowContainer>
+          </div>
+          {isNew && <ExpenseFormComponent />}
+          {isNew && <MonthlyFormComponent />}
+          {data.isExpense && <AccrualFormComponent />}
+          {(data.isMonthly ?? false) && <PerDayCalculationsFormComponent />}
+          <div className="w-full flex flex-row justify-end">
+            <FormSubmitButton
+              onSubmit={onSubmit}
+              isEnabled={!processing}
+              isBusy={processing}
+              iconName="check-circle"
+              title={isNew ? "Create category" : "Update category"}
+            >
+              {isNew ? "CREATE" : "UPDATE"}
+            </FormSubmitButton>
           </div>
         </div>
       </form>

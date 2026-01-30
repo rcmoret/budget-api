@@ -34,7 +34,7 @@ const ClearedMonthItem = () => {
           <div>{transactionDetail.accountName}</div>
         </Cell>
         <div className="font-bold">
-          <AmountSpan color="text-gray-800" amount={transactionDetail.amount} />
+          <AmountSpan amount={transactionDetail.amount} />
         </div>
       </Row>
       <Row
@@ -55,9 +55,8 @@ const ClearedMonthItem = () => {
           <AmountSpan
             amount={difference}
             absolute={true}
-            color="text-gray-800"
-            negativeColor="text-red-400"
-            zeroColor="text-black"
+            negativeColor="red"
+            zeroColor="black"
           />
         </Cell>
       </Row>

@@ -20,7 +20,7 @@ const TransactionAmountComponent = () => {
   return (
     <div className="w-full">
       <Button type="button" onClick={showForm}>
-        <AmountSpan amount={transaction.amount} negativeColor="text-red-400" />
+        <AmountSpan amount={transaction.amount} negativeColor="red" />
       </Button>
     </div>
   );

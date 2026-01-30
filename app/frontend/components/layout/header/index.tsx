@@ -1,4 +1,5 @@
-import { HeaderButtons } from "./HeaderButtons";
+import { HeaderButtons } from "./buttons";
+import { HeaderLinks } from "./links";
 import { Row } from "@/components/common/Row";
 import { Cell } from "@/components/common/Cell";
 import { Summary } from "@/components/layout/BudgetSummary";
@@ -112,15 +113,7 @@ const Header = ({ metadata, data, selectedAccount }: HeaderProps) => {
             />
           </Cell>
         </Cell>
-        <Row>
-          <div className="px-4 text-blue-600">
-            <Point>
-              <a href="/sign-out" className="underline font-semibold">
-                Log Out
-              </a>
-            </Point>
-          </div>
-        </Row>
+        <HeaderLinks />
       </Row>
     </Row>
   );

@@ -33,6 +33,7 @@ import {
   CategoryAveragesProvider,
   useCategoryAveragesContext,
 } from "@/components/common/budget/category-chart";
+import { bgColorFor, backgroundFill, textColorFor } from "@/lib/context-colors";
 
 const PerDayLineItem = (props: {
   title: string;
@@ -64,12 +65,12 @@ const PerDayDetails = () => {
     label = "Percent behind prorated budget";
     prefix = "-";
     if (percentOfBudget < -0.25) {
-      color = "text-red-400";
+      color = textColorFor("negativeAmount");
     }
   } else {
     label = "Percent ahead of prorated budget";
     prefix = "+";
-    color = "text-green-600";
+    color = textColorFor("positiveGreen");
   }
 
   return (
@@ -221,30 +222,31 @@ const PrevVsCurrentlyBudgetedIndicator = () => {
     Math.abs((100 * currentlyBudgeted) / totalBudgeted),
     100,
   );
-  const currentlyBudgetedColor = "chartreuse-200";
   const previouslyBudgetedWidth = Math.min(
     Math.abs((100 * previouslyBudgeted) / totalBudgeted),
     100,
   );
-  const previouslyBudgetedColor = "sky-200";
-
   return (
     <div className="w-full px-4 flex flex-col gap-0">
       <div className="flex flex-row gap-2 items-center">
-        <div className={`text-2xl text-${previouslyBudgetedColor}`}>&bull;</div>
+        <div className={`text-2xl ${textColorFor("previouslyBudgeted")}`}>
+          &bull;
+        </div>
         <div className="text-sm">Previously Budgeted</div>
       </div>
       <div className="flex flex-row gap-2 items-center">
-        <div className={`text-2xl text-${currentlyBudgetedColor}`}>&bull;</div>
+        <div className={`text-2xl ${textColorFor("currentlyBudgeted")}`}>
+          &bull;
+        </div>
         <div className="text-sm">Currently Budgeted</div>
       </div>
       <div className="h-2 w-full overflow-hidden rounded-lg flex flex-row">
         <div
-          className={`h-2 bg-${previouslyBudgetedColor}`}
+          className={`h-2 ${bgColorFor("previouslyBudgeted")}`}
           style={{ width: previouslyBudgetedWidth + "%" }}
         ></div>
         <div
-          className={`h-2 bg-${currentlyBudgetedColor}`}
+          className={`h-2 ${bgColorFor("currentlyBudgeted")}`}
           style={{ width: currentlyBudgetedWidth + "%" }}
         ></div>
       </div>
@@ -265,7 +267,7 @@ const ItemContainer = (props: { children?: React.ReactNode }) => {
     <Row
       styling={{
         flexWrap: "flex-wrap",
-        backgroundColor: "even:bg-sky-50 odd:bg-white",
+        backgroundColor: "even:bg-sky-50 odd:sky-muted",
         color: "text-gray-800",
         gap: "gap-px",
         rounded: "rounded",
@@ -318,7 +320,7 @@ const DeleteButton = ({ item }: { item: BudgetItem }) => {
       <SubmitButton
         isEnabled={!processing}
         onSubmit={onSubmit}
-        styling={{ color: "text-blue-300" }}
+        styling={{ color: "text-blue-300", backgroundColor: "bg-transparent" }}
       >
         <Icon name="trash" />
       </SubmitButton>
@@ -538,8 +540,8 @@ const DifferenceLineItem = () => {
       >
         <AmountSpan
           amount={difference * -1}
-          color="text-green-600"
-          negativeColor="text-red-400"
+          color={textColorFor("positiveGreen")}
+          negativeColor={textColorFor("negativeAmount")}
           zeroColor="text-black"
           absolute={true}
         />

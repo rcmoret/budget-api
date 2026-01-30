@@ -111,6 +111,7 @@ type SkyBgOpion = "bg-sky-50" | "bg-sky-100";
 type YellowBgOption = "bg-yellow-100" | "bg-yellow-200";
 
 export type BgColorOption =
+  | "bg-transparent"
   | "bg-white"
   | StripedRowColorOption
   | BlueBgOption

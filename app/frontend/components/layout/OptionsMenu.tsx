@@ -144,12 +144,6 @@ const OptionsMenu = (props: {
       <div className="w-full text-2xl">Menu / Options</div>
       <Cell styling={{ width: "w-full md:w-4/12" }}>
         <div className="w-full text-lg border-b-2 border-yellow-400">Pages</div>
-        <InertiaLink href="/budget/categories">
-          <MenuItem>Manage Budget Categories</MenuItem>
-        </InertiaLink>
-        <InertiaLink href="/accounts/manage">
-          <MenuItem>Manage Accounts</MenuItem>
-        </InertiaLink>
         {namespace !== "accounts" && <AccountLinks accounts={accounts} />}
         <OptionalMenuItem
           isVisible={!isBudget}

@@ -32,17 +32,17 @@ const Summary = () => {
       <SummaryLineItem label="Remaining/Disretionary:">
         <AmountSpan
           amount={base.discretionary.amount}
-          zeroColor="text-black"
-          color="text-green-600"
-          negativeColor="text-red-400"
+          zeroColor="black"
+          positiveColor="green"
+          negativeColor="red"
         />
       </SummaryLineItem>
       <SummaryLineItem label="Extra From Items:">
         <AmountSpan
           amount={extraAmount}
-          zeroColor="text-black"
-          negativeColor="text-green-600"
-          color="text-red-400"
+          zeroColor="black"
+          positiveColor="green"
+          negativeColor="red"
           absolute={true}
         />
       </SummaryLineItem>

@@ -1,7 +1,10 @@
 import { useState, useRef } from "react";
 import { createContext, useContext } from "react";
-import { SetupEvent, TEventFlags } from "@/pages/budget/set_up/types";
-import { useSetupEventsFormContext } from "@/pages/budget/set_up";
+import {
+  SetupEvent,
+  TEventFlags,
+  useSetupEventsFormContext,
+} from "@/pages/budget/set_up";
 import { KeySpan } from "@/components/common/KeySpan";
 import { i18n } from "@/lib/i18n";
 import { useSetUpCategoryShowContext } from "@/pages/budget/set_up/categories";

@@ -44,7 +44,7 @@ const PendingItemForm = () => {
           onChange={onChange}
           toggleInput={toggleAdjustmentInput}
         >
-          <AmountSpan color="text-gray-800" amount={change.amount.cents ?? 0} />
+          <AmountSpan amount={change.amount.cents ?? 0} />
         </LocalAmountInput>
       </Cell>
       <Cell styling={{ width: "w-6/12" }}>New Amount</Cell>
@@ -58,7 +58,7 @@ const PendingItemForm = () => {
           onChange={onChange2}
           toggleInput={toggleAdjustmentInput}
         >
-          <AmountSpan color="text-gray-800" amount={draftItem.amount} />
+          <AmountSpan amount={draftItem.amount} />
         </LocalAmountInput>
       </Cell>
     </Row>
