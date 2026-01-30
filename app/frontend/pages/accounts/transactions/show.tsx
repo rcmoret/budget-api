@@ -1,124 +1,67 @@
 import { AmountSpan } from "@/components/common/AmountSpan";
-import { Button } from "@/components/common/Button";
+import { Row } from "@/components/common/Row";
 import { Cell } from "@/components/common/Cell";
-import { Icon } from "@/components/common/Icon";
-import { dateParse } from "@/lib/DateFormatter";
-import { TransactionContainer } from "@/pages/accounts/transactions/container";
 import {
-  BudgetItemAmounts,
-  ClearanceDateComponent,
-  DescriptionComponent,
-  DeleteIcon,
-} from "@/pages/accounts/transactions/common";
-import { TransactionWithBalance } from "@/pages/accounts/transactions";
+  type TransactionProviderProps,
+  TransactionProvider,
+  useTransactionContext,
+} from "@/pages/accounts/transactions/context-provider";
+import { Button } from "@/components/common/Button";
+import { BalanceComponent } from "./partials/balance-component";
+import { ClearanceDateComponent } from "./partials/clearance-date";
+import { DescriptionComponent } from "./partials/description-component";
+import { EntryDetailsComponent } from "./partials/entry-details";
+import { EntryActionsComponent } from "./partials/entry-actions-component";
 
-const KeyComponent = (props: { transaction: TransactionWithBalance }) => {
-  const { key, transferKey, details } = props.transaction;
+const TransactionAmountComponent = () => {
+  const { transaction, showForm } = useTransactionContext();
+
   return (
-    <div id={key}>
-      <span className="hidden">{key}</span>
-      {details.map((detail) => (
-        <div data-name="detail-key" key={detail.key} id={detail.key}></div>
-      ))}
-      {transferKey && <div data-name="transfer-key" id={transferKey}></div>}
+    <div className="w-full">
+      <Button type="button" onClick={showForm}>
+        <AmountSpan amount={transaction.amount} negativeColor="text-red-400" />
+      </Button>
     </div>
   );
 };
 
-const TransactionShow = (props: {
-  transaction: TransactionWithBalance;
-  showFormFn: (key: string) => void;
-  index: number;
-}) => {
-  const { transaction, showFormFn } = props;
-  const {
-    key,
-    isBudgetExclusion,
-    checkNumber,
-    details,
-    isPending,
-    notes,
-    transferKey,
-  } = transaction;
-  const clearanceDate = isPending
-    ? "Pending"
-    : dateParse(String(transaction.clearanceDate));
-  const shortClearanceDate = isPending
-    ? "Pending"
-    : dateParse(String(transaction.clearanceDate), {
-        format: "m/d/yy",
-      });
+const TransactionShowContent = () => {
+  const { isOdd } = useTransactionContext();
 
-  let noteLines: string[] = [];
-  const notesNeedAttn = !!notes?.startsWith("!!!");
-  if (notes) {
-    noteLines = notes.replace(/^!!!\s/, "").split("<br>");
-  }
-  const toggleForm = () => showFormFn(key);
+  const bgColor = isOdd ? "bg-sky-100" : "bg-sky-50";
 
   return (
-    <TransactionContainer
-      index={props.index}
-      keyComponent={<KeyComponent transaction={transaction} />}
-      clearanceDateComponent={
-        <ClearanceDateComponent
-          clearanceDate={clearanceDate}
-          shortClearanceDate={shortClearanceDate}
-          toggleForm={toggleForm}
-        />
-      }
-      descriptionComponent={
-        <DescriptionComponent
-          transaction={transaction}
-          toggleForm={toggleForm}
-        />
-      }
-      transactionAmountComponent={
-        <BudgetItemAmounts
-          details={details}
-          amount={transaction.amount}
-          toggleForm={toggleForm}
-        />
-      }
-      balanceCompnent={
-        transaction.balance === null ? (
-          ""
-        ) : (
-          <AmountSpan
-            amount={transaction.balance}
-            negativeColor="text-red-400"
-          />
-        )
-      }
+    <Row
+      styling={{
+        backgroundColor: bgColor,
+        flexAlign: "justify-start",
+        flexWrap: "flex-wrap",
+        padding: "px-4 py-2",
+      }}
     >
-      <Cell
-        styling={{
-          display: "flex",
-          width: "w-full md:w-4/12",
-          flexAlign: "justify-start",
-          flexWrap: "flex-wrap",
-        }}
-      >
-        {isBudgetExclusion && (
-          <div className="md:ml-4 md:max-w-2/12 w-full italic">
-            budget exclusion
+      <div className="flex w-full md:w-6/12">
+        <Cell
+          styling={{
+            width: "w-full",
+            flexAlign: "justify-between",
+            display: "flex",
+            gap: "gap-2",
+            flexWrap: "flex-wrap md:flex-nowrap",
+          }}
+        >
+          <ClearanceDateComponent />
+          <div className="w-4/12">
+            <DescriptionComponent />
           </div>
-        )}
-        {checkNumber && (
-          <div className="md:ml-4">
-            <Icon name="money-check" /> {checkNumber}
+          <div className="w-4/12 flex flex-row justify-end gap-12 text-right">
+            <TransactionAmountComponent />
           </div>
-        )}
-        {transferKey && (
-          <div className="md:ml-4 w-full md:max-w-2/12 italic">
-            <span className="hidden">{transferKey}</span>
-            transfer
+          <div className="w-full md:w-4/12 flex flex-row justify-between mt-4 md:mt-0">
+            <BalanceComponent />
           </div>
-        )}
-        {!!noteLines.length && (
-          <Notes noteLines={noteLines} notesNeedAttn={notesNeedAttn} />
-        )}
-      </Cell>
+        </Cell>
+      </div>
+      <EntryDetailsComponent />
       <Cell
         styling={{
           width: "md:w-[14%] w-full",
@@ -126,41 +69,17 @@ const TransactionShow = (props: {
           margin: "md:mr-4",
         }}
       >
-        <div className="w-full flex flex-row-reverse">
-          <DeleteIcon transaction={transaction} />
-          <Button
-            type="button"
-            onClick={toggleForm}
-            styling={{ color: "text-blue-300" }}
-          >
-            <div className="mr-2">
-              <Icon name="edit" />
-            </div>
-          </Button>
-        </div>
+        <EntryActionsComponent />
       </Cell>
-    </TransactionContainer>
+    </Row>
   );
 };
 
-const Notes = (props: { noteLines: string[]; notesNeedAttn: boolean }) => {
-  const className = [
-    "md:ml-2",
-    "w-full",
-    "md:max-w-4/12",
-    "md:pl-2",
-    "pr-2",
-    ...(props.notesNeedAttn ? ["bg-teal-400", "text-white", "rounded"] : []),
-  ].join(" ");
-
+const TransactionShow = (props: TransactionProviderProps) => {
   return (
-    <div className={className}>
-      {props.noteLines.map((noteLine: string, index: number) => (
-        <div key={index} className="w-full">
-          {index === 0 && <Icon name="sticky-note" />} {noteLine}
-        </div>
-      ))}
-    </div>
+    <TransactionProvider {...props}>
+      <TransactionShowContent />
+    </TransactionProvider>
   );
 };
 

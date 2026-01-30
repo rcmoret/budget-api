@@ -794,10 +794,6 @@ video {
   width: 24rem;
 }
 
-.w-\[4\%\] {
-  width: 4%;
-}
-
 .w-full {
   width: 100%;
 }
@@ -2197,10 +2193,6 @@ video {
 
   .md\:mt-0 {
     margin-top: 0px;
-  }
-
-  .md\:block {
-    display: block;
   }
 
   .md\:hidden {
