@@ -1,4 +1,8 @@
 import { MouseEventHandler } from "react";
+import {
+  GreenBackgrounOption,
+  greenBackgrounds,
+} from "@/lib/theme/colors/greens";
 
 import {
   CursorOptions,
@@ -27,7 +31,7 @@ import type { GapOption } from "types/components/spacing-classes";
 type StylingProps = {
   alignItems?: AlignItemsOption;
   alternatingBgColor?: string;
-  backgroundColor?: BgColorOption;
+  backgroundColor?: BgColorOption | GreenBackgrounOption;
   border?: string;
   color?: TextColor;
   cursor?: CursorOptions;
@@ -44,14 +48,19 @@ type StylingProps = {
   overflow?: OverflowOption;
   padding?: string;
   rounded?: "rounded" | null;
+  shadow?: "shadow-md";
   textAlign?: TextAlignOption;
   shadow?: string;
   width?: string;
 };
 
+const focusClasses =
+  "focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500";
+
 type DisabledButtonProps = {
   children: React.ReactNode;
   styling: StylingProps;
+  "aria-label"?: string;
 };
 
 const DisabledButton = (props: DisabledButtonProps) => {
@@ -61,10 +70,15 @@ const DisabledButton = (props: DisabledButtonProps) => {
       isDisabled={true}
       styling={{ ...props.styling }}
       type="button"
+      aria-label={props["aria-label"]}
     >
       {props.children}
     </ButtonComponent>
   );
+};
+
+const defaultSubmitStyling: StylingProps = {
+  backgroundColor: greenBackgrounds.withHover,
 };
 
 type SubmitButtonProps = {
@@ -74,10 +88,16 @@ type SubmitButtonProps = {
   styling: StylingProps;
   title?: string;
   disabledStyling?: StylingProps;
+  "aria-label"?: string;
 };
 
 const SubmitButton = (props: SubmitButtonProps) => {
   const { children, onSubmit, title } = props;
+  const providedStyling = props.styling;
+  const combinedStyling = {
+    ...defaultSubmitStyling,
+    ...providedStyling,
+  };
 
   const isEnabled = !!props.isEnabled;
 
@@ -85,16 +105,20 @@ const SubmitButton = (props: SubmitButtonProps) => {
     return (
       <ButtonComponent
         onClick={onSubmit}
-        styling={{ ...props.styling }}
+        styling={{ ...combinedStyling }}
         type="submit"
         title={title}
+        aria-label={props["aria-label"]}
       >
         {children}
       </ButtonComponent>
     );
   } else {
     return (
-      <DisabledButton styling={{ ...props.styling, ...props.disabledStyling }}>
+      <DisabledButton
+        styling={{ ...combinedStyling, ...props.disabledStyling }}
+        aria-label={props["aria-label"]}
+      >
         {children}
       </DisabledButton>
     );
@@ -109,6 +133,7 @@ type ButtonProps = {
   styling?: StylingProps;
   title?: string;
   disabledStyling?: StylingProps;
+  "aria-label"?: string;
 };
 
 const Button = (props: ButtonProps) => {
@@ -124,13 +149,18 @@ const Button = (props: ButtonProps) => {
           ...props.styling,
           ...props.disabledStyling,
         }}
+        aria-label={props["aria-label"]}
       >
         {children}
       </DisabledButton>
     );
   } else if (type === "submit") {
     return (
-      <SubmitButton styling={{ ...props.styling }} onSubmit={props.onClick}>
+      <SubmitButton
+        styling={{ ...props.styling }}
+        onSubmit={props.onClick}
+        aria-label={props["aria-label"]}
+      >
         {children}
       </SubmitButton>
     );
@@ -141,6 +171,7 @@ const Button = (props: ButtonProps) => {
         type={type}
         onClick={props.onClick}
         title={title}
+        aria-label={props["aria-label"]}
       >
         {children}
       </ButtonComponent>
@@ -155,24 +186,35 @@ type ButtonComponentProps = {
   type: "button" | "submit";
   styling: StylingProps;
   title?: string;
+  "aria-label"?: string;
 };
 
 const ButtonComponent = (props: ButtonComponentProps) => {
   const { children, onClick, styling, title, type } = props;
 
-  const className = Object.values(styling)
-    .filter((val) => val !== null && val !== "")
+  const isDisabled = !!props.isDisabled;
+
+  const className = [
+    ...Object.values(styling).filter((val) => val !== null && val !== ""),
+    focusClasses,
+    isDisabled ? "opacity-50" : "",
+  ]
+    .filter(Boolean)
     .join(" ");
 
-  const buttonProps = {
-    type,
-    onClick,
-    disabled: !!props.isDisabled,
-    className,
-    ...(!!title ? { title } : {}),
-  };
-
-  return <button {...buttonProps}>{children}</button>;
+  return (
+    <button
+      type={type}
+      onClick={onClick}
+      disabled={isDisabled}
+      className={className}
+      title={title}
+      aria-label={props["aria-label"]}
+      aria-disabled={isDisabled}
+    >
+      {children}
+    </button>
+  );
 };
 
 export { Button, SubmitButton };

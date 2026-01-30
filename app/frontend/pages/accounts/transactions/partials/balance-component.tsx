@@ -12,7 +12,7 @@ const BalanceComponent = () => {
     <>
       <div className="text-sm text-gray-700 md:hidden">Balance</div>
       <div className="w-4/12 md:w-full border-t border-gray-400 text-right text-bold md:border-none">
-        <AmountSpan amount={transaction.balance} negativeColor="text-red-400" />
+        <AmountSpan amount={transaction.balance} negativeColor="red" />
       </div>
     </>
   );

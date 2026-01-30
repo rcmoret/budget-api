@@ -7,6 +7,7 @@ import { useBudgetDashboardContext } from "@/pages/budget/dashboard/context_prov
 import { Icon } from "@/components/common/Icon";
 import Select from "react-select";
 import { DraftItem } from "@/pages/budget/dashboard";
+import { textColorFor } from "@/lib/context-colors";
 
 const CategorySelect = (props: { categories: Array<SelectBudgetCategory> }) => {
   const { form } = useBudgetDashboardContext();
@@ -65,7 +66,7 @@ const NewItemSubmitButton = (props: {
       isEnabled={!props.processing}
       styling={{}}
     >
-      <span className="text-green-600 text-lg">
+      <span className={textColorFor("positiveGreen")}>
         <Icon name="plus-circle" />
       </span>
     </SubmitButton>

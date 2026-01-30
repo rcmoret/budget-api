@@ -17,6 +17,38 @@ type TCategoryListItem = BudgetCategory & {
   currentlyReviewing: boolean;
 };
 
+type HookProps = ComponentProps & {
+  putCategory: (slug?: string) => void;
+  changePreviousCategory: () => void;
+  changePreviousUnreviewedCategory: () => void;
+  changeNextCategory: () => void;
+  changeNextUnreviewedCategory: () => void;
+  processing: boolean;
+  removeEvent: (p: { slug: string; key: string }) => void;
+  updateEvents: (events: Array<{ key: string; amount: string }>) => void;
+};
+
+type ComponentProps = {
+  groups: {
+    revenues: TCategoryGroup;
+    monthlyExpenses: TCategoryGroup;
+    dayToDayExpenses: TCategoryGroup;
+  };
+  budgetCategory: BudgetCategory & { events: Array<SetupEvent> };
+  metadata: {
+    budgetTotal: number;
+    isSubmittable: boolean;
+    nextCategorySlug: string;
+    nextUnreviewedCategorySlug: string;
+    previousCategorySlug: string;
+    previousUnreviewedCategorySlug: string;
+    previousMonth: number;
+    previousYear: number;
+    month: number;
+    year: number;
+  };
+};
+
 type TCategoryGroup = {
   label: string;
   name: string;
@@ -48,6 +80,8 @@ type SetupEvent = {
 };
 
 export type {
+  ComponentProps,
+  HookProps,
   SetupEvent,
   SetupCategory,
   TCategoryGroup,

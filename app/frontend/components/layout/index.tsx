@@ -1,4 +1,4 @@
-import { Header } from "@/components/layout/Header";
+import { Header } from "@/components/layout/header";
 import { OptionsMenu } from "@/components/layout/OptionsMenu";
 import { Provider } from "@/components/layout/Provider";
 import { Row } from "@/components/common/Row";

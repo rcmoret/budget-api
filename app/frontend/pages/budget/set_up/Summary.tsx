@@ -13,9 +13,9 @@ const AmountComponent = (props: { amount: number }) => {
     <div>
       <AmountSpan
         amount={props.amount}
-        zeroColor="text-black"
-        color="text-green-600"
-        negativeColor="text-red-400"
+        zeroColor="black"
+        positiveColor="green"
+        negativeColor="red"
       />
     </div>
   );

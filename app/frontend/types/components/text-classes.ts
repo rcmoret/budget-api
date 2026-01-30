@@ -1,3 +1,12 @@
+import {
+  TextBlues,
+  TextChartreuses,
+  TextGreens,
+  TextGrays,
+  TextReds,
+  TextSkys,
+} from "@/lib/context-colors";
+
 export type FontSizeOption =
   | "text-xs"
   | "text-sm"
@@ -48,10 +57,11 @@ type TextReds = "text-red-400" | "text-red-600" | "text-red-700";
 
 export type TextColor =
   | TextBlues
-  | TextChartreuse
-  | TextGrayScale
+  | TextChartreuses
+  | TextGrays
   | TextGreens
-  | TextReds;
+  | TextReds
+  | TextSkys;
 
 export type TextDecorationOption =
   | "underline"

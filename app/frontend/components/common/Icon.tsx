@@ -1,3 +1,5 @@
+import { backgroundFill } from "@/lib/context-colors";
+
 const IconDictionary = {
   "angle-double-left": "fas fa-angle-double-left",
   "angle-double-right": "fas fa-angle-double-right",
@@ -28,12 +30,16 @@ type IconName = keyof typeof IconDictionary;
 
 const Icon = ({ name }: { name: IconName }) => {
   const className = IconDictionary[name] || name;
-  return <span className={className} />;
+  // aria-hidden="true" hides decorative icons from screen readers
+  // The parent element (button, link) should provide the accessible name
+  return <span className={className} aria-hidden="true" />;
 };
 
 const GreenCheck = () => {
   return (
-    <div className="p-1 text-xs bg-green-600 text-chartreuse-300 rounded">
+    <div
+      className={`p-1 text-xs ${backgroundFill("green")} text-chartreuse-300 rounded`}
+    >
       <Icon name="check-circle" />
     </div>
   );

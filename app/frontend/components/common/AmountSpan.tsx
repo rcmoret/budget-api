@@ -1,16 +1,24 @@
 import { moneyFormatter } from "@/lib/MoneyFormatter";
-import { TextColor } from "@/types/components/text-classes";
+import { primaryColors, neutralColors } from "@/lib/theme/colors";
+
+type AmountColorKey = "red" | "green" | "black";
+
+const colorMap: Record<AmountColorKey, string> = {
+  red: `text-${primaryColors.red}`,
+  green: `text-${primaryColors.green}`,
+  black: `text-${neutralColors.black}`,
+};
 
 interface ComponentProps {
   absolute?: boolean;
   amount: number;
   classes?: string[];
-  color?: TextColor;
+  positiveColor?: AmountColorKey;
   decorate?: boolean;
-  negativeColor?: TextColor;
+  negativeColor?: AmountColorKey;
   showCents?: boolean;
   prefix?: string;
-  zeroColor?: TextColor;
+  zeroColor?: AmountColorKey;
 }
 
 const AmountSpan = (suppliedProps: ComponentProps) => {
@@ -18,7 +26,7 @@ const AmountSpan = (suppliedProps: ComponentProps) => {
     absolute: false,
     amount: 0,
     decorate: true,
-    color: "text-black",
+    positiveColor: "black" as AmountColorKey,
     classes: [],
     prefix: "",
   };
@@ -27,19 +35,19 @@ const AmountSpan = (suppliedProps: ComponentProps) => {
     ...defaultProps,
     ...suppliedProps,
   };
-  const { absolute, amount, classes, color, decorate, prefix } = props;
-  const zeroColor = props.zeroColor || color;
-  const negativeColor = props.negativeColor || color;
+  const { absolute, amount, classes, positiveColor, decorate, prefix } = props;
+  const zeroColor = props.zeroColor || positiveColor;
+  const negativeColor = props.negativeColor || positiveColor;
 
-  let textColor = "";
+  let colorKey: AmountColorKey;
   if (amount === 0) {
-    textColor = zeroColor;
+    colorKey = zeroColor;
   } else if (amount > 0) {
-    textColor = color;
+    colorKey = positiveColor;
   } else {
-    textColor = negativeColor;
+    colorKey = negativeColor;
   }
-  const className = [textColor, ...classes].join(" ");
+  const className = [colorMap[colorKey], ...classes].join(" ");
 
   return (
     <span className={className}>
@@ -58,7 +66,7 @@ const PercentSpan = (suppliedProps: ComponentProps) => {
     absolute: false,
     amount: 0,
     decorate: true,
-    color: "text-black",
+    positiveColor: "black" as AmountColorKey,
     classes: [],
     prefix: "",
   };
@@ -68,19 +76,19 @@ const PercentSpan = (suppliedProps: ComponentProps) => {
     ...suppliedProps,
   };
 
-  const { absolute, amount, classes, color, decorate, prefix } = props;
-  const zeroColor = props.zeroColor || color;
-  const negativeColor = props.negativeColor || color;
+  const { absolute, amount, classes, positiveColor, decorate, prefix } = props;
+  const zeroColor = props.zeroColor || positiveColor;
+  const negativeColor = props.negativeColor || positiveColor;
 
-  let textColor = "";
+  let colorKey: AmountColorKey;
   if (amount === 0) {
-    textColor = zeroColor;
+    colorKey = zeroColor;
   } else if (amount > 0) {
-    textColor = color;
+    colorKey = positiveColor;
   } else {
-    textColor = negativeColor;
+    colorKey = negativeColor;
   }
-  const className = [textColor, ...classes].join(" ");
+  const className = [colorMap[colorKey], ...classes].join(" ");
   const percent = absolute ? Math.abs(amount).toFixed(1) : amount.toFixed(1);
   const copy = decorate ? `${percent}%` : percent;
 

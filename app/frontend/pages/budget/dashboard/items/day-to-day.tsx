@@ -51,8 +51,7 @@ const DayToDayItemForm = () => {
         >
           (
           <AmountSpan
-            color="text-gray-800"
-            amount={change.amount.cents ?? 0}
+                        amount={change.amount.cents ?? 0}
             absolute={true}
           />
           )
@@ -80,16 +79,14 @@ const DayToDayItemForm = () => {
       <Cell styling={{ width: "w-6/12" }}>Spent/Deposited</Cell>
       <Cell styling={{ textAlign: "text-right", width: "w-3/12" }}>
         <AmountSpan
-          color="text-gray-800"
-          amount={item.spent}
+                    amount={item.spent}
           absolute={true}
           prefix="+"
         />
       </Cell>
       <Cell styling={{ textAlign: "text-right", width: "w-3/12" }}>
         <AmountSpan
-          color="text-gray-800"
-          amount={item.spent}
+                    amount={item.spent}
           absolute={true}
           prefix="+"
         />
@@ -103,8 +100,7 @@ const DayToDayItemForm = () => {
         }}
       >
         <AmountSpan
-          color="text-gray-800"
-          amount={item.remaining}
+                    amount={item.remaining}
           absolute={true}
         />
       </Cell>
@@ -116,8 +112,7 @@ const DayToDayItemForm = () => {
         }}
       >
         <AmountSpan
-          color="text-gray-800"
-          amount={draftItem.remaining}
+                    amount={draftItem.remaining}
           absolute={true}
         />
       </Cell>
