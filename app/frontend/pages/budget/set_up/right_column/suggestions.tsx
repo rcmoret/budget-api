@@ -187,13 +187,14 @@ const DefaultAmountForm = (props: { toggleEditForm: () => void }) => {
   const initialFormAmount =
     defaultAmount === 0 ? { display: "" } : { cents: defaultAmount };
 
-  const { data, setData, transform, processing, put, reset } = useForm({
+  const { data, setData, transform, processing, put } = useForm({
     defaultAmount: inputAmount(initialFormAmount),
   });
 
   const onAmountChange = (amt: string) =>
     setData({ defaultAmount: inputAmount({ display: amt }) });
 
+  // @ts-ignore
   transform(() => ({ category: { defaultAmount: data.defaultAmount.cents } }));
 
   const formUrl = UrlBuilder({
