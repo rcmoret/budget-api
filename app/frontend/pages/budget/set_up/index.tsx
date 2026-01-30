@@ -1,3 +1,5 @@
+import { BudgetCategory } from "@/types/budget";
+import { TInputAmount } from "@/components/common/AmountInput";
 import { LeftColumn } from "@/pages/budget/set_up/left_column";
 import { RightColumn } from "@/pages/budget/set_up/right_column";
 import { KeyboardNav } from "./keyboard_nav";
@@ -7,16 +9,83 @@ import { createContext, useContext, useEffect, useRef } from "react";
 import { UrlBuilder } from "@/lib/UrlBuilder";
 import { useToggle } from "@/lib/hooks/useToogle";
 
-import type {
-  ComponentProps,
-  HookProps,
-  SetupCategory,
-  SetupEvent,
-  TCategoryGroup,
-  TCategoryListItem,
-  TEventFlags,
-  TGroupScopes,
-} from "./types";
+type ComponentProps = {
+  groups: {
+    revenues: TCategoryGroup;
+    monthlyExpenses: TCategoryGroup;
+    dayToDayExpenses: TCategoryGroup;
+  };
+  budgetCategory: BudgetCategory & { events: Array<SetupEvent> };
+  metadata: {
+    budgetTotal: number;
+    isSubmittable: boolean;
+    nextCategorySlug: string;
+    nextUnreviewedCategorySlug: string;
+    previousCategorySlug: string;
+    previousUnreviewedCategorySlug: string;
+    previousMonth: number;
+    previousYear: number;
+    month: number;
+    year: number;
+  };
+};
+
+type HookProps = ComponentProps & {
+  putCategory: (slug?: string) => void;
+  changePreviousCategory: () => void;
+  changePreviousUnreviewedCategory: () => void;
+  changeNextCategory: () => void;
+  changeNextUnreviewedCategory: () => void;
+  processing: boolean;
+  removeEvent: (p: { slug: string; key: string }) => void;
+  updateEvents: (events: Array<{ key: string; amount: string }>) => void;
+};
+
+type TGroupScopes = "revenues" | "expenses" | "monthly" | "weekly";
+
+type TEventFlags = {
+  eqPrevBudgeted: boolean;
+  eqPrevSpent: boolean;
+  showDefaultSuggestion: boolean;
+  unreviewed: boolean;
+  hasDeleteIntent: boolean;
+  isValid: boolean;
+};
+
+type TCategoryListItem = BudgetCategory & {
+  events: Array<TEventFlags>;
+  currentlyReviewing: boolean;
+};
+
+type TCategoryGroup = {
+  label: string;
+  name: string;
+  categories: Array<TCategoryListItem>;
+  scopes: Array<TGroupScopes>;
+  metadata: {
+    count: number;
+    sum: number;
+    unreviewed: number;
+    isReviewed: number;
+    isSelected: boolean;
+  };
+};
+
+type SetupCategory = BudgetCategory & {
+  events: Array<TEventFlags>;
+};
+
+type SetupEvent = {
+  budgetItemKey: string;
+  amount: number;
+  updatedAmount: number;
+  eventType: "setup_item_create" | "setup_item_adjust";
+  spent: number;
+  // data: string;
+  adjustment: TInputAmount;
+  previouslyBudgeted: number;
+  flags: TEventFlags;
+};
 
 const useSetUpEventsForm = (props: ComponentProps): HookProps => {
   const { delete: deleteRequest, processing, setData } = useForm();
@@ -208,6 +277,7 @@ const NewSetUpComponent = (props: ComponentProps) => {
 
 export type {
   SetupEvent,
+  SetupCategory,
   TCategoryGroup,
   TCategoryListItem,
   TGroupScopes,
@@ -215,7 +285,6 @@ export type {
 };
 
 export {
-  SetupCategory,
   useSetUpEventsFormContext,
   useSetUpEventsFormContext as useSetupEventsFormContext,
 };

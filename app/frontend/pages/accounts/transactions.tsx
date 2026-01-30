@@ -5,11 +5,11 @@ import {
 import { byClearanceDate } from "@/lib/sort_functions";
 import { AccountTransaction } from "@/types/transaction";
 
-import { InitialBalance } from "@/pages/accounts/transactions/initial_balance";
+import { InitialBalance } from "@/pages/accounts/transactions/partials/initial-balance";
 import { TransactionForm } from "@/pages/accounts/transactions/form";
 import { TransactionShow } from "@/pages/accounts/transactions/show";
 import { useState } from "react";
-import { AddNewComponent } from "./transactions/AddNew";
+import { AddNewComponent } from "./transactions/partials/add-new";
 import { useAppConfigContext } from "@/components/layout/Provider";
 import Select, { SingleValue } from "react-select";
 import { AmountInput, inputAmount } from "@/components/common/AmountInput";

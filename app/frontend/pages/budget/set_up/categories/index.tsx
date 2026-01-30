@@ -1,11 +1,8 @@
 import { createContext, useContext } from "react";
 import { BudgetCategory } from "@/types/budget";
 import { KeySpan } from "@/components/common/KeySpan";
-import {
-  useSetupEventsFormContext,
-  SetupEvent,
-  TCategoryListItem,
-} from "@/pages/budget/set_up";
+import { useSetupEventsFormContext } from "@/pages/budget/set_up";
+import { SetupEvent, TCategoryListItem } from "@/pages/budget/set_up/types";
 
 const CategoryListItemContext = createContext<{
   category: TCategoryListItem;

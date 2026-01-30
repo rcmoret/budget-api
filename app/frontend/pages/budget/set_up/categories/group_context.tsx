@@ -2,7 +2,7 @@ import {
   TCategoryGroup,
   TCategoryListItem,
   TGroupScopes,
-} from "@/pages/budget/set_up";
+} from "@/pages/budget/set_up/types";
 import { createContext, useContext } from "react";
 import { useToggle } from "@/lib/hooks/useToogle";
 
@@ -31,7 +31,7 @@ const CategoryGroupProvider = (props: {
   const { group, children } = props;
   const [showAddForm, toggleShowAddForm] = useToggle(false);
 
-  const value = {
+  const value: TGroupContext = {
     ...group,
     showAddForm,
     toggleShowAddForm,

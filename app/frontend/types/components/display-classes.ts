@@ -24,7 +24,8 @@ export type FlexAlignOption =
   | "justify-evenly"
   | "justify-normal"
   | "justify-start"
-  | "justify-stretch";
+  | "justify-stretch"
+  | "md:justify-start justify-end";
 
 export type FlexDirectionOption =
   | "flex-row"
@@ -81,20 +82,27 @@ type GradientBgOption =
   | "bg-gradient-to-t from-blue-400 to-white"
   | "bg-gradient-to-l from-gray-50 to-gray-200";
 
-type BlueBgOpion =
+type BlueBgOption =
+  | "bg-blue-20"
   | "bg-blue-300"
   | "bg-blue-400"
   | "bg-blue-800"
   | "bg-blue-900";
 
-type GrayBgOptoin =
+type GrayBgOption =
+  | "bg-gray-25"
   | "bg-gray-50"
   | "bg-gray-100"
   | "bg-gray-200"
   | "bg-gray-300"
   | "bg-gray-400";
 
-type GreenBgOpion = "bg-green-600" | "bg-green-700" | "bg-green-800";
+type GreenBgOpion =
+  | "bg-green-400"
+  | "bg-green-500"
+  | "bg-green-600"
+  | "bg-green-700"
+  | "bg-green-800";
 
 type IndigoBgOption = "bg-indigo-100" | "bg-indigo-200";
 
@@ -105,8 +113,8 @@ type YellowBgOption = "bg-yellow-100" | "bg-yellow-200";
 export type BgColorOption =
   | "bg-white"
   | StripedRowColorOption
-  | BlueBgOpion
-  | GrayBgOptoin
+  | BlueBgOption
+  | GrayBgOption
   | IndigoBgOption
   | GreenBgOpion
   | SkyBgOpion
@@ -116,6 +124,7 @@ export type BgColorOption =
 export type BgHoverOption =
   | "hover:bg-gray-300"
   | "hover:bg-gray-400"
+  | "hover:bg-green-600"
   | "hover:bg-green-700";
 
 export type PositionOption =

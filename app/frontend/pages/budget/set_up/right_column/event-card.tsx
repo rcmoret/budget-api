@@ -3,7 +3,6 @@ import { Row } from "@/components/common/Row";
 import {
   AmountInput,
   inputAmount,
-  TInputAmount,
   warningOutlineClasses,
   defaultOutlineClasses,
 } from "@/components/common/AmountInput";
@@ -79,11 +78,6 @@ const EventCard = () => {
       updateEvent({ key: event.budgetItemKey, adjustment: amount });
     }, 500);
   };
-
-  let initialInputAmount: TInputAmount = inputAmount({ display: "" });
-  if (flags.eqPrevSpent && event.amount === 0) {
-    initialInputAmount = inputAmount({ cents: event.previouslyBudgeted });
-  }
 
   const outlineClasses = flags.isValid
     ? {
