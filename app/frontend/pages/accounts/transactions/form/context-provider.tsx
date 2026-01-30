@@ -184,7 +184,7 @@ const TransactionFormProvider = (props: ProviderProps) => {
               budgetItemKey: value,
               amount: updateProps.amount || detail.amount,
             }
-          : detail
+          : detail,
       ),
     });
   };
@@ -198,7 +198,7 @@ const TransactionFormProvider = (props: ProviderProps) => {
     setData({
       ...data,
       details: data.details.map((detail) =>
-        detail.key === detailKey ? { ...detail, amount: value } : detail
+        detail.key === detailKey ? { ...detail, amount: value } : detail,
       ),
     });
   };
@@ -267,7 +267,7 @@ const useTransactionFormContext = (): TransactionFormContextValue => {
   const context = useContext(LocalContext);
   if (!context) {
     throw new Error(
-      "useTransactionFormContext must be used within a TransactionFormProvider"
+      "useTransactionFormContext must be used within a TransactionFormProvider",
     );
   }
   return context;
