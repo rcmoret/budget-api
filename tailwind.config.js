@@ -5,7 +5,14 @@ export default {
     "app/views/**/*.{html,html.erb,tsx}",
     "app/views/layouts/devise.html.erb"
   ],
-  safelist: ["odd:bg-gray-200"],
+  safelist: [
+    "odd:bg-gray-200",
+    "bg-red-400",
+    "text-red-400",
+    "bg-gray-600",
+    "bg-green-600",
+    "text-green-600"
+  ],
   variants: {
     extend: {
       backgroundColor: ["odd", "even"],

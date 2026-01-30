@@ -1,10 +1,51 @@
 import { AccountManage } from "@/types/account";
-import { Button, SubmitButton } from "@/components/common/Button";
-import { useForm } from "@inertiajs/react";
+import { ActionButton } from "@/lib/theme/buttons/action-button";
+import { Button } from "@/components/common/Button";
+import { FormRow } from "@/lib/theme/forms/manage";
+import { FormSubmitButton } from "@/lib/theme/buttons/form-submit-button";
+import { Icon } from "@/components/common/Icon";
+import {
+  SelectableOption,
+  SelectionGroup,
+  ThemeOptions,
+} from "@/lib/theme/options";
 import { UrlBuilder } from "@/lib/UrlBuilder";
 import { buildQueryParams } from "@/lib/redirect_params";
-import { Icon } from "@/components/common/Icon";
 import { generateKeyIdentifier } from "@/lib/KeyIdentifier";
+import { useForm } from "@inertiajs/react";
+
+const LocalSelectionGroup = (props: { children: React.ReactNode }) => {
+  const optionTheme: ThemeOptions = {
+    stature: "slim",
+  };
+
+  return (
+    <SelectionGroup
+      role="radio"
+      className="w-full flex flex-row justify-between"
+      optionTheme={optionTheme}
+      children={props.children}
+    />
+  );
+};
+
+const LocalSectableOption = (props: {
+  children: string | React.ReactNode;
+  optionValue: boolean;
+  isCashFlow: boolean;
+  setCashFlow: (b: boolean) => void;
+}) => {
+  const { children, optionValue, isCashFlow, setCashFlow } = props;
+  const onClick = () => setCashFlow(optionValue);
+
+  return (
+    <div className="w-5/12">
+      <SelectableOption isSelected={isCashFlow} onClick={onClick}>
+        <div className="text-xs">{children}</div>
+      </SelectableOption>
+    </div>
+  );
+};
 
 const AccountForm = (props: {
   account: AccountManage;
@@ -17,6 +58,12 @@ const AccountForm = (props: {
 
   const { data, setData, transform, processing, post, put } =
     useForm(formProps);
+
+  const hasValidInputs =
+    !!data.name &&
+    !!data.slug &&
+    (data.isCashFlow === true || data.isCashFlow === false);
+  const isEnabled = !processing && hasValidInputs;
 
   // @ts-ignore
   transform(() => {
@@ -31,6 +78,8 @@ const AccountForm = (props: {
     };
   });
 
+  const { isCashFlow } = data;
+
   const onChange = (ev: React.ChangeEvent & { target: HTMLInputElement }) => {
     const { name } = ev.target;
 
@@ -44,6 +93,10 @@ const AccountForm = (props: {
     }
 
     setData({ ...data, [name]: ev.target.value });
+  };
+
+  const setCashFlow = (bool: boolean) => {
+    setData({ ...data, isCashFlow: bool });
   };
 
   const putUpdate = () => {
@@ -71,89 +124,78 @@ const AccountForm = (props: {
     }
   };
 
+  const formHeadingId = `account-form-heading-${key}`;
+
   return (
-    <form onSubmit={onSumbit}>
-      <div className="w-72 border-b border-gray700 flex flex-row flex-wrap justify-between pb-2">
+    <form onSubmit={onSumbit} aria-labelledby={formHeadingId}>
+      <div className="w-96 border-b border-gray700 flex flex-row flex-wrap justify-between pb-2">
         <div className="hidden">{key}</div>
-        <div className="w-full">
-          <div className="w-full flex flex-row justify-between">
-            <div>Name</div>
-            <div>
-              <Button
-                type="button"
-                onClick={closeForm}
-                styling={{ color: "text-blue-300" }}
-              >
-                <Icon name="times-circle" />
-              </Button>
-            </div>
-          </div>
-          <input
-            type="string"
+        <div>
+          <ActionButton
+            onClick={closeForm}
+            color="blue"
+            icon="times-circle"
+            title="Close form"
+            aria-label="Close form"
+          />
+        </div>
+        <div className="w-full flex flex-col gap-2">
+          <FormRow
+            label="Name"
+            id={`name-${key}`}
+            inputValue={data.name}
+            labelAriaId={formHeadingId}
             name="name"
-            className="border border-gray-300 rounded h-input-lg px-1"
-            value={data.name}
             onChange={onChange}
+            required={true}
           />
-        </div>
-        <div className="w-full">
-          <div>Slug</div>
-          <input
-            type="string"
+          <FormRow
+            label="Slug"
+            id={`slug-${key}`}
+            inputValue={data.slug}
+            labelAriaId={formHeadingId}
             name="slug"
-            value={data.slug}
             onChange={onChange}
-            className="border border-gray-300 rounded h-input-lg px-1"
+            required={true}
           />
-        </div>
-        <div className="w-full">
-          <div>Priority</div>
-          <input
-            type="number"
+          <FormRow
+            label="Priority"
+            id={`priority-${key}`}
+            inputValue={data.priority}
+            labelAriaId={formHeadingId}
             name="priority"
-            value={data.priority}
             onChange={onChange}
-            className="border border-gray-300 rounded h-input-lg px-1"
+            required={true}
+            type="number"
           />
-        </div>
-        <div className="w-full">
-          <div>Type</div>
-          <div className="w-full flex flex-row justify-between">
-            <div className="w-6/12">
-              <div>Cash Flow</div>
-              <input
-                type="checkbox"
-                name="isCashFlow"
-                checked={data.isCashFlow}
-                className="border border-gray-300 rounded h-input-lg px-1"
-                onChange={onChange}
-              />
-            </div>
-            <div className="w-6/12">
-              <div>Budget Exclusion</div>
-              <input
-                type="checkbox"
-                name="isBudgetExclusion"
-                className="border border-gray-300 rounded h-input-lg px-1"
-                checked={!data.isCashFlow}
-                onChange={onChange}
-              />
-            </div>
+          <div>
+            <legend>Type</legend>
           </div>
-        </div>
-        <div className="w-full flex flex-row-reverse">
-          <SubmitButton
-            onSubmit={onSumbit}
-            styling={{
-              rounded: "rounded",
-              backgroundColor: "bg-green-600",
-              color: "text-white",
-              padding: "px-4 py-1",
-            }}
-            isEnabled={!processing}
-          >
-            {isNew ? "Create" : "Update"}
-          </SubmitButton>
+          <LocalSelectionGroup>
+            <LocalSectableOption
+              isCashFlow={isCashFlow}
+              children="Cash Flow"
+              setCashFlow={setCashFlow}
+              optionValue={true}
+            />
+            <LocalSectableOption
+              isCashFlow={!isCashFlow}
+              children="Budget Exclusion"
+              setCashFlow={setCashFlow}
+              optionValue={false}
+            />
+          </LocalSelectionGroup>
+          <div className="w-full flex flex-row-reverse">
+            <FormSubmitButton
+              onSubmit={onSumbit}
+              isEnabled={isEnabled}
+              isBusy={!isEnabled}
+              iconName="check-circle"
+              title={isNew ? "Create account" : "Update account"}
+            >
+              {isNew ? "Create" : "Update"}
+            </FormSubmitButton>
+          </div>
         </div>
       </div>
     </form>
@@ -202,15 +244,19 @@ const AddNewComponent = (props: {
   const closeForm = () => setShowFormFor(null);
   const openForm = () => setShowFormFor("__new__");
 
-  return (
-    <div className="w-72 flex flex-row flex-wrap justify-between pb-2">
-      {isFormShown ? (
+  if (isFormShown) {
+    return (
+      <div className="w-96 flex flex-row flex-wrap justify-between pb-2">
         <NewForm closeForm={closeForm} />
-      ) : (
+      </div>
+    );
+  } else {
+    return (
+      <div className="w-72 flex flex-row flex-wrap justify-between pb-2">
         <NewButton openForm={openForm} />
-      )}
-    </div>
-  );
+      </div>
+    );
+  }
 };
 
 export { AccountForm, AddNewComponent };

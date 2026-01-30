@@ -1,9 +1,11 @@
 import { DraftItem } from "../dashboard";
 import { AmountSpan } from "@/components/common/AmountSpan";
 import { SubmitButton } from "@/components/common/Button";
+import { FormSubmitButton } from "@/lib/theme/buttons/form-submit-button";
 import { StripedRow } from "@/components/common/Row";
 import { Icon } from "@/components/common/Icon";
 import { useBudgetDashboardContext } from "@/pages/budget/dashboard/context_provider";
+import { textColorFor } from "@/lib/context-colors";
 
 const LineItem = (props: { item: DraftItem }) => {
   const { form } = useBudgetDashboardContext();
@@ -81,12 +83,22 @@ const AdjustForm = () => {
   const bottomLineChange = updatedRemaining - originalRemaining;
 
   return (
-    <div className="w-full px-4 py-2 bg-cyan-50 rounded-lg">
-      <div className="text-xl border-b border-[#056155] pb-2 w-full">
+    <section
+      className="w-full px-4 py-2 bg-cyan-50 rounded-lg"
+      aria-labelledby="budget-updates-heading"
+    >
+      <h2
+        id="budget-updates-heading"
+        className="text-xl border-b border-[#056155] pb-2 w-full"
+      >
         Budget Updates
-      </div>
+      </h2>
       <div className="w-full flex flex-col mb-4 border-b border-[#056155]">
-        <div className="w-full flex flex-row px-2 justify-between text-gray-800 text-sm">
+        <div
+          className="w-full flex flex-row px-2 justify-between text-gray-800 text-sm"
+          role="row"
+          aria-hidden="true"
+        >
           <div className="w-2/12">Item</div>
           <div className="w-2/12 text-right">Original Amount</div>
           <div className="w-2/12 text-right">Adjustment</div>
@@ -132,16 +144,16 @@ const AdjustForm = () => {
             <div className="w-4/12 text-right">
               <AmountSpan
                 amount={discretionary.overUnderBudget}
-                color="text-green-600"
-                negativeColor="text-red-400"
+                color={textColorFor("positiveGreen")}
+                negativeColor={textColorFor("negativeAmount")}
                 zeroColor="text-black"
               />
             </div>
             <div className="w-4/12 text-right">
               <AmountSpan
                 amount={updatedDiscretionary.overUnderBudget}
-                color="text-green-600"
-                negativeColor="text-red-400"
+                color={textColorFor("positiveGreen")}
+                negativeColor={textColorFor("negativeAmount")}
                 zeroColor="text-black"
               />
             </div>
@@ -160,46 +172,26 @@ const AdjustForm = () => {
             <div className="w-6/12 font-semibold">
               <AmountSpan
                 amount={bottomLineChange}
-                color="text-green-600"
-                negativeColor="text-red-400"
+                color={textColorFor("positiveGreen")}
+                negativeColor={textColorFor("negativeAmount")}
                 zeroColor="text-black"
               />
             </div>
           </div>
         </div>
         <div className="w-4/12 flex flex-row justify-end">
-          <SubmitButton
+          <FormSubmitButton
             onSubmit={form.post}
-            disabledStyling={{
-              color: "text-black",
-              backgroundColor: "bg-gray-300",
-              hoverColor: "hover:bg-gray-300",
-              cursor: "cursor-not-allowed",
-            }}
-            styling={{
-              color: "text-white",
-              backgroundColor: "bg-green-600",
-              hoverColor: "hover:bg-green-700",
-              fontWeight: "font-semibold",
-              rounded: "rounded",
-              padding: "px-4 py-2",
-              display: "flex",
-              gap: "gap-2",
-            }}
             isEnabled={!form.processing}
+            isBusy={form.processing}
+            iconName="check-circle"
+            title="Submit budget updates"
           >
             SUBMIT UPDATES
-            <div
-              className={
-                form.processing ? "text-gray-700" : "text-chartreuse-300"
-              }
-            >
-              <Icon name="check-circle" />
-            </div>
-          </SubmitButton>
+          </FormSubmitButton>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

@@ -5,6 +5,7 @@ import { useToggle } from "@/lib/hooks/useToogle";
 import { Button } from "@/components/common/Button";
 import { dateParse } from "@/lib/DateFormatter";
 import { useBudgetDashboardContext } from "@/pages/budget/dashboard/context_provider";
+import { textColorFor } from "@/lib/context-colors";
 
 const TransactionButton = (props: { toggleTransactions: () => void }) => {
   return (
@@ -83,8 +84,8 @@ const TransactionDetailLineItem = (props: {
           <AmountSpan
             amount={transaction.amount}
             zeroColor="text-black"
-            color="text-green-600"
-            negativeColor="text-red-400"
+            color={textColorFor("positiveGreen")}
+            negativeColor={textColorFor("negativeAmount")}
           />
         </div>
       </div>
@@ -128,8 +129,8 @@ const Discretionary = () => {
         <div className="w-4/12 text-right font-bold">
           <AmountSpan
             amount={transactionsTotal}
-            color="text-green-600"
-            negativeColor="text-red-400"
+            color={textColorFor("positiveGreen")}
+            negativeColor={textColorFor("negativeAmount")}
             zeroColor="text-black"
           />
         </div>
@@ -144,8 +145,8 @@ const Discretionary = () => {
         <div className="w-4/12 text-right font-bold">
           <AmountSpan
             amount={overUnderBudget}
-            color="text-green-600"
-            negativeColor="text-red-400"
+            color={textColorFor("positiveGreen")}
+            negativeColor={textColorFor("negativeAmount")}
             zeroColor="text-black"
           />
         </div>
@@ -160,8 +161,8 @@ const Discretionary = () => {
         <div className="w-4/12 text-right font-bold">
           <AmountSpan
             amount={amount}
-            color="text-green-600"
-            negativeColor="text-red-400"
+            color={textColorFor("positiveGreen")}
+            negativeColor={textColorFor("negativeAmount")}
             zeroColor="text-black"
           />
         </div>

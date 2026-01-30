@@ -3,6 +3,7 @@ import { useToggle } from "@/lib/hooks/useToogle";
 import { Card, TIcon } from "@/pages/budget/categories/Card";
 import { CategoryForm } from "./Form";
 import BudgetSummaryChart from "@/components/BudgetSummaryChart";
+import { CategoryFormProvider } from "@/pages/budget/categories/category-form-context";
 
 const Wrapper = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -26,14 +27,14 @@ const BudgetCategoryShowComponent = (props: {
   category: BudgetCategoryWithSummaries;
   icons: TIcon[];
 }) => {
-  const { category, icons } = props;
+  const { category } = props;
 
   const [isFormShown, toggleForm] = useToggle(false);
 
   if (!isFormShown) {
     return (
       <Wrapper>
-        <Card category={category} openForm={toggleForm} />
+        <Card openForm={toggleForm} />
         {category.summaries && category.summaries.length > 0 && (
           <div className="mt-6">
             <BudgetSummaryChart summaries={category.summaries} />
@@ -44,11 +45,14 @@ const BudgetCategoryShowComponent = (props: {
   } else {
     return (
       <Wrapper>
-        <CategoryForm
+        <CategoryFormProvider
           category={category}
           closeForm={toggleForm}
-          icons={icons}
-        />
+          isFormShown={true}
+          isNew={false}
+        >
+          <CategoryForm />
+        </CategoryFormProvider>
       </Wrapper>
     );
   }

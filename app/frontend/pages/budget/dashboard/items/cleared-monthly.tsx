@@ -4,6 +4,7 @@ import { Row } from "@/components/common/Row";
 import { Cell } from "@/components/common/Cell";
 import { AmountSpan } from "@/components/common/AmountSpan";
 import { dateParse } from "@/lib/DateFormatter";
+import { textColorFor } from "@/lib/context-colors";
 
 const ClearedMonthItem = () => {
   const { item } = useBudgetDashboardItemContext();
@@ -56,7 +57,7 @@ const ClearedMonthItem = () => {
             amount={difference}
             absolute={true}
             color="text-gray-800"
-            negativeColor="text-red-400"
+            negativeColor={textColorFor("negativeAmount")}
             zeroColor="text-black"
           />
         </Cell>

@@ -7,7 +7,7 @@ type HeaderButtonProps = {
   accountPath: string;
 };
 
-export const HeaderButtons = (props: HeaderButtonProps) => {
+const HeaderButtons = (props: HeaderButtonProps) => {
   const { namespace } = props;
   const textColor = "text-gray-800";
   const selectedTextColor = "text-gray-100";
@@ -80,3 +80,5 @@ const MainLink = (props: MainLinkProps) => {
     </Cell>
   );
 };
+
+export { HeaderButtons };

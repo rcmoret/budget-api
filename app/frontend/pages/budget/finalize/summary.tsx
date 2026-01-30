@@ -1,6 +1,7 @@
 import { AmountSpan } from "@/components/common/AmountSpan";
 import { DateFormatter } from "@/lib/DateFormatter";
 import { useFinalizeFormContext } from "./form_context";
+import { textColorFor } from "@/lib/context-colors";
 
 const SummaryLineItem = (props: {
   label: string;
@@ -33,16 +34,16 @@ const Summary = () => {
         <AmountSpan
           amount={base.discretionary.amount}
           zeroColor="text-black"
-          color="text-green-600"
-          negativeColor="text-red-400"
+          color={textColorFor("positiveGreen")}
+          negativeColor={textColorFor("negativeAmount")}
         />
       </SummaryLineItem>
       <SummaryLineItem label="Extra From Items:">
         <AmountSpan
           amount={extraAmount}
           zeroColor="text-black"
-          negativeColor="text-green-600"
-          color="text-red-400"
+          color={textColorFor("positiveGreen")}
+          negativeColor={textColorFor("negativeAmount")}
           absolute={true}
         />
       </SummaryLineItem>

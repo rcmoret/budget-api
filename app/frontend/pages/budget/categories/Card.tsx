@@ -1,23 +1,30 @@
-import { BudgetCategory } from "@/types/budget";
-import { Point } from "@/components/common/Symbol";
-import { Icon, IconName } from "@/components/common/Icon";
+import { ActionButton } from "@/lib/theme/buttons/action-button";
 import { AmountSpan } from "@/components/common/AmountSpan";
-import { useToggle } from "@/lib/hooks/useToogle";
-import { Button, SubmitButton } from "@/components/common/Button";
+import { BudgetCategory } from "@/types/budget";
+import {
+  CategoryShowProvider,
+  useCardContext,
+  useCardCategory,
+} from "@/pages/budget/categories/CardContext";
+import { CategoryFormProvider } from "./category-form-context";
+import { CategoryForm } from "@/pages/budget/categories/Form";
+import { Icon } from "@/components/common/Icon";
 import { Link, useForm } from "@inertiajs/react";
+import { Point } from "@/components/common/Symbol";
 import { UrlBuilder } from "@/lib/UrlBuilder";
 import { buildQueryParams } from "@/lib/redirect_params";
-import { CategoryForm } from "@/pages/budget/categories/Form";
+import { type TIcon } from "@/pages/budget/categories/CategoriesContext";
+import { useToggle } from "@/lib/hooks/useToogle";
 
-const AccrualComponent = (props: { category: BudgetCategory }) => {
-  const { isAccrual, maturityIntervals } = props.category;
+const AccrualComponent = () => {
+  const { isAccrual, maturityIntervals } = useCardCategory();
 
   if (!isAccrual) {
     return null;
   }
 
   return (
-    <div className="w-full flex flex-col gap-2">
+    <div className="w-full flex flex-col gap-2 text-sm">
       <div>Accrual</div>
       <MaturityIntervalComponent maturityIntervals={maturityIntervals || []} />
     </div>
@@ -38,10 +45,15 @@ const MaturityIntervalComponent = (props: {
 
   return (
     <div className="w-full">
-      <Button type="button" onClick={toggleShowList}>
-        <Icon name={caretClass} />
-      </Button>{" "}
-      Maturity Intervals
+      <div className="flex flex-row items-center gap-1">
+        <ActionButton
+          title={`${showList ? "Hide" : "Show"} Maturity Intervals`}
+          color="black"
+          onClick={toggleShowList}
+          icon={caretClass}
+        />{" "}
+        Maturity Intervals
+      </div>
       {showList && (
         <MaturityIntervalListComponent maturityIntervals={maturityIntervals} />
       )}
@@ -73,25 +85,19 @@ const MaturityIntervalListComponent = (props: {
   );
 };
 
-const PerDayComponent = (props: { category: BudgetCategory }) => {
-  const { category } = props;
+const PerDayComponent = () => {
+  const category = useCardCategory();
 
   if (category.isMonthly) {
     return null;
   }
 
   return (
-    <div>
+    <div className="w-full text-sm flex flex-row justify-between">
       <div>Per Day Calculations</div>
       <div>{category.isPerDiemEnabled ? "Enabled" : "Disabled"}</div>
     </div>
   );
-};
-
-type TIcon = {
-  key: string;
-  name: string;
-  className: IconName;
 };
 
 const CardWrapper = (props: {
@@ -101,31 +107,42 @@ const CardWrapper = (props: {
   setShowFormKey: (key: string | null) => void;
 }) => {
   const { category, isFormShown, setShowFormKey } = props;
+
+  return (
+    <CategoryShowProvider
+      category={category}
+      isFormShown={isFormShown}
+      setShowFormKey={setShowFormKey}
+    >
+      <CategoryShow />
+    </CategoryShowProvider>
+  );
+};
+
+const CategoryShow = () => {
+  const { category, isFormShown, setShowFormKey } = useCardContext();
   const closeForm = () => setShowFormKey(null);
 
   if (isFormShown) {
     return (
-      <CategoryForm
+      <CategoryFormProvider
         category={category}
         closeForm={closeForm}
-        icons={props.icons}
-      />
+        isFormShown={true}
+        isNew={false}
+      >
+        <CategoryForm />
+      </CategoryFormProvider>
     );
   } else {
-    return (
-      <Card category={category} openForm={() => setShowFormKey(category.key)} />
-    );
+    return <Card openForm={() => setShowFormKey(category.key)} />;
   }
 };
 
-const ArchiveComponent = ({
-  category,
-  queryParams,
-}: {
-  category: BudgetCategory;
-  queryParams: string[];
-}) => {
-  if (!category.isArchived) {
+const ArchiveComponent = ({ queryParams }: { queryParams: string[] }) => {
+  const { name, key, isArchived, archivedAt } = useCardCategory();
+
+  if (!isArchived) {
     return null;
   }
   const { processing, put } = useForm({
@@ -134,38 +151,33 @@ const ArchiveComponent = ({
 
   const formUrl = UrlBuilder({
     name: "CategoryShow",
-    key: category.key,
+    key,
     queryParams: buildQueryParams(queryParams),
   });
 
   const onSubmit = () => put(formUrl);
 
   return (
-    <div className="w-full flex justify-between">
-      <div>Archived at: {category.archivedAt || ""}</div>
-      <div className="bg-green-600 px-1 rounded">
-        <form>
-          <SubmitButton
-            onSubmit={onSubmit}
-            isEnabled={!processing}
-            styling={{ color: "text-chartreuse-300" }}
-            title="Unarchive"
-          >
-            <Icon name="folder-open" />
-          </SubmitButton>
-        </form>
+    <div className="w-full flex justify-between items-start">
+      <div className="flex flex-col gap-1 text-sm">
+        <div>Archived at:</div>
+        <div>{archivedAt || ""}</div>
+      </div>
+      <div className="text-right flex justify-end gap-2">
+        <ActionButton
+          icon="folder-open"
+          isEnabled={!processing}
+          onClick={onSubmit}
+          title={`Restore ${name}`}
+          color="green"
+        />
       </div>
     </div>
   );
 };
 
-const ArchiveButton = ({
-  category,
-  queryParams,
-}: {
-  category: BudgetCategory;
-  queryParams: string[];
-}) => {
+const ArchiveButton = ({ queryParams }: { queryParams: string[] }) => {
+  const category = useCardCategory();
   const { processing, put } = useForm({
     category: { archivedAt: new Date() },
   });
@@ -176,7 +188,10 @@ const ArchiveButton = ({
     queryParams: buildQueryParams(queryParams),
   });
 
-  const onSubmit = () => put(formUrl);
+  const onSubmit = () => {
+    console.log(formUrl);
+    put(formUrl);
+  };
 
   if (category.isArchived) {
     return null;
@@ -184,20 +199,18 @@ const ArchiveButton = ({
 
   return (
     <form>
-      <SubmitButton
-        onSubmit={onSubmit}
+      <ActionButton
+        onClick={onSubmit}
         isEnabled={!processing}
-        styling={{ color: "text-red-400" }}
-      >
-        <Icon name="trash" />
-      </SubmitButton>
+        color="red"
+        title={`Archive ${category.name}`}
+        icon="trash"
+      />
     </form>
   );
 };
 
-const Card = (props: { category: BudgetCategory; openForm: () => void }) => {
-  const { category, openForm } = props;
-
+const Card = (props: { openForm: () => void }) => {
   const {
     name,
     defaultAmount,
@@ -206,54 +219,46 @@ const Card = (props: { category: BudgetCategory; openForm: () => void }) => {
     isExpense,
     isMonthly,
     slug,
-  } = category;
+  } = useCardCategory();
+  const { openForm } = props;
 
   return (
-    <div className="w-96 flex flex-row flex-wrap justify-between border-b border-gray-400 pb-2 px-4">
-      <div className="w-full flex flex-row justify-between">
-        <div className="w-6/12">
+    <div className="w-96 flex flex-col gap-2 border-b border-gray-400 pb-2 px-4">
+      <div className="w-full flex flex-row justify-between items-center">
+        <div className="flex flex-row gap-2 items-center">
           <Point>
             <Link href={`/budget/category/${slug}`}>{name}</Link>
           </Point>{" "}
           <Icon name={iconClassName} />
         </div>
-        <div className="w-6/12 text-right flex justify-end gap-2">
+        <div className="text-right flex justify-end gap-2 items-center">
           <div>
-            <Button
-              type="button"
+            <ActionButton
+              title={`Edit ${name}`}
               onClick={openForm}
-              styling={{ color: "text-blue-300" }}
-            >
-              <Icon name="edit" />
-            </Button>
-          </div>
-          <div>
-            <ArchiveButton
-              category={category}
-              queryParams={["budget", "category"]}
+              color="blue"
+              isEnabled={true}
+              icon="edit"
             />
           </div>
+          <ArchiveButton queryParams={["budget", "category"]} />
         </div>
       </div>
-      <ArchiveComponent
-        category={category}
-        queryParams={["budget", "category"]}
-      />
-      <div className="w-6/12">{isExpense ? "Expense" : "Revenue"}</div>
-      <div className="w-6/12 text-right">
+      <ArchiveComponent queryParams={["budget", "category"]} />
+      <div className="w-full text-sm">{isExpense ? "Expense" : "Revenue"}</div>
+      <div className="w-full text-sm">
         {isMonthly ? "Monthly" : "Day to Day"}
       </div>
-      <div className="w-6/12">
-        {!!defaultAmount && (
-          <span>
-            Default: <AmountSpan amount={defaultAmount} />
-          </span>
-        )}
+      {!!defaultAmount && (
+        <div className="w-full flex flex-row justify-between text-sm">
+          <div>Default:</div>
+          <AmountSpan amount={defaultAmount} />
+        </div>
+      )}
+      <div className="w-full text-sm">
+        <PerDayComponent />
       </div>
-      <div className="w-6/12 text-right text-sm">
-        <PerDayComponent category={category} />
-      </div>
-      {isAccrual && <AccrualComponent category={category} />}
+      {isAccrual && <AccrualComponent />}
     </div>
   );
 };

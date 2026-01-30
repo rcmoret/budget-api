@@ -50,6 +50,7 @@ const handleInputIncrement = (event: React.KeyboardEvent<HTMLInputElement>) => {
 };
 
 type AmountInputProps = {
+  id?: string;
   amount: TInputAmount;
   borderColor?: string;
   classes?: Array<string>;
@@ -102,6 +103,7 @@ const AmountInput = forwardRef<HTMLInputElement, AmountInputProps>(
 
     return (
       <input
+        id={props.id}
         ref={ref}
         name={name}
         step="1.0"

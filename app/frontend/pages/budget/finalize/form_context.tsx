@@ -14,7 +14,7 @@ import {
   useFinalizeEventsForm,
   FinalizeCategory,
 } from "@/lib/hooks/useFinalizeEventsForm";
-import { BudgetFinalizePageData } from "@/components/layout/Header";
+import { BudgetFinalizePageData } from "@/components/layout/header";
 import {
   UpdateCategoryProps,
   FinalizeFormCategory,

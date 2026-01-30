@@ -3,12 +3,8 @@ import { AmountSpan } from "@/components/common/AmountSpan";
 import { Label } from "@/pages/accounts/transactions/partials/label";
 import { Icon } from "@/components/common/Icon";
 import Select, { SingleValue, createFilter } from "react-select";
-import { accrualFilter } from "@/lib/models/budget-items";
-import {
-  AmountInput,
-  inputAmount,
-  TInputAmount,
-} from "@/components/common/AmountInput";
+import { accrualFilter, } from "@/lib/models/budget-items"
+import { AmountInput, inputAmount, TInputAmount } from "@/components/common/AmountInput";
 import { Button } from "@/components/common/Button";
 import { moneyFormatter } from "@/lib/MoneyFormatter";
 import { byNameAndAmount as sortByName } from "@/lib/sort_functions";
@@ -35,8 +31,8 @@ const AddButton = () => {
         <Icon name="plus-circle" />
       </span>
     </Button>
-  );
-};
+  )
+}
 
 const LineItemComponent = (props: {
   detail: { key: string; budgetItemKey: string | null; amount: TInputAmount };
@@ -55,17 +51,17 @@ const LineItemComponent = (props: {
 
   const availableItems = [...items].filter((item) => {
     if (item.key === budgetItemKey) {
-      return true;
+      return true
     } else if (item.isDeleted) {
-      return false;
+      return false 
     } else if (item.month !== month || item.year !== year) {
-      return false;
+      return false
     } else if (item.isMonthly && item.transactionDetails.length) {
-      return false;
+      return false
     } else {
-      return accrualFilter({ item, showAccruals, month, year });
+      return accrualFilter({ item, showAccruals, month, year })
     }
-  });
+  })
 
   const options = availableItems.sort(sortByName).map((item) => ({
     label: `${item.name} (${moneyFormatter(item.remaining, { decorate: true })})`,
@@ -86,13 +82,13 @@ const LineItemComponent = (props: {
     } else {
       updateDetailItem({ key, value: String(ev?.value) });
     }
-  };
+  })
 
   const handleAmountChange = (amt: string) => {
     updateDetailAmount({ key, value: inputAmount({ display: amt }) });
   };
 
-  const value = options.find((item) => item.value === budgetItemKey) || "";
+  const value = options.find((item) => item.value === budgetItemKey) || ""
 
   return (
     <div className="w-full flex flex-row justify-between">
@@ -125,8 +121,8 @@ const LineItemComponent = (props: {
         )}
       </div>
     </div>
-  );
-};
+  )
+}
 
 const Total = () => {
   const { formDetails } = useTransactionFormContext();
@@ -149,8 +145,8 @@ const Total = () => {
         <AddButton />
       </div>
     </div>
-  );
-};
+  )
+}
 
 const BudgetItemsComponent = () => {
   const { formDetails } = useTransactionFormContext();
@@ -168,7 +164,7 @@ const BudgetItemsComponent = () => {
         ))}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export { BudgetItemsComponent };
+export { BudgetItemsComponent }

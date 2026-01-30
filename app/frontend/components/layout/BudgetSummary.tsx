@@ -1,5 +1,5 @@
 import React from "react";
-import { PageData } from "@/components/layout/Header";
+import { PageData } from "@/components/layout/header";
 import { useForm } from "@inertiajs/react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -18,6 +18,7 @@ import { buildQueryParams } from "@/lib/redirect_params";
 import { UrlBuilder } from "@/lib/UrlBuilder";
 import { useToggle } from "@/lib/hooks/useToogle";
 import { useAppConfigContext } from "@/components/layout/Provider";
+import { textColorFor } from "@/lib/context-colors";
 
 const DateDiv = ({ date }: { date: string }) => {
   return <div>{dateParse(date, { format: "monthDay" })}</div>;
@@ -85,7 +86,7 @@ const DateForm = (props: DateFormProps) => {
         <div className="flex justify-between flex-row md:w-4/12 w-6/12">
           <div>
             <button type="submit">
-              <span className="text-green-600">
+              <span className={textColorFor("positiveGreen")}>
                 <Icon name="check-circle" />
               </span>
             </button>
@@ -96,7 +97,7 @@ const DateForm = (props: DateFormProps) => {
               onClick={props.toggleForm}
               disabled={processing}
             >
-              <span className="text-red-400">
+              <span className={textColorFor("negativeAmount")}>
                 <Icon name="times-circle" />
               </span>
             </button>

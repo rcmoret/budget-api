@@ -1,5 +1,6 @@
 import { SetupCategory } from "@/pages/budget/set_up";
 import { AmountSpan } from "@/components/common/AmountSpan";
+import { textColorFor } from "@/lib/context-colors";
 
 type SummaryProps = {
   revenueCategories: Array<SetupCategory>;
@@ -14,8 +15,8 @@ const AmountComponent = (props: { amount: number }) => {
       <AmountSpan
         amount={props.amount}
         zeroColor="text-black"
-        color="text-green-600"
-        negativeColor="text-red-400"
+        color={textColorFor("positiveGreen")}
+        negativeColor={textColorFor("negativeAmount")}
       />
     </div>
   );
