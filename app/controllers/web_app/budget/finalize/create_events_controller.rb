@@ -32,7 +32,7 @@ module WebApp
         end
 
         def change_set
-          @change_set ||= ::Budget::Changes::Rollover.create(interval: interva)
+          @change_set ||= ::Budget::Changes::Rollover.create(interval: interval)
         end
 
         def metadata
