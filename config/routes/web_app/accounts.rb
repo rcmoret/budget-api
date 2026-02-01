@@ -11,5 +11,6 @@ scope "account/:slug", module: :transactions, as: :transactions do
   get "/transactions/(:month)/(:year)", to: "index#call", as: :index
   post "/transaction", to: "create#call", as: :create
   put "/transaction/:key/(:month)/(:year)", to: "update#call", as: :update
+  delete "/transaction/:key/receipt", to: "delete_receipt#call", as: :delete_receipt
   delete "/transaction/:key", to: "delete#call", as: :show
 end

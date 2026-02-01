@@ -12,6 +12,7 @@ import { ClearanceDateComponent } from "./partials/clearance-date";
 import { DescriptionComponent } from "./partials/description-component";
 import { EntryDetailsComponent } from "./partials/entry-details";
 import { EntryActionsComponent } from "./partials/entry-actions-component";
+import { ReceiptDisplayComponent } from "./partials/receipt-display-component";
 
 const TransactionAmountComponent = () => {
   const { transaction, showForm } = useTransactionContext();
@@ -62,6 +63,14 @@ const TransactionShowContent = () => {
         </Cell>
       </div>
       <EntryDetailsComponent />
+      <Cell
+        styling={{
+          width: "w-full md:w-3/12",
+          flexAlign: "justify-start",
+        }}
+      >
+        <ReceiptDisplayComponent />
+      </Cell>
       <Cell
         styling={{
           width: "md:w-[14%] w-full",

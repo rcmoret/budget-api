@@ -3,6 +3,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby "3.2.5"
 
+gem "active_storage_validations"
 gem "alba"
 gem "aws-sdk-s3"
 gem "bcrypt", "~> 3.1.7"

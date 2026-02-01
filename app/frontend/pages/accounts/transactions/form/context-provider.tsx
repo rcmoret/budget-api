@@ -28,12 +28,14 @@ type FormData = {
   details: TFormDetail[];
   isBudgetExclusion: boolean;
   notes: string | null;
+  receipt: File | null;
 };
 
 type TransactionFormContextValue = {
   // Form state
   data: FormData;
   processing: boolean;
+  transaction: TransactionWithBalance;
 
   // Form flags
   isNew: boolean;
@@ -106,11 +108,12 @@ const TransactionFormProvider = (props: ProviderProps) => {
     details,
     isBudgetExclusion,
     notes,
+    receipt: null,
   });
 
   // @ts-ignore
   transform(() => {
-    const { key, details, accountKey, ...txn } = data;
+    const { key, details, accountKey, receipt, ...txn } = data;
     return {
       transaction: {
         ...txn,
@@ -126,6 +129,7 @@ const TransactionFormProvider = (props: ProviderProps) => {
             return { key: detail.key, _destroy: true };
           }
         }),
+        ...(receipt ? { receipt } : {}),
       },
     };
   });
@@ -239,6 +243,7 @@ const TransactionFormProvider = (props: ProviderProps) => {
   const value: TransactionFormContextValue = {
     data,
     processing,
+    transaction,
     isNew,
     isOdd: index % 2 === 1,
     month,

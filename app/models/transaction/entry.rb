@@ -29,6 +29,17 @@ module Transaction
 
     has_one_attached :receipt
 
+    validates :receipt,
+              content_type: {
+                in: %w[image/png image/jpeg application/pdf],
+                message: "must be a PNG, JPG, or PDF file"
+              },
+              size: {
+                less_than: 10.megabytes,
+                message: "must be less than 10MB"
+              },
+              if: -> { receipt.attached? }
+
     scope :cleared, -> { where.not(clearance_date: nil) }
     scope :pending, -> { where(clearance_date: nil) }
     scope :prior_to, lambda { |date, include_pending: false|

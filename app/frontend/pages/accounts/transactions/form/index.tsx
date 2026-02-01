@@ -6,6 +6,7 @@ import { Icon } from "@/components/common/Icon";
 import { Label } from "@/pages/accounts/transactions/partials/label";
 import { BudgetItemsComponent } from "@/pages/accounts/transactions/form/LineItems";
 import { Button } from "@/components/common/Button";
+import { ReceiptUploadComponent } from "@/pages/accounts/transactions/form/receipt-upload-component";
 import Select, { SingleValue } from "react-select";
 import { Row } from "@/components/common/Row";
 import { useToggle } from "@/lib/hooks/useToogle";
@@ -254,6 +255,7 @@ const TransactionFormContent = () => {
           <div className="flex flex-col w-8/12 md:w-2/12 gap-2">
             <CheckNumberComponent />
             <NotesComponent />
+            <ReceiptUploadComponent />
             <BudgetExclusionComponent />
           </div>
           <div className="w-full md:w-3/12 ">
