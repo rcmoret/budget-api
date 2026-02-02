@@ -13,18 +13,17 @@ module Forms
     end
 
     def save
-      receipt_param = params.delete(:receipt)
       transaction_entry.assign_attributes(params)
 
       return false unless valid?
 
       Transaction::Entry.transaction do
-        transaction_entry.tap(&:save).reload
+        transaction_entry.save!
 
         raise ActiveRecord::Rollback unless valid?
       end
 
-      transaction_entry.receipt.attach(receipt_param) if receipt_param.present?
+      transaction_entry.reload
 
       errors.none?
     end
