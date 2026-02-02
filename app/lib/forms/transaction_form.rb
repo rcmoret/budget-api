@@ -13,6 +13,7 @@ module Forms
     end
 
     def save
+      receipt_param = params.delete(:receipt)
       transaction_entry.assign_attributes(params)
 
       return false unless valid?
@@ -22,6 +23,8 @@ module Forms
 
         raise ActiveRecord::Rollback unless valid?
       end
+
+      transaction_entry.receipt.attach(receipt_param) if receipt_param.present?
 
       errors.none?
     end
