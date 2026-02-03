@@ -6,6 +6,9 @@ require "rails/all"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+require_relative "../app/middleware/camel_case_params_transformer"
+require_relative "../app/middleware/json_params_transformer"
+
 module API
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
@@ -13,6 +16,8 @@ module API
 
     config.middleware.use ActionDispatch::Cookies
     config.middleware.use ActionDispatch::Session::CookieStore
+    config.middleware.use JSONParamsTransformer
+    config.middleware.use CamelCaseParamsTransformer
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files

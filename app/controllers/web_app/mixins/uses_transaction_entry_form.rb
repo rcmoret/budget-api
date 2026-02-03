@@ -58,18 +58,22 @@ module WebApp
       end
 
       # rubocop:disable Metrics/CyclomaticComplexity
+      # rubocop:disable Metrics/PerceivedComplexity
       def handle_attribute(key, value)
         case [key, value]
         in ["account_key", *]
           value.blank? ? {} : { account: Account.fetch(current_user_profile, key: value) }
-        in ["details_attributes", *]
-          { details_attributes: value.map { |detail_attrs| handle_detail(detail_attrs) } }
+        in ["details_attributes", Hash => details_hash]
+          { details_attributes: details_hash.values.map { |detail_attrs| handle_detail(detail_attrs) } }
+        in ["details_attributes", Array => details_array]
+          { details_attributes: details_array.map { |detail_attrs| handle_detail(detail_attrs) } }
         in [^key, String => string]
           string.blank? ? { key => nil } : { key => string.strip }
         in [^key, ^value]
           { key => value }
         end
       end
+      # rubocop:enable Metrics/PerceivedComplexity
       # rubocop:enable Metrics/CyclomaticComplexity
 
       def budget_item_look_up(budget_item_key)
