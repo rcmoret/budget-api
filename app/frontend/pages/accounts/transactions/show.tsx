@@ -65,14 +65,6 @@ const TransactionShowContent = () => {
       <EntryDetailsComponent />
       <Cell
         styling={{
-          width: "w-full md:w-3/12",
-          flexAlign: "justify-start",
-        }}
-      >
-        <ReceiptDisplayComponent />
-      </Cell>
-      <Cell
-        styling={{
           width: "md:w-[14%] w-full",
           flexAlign: "md:justify-start justify-end",
           margin: "md:mr-4",
@@ -80,6 +72,7 @@ const TransactionShowContent = () => {
       >
         <EntryActionsComponent />
       </Cell>
+      <ReceiptDisplayComponent />
     </Row>
   );
 };

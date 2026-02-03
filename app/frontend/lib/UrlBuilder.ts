@@ -1,77 +1,63 @@
-type AccountShowProps = {
-  name: "AccountShow";
-  key: string;
+type OptionalProps = {
   queryParams?: string;
   anchor?: string;
 };
 
+type AccountShowProps = {
+  name: "AccountShow";
+  key: string;
+} & OptionalProps;
+
 type AccountIndexProps = {
   name: "AccountIndex";
-  queryParams?: string;
-  anchor?: string;
-};
+} & OptionalProps;
 
 type AccountTransactions = {
   name: "AccountTransactions";
   accountSlug: string;
   month: number | string;
   year: number | string;
-  queryParams?: string;
-  anchor?: string;
-};
+} & OptionalProps;
 
 type AccountTransferProps = {
   name: "AccountTransfer";
-  queryParams?: string;
-  anchor?: string;
-};
+} & OptionalProps;
 
 type BudgetEditProps = {
   name: "BudgetEdit";
   month: number | string;
   year: number | string;
-  queryParams?: string;
-  anchor?: string;
-};
+} & OptionalProps;
 
 type BudgetFinalizePostProps = {
   name: "BudgetFinalize";
   month: number | string;
   year: number | string;
-  queryParams?: string;
-  anchor?: string;
-};
+} & OptionalProps;
 
 type BudgetItemDetailsProps = {
   name: "BudgetItemDetails";
-  queryParams?: string;
   key: string;
-  anchor?: string;
-};
+} & OptionalProps;
 
 type BudgetItemEventsProps = {
   name: "BudgetItemEvents";
   month: number | string;
   year: number | string;
-  queryParams?: string;
-  anchor?: string;
-};
+} & OptionalProps;
 
 type BudgetSetupProps = {
   name: "BudgetSetUp";
   month: number | string;
   year: number | string;
-  queryParams?: string;
-  anchor?: string;
-};
+} & OptionalProps;
 
 type BudgetSetupPutProps = {
   name: "BudgetSetupPut";
   month: number | string;
   year: number | string;
   categorySlug: string;
-  queryParams?: string;
-};
+} & OptionalProps;
 
 type BudgetSetupRemoveEventProps = {
   name: "BudgetSetupRemoveEvent";
@@ -79,60 +65,51 @@ type BudgetSetupRemoveEventProps = {
   year: number | string;
   categorySlug: string;
   key: string;
-  queryParams?: string;
-};
+} & OptionalProps;
 
 type BudgetShowProps = {
   name: "BudgetShow";
   month: number | string;
   year: number | string;
-  queryParams?: string;
-  anchor?: string;
-};
+} & OptionalProps;
 
 type CategoryCreateEventsProps = {
   name: "CategoryCreateEvents";
   month: number | string;
   year: number | string;
-  queryParams?: string;
-  anchor?: string;
-};
+} & OptionalProps;
 
 type CategoryIndexProps = {
   name: "CategoryIndex";
-  queryParams?: string;
-  anchor?: string;
-};
+} & OptionalProps;
 
 type CategorySummaryProps = {
   name: "CategorySummary";
   key: string;
   limit?: number;
-  queryParams?: string;
-  anchor?: string;
-};
+} & OptionalProps;
 
 export type CategoryShowProps = {
   name: "CategoryShow";
   key: string;
-  queryParams?: string;
-  anchor?: string;
-};
+} & OptionalProps;
+
+type TransactionDeleteReceiptProps = {
+  name: "TransactionDeleteReceipt";
+  accountSlug: string;
+  key: string;
+} & OptionalProps;
 
 type TransactionIndexProps = {
   name: "TransactionIndex";
   accountSlug: string;
-  queryParams?: string;
-  anchor?: string;
-};
+} & OptionalProps;
 
 type TransactionShowProps = {
   name: "TransactionShow";
   accountSlug: string;
   key: string;
-  queryParams?: string;
-  anchor?: string;
-};
+} & OptionalProps;
 
 type UrlBuilderProps =
   | AccountIndexProps
@@ -151,6 +128,7 @@ type UrlBuilderProps =
   | CategoryIndexProps
   | CategoryShowProps
   | CategorySummaryProps
+  | TransactionDeleteReceiptProps
   | TransactionIndexProps
   | TransactionShowProps;
 
@@ -216,6 +194,10 @@ const UrlBuilder = (props: UrlBuilderProps) => {
       );
     case "CategoryShow":
       return build(`/budget/category/${props.key}`);
+    case "TransactionDeleteReceipt":
+      return build(
+        `/account/${props.accountSlug}/transaction/${props.key}/receipt`,
+      );
     case "TransactionIndex":
       return build(`/account/${props.accountSlug}/transaction`);
     case "TransactionShow":

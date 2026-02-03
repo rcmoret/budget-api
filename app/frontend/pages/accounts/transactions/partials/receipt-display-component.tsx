@@ -4,11 +4,11 @@ import { router } from "@inertiajs/react";
 import { UrlBuilder } from "@/lib/UrlBuilder";
 import { useTransactionContext } from "../context-provider";
 import { buildQueryParams } from "@/lib/redirect_params";
-import { useAppConfigContext } from "@/components/layout/Provider";
+import { useMonthYearContext } from "@/components/layout/Provider";
 
 const ReceiptDisplayComponent = () => {
   const { transaction } = useTransactionContext();
-  const { appConfig } = useAppConfigContext();
+  const { month, year } = useMonthYearContext();
 
   if (!transaction.receiptUrl) {
     return null;
@@ -26,8 +26,8 @@ const ReceiptDisplayComponent = () => {
       "account",
       transaction.accountSlug,
       "transactions",
-      appConfig.budget.data.month,
-      appConfig.budget.data.year,
+      month,
+      year,
     ]);
 
     const deleteUrl = UrlBuilder({
@@ -41,7 +41,7 @@ const ReceiptDisplayComponent = () => {
   };
 
   return (
-    <div className="flex flex-col gap-2 p-2 border border-gray-300 rounded bg-white">
+    <div className="flex flex-col gap-2 p-2 border border-gray-300 rounded bg-white w-full md:w-1/3">
       <div className="flex flex-row gap-2 items-center justify-between">
         <div className="flex flex-row gap-2 items-center">
           <span className="text-gray-600">

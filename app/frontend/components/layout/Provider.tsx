@@ -98,4 +98,24 @@ const useAppConfigContext = () => {
   return context;
 };
 
-export { useAppConfigContext, AppConfigContext, Provider, TAppConfig };
+const useMonthYearContext = () => {
+  const context = useContext(AppConfigContext);
+  if (!context) {
+    throw new Error(
+      "useMonthYearContext must be used within a Budget Dashboard Item Context Provider",
+    );
+  }
+
+  return {
+    month: context.appConfig.budget.data.month,
+    year: context.appConfig.budget.data.year,
+  };
+};
+
+export {
+  useAppConfigContext,
+  useMonthYearContext,
+  AppConfigContext,
+  Provider,
+  TAppConfig,
+};

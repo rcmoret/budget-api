@@ -3,8 +3,9 @@
 module WebApp
   module Transactions
     class DeleteReceiptController < BaseController
-      include Mixins::HasRedirectParams
+      include Mixins::HasBudgetInterval
       include Mixins::HasAccount
+      include Mixins::HasRedirectParams
 
       before_action -> { redirect_to(home_path) }, if: -> { transaction.nil? }
 

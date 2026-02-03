@@ -19,6 +19,9 @@ export interface AccountTransaction {
   details: AccountTransactionDetail[];
   isBudgetExclusion: boolean;
   notes: string | null;
+  receiptContentType: string | null;
+  receiptFilename: string | null;
+  receiptUrl: string | null;
   shortClearanceDate: string | null;
   transferKey?: string;
   updatedAt: string;
