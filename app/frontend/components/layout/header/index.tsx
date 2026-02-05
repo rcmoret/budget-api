@@ -1,14 +1,15 @@
+import { AccountBudgetSummary, SelectedAccount } from "@/types/budget";
+import { ActionIconButton } from "@/lib/theme/buttons/action-button";
+import { Button } from "@/components/common/Button";
+import { Cell } from "@/components/common/Cell";
+import { DiscretionaryData } from "types/budget";
 import { HeaderButtons } from "./buttons";
 import { HeaderLinks } from "./links";
-import { Row } from "@/components/common/Row";
-import { Cell } from "@/components/common/Cell";
-import { Summary } from "@/components/layout/BudgetSummary";
 import { Icon } from "@/components/common/Icon";
+import { Row } from "@/components/common/Row";
+import { Summary } from "@/components/layout/BudgetSummary";
+import { outlineColor } from "@/lib/theme/colors";
 import { useAppConfigContext } from "@/components/layout/Provider";
-import { Button } from "@/components/common/Button";
-import { AccountBudgetSummary, SelectedAccount } from "@/types/budget";
-import { Point } from "@/components/common/Symbol";
-import { DiscretionaryData } from "types/budget";
 
 type BudgetIndexPageData = {
   name: "budget/index";
@@ -58,14 +59,16 @@ const Header = ({ metadata, data, selectedAccount }: HeaderProps) => {
   return (
     <Row
       styling={{
-        backgroundColor: "bg-gradient-to-l from-gray-50 to-gray-200",
-        padding: "p-4",
+        backgroundColor: "bg-white",
+        padding: "p-2",
         top: "top-0",
       }}
     >
       <Row
         styling={{
-          border: "border-2 border-sky-600",
+          border: `outline outline-2 ${outlineColor("gray")}`,
+          padding: "py-1 px-2",
+          shadow: "shadow-md",
           flexAlign: "justify-between",
           flexWrap: "flex-wrap",
           rounded: "rounded",
@@ -97,13 +100,12 @@ const Header = ({ metadata, data, selectedAccount }: HeaderProps) => {
               padding: "pr-4 py-4",
             }}
           >
-            <Button
-              type="button"
+            <ActionIconButton
               title="Configurations"
               onClick={toggleConfigMenu}
-            >
-              <Icon name="bars" />
-            </Button>
+              icon="bars"
+              color="black"
+            />
           </Cell>
           <Cell styling={{ width: "lg:w-8/12 w-full" }}>
             <Summary

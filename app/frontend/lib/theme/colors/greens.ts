@@ -20,4 +20,4 @@ type TextGreen = `text-${GreenColorOption}`;
 
 export type { GreenBackgrounOption, TextGreen };
 
-export { colorMap, greenBackgrounds };
+export { greenBackgrounds };

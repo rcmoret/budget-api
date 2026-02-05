@@ -6,6 +6,7 @@ import { Icon } from "@/components/common/Icon";
 import { Button } from "@/components/common/Button";
 import { Row } from "@/components/common/Row";
 import { DateFormatter, monthOptions } from "@/lib/DateFormatter";
+import { ActionIconButton } from "@/lib/theme/buttons/action-button";
 
 interface ComponentState {
   isFormShown: boolean;
@@ -46,13 +47,13 @@ const MonthYearNav = (props: ComponentProps) => {
 
   return (
     <div className="my-2">
-      <Button
-        type="button"
+      <ActionIconButton
+        title="month, year navigation"
+        fontSize="text-sm"
         onClick={toggleForm}
-        styling={{ color: "text-blue-300" }}
-      >
-        <Icon name="calendar" />
-      </Button>
+        color="blue"
+        icon="calendar"
+      />
       {isFormShown && (
         <Form
           baseUrl={props.baseUrl}

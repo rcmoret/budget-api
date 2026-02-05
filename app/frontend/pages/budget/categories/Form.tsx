@@ -1,6 +1,6 @@
 import Select from "react-select";
-import { ActionButton } from "@/lib/theme/buttons/action-button";
-import { AmountInput, inputAmount } from "@/components/common/AmountInput";
+import { ActionIconButton } from "@/lib/theme/buttons/action-button";
+import { AmountInput } from "@/components/common/AmountInput";
 import { useCategoryFormContext } from "@/pages/budget/categories/category-form-context";
 import { useCategoriesIndexContext } from "./CategoriesContext";
 import { FormRow, FormRowContainer } from "@/lib/theme/forms/manage";
@@ -182,7 +182,7 @@ const CategoryForm = () => {
         <div className="w-full flex flex-col gap-4">
           <div className="w-full flex flex-col gap-2">
             <div>
-              <ActionButton
+              <ActionIconButton
                 aria-label="Close form"
                 icon="times-circle"
                 onClick={closeForm}

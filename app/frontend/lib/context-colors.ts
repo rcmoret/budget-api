@@ -1,11 +1,14 @@
 import { BgColorOption } from "@/types/component_classes";
-import { TextGreen, colorMap as greenShades } from "@/lib/theme/colors/greens";
+
+const greenShades = {
+  "100": "green-100",
+  "200": "green-200",
+  "300": "green-300",
+  "600": "green-600",
+  "700": "green-700",
+} as const;
 
 type BackgroundFillKey = "blue" | "green";
-
-type BlueColorOptions = "blue-200" | "blue-300" | "blue-400";
-
-type TextBlues = `text-${BlueColorOptions}`;
 
 type TextChartreuses = "text-chartreuse-200" | "text-chartreuse-300";
 
@@ -84,24 +87,20 @@ const borderColor = (color: BorderColors, variant?: keyof BorderColorTuple) => {
   return `border-${borderColors[color][variant ?? "default"]}`;
 };
 
+type BgColorOptionForOptionalProps = {
+  withHover: boolean;
+};
+
 const bgColorFor = (context: ColorContext) => {
   return `bg-${contextColors[context]}`;
 };
 
-type TextColorUnion = TextChartreuses | TextGreen | TextReds | TextSkys;
+type TextColorUnion = TextChartreuses | TextReds | TextSkys;
 
 const textColorFor = (context: ColorContext): TextColorUnion => {
   return `text-${contextColors[context]}` as TextColorUnion;
 };
 
-export type {
-  ColorContext,
-  TextBlues,
-  TextChartreuses,
-  TextGrays,
-  TextGreen,
-  TextReds,
-  TextSkys,
-};
+export type { ColorContext, TextChartreuses, TextGrays, TextReds, TextSkys };
 
 export { backgroundFill, bgColorFor, borderColor, textColorFor };

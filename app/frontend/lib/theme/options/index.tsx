@@ -5,7 +5,7 @@ import { createContext, useContext } from "react";
 // "option" - one of many in a listbox (role="option", aria-selected)
 type SelectionRole = "toggle" | "radio" | "option";
 
-type StatureOption = "default" | "slim";
+type StatureOption = "default" | "slim" | "xl";
 type ColorOption = "chartreuse";
 
 type ThemeOptions = {
@@ -38,12 +38,12 @@ const useSelectionContext = () => {
 };
 
 // Theme configuration
-type ThemeOptionPair = {
+type ThemeSelectionOptions = {
   selected: string;
   unselected: string;
 };
 
-const statureOptions: Record<StatureOption, ThemeOptionPair> = {
+const statureOptions: Record<StatureOption, ThemeSelectionOptions> = {
   default: {
     selected: "p-4 h-12",
     unselected: "px-4 py-2",
@@ -52,9 +52,13 @@ const statureOptions: Record<StatureOption, ThemeOptionPair> = {
     selected: "p-2",
     unselected: "p-2",
   },
+  xl: {
+    selected: "p-4 h-16 text-3xl",
+    unselected: "p-4 h-16 text-3xl",
+  },
 };
 
-const colorOptions: Record<ColorOption, ThemeOptionPair> = {
+const colorOptions: Record<ColorOption, ThemeSelectionOptions> = {
   chartreuse: {
     selected: ["bg-chartreuse-100", "ring-2", "ring-chartreuse-300"].join(" "),
     unselected: [
@@ -233,5 +237,5 @@ const SelectableOption = (props: {
   );
 };
 
-export { SelectionGroup, SelectableOption };
+export { SelectionGroup, SelectableOption, colorOptions };
 export type { SelectionRole, ThemeOptions };

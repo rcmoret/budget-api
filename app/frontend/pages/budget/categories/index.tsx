@@ -8,6 +8,7 @@ import { generateKeyIdentifier } from "@/lib/KeyIdentifier";
 import { Icon } from "@/components/common/Icon";
 import { CategoriesProvider } from "@/pages/budget/categories/CategoriesContext";
 import { CategoryFormProvider } from "@/pages/budget/categories/category-form-context";
+import { ActionButton } from "@/lib/theme/buttons/action-button";
 
 const AddNewComponent = (props: {
   icons: Array<TIcon>;
@@ -20,22 +21,14 @@ const AddNewComponent = (props: {
   if (!isFormShown) {
     return (
       <div>
-        <Button
-          type="button"
+        <ActionButton
+          id="new-category-form"
           onClick={openForm}
-          styling={{
-            backgroundColor: "bg-blue-300",
-            color: "text-white",
-            rounded: "rounded",
-            padding: "px-2 py-1",
-            fontWeight: "font-bold",
-          }}
+          icon="plus-circle"
+          title="Toggle add new category form"
         >
-          ADD NEW{" "}
-          <span className="text-sky-200">
-            <Icon name="plus-circle" />
-          </span>
-        </Button>
+          Add new
+        </ActionButton>
       </div>
     );
   } else {

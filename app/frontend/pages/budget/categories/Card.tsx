@@ -1,4 +1,4 @@
-import { ActionButton } from "@/lib/theme/buttons/action-button";
+import { ActionIconButton } from "@/lib/theme/buttons/action-button";
 import { AmountSpan } from "@/components/common/AmountSpan";
 import { BudgetCategory } from "@/types/budget";
 import {
@@ -46,7 +46,7 @@ const MaturityIntervalComponent = (props: {
   return (
     <div className="w-full">
       <div className="flex flex-row items-center gap-1">
-        <ActionButton
+        <ActionIconButton
           title={`${showList ? "Hide" : "Show"} Maturity Intervals`}
           color="black"
           onClick={toggleShowList}
@@ -164,7 +164,7 @@ const ArchiveComponent = ({ queryParams }: { queryParams: string[] }) => {
         <div>{archivedAt || ""}</div>
       </div>
       <div className="text-right flex justify-end gap-2">
-        <ActionButton
+        <ActionIconButton
           icon="folder-open"
           isEnabled={!processing}
           onClick={onSubmit}
@@ -199,7 +199,7 @@ const ArchiveButton = ({ queryParams }: { queryParams: string[] }) => {
 
   return (
     <form>
-      <ActionButton
+      <ActionIconButton
         onClick={onSubmit}
         isEnabled={!processing}
         color="red"
@@ -233,7 +233,7 @@ const Card = (props: { openForm: () => void }) => {
         </div>
         <div className="text-right flex justify-end gap-2 items-center">
           <div>
-            <ActionButton
+            <ActionIconButton
               title={`Edit ${name}`}
               onClick={openForm}
               color="blue"

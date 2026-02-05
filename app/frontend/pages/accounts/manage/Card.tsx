@@ -5,8 +5,8 @@ import { useForm } from "@inertiajs/react";
 import { UrlBuilder } from "@/lib/UrlBuilder";
 import { buildQueryParams } from "@/lib/redirect_params";
 import {
-  ActionSubmitButton,
-  ActionButton,
+  ActionIconSubmitButton,
+  ActionIconButton,
 } from "@/lib/theme/buttons/action-button";
 
 const ArchivedAtComponent = ({ account }: { account: AccountManage }) => {
@@ -32,9 +32,8 @@ const ArchivedAtComponent = ({ account }: { account: AccountManage }) => {
       <div className="w-4/12 text-sm">archived:</div>
       <div className="w-8/12 text-sm italic text-right flex flex-row justify-end items-center gap-2">
         <div>{account.archivedAt}</div>
-        <form>
-          <ActionSubmitButton
-            onSubmit={onSubmit}
+        <form onSubmit={(e) => { e.preventDefault(); onSubmit(); }}>
+          <ActionIconSubmitButton
             icon="angle-double-right"
             title={
               processing
@@ -65,9 +64,8 @@ const ArchiveButton = (props: { account: AccountManage }) => {
   };
 
   return (
-    <form>
-      <ActionSubmitButton
-        onSubmit={onSubmit}
+    <form onSubmit={(e) => { e.preventDefault(); onSubmit(); }}>
+      <ActionIconSubmitButton
         icon="trash"
         title={
           processing ? "Archiving account..." : `Archive ${props.account.name}`
@@ -100,7 +98,7 @@ const AccountCard = (props: {
         role="group"
         aria-label={`Actions for ${account.name}`}
       >
-        <ActionButton
+        <ActionIconButton
           onClick={showForm}
           icon="edit"
           title={`Edit ${account.name}`}

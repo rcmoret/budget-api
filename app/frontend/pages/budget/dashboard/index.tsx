@@ -1,8 +1,5 @@
 import { useEffect } from "react";
-import {
-  BudgetDashboardProvider,
-  useBudgetDashboardContext,
-} from "@/pages/budget/dashboard/context_provider";
+import { BudgetDashboardProvider } from "@/pages/budget/dashboard/context_provider";
 import {
   BudgetData,
   BudgetItem,
@@ -12,24 +9,13 @@ import {
 import { useAppConfigContext } from "@/components/layout/Provider";
 import { useDraftEvents } from "@/lib/hooks/useDraftEvents";
 import { AdjustForm } from "@/pages/budget/item_components/AdjustForm";
-import { FilterComponent as BaseFilterComponent } from "@/pages/budget/filter";
+import { BudgetMenu } from "@/pages/budget/dashboard/menu";
 import { AccountSummary } from "@/types/account";
 import {
   DayToDayColumn,
   MonthlyColumn,
 } from "@/pages/budget/dashboard/columns";
 import { KeyboardNav } from "@/components/layout/ApplicationListners";
-
-const FilterComponent = () => {
-  const { itemFilter } = useBudgetDashboardContext();
-
-  return (
-    <BaseFilterComponent
-      filterTerm={itemFilter.term}
-      setFilterTerm={itemFilter.setTerm}
-    />
-  );
-};
 
 export type DraftItem = {
   key: string;
@@ -92,7 +78,7 @@ const BudgetComponent = (props: ComponentProps) => {
     >
       <KeyboardNav />
       <AdjustForm />
-      <FilterComponent />
+      <BudgetMenu />
       <DayToDayColumn />
       <MonthlyColumn />
     </BudgetDashboardProvider>

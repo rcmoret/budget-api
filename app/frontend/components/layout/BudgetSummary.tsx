@@ -4,13 +4,11 @@ import { useForm } from "@inertiajs/react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { parseISO as parseIsoDate } from "date-fns";
+import { ButtonStyleLink } from "@/lib/theme/buttons/action-button";
 
 import { AccountBudgetSummary, SelectedAccount } from "@/types/budget";
-import { ButtonStyleLink } from "@/components/common/Link";
-import { Button } from "@/components/common/Button";
 import { Cell } from "@/components/common/Cell";
 import { DateFormatter, dateParse } from "@/lib/DateFormatter";
-import { Icon } from "@/components/common/Icon";
 import { MonthYearNav } from "@/components/layout/MonthYearNav";
 import { Point } from "@/components/common/Symbol";
 import { Row } from "@/components/common/Row";
@@ -18,7 +16,10 @@ import { buildQueryParams } from "@/lib/redirect_params";
 import { UrlBuilder } from "@/lib/UrlBuilder";
 import { useToggle } from "@/lib/hooks/useToogle";
 import { useAppConfigContext } from "@/components/layout/Provider";
-import { textColorFor } from "@/lib/context-colors";
+import {
+  ActionIconButton,
+  ActionIconSubmitButton,
+} from "@/lib/theme/buttons/action-button";
 
 const DateDiv = ({ date }: { date: string }) => {
   return <div>{dateParse(date, { format: "monthDay" })}</div>;
@@ -85,22 +86,21 @@ const DateForm = (props: DateFormProps) => {
         </div>
         <div className="flex justify-between flex-row md:w-4/12 w-6/12">
           <div>
-            <button type="submit">
-              <span className={textColorFor("positiveGreen")}>
-                <Icon name="check-circle" />
-              </span>
-            </button>
+            <ActionIconSubmitButton
+              title="Update start and end dates"
+              icon="check-circle"
+              isEnabled={!processing}
+              isBusy={processing}
+            />
           </div>
           <div>
-            <button
-              type="button"
+            <ActionIconButton
+              title="close date form"
+              isEnabled={!processing}
               onClick={props.toggleForm}
-              disabled={processing}
-            >
-              <span className={textColorFor("negativeAmount")}>
-                <Icon name="times-circle" />
-              </span>
-            </button>
+              icon="times-circle"
+              color="red"
+            />
           </div>
         </div>
       </div>
@@ -121,11 +121,12 @@ const ProgressBar = ({ percentage }: { percentage: string }) => {
 
 const ToggleDateEditButton = (props: { toggleForm: () => void }) => {
   return (
-    <Button type="button" onClick={props.toggleForm}>
-      <span className="text-blue-300 text-xs">
-        <Icon name="edit" />
-      </span>
-    </Button>
+    <ActionIconButton
+      onClick={props.toggleForm}
+      fontSize="text-xs"
+      title="Edit Budget start and end dates"
+      icon="edit"
+    />
   );
 };
 
@@ -272,30 +273,31 @@ const BudgetSummary = (props: ComponentProps) => {
             }}
           >
             <ButtonStyleLink
-              href={visitPrevUrl}
+              href={visitNextUrl}
+              title={`visit ${nextMonth.month} ${nextMonth.year} budget`}
               id="month-year-pagination-prev"
+              icon="angle-double-left"
             >
-              <span className="text-orange-600">
-                <Icon name="angle-double-left" />{" "}
-              </span>
-              {DateFormatter({
-                month: prevMonth.month,
-                year: prevMonth.year,
-                format: "shortMonthYear",
-              })}
+              <div>
+                {DateFormatter({
+                  month: prevMonth.month,
+                  year: prevMonth.year,
+                  format: "shortMonthYear",
+                })}
+              </div>
             </ButtonStyleLink>
             <ButtonStyleLink
-              href={visitNextUrl}
+              href={visitPrevUrl}
+              title={`visit ${prevMonth.month} ${prevMonth.year} budget`}
               id="month-year-pagination-next"
+              icon="angle-double-right"
+              flexDirection="flex-row-reverse"
             >
               {DateFormatter({
                 month: nextMonth.month,
                 year: nextMonth.year,
                 format: "shortMonthYear",
-              })}{" "}
-              <span className="text-orange-600">
-                <Icon name="angle-double-right" />
-              </span>
+              })}
             </ButtonStyleLink>
           </Row>
           {props.children}
