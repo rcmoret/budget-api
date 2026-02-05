@@ -6,17 +6,8 @@ const colorMap = {
   "700": "gray-700",
 } as const;
 
-type GrayColorOption = (typeof colorMap)[keyof typeof colorMap];
-
 const grayBackgrounds = {
   disabled: `bg-${colorMap["600"]}`,
 } as const;
 
-type GrayBackgroundOption =
-  (typeof grayBackgrounds)[keyof typeof grayBackgrounds];
-
-type TextGray = `text-${GrayColorOption}`;
-
-export type { GrayBackgroundOption, TextGray };
-
-export { colorMap, grayBackgrounds };
+export { grayBackgrounds };

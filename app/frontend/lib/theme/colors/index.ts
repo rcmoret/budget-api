@@ -39,6 +39,38 @@ const pairedColors = {
   sky: [mutedColors.sky, "sky-100"],
 } as const;
 
+type BackgroundColorOptions = "green";
+
+type BackgroundColorMapEntry = Record<
+  BackgroundColorOptions,
+  {
+    primary: string;
+    hover: string;
+  }
+>;
+
+const backgroundColors: BackgroundColorMapEntry = {
+  green: {
+    primary: primaryColors.green,
+    hover: "green-700",
+  },
+};
+
+type BorderColorKey = "gray";
+
+type BorderColorVariant = "medium";
+
+const borderColors: Record<
+  BorderColorKey,
+  Record<BorderColorVariant, string>
+> = {
+  gray: { medium: neutralColors.medium },
+};
+
+const outlineColor = (key: BorderColorKey, variant?: BorderColorVariant) => {
+  return ["outline", borderColors[key][variant ?? "medium"]].join("-");
+};
+
 const themeColors = {
   accentColors,
   mutedColors,
@@ -47,11 +79,17 @@ const themeColors = {
   primaryColors,
 } as const;
 
+// uncomment and add to export when needed
+// borderColors,
+// borderColors as ringColors,
+
 export {
   themeColors,
   accentColors,
+  backgroundColors,
   mutedColors,
   neutralColors,
+  outlineColor,
   pairedColors,
   primaryColors,
 };

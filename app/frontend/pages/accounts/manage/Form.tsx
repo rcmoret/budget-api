@@ -1,5 +1,8 @@
 import { AccountManage } from "@/types/account";
-import { ActionButton } from "@/lib/theme/buttons/action-button";
+import {
+  ActionButton,
+  ActionIconButton,
+} from "@/lib/theme/buttons/action-button";
 import { Button } from "@/components/common/Button";
 import { FormRow } from "@/lib/theme/forms/manage";
 import { FormSubmitButton } from "@/lib/theme/buttons/form-submit-button";
@@ -131,7 +134,7 @@ const AccountForm = (props: {
       <div className="w-96 border-b border-gray700 flex flex-row flex-wrap justify-between pb-2">
         <div className="hidden">{key}</div>
         <div>
-          <ActionButton
+          <ActionIconButton
             onClick={closeForm}
             color="blue"
             icon="times-circle"
@@ -222,16 +225,14 @@ const NewForm = (props: { closeForm: () => void }) => {
 const NewButton = (props: { openForm: () => void }) => {
   return (
     <div className="w-full border-b border-gray700 pb-2">
-      <Button
-        type="button"
+      <ActionButton
+        id="new-account-form"
         onClick={props.openForm}
-        styling={{ color: "text-blue-300" }}
+        icon="plus-circle"
+        title="Show for to add new account"
       >
-        <div className="w-full flex flex-row gap-2">
-          <Icon name="plus-circle" />
-          <div>Add New</div>
-        </div>
-      </Button>
+        Add new
+      </ActionButton>
     </div>
   );
 };

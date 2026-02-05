@@ -19,6 +19,7 @@ import { buildQueryParams } from "@/lib/redirect_params";
 import { SubmitButton } from "@/components/common/Button";
 import { Icon } from "@/components/common/Icon";
 import { FilterComponent } from "@/pages/budget/filter";
+import { AccrualToggle } from "@/pages/budget/dashboard/menu";
 
 const TransferComponent = () => {
   const { appConfig, setAppConfig } = useAppConfigContext();
@@ -217,10 +218,18 @@ const Transactions = (props: ComponentProps) => {
     <div className="bg-gray-50 w-full mx-auto flex flex-col pb-20">
       <div className="w-full overflow-hidden shadow-lg">
         <TransferComponent />
-        <FilterComponent
-          filterTerm={filterTerm}
-          setFilterTerm={setFilterTerm}
-        />
+        <div className="w-full flex flex-row justify-between items-end">
+          <FilterComponent
+            id="account-transactions-filter"
+            filterTerm={filterTerm}
+            setFilterTerm={setFilterTerm}
+          />
+          <div className="w-full px-2 flex flex-row-reverse">
+            <div className="w-60 flex flex-col gap-1 items-end pb-4">
+              <AccrualToggle />
+            </div>
+          </div>
+        </div>
         <AddNewComponent
           index={index}
           isFormShown={showFormKey === "__new__"}

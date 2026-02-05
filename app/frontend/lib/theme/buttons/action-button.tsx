@@ -1,6 +1,7 @@
 import { MouseEventHandler } from "react";
 import { Icon, IconName } from "@/components/common/Icon";
 import { textColorFor } from "@/lib/context-colors";
+import { Link } from "@inertiajs/react";
 
 type ColorOption = "black" | "blue" | "green" | "red";
 
@@ -19,13 +20,12 @@ type SharedActionButtonType = {
   isBusy?: boolean; // For loading/processing states
 };
 
-type ActionSubmitButtonType = SharedActionButtonType & {
-  onSubmit: MouseEventHandler<HTMLButtonElement>;
-};
+type ActionSubmitButtonType = SharedActionButtonType;
 
 type ActionButtonType = SharedActionButtonType & {
-  onClick: MouseEventHandler<HTMLButtonElement>;
   buttonType?: "button";
+  fontSize?: "text-xs" | "text-sm" | "text-lg";
+  onClick: MouseEventHandler<HTMLButtonElement>;
 };
 
 const IconComponent = (props: { name: IconName }) => {
@@ -38,7 +38,6 @@ const IconComponent = (props: { name: IconName }) => {
 
 const buttonClasses = [
   "bg-transparent",
-  "text-lg",
   "p-1",
   "m-1",
   // Focus styles for keyboard navigation
@@ -47,17 +46,22 @@ const buttonClasses = [
   "focus-visible:ring-offset-2",
   "focus-visible:ring-blue-300",
   "rounded",
-  // Transition for smooth state changes
   "transition-opacity",
 ];
 
-const ActionButton = (props: ActionButtonType) => {
+const ActionIconButton = (props: ActionButtonType) => {
   const isEnabled = props.isEnabled ?? !props.isEnabled;
   const isBusy = props.isBusy ?? false;
   const buttonType = props.buttonType || "button";
   const textColor = textColorOptions[props.color ?? "blue"];
   const disabledStyles = !isEnabled ? "opacity-50 cursor-not-allowed" : "";
-  const buttonClassName = [...buttonClasses, textColor, disabledStyles]
+  const fontSize = props.fontSize ?? "text-lg";
+  const buttonClassName = [
+    ...buttonClasses,
+    textColor,
+    disabledStyles,
+    fontSize,
+  ]
     .filter(Boolean)
     .join(" ");
 
@@ -77,7 +81,7 @@ const ActionButton = (props: ActionButtonType) => {
   );
 };
 
-const ActionSubmitButton = (props: ActionSubmitButtonType) => {
+const ActionIconSubmitButton = (props: ActionSubmitButtonType) => {
   const isEnabled = !!props.isEnabled;
   const isBusy = props.isBusy ?? false;
   const textColor = textColorOptions[props.color ?? "green"];
@@ -88,7 +92,6 @@ const ActionSubmitButton = (props: ActionSubmitButtonType) => {
 
   return (
     <button
-      onSubmit={props.onSubmit}
       type="submit"
       aria-label={props.title}
       title={props.title}
@@ -102,4 +105,96 @@ const ActionSubmitButton = (props: ActionSubmitButtonType) => {
   );
 };
 
-export { ActionSubmitButton, ActionButton };
+type ButtonStyleProps = {
+  id: string;
+  children: React.ReactNode;
+  flexDirection?: "flex-row" | "flex-row-reverse";
+  icon?: IconName;
+};
+
+const buttonStyleClassName = (props: {
+  flexDirection?: "flex-row" | "flex-row-reverse";
+}) => {
+  const flexDirection = props.flexDirection ?? "flex-row";
+  return [
+    "bg-blue-300",
+    flexDirection,
+    "font-semibold",
+    "gap-2",
+    "group",
+    "h-6",
+    "hover:bg-blue-400",
+    "hover:text-white",
+    "inline-flex",
+    "items-center",
+    "leading-3",
+    "outline",
+    "outline-1",
+    "outline-sky-200",
+    "hover:outline-sky-300",
+    "px-4",
+    "py-0",
+    "rounded",
+    "shadow-md",
+    "text-sm",
+    "text-white",
+  ].join(" ");
+};
+
+const ButtonIcon = (props: { icon: IconName }) => {
+  return (
+    <div className="text-sky-100 text-sm group-hover:text-sky-200">
+      <Icon name={props.icon} />
+    </div>
+  );
+};
+
+const ButtonStyleLink = (
+  props: ButtonStyleProps & { title: string; href: string },
+) => {
+  const className = buttonStyleClassName({
+    flexDirection: props.flexDirection,
+  });
+
+  return (
+    <Link
+      href={props.href}
+      id={props.id}
+      className={className}
+      title={props.title}
+      aria-label={props.title}
+    >
+      {!!props.icon && <ButtonIcon icon={props.icon} />}
+      {props.children}
+    </Link>
+  );
+};
+
+const ActionButton = (
+  props: ButtonStyleProps & { title: string; onClick: () => void },
+) => {
+  const className = buttonStyleClassName({
+    flexDirection: props.flexDirection,
+  });
+
+  return (
+    <button
+      type="button"
+      id={props.id}
+      aria-label={props.title}
+      title={props.title}
+      className={className}
+      onClick={props.onClick}
+    >
+      {!!props.icon && <ButtonIcon icon={props.icon} />}
+      {props.children}
+    </button>
+  );
+};
+
+export {
+  ActionButton,
+  ActionIconSubmitButton,
+  ActionIconButton,
+  ButtonStyleLink,
+};
