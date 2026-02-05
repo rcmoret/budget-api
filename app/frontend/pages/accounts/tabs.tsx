@@ -4,6 +4,8 @@ import { AccountShow, AccountSummary } from "@/types/account";
 import { Row } from "@/components/common/Row";
 import { AmountSpan } from "@/components/common/AmountSpan";
 import { byPriority as sortByPriority } from "@/lib/sort_functions";
+import { primaryColors } from "@/lib/theme/colors";
+import { borderClasses } from "@/lib/theme/colors/borders";
 
 interface AccountSummaryProps {
   account: AccountSummary;
@@ -11,8 +13,9 @@ interface AccountSummaryProps {
 }
 
 const IndividualTab = ({ account, isSelected }: AccountSummaryProps) => {
-  const bgColor = isSelected ? "bg-sky-200" : "bg-gray-100";
-  const borderColor = isSelected ? "border-sky-600" : "border-gray-400";
+  const bgColor = isSelected ? `bg-${primaryColors.yellow}` : "bg-gray-100";
+  const borderColor = isSelected ? "charteuese" : "gray";
+  const borderClassName = borderClasses(borderColor, { width: 2, side: "b" });
   const padding = "p-4";
   const width =
     "sm:min-w-[30%] md:min-w-[10%] lg:min-w-[12%] whitespace-nowrap";
@@ -21,9 +24,7 @@ const IndividualTab = ({ account, isSelected }: AccountSummaryProps) => {
   return (
     <div className={styles}>
       <InertiaLink href={`/account/${account.slug}/transactions`}>
-        <div className={`border-b-2 ${borderColor} border-solid`}>
-          {account.name}
-        </div>
+        <div className={borderClassName}>{account.name}</div>
         <div className="text-right">
           <AmountSpan amount={account.balance} />
         </div>

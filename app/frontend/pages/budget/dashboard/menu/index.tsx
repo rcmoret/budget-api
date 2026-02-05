@@ -4,6 +4,7 @@ import { useAppConfigContext } from "@/components/layout/Provider";
 import { DateFormatter } from "@/lib/DateFormatter";
 import { ButtonStyleLink } from "@/lib/theme/buttons/action-button";
 import { useBudgetDashboardContext } from "@/pages/budget/dashboard/context_provider";
+import { borderClasses } from "@/lib/theme/colors/borders";
 
 const FilterComponent = () => {
   const { itemFilter } = useBudgetDashboardContext();
@@ -144,8 +145,18 @@ const DeletedItemsToggle = () => {
 };
 
 const BudgetMenu = () => {
+  const wrapperClassName = [
+    "flex",
+    "flex-row",
+    "items-end",
+    "pb-2",
+    "justify-between",
+    "w-full",
+    borderClasses("gray", { side: "b", width: 2 }),
+  ].join(" ");
+
   return (
-    <div className="w-full flex flex-row justify-between items-end">
+    <div className={wrapperClassName}>
       <FilterComponent />
       <div className="w-full px-2 flex flex-row-reverse">
         <div className="w-60 flex flex-col gap-1 items-end">

@@ -1,4 +1,3 @@
-import { useContext } from "react";
 import { BudgetItemEvent, BudgetItemTransaction } from "@/types/budget";
 import { Row, RowStylingProps } from "@/components/common/Row";
 import { dateParse } from "@/lib/DateFormatter";

@@ -1,42 +1,46 @@
+const contextColors = {};
+
 const primaryColors = {
-  blue: "blue-300",
-  charteuese: "chartreuse-300",
-  green: "green-600",
-  purple: "purple-200",
-  red: "red-400",
-  sky: "sky-200",
+  blue: "blue-300", // hsl(213, 97%, 87%)
+  charteuese: "chartreuse-300", // hsl(82, 100%, 50%)
+  green: "green-600", // hsl(142, 71%, 45%)
+  purple: "purple-200", // hsl(276, 100%, 87%)
+  red: "red-400", // hsl(0, 91%, 71%)
+  sky: "sky-200", // hsl(204, 94%, 94%)
+  yellow: "yellow-100", //hsl(52, 40%, 87%)
 } as const;
 
 const accentColors = {
-  green: primaryColors.charteuese,
-  red: "red-500",
-  blue: primaryColors.sky,
+  green: primaryColors.charteuese, // hsl(82, 100%, 50%)
+  red: "red-500", // hsl(0, 84%, 60%)
+  blue: primaryColors.sky, // hsl(204, 94%, 94%)
 } as const;
 
 const mutedColors = {
-  blue: "blue-muted",
-  charteuese: "chartreuse-50",
-  green: "green-muted",
-  purple: "purple-muted",
-  red: "red-muted",
-  sky: "sky-50",
+  blue: "blue-muted", // hsl(213, 50%, 95%)
+  charteuese: "chartreuse-50", // hsl(82, 100%, 97%)
+  green: "green-muted", // hsl(142, 50%, 95%)
+  purple: "purple-muted", // hsl(276, 50%, 95%)
+  red: "red-muted", // hsl(0, 50%, 95%)
+  sky: "sky-50", // hsl(204, 100%, 97%)
+  yellow: "yellow-50", //hsl(52, 18%, 93%)
 } as const;
 
 const neutralColors = {
-  black: "black",
-  white: "white",
-  lightest: "gray-50",
-  light: "gray-100",
-  soft: "gray-200",
-  muted: "gray-300",
-  medium: "gray-400",
-  dark: "gray-600",
-  darker: "gray-800",
+  black: "black", // hsl(0, 0%, 0%)
+  white: "white", // hsl(0, 0%, 100%)
+  lightest: "gray-50", // hsl(0, 0%, 98%)
+  light: "gray-100", // hsl(0, 0%, 96%)
+  soft: "gray-200", // hsl(0, 0%, 90%)
+  muted: "gray-300", // hsl(0, 0%, 83%)
+  medium: "gray-400", // hsl(0, 0%, 74%)
+  dark: "gray-600", // hsl(0, 0%, 52%)
+  darker: "gray-800", // hsl(0, 0%, 32%)
 } as const;
 
 const pairedColors = {
-  gray: [neutralColors.light, neutralColors.soft],
-  sky: [mutedColors.sky, "sky-100"],
+  gray: [neutralColors.light, neutralColors.soft], // hsl(0, 0%, 96%) & hsl(0, 0%, 90%)
+  sky: [mutedColors.sky, "sky-100"], // hsl(204, 100%, 97%) & hsl(204, 94%, 94%)
 } as const;
 
 type BackgroundColorOptions = "green";
@@ -51,24 +55,9 @@ type BackgroundColorMapEntry = Record<
 
 const backgroundColors: BackgroundColorMapEntry = {
   green: {
-    primary: primaryColors.green,
-    hover: "green-700",
+    primary: primaryColors.green, // hsl(142, 71%, 45%)
+    hover: "green-700", // hsl(142, 72%, 29%)
   },
-};
-
-type BorderColorKey = "gray";
-
-type BorderColorVariant = "medium";
-
-const borderColors: Record<
-  BorderColorKey,
-  Record<BorderColorVariant, string>
-> = {
-  gray: { medium: neutralColors.medium },
-};
-
-const outlineColor = (key: BorderColorKey, variant?: BorderColorVariant) => {
-  return ["outline", borderColors[key][variant ?? "medium"]].join("-");
 };
 
 const themeColors = {
@@ -83,13 +72,29 @@ const themeColors = {
 // borderColors,
 // borderColors as ringColors,
 
+const gradients = {
+  charteuese: {
+    full: primaryColors.charteuese,
+    muted: "chartreuse-100",
+  },
+};
+
+const positiveGreen = primaryColors.green;
+const negativeRed = primaryColors.red;
+const previouslyBudgeted = primaryColors.sky;
+const currentlyBudgeted = primaryColors.purple;
+
 export {
   themeColors,
   accentColors,
   backgroundColors,
+  currentlyBudgeted,
+  gradients,
   mutedColors,
+  negativeRed,
   neutralColors,
-  outlineColor,
   pairedColors,
+  positiveGreen,
+  previouslyBudgeted,
   primaryColors,
 };

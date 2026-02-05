@@ -3,6 +3,7 @@ import { Row } from "@/components/common/Row";
 import { PendingMonthItem } from "@/pages/budget/dashboard/items/pending-monthly";
 import { DayToDayItem } from "@/pages/budget/dashboard/items/day-to-day";
 import { ClearedMonthItem } from "@/pages/budget/dashboard/items/cleared-monthly";
+import { SectionHeader } from "@/lib/theme/section";
 
 import { useAppConfigContext } from "@/components/layout/Provider";
 import {
@@ -160,21 +161,7 @@ const Section = (props: { title: string; children: React.ReactNode }) => (
       padding: "px-2",
     }}
   >
-    <Row
-      styling={{
-        backgroundColor: "bg-gradient-to-l from-chartreuse-200 to-green-100",
-        margin: "mb-1",
-        fontWeight: "font-semibold",
-        fontSize: "text-xl",
-        rounded: "rounded",
-        overflow: "overflow-hidden",
-        padding: "p-2",
-      }}
-    >
-      <Point>
-        <span className="underline">{props.title}</span>
-      </Point>
-    </Row>
+    <SectionHeader title={props.title} />
     {props.children}
   </Row>
 );
