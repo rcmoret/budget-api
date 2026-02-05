@@ -1,12 +1,12 @@
 import { moneyFormatter } from "@/lib/MoneyFormatter";
-import { primaryColors, neutralColors } from "@/lib/theme/colors";
+import { textBlack, textGreen, textRed } from "@/lib/theme/colors/text";
 
 type AmountColorKey = "red" | "green" | "black";
 
 const colorMap: Record<AmountColorKey, string> = {
-  red: `text-${primaryColors.red}`,
-  green: `text-${primaryColors.green}`,
-  black: `text-${neutralColors.black}`,
+  red: textRed,
+  green: textGreen,
+  black: textBlack,
 };
 
 interface ComponentProps {

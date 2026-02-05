@@ -1,4 +1,4 @@
-import { FormSubmitButton } from "@/lib/theme/buttons";
+import { FormSubmitButton } from "@/lib/theme/buttons/form-submit-button";
 import { useFinalizeFormContext } from "./form_context";
 
 const FinalizeSubmitButton = () => {

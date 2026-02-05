@@ -5,7 +5,6 @@ import { useToggle } from "@/lib/hooks/useToogle";
 import { Button } from "@/components/common/Button";
 import { dateParse } from "@/lib/DateFormatter";
 import { useBudgetDashboardContext } from "@/pages/budget/dashboard/context_provider";
-import { textColorFor } from "@/lib/context-colors";
 
 const TransactionButton = (props: { toggleTransactions: () => void }) => {
   return (
@@ -83,9 +82,9 @@ const TransactionDetailLineItem = (props: {
         <div className="font-bold">
           <AmountSpan
             amount={transaction.amount}
-            zeroColor="text-black"
-            color={textColorFor("positiveGreen")}
-            negativeColor={textColorFor("negativeAmount")}
+            zeroColor="black"
+            positiveColor="green"
+            negativeColor="red"
           />
         </div>
       </div>
@@ -129,9 +128,9 @@ const Discretionary = () => {
         <div className="w-4/12 text-right font-bold">
           <AmountSpan
             amount={transactionsTotal}
-            color={textColorFor("positiveGreen")}
-            negativeColor={textColorFor("negativeAmount")}
-            zeroColor="text-black"
+            positiveColor="green"
+            negativeColor="red"
+            zeroColor="black"
           />
         </div>
       </Row>
@@ -145,9 +144,9 @@ const Discretionary = () => {
         <div className="w-4/12 text-right font-bold">
           <AmountSpan
             amount={overUnderBudget}
-            color={textColorFor("positiveGreen")}
-            negativeColor={textColorFor("negativeAmount")}
-            zeroColor="text-black"
+            positiveColor="green"
+            negativeColor="red"
+            zeroColor="black"
           />
         </div>
       </Row>
@@ -161,9 +160,9 @@ const Discretionary = () => {
         <div className="w-4/12 text-right font-bold">
           <AmountSpan
             amount={amount}
-            color={textColorFor("positiveGreen")}
-            negativeColor={textColorFor("negativeAmount")}
-            zeroColor="text-black"
+            positiveColor="green"
+            negativeColor="red"
+            zeroColor="black"
           />
         </div>
       </Row>

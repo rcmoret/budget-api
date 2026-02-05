@@ -1,14 +1,12 @@
 import { AccountBudgetSummary, SelectedAccount } from "@/types/budget";
 import { ActionIconButton } from "@/lib/theme/buttons/action-button";
-import { Button } from "@/components/common/Button";
 import { Cell } from "@/components/common/Cell";
 import { DiscretionaryData } from "types/budget";
 import { HeaderButtons } from "./buttons";
 import { HeaderLinks } from "./links";
-import { Icon } from "@/components/common/Icon";
 import { Row } from "@/components/common/Row";
 import { Summary } from "@/components/layout/BudgetSummary";
-import { outlineColor } from "@/lib/theme/colors";
+import { outlineClasses } from "@/lib/theme/colors/borders";
 import { useAppConfigContext } from "@/components/layout/Provider";
 
 type BudgetIndexPageData = {
@@ -66,7 +64,7 @@ const Header = ({ metadata, data, selectedAccount }: HeaderProps) => {
     >
       <Row
         styling={{
-          border: `outline outline-2 ${outlineColor("gray")}`,
+          border: outlineClasses("gray", { width: 2 }),
           padding: "py-1 px-2",
           shadow: "shadow-md",
           flexAlign: "justify-between",

@@ -1,18 +1,12 @@
 import { AmountSpan } from "@/components/common/AmountSpan";
 import { useSetupEventsFormContext } from "@/pages/budget/set_up";
-import { textColorFor } from "@/lib/context-colors";
 
 type FontSizeType = "sm" | "base" | "xl";
 
 const AmountComponent = (props: { amount: number }) => {
   return (
     <div>
-      <AmountSpan
-        amount={props.amount}
-        zeroColor="text-black"
-        color={textColorFor("positiveGreen")}
-        negativeColor={textColorFor("negativeAmount")}
-      />
+      <AmountSpan amount={props.amount} zeroColor="black" negativeColor="red" />
     </div>
   );
 };

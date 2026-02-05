@@ -95,12 +95,6 @@ const bgColorFor = (context: ColorContext) => {
   return `bg-${contextColors[context]}`;
 };
 
-type TextColorUnion = TextChartreuses | TextReds | TextSkys;
-
-const textColorFor = (context: ColorContext): TextColorUnion => {
-  return `text-${contextColors[context]}` as TextColorUnion;
-};
-
 export type { ColorContext, TextChartreuses, TextGrays, TextReds, TextSkys };
 
-export { backgroundFill, bgColorFor, borderColor, textColorFor };
+export { backgroundFill, bgColorFor, borderColor };

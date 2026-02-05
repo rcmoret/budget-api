@@ -1,15 +1,20 @@
 import { MouseEventHandler } from "react";
 import { Icon, IconName } from "@/components/common/Icon";
-import { textColorFor } from "@/lib/context-colors";
 import { Link } from "@inertiajs/react";
+import {
+  textBlack,
+  textBlue,
+  textGreen,
+  textRed,
+} from "@/lib/theme/colors/text";
 
 type ColorOption = "black" | "blue" | "green" | "red";
 
 const textColorOptions: Record<ColorOption, string> = {
-  black: "text-black",
-  blue: "text-blue-300 hover:text-blue-400",
-  green: `${textColorFor("positiveGreen")} hover:text-green-800`,
-  red: `text-red-300 hover:text-red-400`,
+  black: textBlack,
+  blue: `${textBlue} hover:text-blue-400`,
+  green: `${textGreen} hover:text-green-800`,
+  red: `${textRed} hover:text-red-400`,
 };
 
 type SharedActionButtonType = {

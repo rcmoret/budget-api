@@ -1,11 +1,8 @@
 import { DraftItem } from "../dashboard";
 import { AmountSpan } from "@/components/common/AmountSpan";
-import { SubmitButton } from "@/components/common/Button";
 import { FormSubmitButton } from "@/lib/theme/buttons/form-submit-button";
 import { StripedRow } from "@/components/common/Row";
-import { Icon } from "@/components/common/Icon";
 import { useBudgetDashboardContext } from "@/pages/budget/dashboard/context_provider";
-import { textColorFor } from "@/lib/context-colors";
 
 const LineItem = (props: { item: DraftItem }) => {
   const { form } = useBudgetDashboardContext();
@@ -144,17 +141,16 @@ const AdjustForm = () => {
             <div className="w-4/12 text-right">
               <AmountSpan
                 amount={discretionary.overUnderBudget}
-                color={textColorFor("positiveGreen")}
-                negativeColor={textColorFor("negativeAmount")}
-                zeroColor="text-black"
+                negativeColor="red"
+                zeroColor="black"
               />
             </div>
             <div className="w-4/12 text-right">
               <AmountSpan
                 amount={updatedDiscretionary.overUnderBudget}
-                color={textColorFor("positiveGreen")}
-                negativeColor={textColorFor("negativeAmount")}
-                zeroColor="text-black"
+                positiveColor="green"
+                negativeColor="red"
+                zeroColor="black"
               />
             </div>
           </div>
@@ -172,9 +168,9 @@ const AdjustForm = () => {
             <div className="w-6/12 font-semibold">
               <AmountSpan
                 amount={bottomLineChange}
-                color={textColorFor("positiveGreen")}
-                negativeColor={textColorFor("negativeAmount")}
-                zeroColor="text-black"
+                positiveColor="green"
+                negativeColor="red"
+                zeroColor="black"
               />
             </div>
           </div>

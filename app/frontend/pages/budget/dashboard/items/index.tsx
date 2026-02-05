@@ -23,7 +23,6 @@ import { UrlBuilder } from "@/lib/UrlBuilder";
 import { buildQueryParams } from "@/lib/redirect_params";
 import { inputAmount } from "@/components/common/AmountInput";
 import { useToggle } from "@/lib/hooks/useToogle";
-import { TextColor } from "@/types/components/text-classes";
 import { useBudgetDashboardContext } from "@/pages/budget/dashboard/context_provider";
 import { useBudgetDashboardItemContext } from "@/pages/budget/dashboard/items/context_provider";
 import { ItemDetailHistory } from "./details";
@@ -33,7 +32,11 @@ import {
   CategoryAveragesProvider,
   useCategoryAveragesContext,
 } from "@/components/common/budget/category-chart";
-import { bgColorFor, backgroundFill, textColorFor } from "@/lib/context-colors";
+import { bgColorFor } from "@/lib/context-colors";
+import {
+  textCurrentlyBudgeted,
+  textPreviouslyBudgeted,
+} from "@/lib/theme/colors/text";
 
 const PerDayLineItem = (props: {
   title: string;
@@ -57,7 +60,7 @@ const PerDayDetails = () => {
   const percentOfBudget = remainingPerDay / budgetedPerDay - 1;
   let prefix: "" | "+" | "-" = "";
   let label = "";
-  let color: TextColor = "text-black";
+  let color: "black" | "red" | "green" = "black";
   if (Math.abs(percentOfBudget) < 0.001) {
     // this will get rounded to 100
     label = "Percent of prorated budget";
@@ -65,12 +68,12 @@ const PerDayDetails = () => {
     label = "Percent behind prorated budget";
     prefix = "-";
     if (percentOfBudget < -0.25) {
-      color = textColorFor("negativeAmount");
+      color = "red";
     }
   } else {
     label = "Percent ahead of prorated budget";
     prefix = "+";
-    color = textColorFor("positiveGreen");
+    color = "green";
   }
 
   return (
@@ -93,7 +96,7 @@ const PerDayDetails = () => {
             prefix={prefix}
             amount={percentOfBudget * 100}
             absolute={true}
-            color={color}
+            zeroColor={color}
             classes={["font-semibold"]}
           />
         </PerDayLineItem>
@@ -202,7 +205,7 @@ const CategoryAveragesComponent = () => {
       month={month}
       year={year}
     >
-      <div className="flex flex-col">
+      <div className="flex flex-col mt-4">
         <CategoryAverages />
         <SummaryUpdateButton />
       </div>
@@ -227,18 +230,16 @@ const PrevVsCurrentlyBudgetedIndicator = () => {
     100,
   );
   return (
-    <div className="w-full px-4 flex flex-col gap-0">
-      <div className="flex flex-row gap-2 items-center">
-        <div className={`text-2xl ${textColorFor("previouslyBudgeted")}`}>
-          &bull;
+    <div className="w-full px-4 flex flex-col gap-2 mt-2">
+      <div className="w-full gap-0">
+        <div className="flex flex-row gap-2 items-center h-4">
+          <div className={`text-2xl ${textPreviouslyBudgeted}`}>&bull;</div>
+          <div className="text-sm">Previously Budgeted</div>
         </div>
-        <div className="text-sm">Previously Budgeted</div>
-      </div>
-      <div className="flex flex-row gap-2 items-center">
-        <div className={`text-2xl ${textColorFor("currentlyBudgeted")}`}>
-          &bull;
+        <div className="flex flex-row gap-2 items-center h-4">
+          <div className={`text-2xl ${textCurrentlyBudgeted}`}>&bull;</div>
+          <div className="text-sm">Currently Budgeted</div>
         </div>
-        <div className="text-sm">Currently Budgeted</div>
       </div>
       <div className="h-2 w-full overflow-hidden rounded-lg flex flex-row">
         <div
@@ -274,8 +275,8 @@ const ItemContainer = (props: { children?: React.ReactNode }) => {
       }}
     >
       <NameRow showDetails={showDetails} toggleDetails={toggleDetails} />
-      <PrevVsCurrentlyBudgetedIndicator />
       {children}
+      <PrevVsCurrentlyBudgetedIndicator />
       <CategoryAveragesComponent />
       {item.isAccrual && <AccrualRow item={item} />}
       <ActionableIcons />
@@ -505,11 +506,7 @@ const NameRow = (props: NameRowProps) => {
             width: "w-4/12",
           }}
         >
-          <AmountSpan
-            color="text-gray-800"
-            amount={amount}
-            absolute={absolute}
-          />
+          <AmountSpan zeroColor="black" amount={amount} absolute={absolute} />
         </Cell>
       </Row>
     </>
@@ -540,9 +537,9 @@ const DifferenceLineItem = () => {
       >
         <AmountSpan
           amount={difference * -1}
-          color={textColorFor("positiveGreen")}
-          negativeColor={textColorFor("negativeAmount")}
-          zeroColor="text-black"
+          positiveColor="green"
+          negativeColor="red"
+          zeroColor="black"
           absolute={true}
         />
       </Cell>
