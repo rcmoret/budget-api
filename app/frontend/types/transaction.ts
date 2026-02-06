@@ -21,6 +21,7 @@ export interface AccountTransaction {
   notes: string | null;
   receiptContentType: string | null;
   receiptFilename: string | null;
+  receiptUploadedAt: string | null;
   receiptUrl: string | null;
   shortClearanceDate: string | null;
   transferKey?: string;

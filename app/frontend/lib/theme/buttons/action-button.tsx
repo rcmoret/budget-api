@@ -14,7 +14,7 @@ const textColorOptions: Record<ColorOption, string> = {
   black: textBlack,
   blue: `${textBlue} hover:text-blue-400`,
   green: `${textGreen} hover:text-green-800`,
-  red: `${textRed} hover:text-red-400`,
+  red: `${textRed} hover:text-red-500`,
 };
 
 type SharedActionButtonType = {

@@ -1,14 +1,76 @@
+import { ActionIconButton } from "@/lib/theme/buttons/action-button";
+import {
+  CaretComponent,
+  DetailWrapper,
+  SummaryWithDetailsProvider,
+} from "@/lib/theme/summary-with-details";
 import { Icon } from "@/components/common/Icon";
-import { Button } from "@/components/common/Button";
-import { router } from "@inertiajs/react";
 import { UrlBuilder } from "@/lib/UrlBuilder";
-import { useTransactionContext } from "../context-provider";
 import { buildQueryParams } from "@/lib/redirect_params";
+import { router } from "@inertiajs/react";
 import { useMonthYearContext } from "@/components/layout/Provider";
+import { useTransactionContext } from "../context-provider";
+import { borderClasses } from "@/lib/theme/colors/borders";
+import { dateParse } from "@/lib/DateFormatter";
+import { textBlue, textCharcoal } from "@/lib/theme/colors/text";
 
 const ReceiptDisplayComponent = () => {
+  return (
+    <SummaryWithDetailsProvider description="transaction receipt">
+      <ReceiptComponent />
+    </SummaryWithDetailsProvider>
+  );
+};
+
+const ImgPreview = () => {
+  const { transaction } = useTransactionContext();
+
+  if (!transaction.receiptUrl) {
+    return null;
+  }
+
+  return (
+    <div className="mt-2">
+      <a
+        href={transaction.receiptUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <img
+          src={transaction.receiptUrl}
+          alt="Receipt"
+          className="max-w-48 max-h-48 border border-gray-300 rounded cursor-pointer hover:opacity-80"
+        />
+      </a>
+    </div>
+  );
+};
+
+const PdfPreview = () => {
+  const { transaction } = useTransactionContext();
+
+  if (!transaction.receiptUrl) {
+    return null;
+  }
+
+  return (
+    <div className="text-sm text-gray-600">
+      <a
+        href={transaction.receiptUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-blue-600 hover:text-blue-800"
+      >
+        View PDF
+      </a>
+    </div>
+  );
+};
+
+const ReceiptComponent = () => {
   const { transaction } = useTransactionContext();
   const { month, year } = useMonthYearContext();
+  // const { showDetail } = useSummaryWithDetailsContext();
 
   if (!transaction.receiptUrl) {
     return null;
@@ -40,62 +102,44 @@ const ReceiptDisplayComponent = () => {
     router.delete(deleteUrl);
   };
 
+  const borderClassName = borderClasses("gray");
+
   return (
-    <div className="flex flex-col gap-2 p-2 border border-gray-300 rounded bg-white w-full md:w-1/3">
+    <div
+      className={`flex flex-col gap-2 p-2 ${borderClassName} rounded bg-transparent w-full md:w-1/3`}
+    >
       <div className="flex flex-row gap-2 items-center justify-between">
         <div className="flex flex-row gap-2 items-center">
-          <span className="text-gray-600">
+          <CaretComponent />
+          <span className={textCharcoal}>
             <Icon name={isPdf ? "file-pdf" : "file-image"} />
           </span>
-          <span className="text-sm text-gray-600">
-            {transaction.receiptFilename}
+          <span className={`text-sm ${textCharcoal}`}>
+            Receipt uploaded at{" "}
+            {dateParse(String(transaction.receiptUploadedAt))}
           </span>
-        </div>
-
-        <div className="flex flex-row gap-2">
-          <a
-            href={transaction.receiptUrl}
-            download
-            className="text-blue-600 hover:text-blue-800"
-          >
-            <Icon name="download" />
-          </a>
-          <Button type="button" onClick={handleDelete}>
-            <span className="text-red-600">
-              <Icon name="trash" />
-            </span>
-          </Button>
         </div>
       </div>
 
-      {isImage && (
-        <div className="mt-2">
+      <DetailWrapper>
+        {isImage && <ImgPreview />}
+        {isPdf && <PdfPreview />}
+        <div className="flex flex-row gap-4 justify-end items-center">
           <a
             href={transaction.receiptUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+            download
+            className={`${textBlue} hover:text-blue-400`}
           >
-            <img
-              src={transaction.receiptUrl}
-              alt="Receipt"
-              className="max-w-48 max-h-48 border border-gray-300 rounded cursor-pointer hover:opacity-80"
-            />
+            <Icon name="download" />
           </a>
+          <ActionIconButton
+            onClick={handleDelete}
+            color="red"
+            icon="trash"
+            title="delete receipt"
+          />
         </div>
-      )}
-
-      {isPdf && (
-        <div className="text-sm text-gray-600">
-          <a
-            href={transaction.receiptUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 hover:text-blue-800"
-          >
-            View PDF
-          </a>
-        </div>
-      )}
+      </DetailWrapper>
     </div>
   );
 };

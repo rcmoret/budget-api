@@ -16,6 +16,7 @@ module WebApp
       attribute :receipt_url, conditional: :receipt_attached?
       attribute :receipt_filename, conditional: :receipt_attached?
       attribute :receipt_content_type, conditional: :receipt_attached?
+      attribute :receipt_uploaded_at, conditional: :receipt_attached?
 
       delegate :slug, :key, to: :account, prefix: true
       delegate :key, to: :transfer, prefix: true
@@ -32,13 +33,11 @@ module WebApp
         receipt.filename.to_s
       end
 
-      def receipt_content_type
-        receipt.content_type
+      def receipt_uploaded_at
+        receipt_created_at
       end
 
-      def receipt_attached?
-        receipt.attached?
-      end
+      delegate :content_type, :attached?, :created_at, to: :receipt, prefix: true
     end
   end
 end
