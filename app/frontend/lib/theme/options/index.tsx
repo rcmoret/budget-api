@@ -1,4 +1,7 @@
 import { createContext, useContext } from "react";
+import { ringClasses } from "@/lib/theme/colors/borders";
+import { bgChareueseMuted } from "@/lib/theme/colors/backgrounds";
+import { textCharcoal } from "@/lib/theme/colors/text";
 
 // "toggle" - standalone toggle buttons (aria-pressed)
 // "radio" - one of many mutually exclusive options (role="radio", aria-checked)
@@ -60,12 +63,13 @@ const statureOptions: Record<StatureOption, ThemeSelectionOptions> = {
 
 const colorOptions: Record<ColorOption, ThemeSelectionOptions> = {
   chartreuse: {
-    selected: ["bg-chartreuse-100", "ring-2", "ring-chartreuse-300"].join(" "),
+    selected: [bgChareueseMuted, ringClasses("charteuese", { width: 2 })].join(
+      " ",
+    ),
     unselected: [
-      "hover:ring-2",
-      "hover:ring-chartreuse-300",
-      "hover:bg-chartreuse-50",
-      "hover:text-chartreuse-900",
+      ringClasses("charteuese", { width: 2, prefix: "hover" }),
+      `hover:${bgChareueseMuted}`,
+      `hover:${textCharcoal}`,
     ].join(" "),
   },
 };

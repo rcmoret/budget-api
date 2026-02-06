@@ -273,8 +273,8 @@ const BudgetSummary = (props: ComponentProps) => {
             }}
           >
             <ButtonStyleLink
-              href={visitNextUrl}
-              title={`visit ${nextMonth.month} ${nextMonth.year} budget`}
+              href={visitPrevUrl}
+              title={`visit ${prevMonth.month} ${prevMonth.year} budget`}
               id="month-year-pagination-prev"
               icon="angle-double-left"
             >
@@ -287,8 +287,8 @@ const BudgetSummary = (props: ComponentProps) => {
               </div>
             </ButtonStyleLink>
             <ButtonStyleLink
-              href={visitPrevUrl}
-              title={`visit ${prevMonth.month} ${prevMonth.year} budget`}
+              href={visitNextUrl}
+              title={`visit ${nextMonth.month} ${nextMonth.year} budget`}
               id="month-year-pagination-next"
               icon="angle-double-right"
               flexDirection="flex-row-reverse"

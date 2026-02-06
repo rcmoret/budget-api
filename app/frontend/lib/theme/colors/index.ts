@@ -18,7 +18,7 @@ const accentColors = {
 
 const mutedColors = {
   blue: "blue-muted", // hsl(213, 50%, 95%)
-  charteuese: "chartreuse-50", // hsl(82, 100%, 97%)
+  charteuese: "chartreuse-100", // hsl(112, 28%, 88%)
   green: "green-muted", // hsl(142, 50%, 95%)
   purple: "purple-muted", // hsl(276, 50%, 95%)
   red: "red-muted", // hsl(0, 50%, 95%)
@@ -75,7 +75,7 @@ const themeColors = {
 const gradients = {
   charteuese: {
     full: primaryColors.charteuese,
-    muted: "chartreuse-100",
+    muted: mutedColors.charteuese,
   },
 };
 

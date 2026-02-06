@@ -35,29 +35,29 @@ const TransactionShowContent = () => {
     <Row
       styling={{
         backgroundColor: bgColor,
-        flexAlign: "justify-start",
+        flexAlign: "justify-between md:justify-start",
         flexWrap: "flex-wrap",
         padding: "px-4 py-2",
       }}
     >
-      <div className="flex w-full md:w-6/12">
+      <div className="flex w-full md:w-7/12">
         <Cell
           styling={{
             width: "w-full",
             flexAlign: "justify-between",
             display: "flex",
-            gap: "gap-2",
+            gap: "gap-4",
             flexWrap: "flex-wrap md:flex-nowrap",
           }}
         >
           <ClearanceDateComponent />
-          <div className="w-4/12">
+          <div className="w-6/12">
             <DescriptionComponent />
           </div>
-          <div className="w-4/12 flex flex-row justify-end gap-12 text-right">
+          <div className="w-2/12 flex flex-row justify-end gap-12 text-right">
             <TransactionAmountComponent />
           </div>
-          <div className="w-full md:w-4/12 flex flex-row justify-between mt-4 md:mt-0">
+          <div className="w-full md:w-2/12 flex flex-row justify-between mt-4 md:mt-0">
             <BalanceComponent />
           </div>
         </Cell>
@@ -66,7 +66,7 @@ const TransactionShowContent = () => {
       <Cell
         styling={{
           width: "md:w-[14%] w-full",
-          flexAlign: "md:justify-start justify-end",
+          flexAlign: "justify-end",
           margin: "md:mr-4",
         }}
       >

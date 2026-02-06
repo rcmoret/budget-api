@@ -3,11 +3,12 @@ import { AmountSpan } from "@/components/common/AmountSpan";
 import { useRef, useState } from "react";
 import { UrlBuilder } from "@/lib/UrlBuilder";
 import {
-  bgColorFor,
-  borderColor,
-  backgroundFill,
-  ColorContext,
-} from "@/lib/context-colors";
+  bgCurrentlyBudgeted,
+  bgDeposited,
+  bgPreviouslyBudgeted,
+  bgSpent,
+} from "@/lib/theme/colors/backgrounds";
+import { borderColor, backgroundFill } from "@/lib/context-colors";
 import axios from "axios";
 
 type MonthlyData = {
@@ -25,6 +26,9 @@ type GenericCategory = {
 };
 
 const Bar = (props: MonthlyData & { maxAmount: number }) => {
+  const {
+    category: { isExpense },
+  } = useCategoryAveragesContext();
   const budgetedWidth = (100 * Math.abs(props.budgeted)) / props.maxAmount;
   const spentWidth =
     (100 * Math.abs(props.transactionsTotal)) / props.maxAmount;
@@ -45,16 +49,16 @@ const Bar = (props: MonthlyData & { maxAmount: number }) => {
           style={{ width: budgetedWidth.toFixed(2) + "%" }}
         >
           <div
-            className={`h-2 ${bgColorFor("previouslyBudgeted")}`}
+            className={`h-2 ${bgPreviouslyBudgeted}`}
             style={{ width: previousShare.toFixed(2) + "%" }}
           ></div>
           <div
-            className={`h-2 ${bgColorFor("currentlyBudgeted")}`}
+            className={`h-2 ${bgCurrentlyBudgeted}`}
             style={{ width: currentShare.toFixed(2) + "%" }}
           ></div>
         </div>
         <div
-          className={`h-2 ${bgColorFor("spent")} rounded-lg`}
+          className={`h-2 ${isExpense ? bgSpent : bgDeposited} rounded-lg`}
           style={{ width: spentWidth.toFixed(2) + "%" }}
         ></div>
       </div>
@@ -81,15 +85,14 @@ const Bar = (props: MonthlyData & { maxAmount: number }) => {
 const BarLabel = (props: {
   children: React.ReactNode;
   color: string;
-  bgType: ColorContext;
+  bgColor: string;
 }) => {
-  const className = [bgColorFor(props.bgType), props.color, "rounded"].join(
-    " ",
-  );
+  const { children, color, bgColor } = props;
+  const className = [bgColor, color, "rounded"].join(" ");
 
   return (
     <div className="w-4/12 p-0.5">
-      <div className={className}>{props.children}</div>
+      <div className={className}>{children}</div>
     </div>
   );
 };
@@ -97,6 +100,10 @@ const BarLabel = (props: {
 const MonthlyDataChart = (props: {
   data: Array<MonthlyData>;
 }): JSX.Element | null => {
+  const {
+    category: { isExpense },
+  } = useCategoryAveragesContext();
+
   if (!props.data || props.data.length === 0) return null;
 
   const maxAmount = Math.max(
@@ -108,14 +115,17 @@ const MonthlyDataChart = (props: {
   return (
     <div className="w-full flex flex-col gap-1">
       <div className="w-full text-center flex flex-row justify-between text-xs items-center">
-        <BarLabel bgType="previouslyBudgeted" color="text-white">
+        <BarLabel bgColor={bgPreviouslyBudgeted} color="text-white">
           Previous
         </BarLabel>
-        <BarLabel bgType="currentlyBudgeted" color="text-white">
+        <BarLabel bgColor={bgCurrentlyBudgeted} color="text-white">
           Current
         </BarLabel>
-        <BarLabel bgType="negativeAmount" color="text-white">
-          Spent
+        <BarLabel
+          bgColor={isExpense ? bgSpent : bgDeposited}
+          color="text-white"
+        >
+          {isExpense ? "Spent" : "Deposited"}
         </BarLabel>
       </div>
       <div className="w-full flex flex-row justify-between">

@@ -147,7 +147,8 @@ const DeletedItemsToggle = () => {
 const BudgetMenu = () => {
   const wrapperClassName = [
     "flex",
-    "flex-row",
+    "flex-col",
+    "md:flex-row",
     "items-end",
     "pb-2",
     "justify-between",
@@ -158,8 +159,8 @@ const BudgetMenu = () => {
   return (
     <div className={wrapperClassName}>
       <FilterComponent />
-      <div className="w-full px-2 flex flex-row-reverse">
-        <div className="w-60 flex flex-col gap-1 items-end">
+      <div className="w-full px-2 flex flex-row md:flex-row-reverse">
+        <div className="w-full md:w-60 flex flex-col gap-1 items-start md:items-end justify-between">
           <AccrualToggle />
           <ClearedMonthlyToggle />
           <DeletedItemsToggle />
