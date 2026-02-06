@@ -2228,6 +2228,11 @@ video {
   color: rgb(255 255 255 / var(--tw-text-opacity, 1));
 }
 
+.hover\:text-red-500:hover {
+  --tw-text-opacity: 1;
+  color: hsl(352 80% 48% / var(--tw-text-opacity, 1));
+}
+
 .hover\:opacity-80:hover {
   opacity: 0.8;
 }
