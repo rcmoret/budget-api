@@ -39,11 +39,9 @@ const CaretComponent = () => {
 const DetailWrapper = (props: { children: React.ReactNode }) => {
   const { showDetail } = useSummaryWithDetailsContext();
 
-  if (!showDetail) {
-    return <div className="hidden">{props.children}</div>;
-  } else {
-    return props.children;
-  }
+  return (
+    <details className={showDetail ? "" : "hidden"}>{props.children}</details>
+  );
 };
 
 const SummaryWithDetailsProvider = (

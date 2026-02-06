@@ -76,7 +76,7 @@ const contextColors = {
   actionItem: "blue-300",
   "actionItem:hover": "blue-400",
   currentlyBudgeted: "chartreuse-200",
-  previouslyBudgeted: "sky-200",
+  previouslyBudgeted: "purple-200",
   negativeAmount: "red-400",
   positiveGreen: greenShades["600"],
 } as const;

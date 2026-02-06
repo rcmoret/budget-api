@@ -28,9 +28,17 @@ const BudgetItemList = () => {
   const textClass = noDescription && singleItem ? "text-base" : "text-sm";
 
   return details.sort(byAmount).map((detail) => (
-    <div key={detail.key} className={`w-full ${textClass}`}>
-      {detail.budgetCategoryName || "Petty Cash"}{" "}
-      {detail.iconClassName && <Icon name={detail.iconClassName} />}
+    <div
+      key={detail.key}
+      className={`w-full flex flex-row justify-between ${textClass}`}
+    >
+      <div>
+        {detail.budgetCategoryName || "Petty Cash"}{" "}
+        {detail.iconClassName && <Icon name={detail.iconClassName} />}
+      </div>
+      <div>
+        <AmountSpan amount={detail.amount} />
+      </div>
     </div>
   ));
 };
@@ -62,7 +70,6 @@ const DescriptionComponent = () => {
       <div className="w-full flex flex-col">
         <DescriptionLine />
         <BudgetItemList />
-        {!noDescription && details.length > 1 && <LineItemAmounts />}
       </div>
     </Button>
   );

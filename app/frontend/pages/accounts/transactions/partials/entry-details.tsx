@@ -45,7 +45,7 @@ const EntryDetailsComponent = () => {
     <Cell
       styling={{
         display: "flex",
-        width: "w-full md:w-4/12",
+        width: "w-full md:w-2/12",
         flexAlign: "justify-start",
         flexWrap: "flex-wrap",
       }}

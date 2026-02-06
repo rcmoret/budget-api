@@ -108,7 +108,7 @@ const ReceiptComponent = () => {
     <div
       className={`flex flex-col gap-2 p-2 ${borderClassName} rounded bg-transparent w-full md:w-1/3`}
     >
-      <div className="flex flex-row gap-2 items-center justify-between">
+      <summary className="flex flex-row gap-2 items-center justify-between">
         <div className="flex flex-row gap-2 items-center">
           <CaretComponent />
           <span className={textCharcoal}>
@@ -119,7 +119,7 @@ const ReceiptComponent = () => {
             {dateParse(String(transaction.receiptUploadedAt))}
           </span>
         </div>
-      </div>
+      </summary>
 
       <DetailWrapper>
         {isImage && <ImgPreview />}

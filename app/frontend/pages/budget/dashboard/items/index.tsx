@@ -32,7 +32,10 @@ import {
   CategoryAveragesProvider,
   useCategoryAveragesContext,
 } from "@/components/common/budget/category-chart";
-import { bgColorFor } from "@/lib/context-colors";
+import {
+  bgCurrentlyBudgeted,
+  bgPreviouslyBudgeted,
+} from "@/lib/theme/colors/backgrounds";
 import {
   textCurrentlyBudgeted,
   textPreviouslyBudgeted,
@@ -243,11 +246,11 @@ const PrevVsCurrentlyBudgetedIndicator = () => {
       </div>
       <div className="h-2 w-full overflow-hidden rounded-lg flex flex-row">
         <div
-          className={`h-2 ${bgColorFor("previouslyBudgeted")}`}
+          className={`h-2 ${bgPreviouslyBudgeted}`}
           style={{ width: previouslyBudgetedWidth + "%" }}
         ></div>
         <div
-          className={`h-2 ${bgColorFor("currentlyBudgeted")}`}
+          className={`h-2 ${bgCurrentlyBudgeted}`}
           style={{ width: currentlyBudgetedWidth + "%" }}
         ></div>
       </div>
