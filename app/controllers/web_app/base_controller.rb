@@ -25,7 +25,7 @@ module WebApp
 
     def metadata
       {
-        user_key: current_user_profile.key,
+        user_key: current_user_profile&.key,
         namespace: namespace,
         prev_selected_account_path: session[:selected_account_path].to_s,
       }

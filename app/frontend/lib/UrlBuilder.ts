@@ -111,6 +111,24 @@ type TransactionShowProps = {
   key: string;
 } & OptionalProps;
 
+type PortfolioIndexProps = {
+  name: "PortfolioIndex";
+  email: string;
+} & OptionalProps;
+
+type PortfolioCreateItemProps = {
+  name: "PortfolioCreateItem";
+} & OptionalProps;
+
+type PortfolioUpdateItemProps = {
+  name: "PortfolioUpdateItem";
+  key: string;
+} & OptionalProps;
+
+type PortfolioUpdateAboutProps = {
+  name: "PortfolioUpdateAbout";
+} & OptionalProps;
+
 type UrlBuilderProps =
   | AccountIndexProps
   | AccountShowProps
@@ -130,7 +148,11 @@ type UrlBuilderProps =
   | CategorySummaryProps
   | TransactionDeleteReceiptProps
   | TransactionIndexProps
-  | TransactionShowProps;
+  | TransactionShowProps
+  | PortfolioIndexProps
+  | PortfolioCreateItemProps
+  | PortfolioUpdateItemProps
+  | PortfolioUpdateAboutProps;
 
 const UrlBuilder = (props: UrlBuilderProps) => {
   const { name, anchor, queryParams } = props;
@@ -202,6 +224,14 @@ const UrlBuilder = (props: UrlBuilderProps) => {
       return build(`/account/${props.accountSlug}/transaction`);
     case "TransactionShow":
       return build(`/account/${props.accountSlug}/transaction/${props.key}`);
+    case "PortfolioIndex":
+      return build(`/portfolio/items?email=${props.email}`);
+    case "PortfolioCreateItem":
+      return build("/portfolio/item");
+    case "PortfolioUpdateItem":
+      return build(`/portfolio/item/${props.key}`);
+    case "PortfolioUpdateAbout":
+      return build("/portfolio/about");
   }
 };
 

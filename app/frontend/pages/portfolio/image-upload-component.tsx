@@ -1,26 +1,44 @@
-import { Icon } from "@/components/common/Icon";
 import { Button } from "@/components/common/Button";
-import { useTransactionFormContext } from "./context-provider";
-import { useState, useRef } from "react";
+import { Icon } from "@/components/common/Icon";
+import { useRef, useState } from "react";
 
-const ReceiptUploadComponent = () => {
-  const { data, updateFormData, transaction } = useTransactionFormContext();
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+type FormProps = {
+  description: string;
+  image: File | null;
+  previewUrl: string | null;
+  title: string;
+};
+
+type ImageComponentProps = {
+  image: File | null;
+  previewUrl: string | null;
+  description: string;
+  title: string;
+  setData: (p: FormProps) => void;
+};
+
+const ImageUploadComponent = (props: ImageComponentProps) => {
+  const [previewUrl, setPreviewUrl] = useState<string | null>(props.previewUrl);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const hasExistingReceipt = transaction.receiptUrl && !data.receipt;
+  const data = {
+    title: props.title,
+    previewUrl,
+    description: props.description,
+  };
 
   const handleFileChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
     const file = ev.target.files?.[0];
+
     if (!file) return;
 
-    // Validate file type
     const validTypes = [
       "image/png",
       "image/jpeg",
       "image/jpg",
       "application/pdf",
     ];
+
     if (!validTypes.includes(file.type)) {
       alert("Please upload a PNG, JPG, or PDF file");
       return;
@@ -32,7 +50,7 @@ const ReceiptUploadComponent = () => {
       return;
     }
 
-    updateFormData({ name: "receipt", value: file });
+    props.setData({ ...data, image: file });
 
     // Create preview for images only
     if (file.type.startsWith("image/")) {
@@ -47,7 +65,7 @@ const ReceiptUploadComponent = () => {
   };
 
   const handleRemove = () => {
-    updateFormData({ name: "receipt", value: null });
+    props.setData({ ...data, image: null });
     setPreviewUrl(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
@@ -67,11 +85,8 @@ const ReceiptUploadComponent = () => {
           </span>
         </Button>
 
-        {(data.receipt || hasExistingReceipt) && (
+        {!!props.image && (
           <div className="flex flex-row gap-2 items-center">
-            <span className="text-sm text-gray-600">
-              {data.receipt ? data.receipt.name : transaction.receiptFilename}
-            </span>
             <Button type="button" onClick={handleRemove}>
               <span className="text-red-600">
                 <Icon name="times-circle" />
@@ -85,23 +100,11 @@ const ReceiptUploadComponent = () => {
         <div className="mt-2">
           <img
             src={previewUrl}
-            alt="Receipt preview"
+            alt="Image preview"
             className="max-w-32 max-h-32 border border-gray-300 rounded"
           />
         </div>
       )}
-
-      {hasExistingReceipt &&
-        !previewUrl &&
-        transaction.receiptContentType?.startsWith("image/") && (
-          <div className="mt-2">
-            <img
-              src={transaction.receiptUrl}
-              alt="Current receipt"
-              className="max-w-32 max-h-32 border border-gray-300 rounded"
-            />
-          </div>
-        )}
 
       <input
         ref={fileInputRef}
@@ -114,4 +117,4 @@ const ReceiptUploadComponent = () => {
   );
 };
 
-export { ReceiptUploadComponent };
+export { ImageUploadComponent };

@@ -688,6 +688,10 @@ video {
   margin-top: 1.5rem;
 }
 
+.mb-8 {
+  margin-bottom: 2rem;
+}
+
 .block {
   display: block;
 }
@@ -718,6 +722,10 @@ video {
 
 .table-caption {
   display: table-caption;
+}
+
+.grid {
+  display: grid;
 }
 
 .hidden {
@@ -768,6 +776,10 @@ video {
   height: 2.4rem;
 }
 
+.h-48 {
+  height: 12rem;
+}
+
 .max-h-32 {
   max-height: 8rem;
 }
@@ -782,6 +794,14 @@ video {
 
 .min-h-\[18px\] {
   min-height: 18px;
+}
+
+.min-h-\[150px\] {
+  min-height: 150px;
+}
+
+.min-h-\[100px\] {
+  min-height: 100px;
 }
 
 .w-1\/12 {
@@ -880,6 +900,10 @@ video {
   max-width: 24rem;
 }
 
+.max-w-6xl {
+  max-width: 72rem;
+}
+
 .grow {
   flex-grow: 1;
 }
@@ -933,6 +957,10 @@ video {
 
 .cursor-wait {
   cursor: wait;
+}
+
+.grid-cols-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
 }
 
 .flex-row {
@@ -1055,6 +1083,12 @@ video {
   gap: 1px;
 }
 
+.space-y-4 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(1rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(1rem * var(--tw-space-y-reverse));
+}
+
 .self-end {
   align-self: flex-end;
 }
@@ -1101,6 +1135,10 @@ video {
 
 .whitespace-nowrap {
   white-space: nowrap;
+}
+
+.whitespace-pre-wrap {
+  white-space: pre-wrap;
 }
 
 .rounded {
@@ -1539,6 +1577,11 @@ video {
   --tw-gradient-to: #fff var(--tw-gradient-to-position);
 }
 
+.object-cover {
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
 .p-0\.5 {
   padding: 0.125rem;
 }
@@ -1553,6 +1596,14 @@ video {
 
 .p-4 {
   padding: 1rem;
+}
+
+.p-3 {
+  padding: 0.75rem;
+}
+
+.p-6 {
+  padding: 1.5rem;
 }
 
 .px-0\.5 {
@@ -1603,6 +1654,11 @@ video {
 .py-4 {
   padding-top: 1rem;
   padding-bottom: 1rem;
+}
+
+.py-12 {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
 }
 
 .pb-1 {
@@ -2459,6 +2515,10 @@ video {
     max-width: 40%;
   }
 
+  .md\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .md\:flex-row {
     flex-direction: row;
   }
@@ -2508,5 +2568,9 @@ video {
 
   .lg\:min-w-\[12\%\] {
     min-width: 12%;
+  }
+
+  .lg\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }

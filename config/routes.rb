@@ -20,5 +20,12 @@ Rails.application.routes.draw do
     devise_scope :user_profile do
       get "/sign-out", to: Devise::SessionsController.action(:destroy)
     end
+
+    scope "/portfolio", module: :portfolio do
+      get "/items", to: WebApp::Portfolio::ItemsIndexController.action(:call)
+      post "/item", to: WebApp::Portfolio::CreateItemController.action(:call)
+      put "/item/:key", to: WebApp::Portfolio::UpdateItemController.action(:call)
+      put "/about", to: WebApp::Portfolio::UpdateAboutMeController.action(:call)
+    end
   end
 end

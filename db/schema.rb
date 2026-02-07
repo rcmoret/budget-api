@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2026_01_20_011926) do
+ActiveRecord::Schema[7.0].define(version: 2026_02_07_003019) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -169,6 +169,16 @@ ActiveRecord::Schema[7.0].define(version: 2026_01_20_011926) do
     t.index ["name"], name: "index_icons_on_name", unique: true
   end
 
+  create_table "portfolio_items", force: :cascade do |t|
+    t.bigint "user_profile_id", null: false
+    t.string "title", limit: 40, default: "", null: false
+    t.string "description", limit: 400, default: "", null: false
+    t.string "key", limit: 12
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_profile_id"], name: "index_portfolio_items_on_user_profile_id"
+  end
+
   create_table "transaction_details", force: :cascade do |t|
     t.bigint "transaction_entry_id", null: false
     t.bigint "budget_item_id"
@@ -263,6 +273,7 @@ ActiveRecord::Schema[7.0].define(version: 2026_01_20_011926) do
     t.datetime "updated_at", null: false
     t.bigint "user_group_id", null: false
     t.string "key", limit: 12, null: false
+    t.string "about", limit: 9999
     t.index ["email"], name: "index_user_profiles_on_email", unique: true
     t.index ["key"], name: "index_user_profiles_on_key", unique: true
     t.index ["reset_password_token"], name: "index_user_profiles_on_reset_password_token", unique: true
@@ -284,6 +295,7 @@ ActiveRecord::Schema[7.0].define(version: 2026_01_20_011926) do
   add_foreign_key "budget_item_events", "user_profiles", column: "user_id"
   add_foreign_key "budget_items", "budget_categories"
   add_foreign_key "budget_items", "budget_intervals"
+  add_foreign_key "portfolio_items", "user_profiles"
   add_foreign_key "transaction_details", "budget_items"
   add_foreign_key "transaction_details", "transaction_entries"
   add_foreign_key "transaction_entries", "accounts"

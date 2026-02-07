@@ -79,7 +79,6 @@ const FormSubmitButton = (props: {
   iconName?: IconName;
   outer?: OuterClassOptions;
   title?: string;
-  onSubmit: MouseEventHandler<HTMLButtonElement>;
   isEnabled?: boolean;
   isBusy?: boolean;
 }) => {
