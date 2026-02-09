@@ -28,9 +28,9 @@ module API
           end
 
           attributes :key,
-                     :name,
-                     :slug,
-                     :icon_class_name
+            :name,
+            :slug,
+            :icon_class_name
           attribute :is_accrual, alias_of: :accrual?
           attribute :is_expense, alias_of: :expense?
           attribute :is_monthly, alias_of: :monthly?

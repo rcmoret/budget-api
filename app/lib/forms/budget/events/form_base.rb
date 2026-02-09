@@ -23,9 +23,9 @@ module Forms
             user: current_user,
             item: budget_item,
             type: budget_item_event_type,
-            data: data,
-            change_set: change_set,
-            key: key,
+            data:,
+            change_set:,
+            key:,
             amount: event_amount,
           )
         end

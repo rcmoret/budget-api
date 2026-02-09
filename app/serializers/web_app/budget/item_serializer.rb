@@ -7,29 +7,30 @@ module WebApp
       end
 
       attributes :key,
-                 :amount,
-                 :currently_budgeted,
-                 :icon_class_name,
-                 :maturity_month,
-                 :maturity_year,
-                 :month,
-                 :name,
-                 :previously_budgeted,
-                 :remaining,
-                 :year
+        :amount,
+        :currently_budgeted,
+        :icon_class_name,
+        :maturity_month,
+        :maturity_year,
+        :month,
+        :name,
+        :previously_budgeted,
+        :remaining,
+        :year
       attribute :is_accrual, alias_of: :accrual?
       attribute :is_deleted, alias_of: :deleted?
       attribute :is_deletable, alias_of: :deletable?
       attribute :is_expense, alias_of: :expense?
       attribute :is_monthly, alias_of: :monthly?
-      attribute :transaction_details, each_serializer: Transactions::DetailSerializer
+      attribute :transaction_details,
+        each_serializer: Transactions::DetailSerializer
 
       delegate :name,
-               :accrual?,
-               :expense?,
-               :icon_class_name,
-               :monthly?,
-               to: :category
+        :accrual?,
+        :expense?,
+        :icon_class_name,
+        :monthly?,
+        to: :category
 
       def maturity_month
         maturity_interval.month

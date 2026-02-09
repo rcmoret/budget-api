@@ -11,7 +11,9 @@ module API
 
           def categories
             SerializableCollection.new do
-              budget_items.reduce(Set.new) { |set, item| set << item.category }.filter_map do |category|
+              budget_items.reduce(Set.new) do |set, item|
+                set << item.category
+              end.filter_map do |category|
                 next if reviewable_items_for(category).none?
 
                 category_serializer(category)
@@ -46,12 +48,14 @@ module API
             @budget_items ||=
               ::Budget::Item
               .includes(:transaction_details, :events, category: { maturity_intervals: :interval })
-              .where(interval: [base_interval, target_interval])
+              .where(interval: [ base_interval, target_interval ])
               .map(&:decorated)
           end
 
           def base_items
-            @base_items ||= budget_items.group_by(&:budget_interval_id).fetch(base_interval.id) { [] }
+            @base_items ||= budget_items.group_by(&:budget_interval_id).fetch(base_interval.id) do
+              []
+            end
           end
 
           def reviewable_items_for(category)
@@ -59,7 +63,10 @@ module API
           end
 
           def target_items
-            @target_items ||= budget_items.group_by(&:budget_interval_id).fetch(target_interval.id) { [] }
+            @target_items ||=
+              budget_items.group_by(&:budget_interval_id).fetch(target_interval.id) do
+                []
+              end
           end
 
           def target_items_for(category)

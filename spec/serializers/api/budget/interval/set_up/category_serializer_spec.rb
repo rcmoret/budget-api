@@ -29,7 +29,8 @@ RSpec.describe API::Budget::Interval::SetUp::CategorySerializer do
     let(:additional_upcoming_interval) { upcoming_interval.next }
 
     before do
-      [current_interval, past_interval, upcoming_interval, additional_upcoming_interval].each do |interval|
+      [ current_interval, past_interval, upcoming_interval,
+        additional_upcoming_interval, ].each do |interval|
         create(:maturity_interval, category: category, interval: interval)
       end
     end
@@ -38,14 +39,16 @@ RSpec.describe API::Budget::Interval::SetUp::CategorySerializer do
       expect(subject.upcoming_maturity_intervals.render).to contain_exactly(
         { "month" => current_interval.month, "year" => current_interval.year },
         { "month" => upcoming_interval.month, "year" => upcoming_interval.year },
-        { "month" => additional_upcoming_interval.month, "year" => additional_upcoming_interval.year },
+        { "month" => additional_upcoming_interval.month,
+          "year" => additional_upcoming_interval.year, },
       )
     end
   end
 
   describe "#events" do
     subject do
-      described_class.new(category, interval: interval, base_items: base_items, target_items: target_items)
+      described_class.new(category, interval: interval, base_items: base_items,
+        target_items: target_items)
     end
 
     let(:category) { create(:category, :monthly, user_group: user_group) }
@@ -57,7 +60,7 @@ RSpec.describe API::Budget::Interval::SetUp::CategorySerializer do
     let(:target_items) { [] }
 
     context "when a base item exists" do
-      let(:base_items) { [budget_item] }
+      let(:base_items) { [ budget_item ] }
 
       it "call new on the create event serializer" do
         expect(API::Budget::Interval::SetUp::CreateEventSerializer)
@@ -69,7 +72,7 @@ RSpec.describe API::Budget::Interval::SetUp::CategorySerializer do
     end
 
     context "when a target item exists" do
-      let(:target_items) { [budget_item] }
+      let(:target_items) { [ budget_item ] }
 
       it "call new on the create event serializer" do
         expect(API::Budget::Interval::SetUp::AdjustEventSerializer)
@@ -82,7 +85,7 @@ RSpec.describe API::Budget::Interval::SetUp::CategorySerializer do
 
     context "when two target items exists" do
       let(:target_items) do
-        [budget_item, create(:budget_item, category: category, interval: interval)]
+        [ budget_item, create(:budget_item, category: category, interval: interval) ]
       end
 
       it "call new on the create event serializer" do
@@ -97,9 +100,11 @@ RSpec.describe API::Budget::Interval::SetUp::CategorySerializer do
     context "when a base and target item exist" do
       context "when the category is monthly" do
         let(:category) { create(:category, :monthly, user_group: user_group) }
-        let(:base_item) { create(:budget_item, category: category, interval: current_interval.prev) }
-        let(:base_items) { [base_item] }
-        let(:target_items) { [budget_item] }
+        let(:base_item) do
+          create(:budget_item, category: category, interval: current_interval.prev)
+        end
+        let(:base_items) { [ base_item ] }
+        let(:target_items) { [ budget_item ] }
 
         it "call new on the create event serializer" do
           expect(API::Budget::Interval::SetUp::CreateEventSerializer)
@@ -115,9 +120,11 @@ RSpec.describe API::Budget::Interval::SetUp::CategorySerializer do
 
       context "when the category is day to day" do
         let(:category) { create(:category, :weekly, user_group: user_group) }
-        let(:base_item) { create(:budget_item, category: category, interval: current_interval.prev) }
-        let(:base_items) { [base_item] }
-        let(:target_items) { [budget_item] }
+        let(:base_item) do
+          create(:budget_item, category: category, interval: current_interval.prev)
+        end
+        let(:base_items) { [ base_item ] }
+        let(:target_items) { [ budget_item ] }
 
         before do
           allow(API::Budget::Interval::SetUp::AdjustEventSerializer)

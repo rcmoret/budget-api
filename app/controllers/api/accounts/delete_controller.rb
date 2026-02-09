@@ -5,7 +5,7 @@ module API
 
       def call
         account.destroy
-        case [account.errors.any?, archived?]
+        case [ account.errors.any?, archived? ]
         in [false, true]
           render json: { account: serializer.render }, status: :accepted
         in [false, false]
@@ -22,7 +22,7 @@ module API
       end
 
       def serializer
-        @serializer ||= ShowSerializer.new(account: account)
+        @serializer ||= ShowSerializer.new(account:)
       end
     end
   end

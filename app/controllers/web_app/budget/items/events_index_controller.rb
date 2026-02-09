@@ -5,7 +5,7 @@ module WebApp
     module Items
       class EventsIndexController < BaseController
         before_action -> { render json: {}, status: :not_found },
-                      if: -> { budget_item.nil? }
+          if: -> { budget_item.nil? }
 
         def call
           render json: serializer.render
@@ -27,7 +27,7 @@ module WebApp
         end
 
         def budget_item_serializer
-          API::Budget::Items::DetailsSerializer.new(budget_item)
+          WebApp::Budget::Items::DetailsSerializer.new(budget_item)
         end
       end
     end

@@ -8,6 +8,6 @@ class SerializableCollection < Array
   end
 
   def render(camelize: :lower)
-    map { |item| item.render(camelize: camelize) }
+    map { |item| item.render(camelize:) }
   end
 end

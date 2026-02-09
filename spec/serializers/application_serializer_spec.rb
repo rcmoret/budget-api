@@ -6,7 +6,7 @@ RSpec.describe ApplicationSerializer do
 
     let(:name) { "Account Name" }
     let(:slug) { "account-slug" }
-    let(:account) { build(:account, name: name, slug: slug) }
+    let(:account) { build(:account, name:, slug:) }
 
     let(:serializer) do
       Class.new(described_class) do
@@ -33,7 +33,7 @@ RSpec.describe ApplicationSerializer do
 
     let(:name) { "Account Name" }
     let(:slug) { "account-slug" }
-    let(:account) { build(:account, name: name, slug: slug) }
+    let(:account) { build(:account, name:, slug:) }
 
     context "when added by name only" do
       let(:serializer) do
@@ -67,11 +67,13 @@ RSpec.describe ApplicationSerializer do
       end
 
       it "camel cases keys by default" do
-        expect(subject.render).to eq({ "accountName" => name, "accountSlug" => slug })
+        expect(subject.render).to eq({ "accountName" => name,
+"accountSlug" => slug, })
       end
 
       it "snake caes the keys when passing `camelize: false`" do
-        expect(subject.render(camelize: false)).to eq({ account_name: name, account_slug: slug })
+        expect(subject.render(camelize: false)).to eq({ account_name: name,
+account_slug: slug, })
       end
     end
 
@@ -97,7 +99,7 @@ RSpec.describe ApplicationSerializer do
       end
     end
 
-    context 'when added by name with a "alias_of" defined and a conditional given' do
+    context 'when added by name w/ a "alias_of" defined, a conditional given' do
       let(:serializer) do
         Class.new(described_class) do
           attribute :account_name, alias_of: :name, conditional: :truthy_method?
@@ -124,8 +126,8 @@ RSpec.describe ApplicationSerializer do
     subject { transaction_serializer.new(transaction) }
 
     let(:name) { "Account Name" }
-    let(:account) { create(:account, name: name) }
-    let(:transaction) { create(:transaction_entry, :pending, account: account) }
+    let(:account) { create(:account, name:) }
+    let(:transaction) { create(:transaction_entry, :pending, account:) }
 
     let(:transaction_serializer) do
       account_serializer = Class.new(described_class) do
@@ -175,7 +177,7 @@ RSpec.describe ApplicationSerializer do
       end
 
       before do
-        create_list(:transaction_entry, 2, account: account)
+        create_list(:transaction_entry, 2, account:)
       end
 
       it "delegates the relationship to the underlying object" do
@@ -184,7 +186,9 @@ RSpec.describe ApplicationSerializer do
 
       it "serializes the related records" do
         expect(subject.render).to eq(
-          "transactions" => account.transactions.pluck(:key).map { |key| { "key" => key } },
+          "transactions" => account.transactions.pluck(:key).map do |key|
+            { "key" => key }
+          end,
         )
       end
     end
@@ -199,17 +203,20 @@ RSpec.describe ApplicationSerializer do
         end
 
         Class.new(described_class) do
-          has_many :entries, each_serializer: transaction_serializer, alias_of: :transactions
+          has_many :entries, each_serializer: transaction_serializer,
+            alias_of: :transactions
         end
       end
 
       before do
-        create_list(:transaction_entry, 2, account: account)
+        create_list(:transaction_entry, 2, account:)
       end
 
       it "serializes the related records" do
         expect(subject.render).to eq(
-          "entries" => account.transactions.pluck(:key).map { |key| { "key" => key } },
+          "entries" => account.transactions.pluck(:key).map do |key|
+            { "key" => key }
+          end,
         )
       end
     end
@@ -224,12 +231,14 @@ RSpec.describe ApplicationSerializer do
         end
 
         Class.new(described_class) do
-          has_many :entries, each_serializer: transaction_serializer, conditional: proc { false }
+          has_many :entries,
+            each_serializer: transaction_serializer,
+            conditional: proc { false }
         end
       end
 
       before do
-        create_list(:transaction_entry, 2, account: account)
+        create_list(:transaction_entry, 2, account:)
       end
 
       it "does not serialize the relation if false-y" do

@@ -4,24 +4,25 @@ module Budget
     include Fetchable
     include Intervals::DateScopes
 
-    has_many :items, foreign_key: :budget_interval_id, inverse_of: :interval, dependent: :restrict_with_exception
+    has_many :items, foreign_key: :budget_interval_id, inverse_of: :interval,
+      dependent: :restrict_with_exception
     has_many :change_sets,
-             class_name: "ChangeSet",
-             dependent: :destroy,
-             inverse_of: :interval,
-             foreign_key: :budget_change_set_id
+      class_name: "ChangeSet",
+      dependent: :destroy,
+      inverse_of: :interval,
+      foreign_key: :budget_change_set_id
     has_many :maturity_intervals,
-             class_name: "CategoryMaturityInterval",
-             dependent: :destroy,
-             inverse_of: :interval,
-             foreign_key: :budget_interval_id
+      class_name: "CategoryMaturityInterval",
+      dependent: :destroy,
+      inverse_of: :interval,
+      foreign_key: :budget_interval_id
 
     validates :month, presence: true, inclusion: (1..12)
     validates :year, presence: true, inclusion: (2000..2099)
     validates :month, uniqueness: { scope: %i[year user_group_id] }
     validates :effective_start,
-              comparison: { less_than_or_equal_to: proc { Time.current } },
-              allow_nil: true
+      comparison: { less_than_or_equal_to: proc { Time.current } },
+      allow_nil: true
 
     scope :ordered, -> { order_asc }
     scope :unclosed, -> { where(close_out_completed_at: nil) }
@@ -76,7 +77,7 @@ module Budget
 
     def prev
       if month > 1
-        self.class.belonging_to(user_group).for(month: (month - 1), year: year)
+        self.class.belonging_to(user_group).for(month: (month - 1), year:)
       else
         self.class.belonging_to(user_group).for(month: 12, year: (year - 1))
       end
@@ -84,7 +85,7 @@ module Budget
 
     def next_month
       if month < 12
-        self.class.belonging_to(user_group).for(month: (month + 1), year: year)
+        self.class.belonging_to(user_group).for(month: (month + 1), year:)
       else
         self.class.belonging_to(user_group).for(month: 1, year: (year + 1))
       end

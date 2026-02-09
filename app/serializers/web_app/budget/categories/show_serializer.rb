@@ -21,14 +21,26 @@ module WebApp
             @chart_params = chart_params
           end
 
-          attributes :key, :slug, :name, :default_amount, :is_per_diem_enabled, :icon_class_name, :icon_key
-          attribute :archived_at, on_render: proc { |timestamp| render_date_time(timestamp, "%B %-d, %Y") }
-          attribute :created_at, on_render: proc { |timestamp| render_date_time(timestamp, "%B %-d, %Y %Z") }
+          attributes :key,
+            :slug,
+            :name,
+            :default_amount,
+            :is_per_diem_enabled,
+            :icon_class_name,
+            :icon_key
+          attribute :archived_at, on_render: proc { |timestamp|
+            render_date_time(timestamp, "%B %-d, %Y")
+          }
+          attribute :created_at, on_render: proc { |timestamp|
+            render_date_time(timestamp, "%B %-d, %Y %Z")
+          }
           attribute :is_archived, alias_of: :archived?
           attribute :is_accrual, alias_of: :accrual?
           attribute :is_expense, alias_of: :expense?
           attribute :is_monthly, alias_of: :monthly?
-          attribute :maturity_intervals, each_serializer: MaturityIntervalSerializer, conditional: :accrual?
+          attribute :maturity_intervals,
+            each_serializer: MaturityIntervalSerializer,
+            conditional: :accrual?
           attribute :summaries, on_render: :render
           # attribute :
 
@@ -46,7 +58,10 @@ module WebApp
             in { limit:, ** }
               base_scope.most_recent(limit).to_a.sort
             in { start_month:, start_year:, end_month:, end_year:, ** }
-              date_range = Time.new(start_year, start_month, 1)..Time.new(end_year, end_month, 1)
+              date_range = (
+                Time.new(start_year, start_month, 1)..
+                  Time.new(end_year, end_month, 1)
+              )
               base_scope.between_dates(date_range).order_asc
             else
               base_scope.most_recent(12).to_a.sort
@@ -75,8 +90,8 @@ module WebApp
         def category
           LocalCategorySerializer.new(
             __getobj__,
-            current_user_profile: current_user_profile,
-            chart_params: chart_params
+            current_user_profile:,
+            chart_params:
           )
         end
 

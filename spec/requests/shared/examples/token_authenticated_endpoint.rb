@@ -26,7 +26,7 @@ RSpec.shared_examples "a token authenticated endpoint" do
     end
     let(:params) { {} }
     let(:user) { create(:user) }
-    let(:auth_token_context) { create(:auth_token_context, user: user) }
+    let(:auth_token_context) { create(:auth_token_context, user:) }
     let(:token) do
       Auth::Token::JWT.encode(
         exp: 1.second.ago,
@@ -46,7 +46,9 @@ RSpec.shared_examples "a token authenticated endpoint" do
     end
     let(:params) { {} }
     let(:user) { create(:user) }
-    let(:auth_token_context) { create(:auth_token_context, :manually_expired, user: user) }
+    let(:auth_token_context) do
+      create(:auth_token_context, :manually_expired, user:)
+    end
     let(:token) do
       Auth::Token::JWT.encode(
         payload: {
@@ -68,7 +70,7 @@ RSpec.shared_examples "a token authenticated endpoint" do
     let(:auth_token_context) do
       create(
         :auth_token_context,
-        user: user,
+        user:,
         ip_address: Faker::Internet.ip_v4_address
       )
     end

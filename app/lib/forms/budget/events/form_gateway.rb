@@ -9,9 +9,11 @@ module Forms
         ].freeze
 
         REGISTERED_EVENT_TYPES = REGISTERED_CLASSES.reduce([]) do |list, klass|
-          raise DuplicateEventTypeRegistrationError if list.intersect?(klass.applicable_event_types)
+          if list.intersect?(klass.applicable_event_types)
+            raise DuplicateEventTypeRegistrationError
+          end
 
-          [*list, *klass.applicable_event_types.dup]
+          [ *list, *klass.applicable_event_types.dup ]
         end.freeze
 
         class << self
@@ -21,10 +23,20 @@ module Forms
 
           def form_for(current_user, change_set, event)
             event_type = event.fetch(:event_type)
-            form_class = REGISTERED_CLASSES.find { |potential_hanlder| potential_hanlder.applies?(event_type) }
-            return form_class.new(current_user, change_set, event) unless form_class.nil?
+            form_class = REGISTERED_CLASSES.find do |potential_hanlder|
+              potential_hanlder.applies?(event_type)
+            end
 
-            raise MissingFormClassError, "no form_class register for #{event_type}"
+            unless form_class.nil?
+              return form_class.new(
+                current_user,
+                change_set,
+                event
+              )
+            end
+
+            raise MissingFormClassError,
+              "no form_class register for #{event_type}"
           end
         end
 

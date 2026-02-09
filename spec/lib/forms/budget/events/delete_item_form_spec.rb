@@ -1,7 +1,8 @@
 require "rails_helper"
 
 RSpec.describe Forms::Budget::Events::DeleteItemForm do
-  describe ".applies?" do # inherited from the base class but needs to be tested here
+  # inherited from the base class but needs to be tested here
+  describe ".applies?" do
     context "when an applicable event" do
       it "returns true" do
         event_type = Budget::EventTypes::DELETE_EVENTS.sample
@@ -21,7 +22,9 @@ RSpec.describe Forms::Budget::Events::DeleteItemForm do
     let(:user) { create(:user) }
     let(:budget_interval) { create(:budget_interval, user_group: user.group) }
     let(:budget_category) { create(:category, user_group: user.group) }
-    let(:budget_item) { create(:budget_item, category: budget_category, interval: budget_interval) }
+    let(:budget_item) do
+      create(:budget_item, category: budget_category, interval: budget_interval)
+    end
 
     describe "event type validation" do
       context "when a valid event" do
@@ -50,7 +53,7 @@ RSpec.describe Forms::Budget::Events::DeleteItemForm do
 
     describe "item validation" do
       let(:category) { create(:category, user_group: user.group) }
-      let(:budget_item) { create(:budget_item, category: category) }
+      let(:budget_item) { create(:budget_item, category:) }
 
       context "when a budget item exists" do
         it "is a valid form object" do
@@ -77,10 +80,10 @@ RSpec.describe Forms::Budget::Events::DeleteItemForm do
 
     describe "item transacations validations" do
       context "when there is a transaction detail associated" do
-        before { create(:transaction_detail, budget_item: budget_item) }
+        before { create(:transaction_detail, budget_item:) }
 
         let(:category) { create(:category, user_group: user.group) }
-        let(:budget_item) { create(:budget_item, category: category) }
+        let(:budget_item) { create(:budget_item, category:) }
 
         it "is an invalid form object" do
           params = {
@@ -89,7 +92,8 @@ RSpec.describe Forms::Budget::Events::DeleteItemForm do
           }
           form = described_class.new(user, params)
           expect(form).not_to be_valid
-          expect(form.errors["budget_item"]).to include "cannot delete an item with transaction details"
+          expect(form.errors["budget_item"])
+            .to include "cannot delete an item with transaction details"
         end
       end
     end
@@ -109,7 +113,7 @@ RSpec.describe Forms::Budget::Events::DeleteItemForm do
   describe "save" do
     let(:user) { create(:user) }
     let(:category) { create(:category, user_group: user.group) }
-    let(:budget_item) { create(:budget_item, category: category) }
+    let(:budget_item) { create(:budget_item, category:) }
 
     before { freeze_time }
 

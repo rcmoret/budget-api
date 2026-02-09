@@ -28,7 +28,7 @@ module API
         def deleted_serializer
           IndividualSerializer.new(
             key: :budget_category,
-            serializable: DeletedSerializer.new([budget_category.id])
+            serializable: DeletedSerializer.new([ budget_category.id ])
           )
         end
 

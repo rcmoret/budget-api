@@ -17,7 +17,8 @@ module API
     end
 
     def render_account_not_found
-      render json: { account: "not found by key: #{account_key}" }, status: :not_found
+      render json: { account: "not found by key: #{account_key}" },
+        status: :not_found
     end
   end
 end

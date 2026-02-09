@@ -9,7 +9,9 @@ module Budget
     end
 
     def call
-      CollectionSerializer.new(serializer: UpcomingMaturityIntervalSerializer) do
+      CollectionSerializer.new(
+        serializer: UpcomingMaturityIntervalSerializer
+      ) do
         ApplicationRecord.connection.exec_query(query.to_sql).to_a
       end
     end
@@ -20,10 +22,16 @@ module Budget
     def query
       BUDGET_CATEGORY_MATURITY_INTERVALS
         .join(BUDGET_INTERVALS)
-        .on(BUDGET_INTERVALS[:id].eq(BUDGET_CATEGORY_MATURITY_INTERVALS[:budget_interval_id]))
+        .on(
+          BUDGET_INTERVALS[:id]
+          .eq(BUDGET_CATEGORY_MATURITY_INTERVALS[:budget_interval_id])
+        )
         .join(BUDGET_CATEGORIES)
-        .on(BUDGET_CATEGORIES[:id].eq(BUDGET_CATEGORY_MATURITY_INTERVALS[:budget_category_id])
-        .and(BUDGET_CATEGORIES[:user_group_id].eq(user_group_id)))
+        .on(
+          BUDGET_CATEGORIES[:id]
+          .eq(BUDGET_CATEGORY_MATURITY_INTERVALS[:budget_category_id])
+          .and(BUDGET_CATEGORIES[:user_group_id].eq(user_group_id))
+        )
         .project(*project)
         .where(where_clause)
         .group(BUDGET_CATEGORIES[:id])
@@ -45,7 +53,8 @@ module Budget
 
     def where_clause
       BUDGET_INTERVALS[:year].gt(interval.year).or(
-        BUDGET_INTERVALS[:year].eq(interval.year).and(BUDGET_INTERVALS[:month].gteq(interval.month))
+        BUDGET_INTERVALS[:year].eq(interval.year)
+        .and(BUDGET_INTERVALS[:month].gteq(interval.month))
       )
     end
 
@@ -66,7 +75,9 @@ module Budget
 
     CollectionSerializer = Class.new(SerializableCollection) do
       def find(budget_category_id)
-        super() { |result_object| budget_category_id == result_object.budget_category_id } ||
+        super() do |result_object|
+          budget_category_id == result_object.budget_category_id
+        end ||
           NullSerializer.new(budget_category_id)
       end
     end

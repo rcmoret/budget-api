@@ -9,7 +9,8 @@ FactoryBot.define do
     trait :create_event do
       type do
         Budget::EventTypes::CREATE_EVENTS.sample.to_sym.then do |event_type|
-          Budget::ItemEventType.find_by(name: event_type) || create(:budget_item_event_type, event_type)
+          Budget::ItemEventType.find_by(name: event_type) ||
+            create(:budget_item_event_type, event_type)
         end
       end
     end
@@ -17,7 +18,8 @@ FactoryBot.define do
     trait :adjust_event do
       type do
         Budget::EventTypes::ADJUST_EVENTS.sample.to_sym.then do |event_type|
-          Budget::ItemEventType.find_by(name: event_type) || create(:budget_item_event_type, event_type)
+          Budget::ItemEventType.find_by(name: event_type) ||
+            create(:budget_item_event_type, event_type)
         end
       end
     end
@@ -25,7 +27,8 @@ FactoryBot.define do
     Budget::EventTypes::VALID_EVENT_TYPES.map(&:to_sym).each do |event_type|
       trait event_type do
         type do
-          Budget::ItemEventType.find_by(name: event_type) || create(:budget_item_event_type, event_type)
+          Budget::ItemEventType.find_by(name: event_type) ||
+            create(:budget_item_event_type, event_type)
         end
       end
     end

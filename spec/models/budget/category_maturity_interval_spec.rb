@@ -5,7 +5,7 @@ RSpec.describe Budget::CategoryMaturityInterval do
   it { is_expected.to delegate_method(:year).to(:interval) }
 
   describe "belongs to" do
-    subject { described_class.new(category: category, interval: interval) }
+    subject { described_class.new(category:, interval:) }
 
     let(:category) { create(:category, :accrual) }
     let(:interval) { create(:budget_interval) }
@@ -15,7 +15,7 @@ RSpec.describe Budget::CategoryMaturityInterval do
 
   describe "requires interval and catgory" do
     context "when the budget interval is null" do
-      subject { described_class.new(category: category, interval: nil) }
+      subject { described_class.new(category:, interval: nil) }
 
       let(:category) { create(:category, :accrual) }
 
@@ -25,7 +25,7 @@ RSpec.describe Budget::CategoryMaturityInterval do
     end
 
     context "when the budget category is null" do
-      subject { described_class.new(category: nil, interval: interval) }
+      subject { described_class.new(category: nil, interval:) }
 
       let(:interval) { create(:budget_interval) }
 
@@ -40,9 +40,13 @@ RSpec.describe Budget::CategoryMaturityInterval do
 
     let(:interval) { create(:budget_interval) }
     let(:category) { create(:category, :accrual) }
-    let(:record) { build(:maturity_interval, interval: interval, category: category) }
+    let(:record) do
+      build(:maturity_interval, interval:, category:)
+    end
 
-    before { create(:maturity_interval, interval: interval, category: category) }
+    before do
+      create(:maturity_interval, interval:, category:)
+    end
 
     it "returns false" do
       expect(subject).to be false
@@ -56,7 +60,7 @@ RSpec.describe Budget::CategoryMaturityInterval do
       let(:interval) { build(:budget_interval) }
       let(:category) { build(:category) }
       let(:record) do
-        described_class.new(interval: interval, category: category)
+        described_class.new(interval:, category:)
       end
 
       it "returns false" do
@@ -68,7 +72,7 @@ RSpec.describe Budget::CategoryMaturityInterval do
       let(:interval) { build(:budget_interval) }
       let(:category) { build(:category, :accrual) }
       let(:record) do
-        described_class.new(interval: interval, category: category)
+        described_class.new(interval:, category:)
       end
 
       it "returns true" do

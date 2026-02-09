@@ -191,7 +191,7 @@ RSpec.describe API::Budget::Interval::DiscretionarySerializer do
       include_context "with a stubbed out detail serializer"
 
       it "passes the transaction detail to the detail serializer" do
-        expect(subject.transaction_details).to eq([detail_serializer])
+        expect(subject.transaction_details).to eq([ detail_serializer ])
       end
     end
 
@@ -208,7 +208,7 @@ RSpec.describe API::Budget::Interval::DiscretionarySerializer do
       include_context "with a stubbed out detail serializer"
 
       it "returns the detail(s) attributes" do
-        expect(subject.transaction_details).to eq([detail_serializer])
+        expect(subject.transaction_details).to eq([ detail_serializer ])
       end
     end
 
@@ -270,7 +270,7 @@ RSpec.describe API::Budget::Interval::DiscretionarySerializer do
     end
 
     it "returns a sum of the items' budget impact" do
-      [day_to_day_presenter, monthly_presenter].map(&:budget_impact).sum.then do |expected_amount|
+      [ day_to_day_presenter, monthly_presenter ].map(&:budget_impact).sum.then do |expected_amount|
         expect(subject.over_under_budget).to be expected_amount
       end
     end
@@ -344,7 +344,7 @@ RSpec.describe API::Budget::Interval::DiscretionarySerializer do
     let(:monthly_expense_double) do
       instance_double(Presenters::Budget::MonthlyItemPresenter, remaining: -13_40)
     end
-    let(:remaining) { [weekly_expense_double, monthly_expense_double].map(&:remaining).sum }
+    let(:remaining) { [ weekly_expense_double, monthly_expense_double ].map(&:remaining).sum }
     let!(:existing_cash_flow_transaction) do
       create(
         :transaction_entry,
@@ -385,13 +385,13 @@ RSpec.describe API::Budget::Interval::DiscretionarySerializer do
     context "when future" do
       before { travel_to(interval.first_date - 1.day) }
 
-      context "when there are no budget inclusions in non-cash-flow accounts, no pending transactions" do
+      context "when no budget inclusions in non-cash-flow accounts, no pending transactions" do
         it "returns the remaining only" do
           expect(subject.amount).to be remaining
         end
       end
 
-      context "when there are no budget inclusions in non-cash-flow accounts, some pending transactions" do
+      context "when no budget inclusions in non-cash-flow accounts, some pending transactions" do
         before do
           create(
             :transaction_entry,
@@ -455,7 +455,7 @@ RSpec.describe API::Budget::Interval::DiscretionarySerializer do
     context "when current" do
       before { travel_to(interval.date_range.to_a.sample) }
 
-      context "when there are no budget inclusions in non-cash-flow accounts, no pending transactions" do
+      context "when no budget inclusions in non-cash-flow accounts, no pending transactions" do
         before do
           create(
             :transaction_entry,
@@ -484,13 +484,13 @@ RSpec.describe API::Budget::Interval::DiscretionarySerializer do
           )
         end
 
-        it "returns the remaining and the balance prior to the last date of the cash flow accounts" do
+        it "returns the remaining and balance prior to the last date of the cash flow accounts" do
           expect(subject.amount)
             .to be(remaining + current_transaction.total + existing_cash_flow_transaction.total)
         end
       end
 
-      context "when there are no budget inclusions in non-cash-flow accounts, some pending transactions" do
+      context "when no budget inclusions in non-cash-flow accounts, some pending transactions" do
         let!(:pending_transaction) do
           create(
             :transaction_entry,
@@ -505,7 +505,7 @@ RSpec.describe API::Budget::Interval::DiscretionarySerializer do
           )
         end
 
-        it "returns the remaining and the balance prior to the last date of the cash flow accounts" do
+        it "returns the sum of: remaining, the cash flow balance prior to the last date" do
           expect(subject.amount)
             .to be(remaining + existing_cash_flow_transaction.total + pending_transaction.total)
         end
@@ -527,9 +527,13 @@ RSpec.describe API::Budget::Interval::DiscretionarySerializer do
           )
         end
 
-        it "returns the remaining plus the balance of cash flow accounts and cleared budget inclusions" do
+        it "returns the sum of: remaining, cash flow balance, cleared budget inclusions" do
           expect(subject.amount)
-            .to be(remaining + existing_cash_flow_transaction.total + cleared_budget_inclusion.total)
+            .to be(
+              remaining +
+              existing_cash_flow_transaction.total +
+              cleared_budget_inclusion.total
+            )
         end
       end
 
@@ -549,9 +553,13 @@ RSpec.describe API::Budget::Interval::DiscretionarySerializer do
           )
         end
 
-        it "returns the remaining plus the balance of cash flow accounts and pending budget inclusions" do
+        it "returns the sum of remaining, cash flow accounts balance, pending budget inclusions" do
           expect(subject.amount)
-            .to be(remaining + existing_cash_flow_transaction.total + pending_budget_inclusion.total)
+            .to be(
+              remaining +
+              existing_cash_flow_transaction.total +
+              pending_budget_inclusion.total
+            )
         end
       end
     end
@@ -559,13 +567,13 @@ RSpec.describe API::Budget::Interval::DiscretionarySerializer do
     context "when in the past" do
       before { travel_to(interval.last_date + 1.day) }
 
-      context "when there are no budget inclusions in non-cash-flow accounts, no pending transactions" do
+      context "when no budget inclusions in non-cash-flow accounts, no pending transactions" do
         it "returns the remaining plus existing cash flow" do
           expect(subject.amount).to be(remaining + existing_cash_flow_transaction.total)
         end
       end
 
-      context "when there are no budget inclusions in non-cash-flow accounts, some pending transactions" do
+      context "when no budget inclusions in non-cash-flow accounts, some pending transactions" do
         before do
           create(
             :transaction_entry,

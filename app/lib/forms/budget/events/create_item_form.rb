@@ -12,17 +12,17 @@ module Forms
         validates :category, presence: true
         validates :amount, numericality: { only_integer: true }
         validates :amount,
-                  numericality: {
-                    less_than_or_equal_to: 0,
-                    message: EXPENSE_AMOUNT_VALIDATION_MESSAGE,
-                  },
-                  if: :expense?
+          numericality: {
+            less_than_or_equal_to: 0,
+            message: EXPENSE_AMOUNT_VALIDATION_MESSAGE,
+          },
+          if: :expense?
         validates :amount,
-                  numericality: {
-                    greater_than_or_equal_to: 0,
-                    message: REVENUE_AMOUNT_VALIDATION_MESSAGE,
-                  },
-                  if: :revenue?
+          numericality: {
+            greater_than_or_equal_to: 0,
+            message: REVENUE_AMOUNT_VALIDATION_MESSAGE,
+          },
+          if: :revenue?
         validates :budget_item_key, presence: true, length: { is: 12 }
         validate :new_item
 
@@ -77,15 +77,25 @@ module Forms
         end
 
         def budget_item
-          @budget_item ||= ::Budget::Item.new(interval: interval, category: category, key: budget_item_key)
+          @budget_item ||= ::Budget::Item.new(
+            interval:,
+            category:,
+            key: budget_item_key
+          )
         end
 
         def category
-          @category ||= ::Budget::Category.fetch(current_user, key: budget_category_key)
+          @category ||= ::Budget::Category.fetch(
+            current_user,
+            key: budget_category_key
+          )
         end
 
         def interval
-          @interval ||= ::Budget::Interval.fetch(current_user, key: { month: month, year: year })
+          @interval ||= ::Budget::Interval.fetch(
+            current_user,
+            key: { month:, year: }
+          )
         end
 
         def expense?
@@ -102,7 +112,7 @@ module Forms
 
         def new_item
           return if category.monthly?
-          return unless ::Budget::Item.exists?(interval: interval, category: category)
+          return unless ::Budget::Item.exists?(interval:, category:)
 
           errors.add(:budget_item, "already exists")
         end

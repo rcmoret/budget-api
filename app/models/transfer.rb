@@ -19,7 +19,12 @@ class Transfer < ApplicationRecord
 
   def self.transaction_ids
     select(:from_transaction_id, :to_transaction_id)
-      .flat_map { |transfer| [transfer.to_transaction_id, transfer.from_transaction_id] }
+      .flat_map do |transfer|
+      [
+        transfer.to_transaction_id,
+        transfer.from_transaction_id,
+      ]
+    end
       .uniq
   end
 
@@ -38,6 +43,6 @@ class Transfer < ApplicationRecord
   end
 
   def transactions
-    [to_transaction, from_transaction]
+    [ to_transaction, from_transaction ]
   end
 end

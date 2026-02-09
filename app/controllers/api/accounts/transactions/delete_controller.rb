@@ -18,10 +18,10 @@ module API
 
         def serializer
           API::Transactions::ResponseSerializer.new(
-            accounts: [account],
+            accounts: [ account ],
             transactions: [],
-            interval: interval,
-            deleted_transaction_keys: [transaction_entry.key],
+            interval:,
+            deleted_transaction_keys: [ transaction_entry.key ],
             budget_items: transaction_entry.budget_items
           )
         end

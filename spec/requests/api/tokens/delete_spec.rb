@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "DELETE /api/tokens" do
-  subject { delete("/api/tokens", headers: headers) }
+  subject { delete("/api/tokens", headers:) }
 
   context "when passing a valid token" do
     let(:user) { create(:user) }

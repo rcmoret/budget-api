@@ -3,8 +3,8 @@ require "rails_helper"
 RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
   subject do
     put(api_account_transaction_path(account_key, transaction_key, month, year),
-        params: params,
-        headers: headers)
+      params:,
+      headers:)
   end
 
   context "when updating the entry itself" do
@@ -52,7 +52,9 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
       let(:account) { create(:account, user_group: user.group) }
       let(:account_key) { account.key }
       let(:savings_account) { create(:savings_account, user_group: user.group) }
-      let(:transaction) { create(:transaction_entry, :pending, account: account) }
+      let(:transaction) do
+        create(:transaction_entry, :pending, account:)
+      end
       let(:transaction_key) { transaction.key }
       let(:interval) { create(:budget_interval, user_group: user.group) }
       let(:month) { interval.month }
@@ -76,7 +78,8 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
         body = response.parsed_body.deep_symbolize_keys
         expect(body[:accounts]).to contain_exactly(
           { key: account.key, balance: 0, balancePriorTo: 0 },
-          { key: savings_account.key, balance: transaction.total, balancePriorTo: 0 }
+          { key: savings_account.key, balance: transaction.total,
+            balancePriorTo: 0, }
         )
         expect(body[:budgetItems]).to be_nil
         expect(body[:transactions]).to eq(
@@ -114,7 +117,9 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
         let(:user) { create(:user) }
         let(:account) { create(:account, user_group: user.group) }
         let(:account_key) { account.key }
-        let(:transaction) { create(:transaction_entry, :discretionary, account: account) }
+        let(:transaction) do
+          create(:transaction_entry, :discretionary, account:)
+        end
         let(:transaction_key) { transaction.key }
         let(:interval) { create(:budget_interval, user_group: user.group) }
         let(:month) { interval.month }
@@ -126,7 +131,13 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
           expect(response).to have_http_status :unprocessable_entity
           body = response.parsed_body.deep_symbolize_keys
           expect(body)
-            .to eq(transaction: { budgetExclusion: ["Budget Exclusions only applicable for non-cash-flow accounts"] })
+            .to eq(
+              transaction: {
+                budgetExclusion: [
+                  "Budget Exclusions only applicable for non-cash-flow accounts",
+                ],
+              }
+            )
         end
       end
 
@@ -134,9 +145,13 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
         include_context "with valid token"
 
         let(:user) { create(:user) }
-        let(:savings_account) { create(:savings_account, user_group: user.group) }
+        let(:savings_account) do
+          create(:savings_account, user_group: user.group)
+        end
         let(:account_key) { savings_account.key }
-        let(:transaction) { create(:transaction_entry, :discretionary, account: savings_account) }
+        let(:transaction) do
+          create(:transaction_entry, :discretionary, account: savings_account)
+        end
         let(:transaction_key) { transaction.key }
         let(:interval) { create(:budget_interval, user_group: user.group) }
         let(:month) { interval.month }
@@ -158,11 +173,15 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
       let(:user) { create(:user) }
       let(:account) { create(:account, user_group: user.group) }
       let(:account_key) { account.key }
-      let(:transaction) { create(:transaction_entry, :discretionary, account: account) }
+      let(:transaction) do
+        create(:transaction_entry, :discretionary, account:)
+      end
       let(:transaction_key) { transaction.key }
       let(:interval) { create(:budget_interval, user_group: user.group) }
       let(:category) { create(:category, user_group: user.group) }
-      let(:budget_item) { create(:budget_item, interval: interval, category: category) }
+      let(:budget_item) do
+        create(:budget_item, interval:, category:)
+      end
       let(:month) { interval.month }
       let(:year) { interval.year }
       let(:detail) { transaction.details.first }
@@ -204,11 +223,15 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
     let(:user) { create(:user) }
     let(:account) { create(:account, user_group: user.group) }
     let(:account_key) { account.key }
-    let!(:transaction) { create(:transaction_entry, :discretionary, account: account) }
+    let!(:transaction) do
+      create(:transaction_entry, :discretionary, account:)
+    end
     let(:transaction_key) { transaction.key }
     let(:interval) { create(:budget_interval, user_group: user.group) }
     let(:category) { create(:category, user_group: user.group) }
-    let(:budget_item) { create(:budget_item, interval: interval, category: category) }
+    let(:budget_item) do
+      create(:budget_item, interval:, category:)
+    end
     let(:month) { interval.month }
     let(:year) { interval.year }
     let(:params) do
@@ -249,17 +272,21 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
     end
   end
 
-  context "when adding an additional detail where the budget item belongs to a different interval" do
+  context "when adding an additional detail and the budget item belongs to a different interval" do
     include_context "with valid token"
 
     let(:user) { create(:user) }
     let(:account) { create(:account, user_group: user.group) }
     let(:account_key) { account.key }
-    let!(:transaction) { create(:transaction_entry, :discretionary, account: account) }
+    let!(:transaction) do
+      create(:transaction_entry, :discretionary, account:)
+    end
     let(:transaction_key) { transaction.key }
     let(:interval) { create(:budget_interval, user_group: user.group) }
     let(:category) { create(:category, user_group: user.group) }
-    let(:budget_item) { create(:budget_item, interval: interval.prev, category: category) }
+    let(:budget_item) do
+      create(:budget_item, interval: interval.prev, category:)
+    end
     let(:month) { interval.month }
     let(:year) { interval.year }
     let(:params) do
@@ -292,7 +319,7 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
       let(:account) { create(:account, user_group: user.group) }
       let(:account_key) { account.key }
       let(:transaction) do
-        create(:transaction_entry, :with_multiple_details, account: account)
+        create(:transaction_entry, :with_multiple_details, account:)
       end
       let(:transaction_key) { transaction.key }
       let(:detail) { transaction.details.to_a.sample }
@@ -323,7 +350,7 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
       let(:account) { create(:account, user_group: user.group) }
       let(:account_key) { account.key }
       let(:transaction) do
-        create(:transaction_entry, account: account)
+        create(:transaction_entry, account:)
       end
       let(:transaction_key) { transaction.key }
       let(:detail) { transaction.details.first }
@@ -347,7 +374,7 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
         expect(response).to have_http_status :unprocessable_entity
         body = response.parsed_body.deep_symbolize_keys
         expect(body).to eq(
-          transaction: { details: ["Must have at least one detail for this entry"] }
+          transaction: { details: [ "Must have at least one detail for this entry" ] }
         )
       end
     end
@@ -364,7 +391,7 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
     let(:original_amount) { rand(100_00) }
     let(:transfer_result) do
       Forms::TransferForm.new(
-        user: user,
+        user:,
         params: {
           amount: original_amount,
           from_account_key: account.key,
@@ -397,7 +424,7 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
         [
           {
             "identifier" => detail_key,
-            "amount" => ["Cannot be changed for a transfer"],
+            "amount" => [ "Cannot be changed for a transfer" ],
           },
         ]
       )
@@ -409,7 +436,7 @@ RSpec.describe "PUT /api/account/:account_key/transaction/:key/:month/:year" do
 
     let(:account) { create(:account, user_group: user.group) }
     let(:account_key) { account.key }
-    let(:transaction) { create(:transaction_entry, account: account) }
+    let(:transaction) { create(:transaction_entry, account:) }
     let(:transaction_key) { transaction.key }
     let(:month) { rand(1..12) }
     let(:year) { rand(2020..2039) }

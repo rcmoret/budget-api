@@ -15,13 +15,13 @@ module Forms
     end
 
     def call
-      return [:error, errors.to_hash] if invalid?
+      return [ :error, errors.to_hash ] if invalid?
 
       create!
 
-      return [:error, errors.to_hash] if errors.any?
+      return [ :error, errors.to_hash ] if errors.any?
 
-      [:ok, success_hash]
+      [ :ok, success_hash ]
     end
 
     private
@@ -32,9 +32,9 @@ module Forms
 
     def transfer
       @transfer ||= Transfer.new(
-        key: key,
-        from_transaction_attributes: from_transaction_attributes,
-        to_transaction_attributes: to_transaction_attributes,
+        key:,
+        from_transaction_attributes:,
+        to_transaction_attributes:,
       )
     end
 
@@ -43,7 +43,12 @@ module Forms
         description: "Transfer to #{to_account}",
         account: from_account,
         key: generate_key_indentifier,
-        details_attributes: [{ key: generate_key_indentifier, amount: -amount }],
+        details_attributes: [
+          {
+            key: generate_key_indentifier,
+            amount: -amount,
+          },
+        ],
       }
     end
 
@@ -52,7 +57,12 @@ module Forms
         description: "Transfer from #{from_account}",
         account: to_account,
         key: generate_key_indentifier,
-        details_attributes: [{ key: generate_key_indentifier, amount: amount }],
+        details_attributes: [
+          {
+            key: generate_key_indentifier,
+            amount:,
+          },
+        ],
       }
     end
 
@@ -84,10 +94,10 @@ module Forms
 
     def success_hash
       {
-        transfer: transfer,
-        from_account: from_account,
+        transfer:,
+        from_account:,
         from_transaction: transfer.from_transaction,
-        to_account: to_account,
+        to_account:,
         to_transaction: transfer.to_transaction,
       }
     end

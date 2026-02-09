@@ -9,7 +9,8 @@ module API
     private
 
     def render_category_not_found
-      render json: { category: "not found by key: #{category_key}" }, status: :not_found
+      render json: { category: "not found by key: #{category_key}" },
+        status: :not_found
     end
 
     def category_found?

@@ -6,12 +6,12 @@ module Budget
           include Alba::Resource
 
           attributes :amount,
-                     :budget_item_key,
-                     :event_type,
-                     :flags,
-                     :previously_budgeted,
-                     :spent,
-                     :updated_amount
+            :budget_item_key,
+            :event_type,
+            :flags,
+            :previously_budgeted,
+            :spent,
+            :updated_amount
 
           nested_attribute :adjustment do
             attribute :display, &:adjustment

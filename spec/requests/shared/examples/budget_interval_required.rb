@@ -9,6 +9,8 @@ RSpec.shared_examples "endpoint requires budget interval" do
     subject
     expect(response).to have_http_status :not_found
     expect(response.parsed_body)
-      .to eq("interval" => "not found by month: #{month.to_s.inspect} and year: #{year.to_s.inspect}")
+      .to eq(
+        "interval" => "not found by month: #{month.to_s.inspect} and year: #{year.to_s.inspect}"
+      )
   end
 end

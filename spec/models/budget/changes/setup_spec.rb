@@ -4,7 +4,10 @@ CategoryPair = Data.define(:category, :events)
 
 RSpec.describe Budget::Changes::Setup do
   describe "#update_category_events" do
-    subject(:change_set) { described_class.create(events_data: events_data, interval: create(:budget_interval)) }
+    subject(:change_set) do
+      described_class.create(events_data:,
+        interval: create(:budget_interval))
+    end
 
     let(:budget_item_key) { KeyGenerator.call }
     let(:second_item_key) { KeyGenerator.call }
@@ -47,17 +50,26 @@ RSpec.describe Budget::Changes::Setup do
 
       change_set.update_category_events(
         category,
-        events: events
+        events:
       )
 
-      updated_amounts = change_set.reload.data_model.categories.first.events.map(&:updated_amount)
+      updated_amounts = change_set
+                        .reload
+                        .data_model
+                        .categories
+                        .first
+                        .events
+                        .map(&:updated_amount)
       expect(updated_amounts)
         .to contain_exactly(-19_99, 0)
     end
   end
 
   describe "#add_item_event" do
-    subject(:change_set) { described_class.create(events_data: events_data, interval: create(:budget_interval)) }
+    subject(:change_set) do
+      described_class.create(events_data:,
+        interval: create(:budget_interval))
+    end
 
     let(:category) { create(:category, :expense) }
     let(:events_data) do
@@ -73,7 +85,7 @@ RSpec.describe Budget::Changes::Setup do
     let(:category_pair) do
       CategoryPair.new(
         category,
-        [{ amount: -100_00, key: KeyGenerator.call }]
+        [ { amount: -100_00, key: KeyGenerator.call } ]
       )
     end
 
@@ -98,7 +110,10 @@ RSpec.describe Budget::Changes::Setup do
   end
 
   describe "#remove_event" do
-    subject(:change_set) { described_class.create(events_data: events_data, interval: create(:budget_interval)) }
+    subject(:change_set) do
+      described_class.create(events_data:,
+        interval: create(:budget_interval))
+    end
 
     let(:budget_item_key) { KeyGenerator.call }
     let(:second_item_key) { KeyGenerator.call }
@@ -130,12 +145,16 @@ RSpec.describe Budget::Changes::Setup do
     end
 
     it "allows us to remove an item" do
-      expect { change_set.remove_event(slug: category.slug, key: budget_item_key) }
+      expect do
+        change_set.remove_event(slug: category.slug, key: budget_item_key)
+      end
         .to change { change_set.reload.categories.flat_map(&:events).count }
         .by(-1)
 
       expect { change_set.refresh_category!(category) }
-        .not_to(change { change_set.reload.categories.flat_map(&:events).count })
+        .not_to(change do
+                  change_set.reload.categories.flat_map(&:events).count
+                end)
     end
 
     it "removes the category if removing all events" do
@@ -155,22 +174,26 @@ RSpec.describe Budget::Changes::Setup do
   describe "#assign_categories" do
     context "when there are a variety of items in play" do
       let(:prev_change_set) { described_class.create(interval: interval.prev) }
-      let(:current_change_set) { Budget::Changes::Adjust.create(interval: interval) }
-      let(:category) { create(:category, :revenue, user_group: interval.user_group) }
+      let(:current_change_set) do
+        Budget::Changes::Adjust.create(interval:)
+      end
+      let(:category) do
+        create(:category, :revenue, user_group: interval.user_group)
+      end
       let(:interval) { create(:budget_interval) }
       let(:bonus_amount) { 3_200_00 }
-      let(:change_set_scope) { described_class.where(interval: interval) }
+      let(:change_set_scope) { described_class.where(interval:) }
       let(:previous_item) do
         create(
           :budget_item,
-          category: category,
+          category:,
           interval: prev_change_set.interval
         )
       end
       let(:current_item) do
         create(
           :budget_item,
-          category: category,
+          category:,
           interval: current_change_set.interval
         )
       end
@@ -245,7 +268,8 @@ RSpec.describe Budget::Changes::Setup do
           }
         )
 
-        expect(change_set.events_data.dig("categories", 0, "events").size).to eq 2
+        expect(change_set.events_data.dig("categories", 0,
+          "events").size).to eq 2
       end
     end
   end

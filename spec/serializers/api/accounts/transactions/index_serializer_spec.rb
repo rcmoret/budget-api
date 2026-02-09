@@ -60,7 +60,8 @@ RSpec.describe API::Accounts::Transactions::IndexSerializer do
 
       it "does not inlcude pending transactions" do
         expect(subject.transactions.size).to be 1
-        expect(subject.transactions.map(&:clearance_date)).to contain_exactly(interval_transaction.clearance_date)
+        expect(subject.transactions.map(&:clearance_date))
+          .to contain_exactly(interval_transaction.clearance_date)
       end
     end
   end
@@ -71,14 +72,16 @@ RSpec.describe API::Accounts::Transactions::IndexSerializer do
     let(:user_group) { create(:user_group) }
     let(:account) { create(:account, user_group: user_group) }
     let!(:entries) do
-      create_list(:transaction_entry, 10, account: account, clearance_date: (interval.first_date - 1.day))
+      create_list(:transaction_entry, 10, account: account,
+        clearance_date: (interval.first_date - 1.day))
     end
     let!(:pending_entries) do
       create_list(:transaction_entry, 10, :pending, account: account)
     end
 
     before do
-      create_list(:transaction_entry, 10, account: account, clearance_date: interval.date_range.to_a.sample)
+      create_list(:transaction_entry, 10, account: account,
+        clearance_date: interval.date_range.to_a.sample)
     end
 
     context "when the interval is current" do

@@ -5,7 +5,10 @@ RSpec.describe Presenters::Budget::MonthlyItemPresenter do
     subject { described_class.new(item_double) }
 
     context "when there are no transaction details" do
-      let(:item_double) { instance_double(Budget::Item, transaction_detail_count: 0, amount: rand(-100_00..-100)) }
+      let(:item_double) do
+        instance_double(Budget::Item, transaction_detail_count: 0,
+          amount: rand(-100_00..-100))
+      end
 
       it "returns the difference" do
         expect(subject.remaining).to be item_double.amount
@@ -13,7 +16,10 @@ RSpec.describe Presenters::Budget::MonthlyItemPresenter do
     end
 
     context "when difference is positive" do
-      let(:item_double) { instance_double(Budget::Item, transaction_detail_count: 1, amount: rand(-100_00..-100)) }
+      let(:item_double) do
+        instance_double(Budget::Item, transaction_detail_count: 1,
+          amount: rand(-100_00..-100))
+      end
 
       it "returns the difference" do
         expect(subject.remaining).to be_zero
@@ -45,7 +51,9 @@ RSpec.describe Presenters::Budget::MonthlyItemPresenter do
     subject { described_class.new(item_double) }
 
     context "when the item has no transaction details" do
-      let(:item_double) { instance_double(Budget::Item, transaction_detail_count: 0) }
+      let(:item_double) do
+        instance_double(Budget::Item, transaction_detail_count: 0)
+      end
 
       it "returns -1 times the difference" do
         expect(subject.budget_impact).to be_zero
@@ -54,7 +62,8 @@ RSpec.describe Presenters::Budget::MonthlyItemPresenter do
 
     context "when the item has a transaction detail" do
       let(:item_double) do
-        instance_double(Budget::Item, difference: rand(100..100_00), transaction_detail_count: 1)
+        instance_double(Budget::Item, difference: rand(100..100_00),
+          transaction_detail_count: 1)
       end
 
       it "returns zero" do

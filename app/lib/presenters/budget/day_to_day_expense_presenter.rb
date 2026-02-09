@@ -2,7 +2,7 @@ module Presenters
   module Budget
     class DayToDayExpensePresenter < SimpleDelegator
       def remaining
-        [difference, 0].min
+        [ difference, 0 ].min
       end
 
       def reviewable?

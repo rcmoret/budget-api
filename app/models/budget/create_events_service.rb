@@ -8,7 +8,12 @@ module Budget
       new(...).call
     end
 
-    def initialize(interval:, event_context: :current, scopes: [], excluded_keys: [])
+    def initialize(
+      interval:,
+      event_context: :current,
+      scopes: [],
+      excluded_keys: []
+    )
       @interval = interval
       @event_context = event_context
       @excluded_keys = excluded_keys
@@ -37,7 +42,7 @@ module Budget
           amount: 0,
           budget_category_key: category.key,
           budget_item_key: KeyGenerator.call,
-          event_type: event_type,
+          event_type:,
           key: KeyGenerator.call,
           data: {},
         }
@@ -70,28 +75,29 @@ module Budget
     end
 
     def category_scope
-      @category_scope ||= @scopes.reduce(initial_scope) do |categories, named_scope|
-        case named_scope.to_sym
-        when *CATEGORY_SCOPES
-          categories.public_send(named_scope)
-        else
-          categories
+      @category_scope ||=
+        @scopes.reduce(initial_scope) do |categories, named_scope|
+          case named_scope.to_sym
+          when *CATEGORY_SCOPES
+            categories.public_send(named_scope)
+          else
+            categories
+          end
         end
-      end
     end
 
     def event_types
       case @event_context
       when *CREATE_EVENTS
-        [@event_context]
+        [ @event_context ]
       when :pre_setup
-        [PRE_SETUP_ITEM_CREATE, PRE_SETUP_MULTI_ITEM_ADJUST_CREATE]
+        [ PRE_SETUP_ITEM_CREATE, PRE_SETUP_MULTI_ITEM_ADJUST_CREATE ]
       when :setup
-        [SETUP_ITEM_CREATE]
+        [ SETUP_ITEM_CREATE ]
       when :close_out
-        [ROLLOVER_ITEM_CREATE, ROLLOVER_ITEM_CREATE]
+        [ ROLLOVER_ITEM_CREATE, ROLLOVER_ITEM_CREATE ]
       else
-        [ITEM_CREATE, MULTI_ITEM_ADJUST_CREATE]
+        [ ITEM_CREATE, MULTI_ITEM_ADJUST_CREATE ]
       end
     end
   end

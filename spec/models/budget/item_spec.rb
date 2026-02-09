@@ -11,9 +11,10 @@ RSpec.describe Budget::Item do
     specify do
       budget_interval = create(:budget_interval)
       category = create(:category, :weekly)
-      create(:budget_item, category: category, interval: budget_interval)
+      create(:budget_item, category:, interval: budget_interval)
 
-      subject = build(:budget_item, category: category, interval: budget_interval)
+      subject = build(:budget_item, category:,
+        interval: budget_interval)
 
       expect(subject).to be_invalid
     end
@@ -27,7 +28,9 @@ RSpec.describe Budget::Item do
         transaction_detail = create(:transaction_detail)
         subject = transaction_detail.budget_item
 
-        expect { subject.delete }.to raise_error(described_class::NonDeleteableError)
+        expect do
+          subject.delete
+        end.to raise_error(described_class::NonDeleteableError)
       end
     end
 
@@ -53,7 +56,7 @@ RSpec.describe Budget::Item do
     end
 
     context "when the budget item has at least one transaction detail" do
-      before { create(:transaction_detail, budget_item: budget_item) }
+      before { create(:transaction_detail, budget_item:) }
 
       it "returns false" do
         expect(subject).to be false
@@ -65,6 +68,7 @@ RSpec.describe Budget::Item do
     subject { budget_item }
 
     let(:budget_item) { create(:budget_item) }
+    let(:change_set) { create(:budget_change_set, :adjust) }
 
     context "when the budget item has no events" do
       it "returns zero" do
@@ -73,7 +77,9 @@ RSpec.describe Budget::Item do
     end
 
     context "when the budget item has at least one event" do
-      let!(:budget_item_event) { create(:budget_item_event, item: budget_item) }
+      let!(:budget_item_event) do
+        create(:budget_item_event, change_set:, item: budget_item)
+      end
 
       it "returns the total of the details' amounts" do
         expect(subject.amount).to be budget_item_event.amount
@@ -113,7 +119,9 @@ RSpec.describe Budget::Item do
     context "when there are serveral details" do
       let(:count) { rand(1..10) }
 
-      let!(:details) { create_list(:transaction_detail, count, budget_item: subject) }
+      let!(:details) do
+        create_list(:transaction_detail, count, budget_item: subject)
+      end
 
       it "returns the count" do
         expect(subject.spent).to be details.map(&:amount).sum
@@ -124,7 +132,9 @@ RSpec.describe Budget::Item do
   describe "#difference" do
     subject { create(:weekly_expense) }
 
-    before { create(:budget_item_event, :create_event, amount: rand(-100_00..-10_00)) }
+    before do
+      create(:budget_item_event, :create_event, amount: rand(-100_00..-10_00))
+    end
 
     context "when there are no details" do
       it "returns zero" do
@@ -134,7 +144,9 @@ RSpec.describe Budget::Item do
 
     context "when there are serveral details" do
       let(:count) { rand(1..10) }
-      let!(:details) { create_list(:transaction_detail, count, budget_item: subject) }
+      let!(:details) do
+        create_list(:transaction_detail, count, budget_item: subject)
+      end
 
       it "returns the count" do
         expect(subject.difference)

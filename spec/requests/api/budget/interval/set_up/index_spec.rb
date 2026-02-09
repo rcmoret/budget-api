@@ -4,7 +4,7 @@ RSpec.describe "GET /api/budget/intervals/set_up/:month/:year" do
   subject do
     get(
       api_budget_interval_set_up_path(month, year),
-      headers: headers
+      headers:
     )
   end
 
@@ -31,31 +31,47 @@ RSpec.describe "GET /api/budget/intervals/set_up/:month/:year" do
     let(:accrual_category) { create_category(user, :monthly, :accrual) }
     let(:day_to_day_category) { create_category(user, :expense, :weekly) }
     let(:monthly_category) { create_category(user, :revenue, :monthly) }
-    let(:accrual_item) { create(:budget_item, interval: current_interval, category: accrual_category) }
-    let(:day_to_day_item) { create(:budget_item, interval: current_interval, category: day_to_day_category) }
+    let(:accrual_item) do
+      create(:budget_item, interval: current_interval,
+        category: accrual_category)
+    end
+    let(:day_to_day_item) do
+      create(:budget_item, interval: current_interval,
+        category: day_to_day_category)
+    end
     let(:day_to_day_upcoming_item) do
-      create(:budget_item, interval: upcoming_interval, category: day_to_day_category)
+      create(:budget_item, interval: upcoming_interval,
+        category: day_to_day_category)
     end
     let(:monthly_item) do
-      create(:budget_item, interval: current_interval, category: monthly_category)
+      create(:budget_item, interval: current_interval,
+        category: monthly_category)
     end
     let(:monthly_upcoming_item) do
-      create(:budget_item, interval: upcoming_interval, category: monthly_category)
+      create(:budget_item, interval: upcoming_interval,
+        category: monthly_category)
     end
     let(:month) { upcoming_interval.month }
     let(:year) { upcoming_interval.year }
     let(:body) { JSON.parse.call(response.body).deep_symbolize_keys }
     let(:categories_data) { body.dig(:data, :budgetCategories) }
     let(:expected_category_keys) do
-      %i[key name slug iconClassName isAccrual isExpense isMonthly events defaultAmount]
+      %i[key name slug iconClassName isAccrual isExpense isMonthly events
+         defaultAmount]
     end
-    let(:expected_accrual_category_keys) { expected_category_keys + [:upcomingMaturityIntervals] }
+    let(:expected_accrual_category_keys) do
+      expected_category_keys + [ :upcomingMaturityIntervals ]
+    end
 
     before do
-      create(:maturity_interval, category: accrual_category, interval: current_interval.prev)
-      create(:maturity_interval, category: accrual_category, interval: upcoming_interval)
-      create(:maturity_interval, category: accrual_category, interval: further_upcoming_interval)
-      [day_to_day_item, day_to_day_upcoming_item, accrual_item, monthly_item, monthly_upcoming_item]
+      create(:maturity_interval, category: accrual_category,
+        interval: current_interval.prev)
+      create(:maturity_interval, category: accrual_category,
+        interval: upcoming_interval)
+      create(:maturity_interval, category: accrual_category,
+        interval: further_upcoming_interval)
+      [ day_to_day_item, day_to_day_upcoming_item, accrual_item, monthly_item,
+        monthly_upcoming_item, ]
     end
 
     it "returns data" do
@@ -67,9 +83,12 @@ RSpec.describe "GET /api/budget/intervals/set_up/:month/:year" do
         lastDate: upcoming_interval.last_date,
       )
       expect(body.dig(:data, :categories).size).to be 3
-      expect(body.dig(:data, :categories, 0).keys).to match_array(expected_accrual_category_keys)
-      expect(body.dig(:data, :categories, 1).keys).to match_array(expected_category_keys)
-      expect(body.dig(:data, :categories, 2).keys).to match_array(expected_category_keys)
+      expect(body.dig(:data, :categories,
+        0).keys).to match_array(expected_accrual_category_keys)
+      expect(body.dig(:data, :categories,
+        1).keys).to match_array(expected_category_keys)
+      expect(body.dig(:data, :categories,
+        2).keys).to match_array(expected_category_keys)
       expect(body.dig(:data, :categories, 0)).to include(
         key: accrual_category.key,
         name: accrual_category.name,
@@ -80,7 +99,8 @@ RSpec.describe "GET /api/budget/intervals/set_up/:month/:year" do
         isMonthly: true,
         upcomingMaturityIntervals: [
           { month: upcoming_interval.month, year: upcoming_interval.year },
-          { month: further_upcoming_interval.month, year: further_upcoming_interval.year },
+          { month: further_upcoming_interval.month,
+            year: further_upcoming_interval.year, },
         ],
       )
       expect(body.dig(:data, :categories, 1)).to include(

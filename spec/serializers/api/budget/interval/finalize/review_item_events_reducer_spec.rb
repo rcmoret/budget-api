@@ -19,7 +19,7 @@ RSpec.describe API::Budget::Interval::Finalize::ReviewItemEventsReducer do
           instance_double(Presenters::Budget::MonthlyItemPresenter),
         ]
       end
-      let(:target_items) { [instance_double(Presenters::Budget::MonthlyItemPresenter)] }
+      let(:target_items) { [ instance_double(Presenters::Budget::MonthlyItemPresenter) ] }
 
       context "when there are target items" do
         subject do
@@ -63,7 +63,7 @@ RSpec.describe API::Budget::Interval::Finalize::ReviewItemEventsReducer do
 
     context "when the category is day to day" do
       let(:category) { create(:category, :weekly, user_group: user_group) }
-      let(:reviewable_items) { [instance_double(Presenters::Budget::DayToDayExpensePresenter)] }
+      let(:reviewable_items) { [ instance_double(Presenters::Budget::DayToDayExpensePresenter) ] }
 
       context "when there is a target item" do
         subject do
@@ -75,7 +75,7 @@ RSpec.describe API::Budget::Interval::Finalize::ReviewItemEventsReducer do
           )
         end
 
-        let(:target_items) { [instance_double(Presenters::Budget::DayToDayExpensePresenter)] }
+        let(:target_items) { [ instance_double(Presenters::Budget::DayToDayExpensePresenter) ] }
 
         it "does not add a create event" do
           expect(API::Budget::Interval::Finalize::CreateEventSerializer)
@@ -111,7 +111,9 @@ RSpec.describe API::Budget::Interval::Finalize::ReviewItemEventsReducer do
 
     context "when the category is an accrual" do
       let(:category) { create(:category, :accrual, user_group: user_group) }
-      let(:reviewable_items) { [instance_double(Presenters::Budget::DayToDayExpensePresenter, remaining: 0)] }
+      let(:reviewable_items) do
+        [ instance_double(Presenters::Budget::DayToDayExpensePresenter, remaining: 0) ]
+      end
 
       context "when there are target items" do
         subject do
@@ -123,7 +125,7 @@ RSpec.describe API::Budget::Interval::Finalize::ReviewItemEventsReducer do
           )
         end
 
-        let(:target_items) { [instance_double(Presenters::Budget::DayToDayExpensePresenter)] }
+        let(:target_items) { [ instance_double(Presenters::Budget::DayToDayExpensePresenter) ] }
 
         it "does not add a create event" do
           expect(API::Budget::Interval::Finalize::CreateEventSerializer)

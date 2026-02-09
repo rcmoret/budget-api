@@ -2,7 +2,7 @@ module Helpers
   module CustomMatchers
     RSpec::Matchers.define :be_a_boolean do |_expected|
       match do |actual|
-        [true, false].include?(actual)
+        [ true, false ].include?(actual)
       end
     end
 

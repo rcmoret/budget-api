@@ -56,8 +56,9 @@ RSpec.describe API::Accounts::Transactions::BalanceSerializer do
     context "when the budget interval is in the future" do
       let(:interval) { create(:budget_interval, :future, user_group: user_group) }
 
-      it "returns the sum of cleared and pending transactions prior to the beginning of the interval" do
-        expect(subject.balance_prior_to).to eq [*cleared_transactions, *pending_transactions].sum(&:total)
+      it "returns the sum of cleared and pending transactions prior to beginning of the interval" do
+        expect(subject.balance_prior_to).to eq [ *cleared_transactions,
+                                                 *pending_transactions, ].sum(&:total)
       end
     end
   end

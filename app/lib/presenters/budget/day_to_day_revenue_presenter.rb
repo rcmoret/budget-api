@@ -2,7 +2,7 @@ module Presenters
   module Budget
     class DayToDayRevenuePresenter < SimpleDelegator
       def remaining
-        [difference, 0].max
+        [ difference, 0 ].max
       end
 
       def reviewable?

@@ -8,7 +8,7 @@ module API
         delegate :key, to: :category
 
         def maturity_intervals
-          [{ month: month, year: year }]
+          [ { month: month, year: year } ]
         end
       end
     end

@@ -72,7 +72,7 @@ module Budget
             end
 
             def non_zero?
-              !zero?
+              !!adjustment[:cents].non_zero?
             end
 
             def zero?
@@ -90,15 +90,13 @@ module Budget
 
           def initialize(change)
             @change = change
-            @categories = change.events_data.fetch("categories").map(&:deep_symbolize_keys).map do |category_data|
-              category_data[:events] = category_data[:events].map do |ev|
-                EventStruct.new(*ev.values_at(*EVENT_ATTRIBUTES))
+            @categories =
+              change.events_data.fetch("categories").map do |category_data|
+                category_struct(category_data)
               end
-              CategoryStruct.new(*category_data.values_at(*CATEGORY_ATTRIBUTES))
-            end.sort!
           end
 
-          attr_reader :change, :categories, :groups, :category_slug, :metadata
+          attr_reader :change, :groups, :categories, :category_slug, :metadata
 
           attr_accessor :slug
 
@@ -125,22 +123,36 @@ module Budget
             :base_interval
           )
 
+          # rubocop:disable Metrics/AbcSize
           def index_serializer
             IndexStruct.new(
-              revenues: revenues,
-              monthly_expenses: monthly_expenses,
-              day_to_day_expenses: day_to_day_expenses,
+              revenues:,
+              monthly_expenses:,
+              day_to_day_expenses:,
               budget_total: categories.sum(&:sum),
               month: change.month,
               year: change.year,
               selected_category: selected_category_data,
-              next_category_slug: next_category_slug,
-              previous_category_slug: previous_category_slug,
-              next_unreviewed_category_slug: next_unreviewed_category_slug,
-              previous_unreviewed_category_slug: previous_unreviewed_category_slug,
+              next_category_slug:,
+              previous_category_slug:,
+              next_unreviewed_category_slug:,
+              previous_unreviewed_category_slug:,
               is_submittable: submittable?,
               base_interval: change.interval.prev
             )
+          end
+          # rubocop:enable Metrics/AbcSize
+
+          def category_struct(category_data)
+            category_data.deep_symbolize_keys!
+
+            # binding.pry
+            category_data[:events].map! do |ev|
+              next ev unless ev.is_a? Hash
+
+              EventStruct.new(*ev.values_at(*EVENT_ATTRIBUTES))
+            end
+            CategoryStruct.new(*category_data.values_at(*CATEGORY_ATTRIBUTES))
           end
 
           def selected_category_data
@@ -160,11 +172,13 @@ module Budget
           end
 
           def previous_unreviewed_category_slug
-            categories.rotate(previous_index).reduce("") do |memo, category_data|
-              next memo if category_data.reviewed?
+            categories
+              .rotate(previous_index)
+              .reduce("") do |memo, category_data|
+                next memo if category_data.reviewed?
 
-              memo.presence || category_data.slug
-            end
+                memo.presence || category_data.slug
+              end
           end
 
           def previous_category_slug
@@ -177,7 +191,7 @@ module Budget
 
           def next_index
             (current_index + 1).then do |index|
-              [index, (0 if index == slugs.size)].compact.min
+              [ index, (0 if index == slugs.size) ].compact.min
             end
           end
 
@@ -204,7 +218,7 @@ module Budget
               label: "Revenues",
               categories: collection.to_a,
               is_selected: collection.map(&:slug).include?(slug),
-              scopes: [:revenues]
+              scopes: [ :revenues ]
             )
           end
 

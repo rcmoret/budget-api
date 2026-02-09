@@ -2,15 +2,25 @@ require "rails_helper"
 
 RSpec.describe Budget::CreateEventsService do
   describe ".call" do
-    subject(:events) { described_class.call(interval: interval, event_context: event_context, scopes: scopes) }
+    subject(:events) do
+      described_class.call(interval:, event_context:,
+        scopes:)
+    end
 
     let(:interval) { create(:budget_interval) }
     let(:event_context) { :current }
     let(:scopes) { [] }
-    let(:user_profile) { interval.user_group.users.first || create(:user, user_group: interval.user_group) }
+    let(:user_profile) do
+      interval.user_group.users.first || create(:user,
+        user_group: interval.user_group)
+    end
 
-    let!(:monthly_category) { create(:category, :monthly, :expense, user_group: interval.user_group) }
-    let!(:weekly_category) { create(:category, :weekly, :expense, user_group: interval.user_group) }
+    let!(:monthly_category) do
+      create(:category, :monthly, :expense, user_group: interval.user_group)
+    end
+    let!(:weekly_category) do
+      create(:category, :weekly, :expense, user_group: interval.user_group)
+    end
 
     it "returns an array of event hashes" do
       expect(events).to be_an(Array)
@@ -21,7 +31,7 @@ RSpec.describe Budget::CreateEventsService do
       expect(events.first[:amount]).to eq(0)
       expect(events.first[:budget_category_key]).to eq(monthly_category.key)
       expect(events.first[:budget_item_key]).to be_a(String)
-      expect(events.first[:budget_item_key].length).to eq(12) # hex(6) = 12 chars
+      expect(events.first[:budget_item_key].length).to eq(12)
       expect(events.first[:key]).to be_a(String)
       expect(events.first[:key].length).to eq(12) # hex(6) = 12 chars
       expect(events.first[:data]).to eq({})
@@ -29,8 +39,9 @@ RSpec.describe Budget::CreateEventsService do
 
     describe "exclusion of weekly categories with existing items" do
       let!(:weekly_category_with_item) do
-        create(:category, :weekly, :expense, user_group: interval.user_group).tap do |category|
-          create(:budget_item, category: category, interval: interval)
+        create(:category, :weekly, :expense,
+          user_group: interval.user_group).tap do |category|
+          create(:budget_item, category:, interval:)
         end
       end
 
@@ -52,12 +63,24 @@ RSpec.describe Budget::CreateEventsService do
     end
 
     describe "category scopes" do
-      let!(:expense_category) { create(:category, :expense, user_group: interval.user_group) }
-      let!(:revenue_category) { create(:category, :revenue, user_group: interval.user_group) }
-      let!(:monthly_category) { create(:category, :monthly, user_group: interval.user_group) }
-      let!(:weekly_category) { create(:category, :weekly, user_group: interval.user_group) }
-      let!(:accrual_category) { create(:category, :expense, :accrual, user_group: interval.user_group) }
-      let!(:non_accrual_category) { create(:category, :expense, user_group: interval.user_group) }
+      let!(:expense_category) do
+        create(:category, :expense, user_group: interval.user_group)
+      end
+      let!(:revenue_category) do
+        create(:category, :revenue, user_group: interval.user_group)
+      end
+      let!(:monthly_category) do
+        create(:category, :monthly, user_group: interval.user_group)
+      end
+      let!(:weekly_category) do
+        create(:category, :weekly, user_group: interval.user_group)
+      end
+      let!(:accrual_category) do
+        create(:category, :expense, :accrual, user_group: interval.user_group)
+      end
+      let!(:non_accrual_category) do
+        create(:category, :expense, user_group: interval.user_group)
+      end
 
       context "when scopes is empty" do
         let(:scopes) { [] }
@@ -68,7 +91,7 @@ RSpec.describe Budget::CreateEventsService do
       end
 
       context "when scopes includes :expense" do
-        let(:scopes) { [:expenses] }
+        let(:scopes) { [ :expenses ] }
 
         it "returns only expense categories" do
           category_keys = events.pluck(:budget_category_key)
@@ -79,7 +102,7 @@ RSpec.describe Budget::CreateEventsService do
       end
 
       context "when scopes includes :revenues" do
-        let(:scopes) { [:revenues] }
+        let(:scopes) { [ :revenues ] }
 
         it "returns only revenue categories" do
           category_keys = events.pluck(:budget_category_key)
@@ -90,7 +113,7 @@ RSpec.describe Budget::CreateEventsService do
       end
 
       context "when scopes includes :monthly" do
-        let(:scopes) { [:monthly] }
+        let(:scopes) { [ :monthly ] }
 
         it "returns only monthly categories" do
           category_keys = events.pluck(:budget_category_key)
@@ -101,7 +124,7 @@ RSpec.describe Budget::CreateEventsService do
       end
 
       context "when scopes includes :weekly" do
-        let(:scopes) { [:weekly] }
+        let(:scopes) { [ :weekly ] }
 
         it "returns only weekly categories" do
           category_keys = events.pluck(:budget_category_key)
@@ -112,7 +135,7 @@ RSpec.describe Budget::CreateEventsService do
       end
 
       context "when scopes includes :accruals" do
-        let(:scopes) { [:accruals] }
+        let(:scopes) { [ :accruals ] }
 
         it "returns only accrual categories" do
           category_keys = events.pluck(:budget_category_key)
@@ -123,7 +146,7 @@ RSpec.describe Budget::CreateEventsService do
       end
 
       context "when scopes includes :non_accruals" do
-        let(:scopes) { [:non_accruals] }
+        let(:scopes) { [ :non_accruals ] }
 
         it "returns only non-accrual categories" do
           category_keys = events.pluck(:budget_category_key)
@@ -139,14 +162,16 @@ RSpec.describe Budget::CreateEventsService do
         it "applies all scopes" do
           category_keys = events.pluck(:budget_category_key)
 
-          expect(category_keys).to include(monthly_category.key) if monthly_category.expense?
+          if monthly_category.expense?
+            expect(category_keys).to include(monthly_category.key)
+          end
           expect(category_keys).not_to include(weekly_category.key)
           expect(category_keys).not_to include(revenue_category.key)
         end
       end
 
       context "when scopes includes an invalid scope" do
-        let(:scopes) { [:invalid_scope] }
+        let(:scopes) { [ :invalid_scope ] }
 
         it "ignores the invalid scope" do
           expect(events.length).to be >= 6
@@ -161,21 +186,26 @@ RSpec.describe Budget::CreateEventsService do
         let(:event_context) { :current }
 
         it "returns [ITEM_CREATE, MULTI_ITEM_ADJUST_CREATE]" do
-          expect(events.first[:event_types]).to eq([
-                                                     Budget::EventTypes::ITEM_CREATE,
-                                                     Budget::EventTypes::MULTI_ITEM_ADJUST_CREATE,
-                                                   ])
+          expect(events.first[:event_types]).to eq(
+            [
+              Budget::EventTypes::ITEM_CREATE,
+              Budget::EventTypes::MULTI_ITEM_ADJUST_CREATE,
+            ]
+          )
         end
       end
 
       context "when event_context is :pre_setup" do
         let(:event_context) { :pre_setup }
 
-        it "returns [PRE_SETUP_ITEM_CREATE, PRE_SETUP_MULTI_ITEM_ADJUST_CREATE]" do
-          expect(events.first[:event_types]).to eq([
-                                                     Budget::EventTypes::PRE_SETUP_ITEM_CREATE,
-                                                     Budget::EventTypes::PRE_SETUP_MULTI_ITEM_ADJUST_CREATE,
-                                                   ])
+        it "returns [PRE_SETUP_ITEM_CREATE, " \
+           "PRE_SETUP_MULTI_ITEM_ADJUST_CREATE]" do
+          expect(events.first[:event_types]).to eq(
+            [
+              Budget::EventTypes::PRE_SETUP_ITEM_CREATE,
+              Budget::EventTypes::PRE_SETUP_MULTI_ITEM_ADJUST_CREATE,
+            ]
+          )
         end
       end
 
@@ -183,9 +213,8 @@ RSpec.describe Budget::CreateEventsService do
         let(:event_context) { :setup }
 
         it "returns [SETUP_ITEM_CREATE]" do
-          expect(events.first[:event_types]).to eq([
-                                                     Budget::EventTypes::SETUP_ITEM_CREATE,
-                                                   ])
+          expect(events.first[:event_types])
+            .to eq([ Budget::EventTypes::SETUP_ITEM_CREATE ])
         end
       end
 
@@ -206,7 +235,8 @@ RSpec.describe Budget::CreateEventsService do
         let(:event_context) { Budget::EventTypes::ITEM_CREATE }
 
         it "returns [event_context]" do
-          expect(events.first[:event_types]).to eq([Budget::EventTypes::ITEM_CREATE])
+          expect(events.first[:event_types])
+            .to eq([ Budget::EventTypes::ITEM_CREATE ])
         end
       end
 
@@ -214,7 +244,8 @@ RSpec.describe Budget::CreateEventsService do
         let(:event_context) { Budget::EventTypes::PRE_SETUP_ITEM_CREATE }
 
         it "returns [PRE_SETUP_ITEM_CREATE]" do
-          expect(events.first[:event_types]).to eq([Budget::EventTypes::PRE_SETUP_ITEM_CREATE])
+          expect(events.first[:event_types])
+            .to eq([ Budget::EventTypes::PRE_SETUP_ITEM_CREATE ])
         end
       end
 
@@ -222,7 +253,8 @@ RSpec.describe Budget::CreateEventsService do
         let(:event_context) { Budget::EventTypes::MULTI_ITEM_ADJUST_CREATE }
 
         it "returns [MULTI_ITEM_ADJUST_CREATE]" do
-          expect(events.first[:event_types]).to eq([Budget::EventTypes::MULTI_ITEM_ADJUST_CREATE])
+          expect(events.first[:event_types])
+            .to eq([ Budget::EventTypes::MULTI_ITEM_ADJUST_CREATE ])
         end
       end
 
@@ -230,7 +262,8 @@ RSpec.describe Budget::CreateEventsService do
         let(:event_context) { Budget::EventTypes::SETUP_ITEM_CREATE }
 
         it "returns [SETUP_ITEM_CREATE]" do
-          expect(events.first[:event_types]).to eq([Budget::EventTypes::SETUP_ITEM_CREATE])
+          expect(events.first[:event_types])
+            .to eq([ Budget::EventTypes::SETUP_ITEM_CREATE ])
         end
       end
 
@@ -238,15 +271,20 @@ RSpec.describe Budget::CreateEventsService do
         let(:event_context) { Budget::EventTypes::ROLLOVER_ITEM_CREATE }
 
         it "returns [ROLLOVER_ITEM_CREATE]" do
-          expect(events.first[:event_types]).to eq([Budget::EventTypes::ROLLOVER_ITEM_CREATE])
+          expect(events.first[:event_types])
+            .to eq([ Budget::EventTypes::ROLLOVER_ITEM_CREATE ])
         end
       end
     end
 
     describe "with different user groups" do
       let(:other_user_group) { create(:user_group) }
-      let!(:category_in_interval_group) { create(:category, user_group: interval.user_group) }
-      let!(:category_in_other_group) { create(:category, user_group: other_user_group) }
+      let!(:category_in_interval_group) do
+        create(:category, user_group: interval.user_group)
+      end
+      let!(:category_in_other_group) do
+        create(:category, user_group: other_user_group)
+      end
 
       it "only returns categories from the interval's user group" do
         category_keys = events.pluck(:budget_category_key)
@@ -257,11 +295,17 @@ RSpec.describe Budget::CreateEventsService do
     end
 
     describe "caching of category_scope" do
-      let!(:category1) { create(:category, user_group: interval.user_group) }
-      let!(:category2) { create(:category, user_group: interval.user_group) }
+      before do
+        create(:category, user_group: interval.user_group)
+        create(:category, user_group: interval.user_group)
+      end
+
+      # let!(:category1) { create(:category, user_group: interval.user_group) }
+      # let!(:category2) { create(:category, user_group: interval.user_group) }
 
       it "memoizes the category scope" do
-        service = described_class.new(interval: interval, event_context: :current, scopes: [])
+        service = described_class.new(interval:,
+          event_context: :current, scopes: [])
         first_call = service.call
         second_call = service.call
 
@@ -277,7 +321,7 @@ RSpec.describe Budget::CreateEventsService do
 
     it "accepts interval, event_context, and scopes" do
       service = described_class.new(
-        interval: interval,
+        interval:,
         event_context: :setup,
         scopes: %i[expense monthly]
       )
@@ -288,7 +332,7 @@ RSpec.describe Budget::CreateEventsService do
 
   describe "#user_group" do
     let(:interval) { create(:budget_interval) }
-    let(:service) { described_class.new(interval: interval) }
+    let(:service) { described_class.new(interval:) }
 
     it "delegates to interval" do
       expect(service.user_group).to eq(interval.user_group)

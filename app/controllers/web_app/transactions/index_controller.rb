@@ -21,15 +21,15 @@ module WebApp
       end
 
       def accounts_serializer
-        API::Accounts::IndexSerializer.new(
+        WebApp::Accounts::IndexSerializer.new(
           Account.belonging_to(current_user_profile)
         )
       end
 
       def selected_account_serializer
         IndexSerializer.new(
-          account: account,
-          interval: interval
+          account:,
+          interval:
         )
       end
 

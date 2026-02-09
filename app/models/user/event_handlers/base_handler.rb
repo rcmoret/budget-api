@@ -7,7 +7,11 @@ module User
         @data = event
                 .data
                 .merge(transient_data.transform_values { "FILTERED" })
-                .merge(actor: event.actor, target_user: event.target_user, event_key: event.key)
+                .merge(
+                  actor: event.actor,
+                  target_user: event.target_user,
+                  event_key: event.key
+                )
         @transient_data = transient_data
       end
 
@@ -16,7 +20,7 @@ module User
       attr_reader :data, :transient_data
 
       def ok_tuple(**args)
-        [:ok, args]
+        [ :ok, args ]
       end
     end
   end

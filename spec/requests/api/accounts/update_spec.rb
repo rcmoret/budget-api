@@ -1,7 +1,9 @@
 require "rails_helper"
 
 RSpec.describe "PUT /api/accounts/:key" do
-  subject { put(api_account_path(account_key), params: params, headers: headers) }
+  subject do
+    put(api_account_path(account_key), params:, headers:)
+  end
 
   context "when the account is not found" do
     include_context "with valid token"

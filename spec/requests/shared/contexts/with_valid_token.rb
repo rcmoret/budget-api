@@ -5,9 +5,9 @@ RSpec.shared_context "with valid token" do
   let(:auth_token_context) do
     create(
       :auth_token_context,
-      user: user,
+      user:,
       ip_address: "127.0.0.1",
-      expires_at: expires_at,
+      expires_at:,
       manually_expired_at: nil,
     )
   end

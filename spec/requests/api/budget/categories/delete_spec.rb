@@ -2,18 +2,20 @@ require "rails_helper"
 
 RSpec.describe "DELETE /api/budget/category/:category_key" do
   subject do
-    delete(api_budget_category_path(category_key), headers: headers)
+    delete(api_budget_category_path(category_key), headers:)
   end
 
   context "when at least one related budget item exists" do
     include_context "with valid token"
 
     let(:icon) { create(:icon) }
-    let(:category) { create(:category, :accrual, icon: icon, user_group: user.group) }
+    let(:category) do
+      create(:category, :accrual, icon:, user_group: user.group)
+    end
     let(:category_key) { category.key }
 
     before do
-      create(:budget_item, category: category)
+      create(:budget_item, category:)
     end
 
     it "updates the category, and returns a serialized category" do
@@ -53,7 +55,8 @@ RSpec.describe "DELETE /api/budget/category/:category_key" do
         .by(-1)
       expect(response).to have_http_status :accepted
       body = response.parsed_body.deep_symbolize_keys
-      expect(body).to eq(budgetCategory: { deletedBudgetCategoryIds: [category.id] })
+      expect(body)
+        .to eq(budgetCategory: { deletedBudgetCategoryIds: [ category.id ] })
     end
   end
 

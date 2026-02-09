@@ -18,15 +18,15 @@ module WebApp
     def page_props
       props
         .render
-        .deep_merge({ metadata: metadata })
-        .merge(errors.any? ? { errors: errors } : {})
+        .deep_merge({ metadata: })
+        .merge(errors.any? ? { errors: } : {})
         .deep_transform_keys { |key| key.to_s.camelize(:lower) }
     end
 
     def metadata
       {
         user_key: current_user_profile.key,
-        namespace: namespace,
+        namespace:,
         prev_selected_account_path: session[:selected_account_path].to_s,
       }
     end

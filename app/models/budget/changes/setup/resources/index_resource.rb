@@ -15,13 +15,13 @@ module Budget
 
           nested :metadata do
             attributes :budget_total,
-                       :is_submittable,
-                       :next_category_slug,
-                       :next_unreviewed_category_slug,
-                       :previous_category_slug,
-                       :previous_unreviewed_category_slug,
-                       :month,
-                       :year
+              :is_submittable,
+              :next_category_slug,
+              :next_unreviewed_category_slug,
+              :previous_category_slug,
+              :previous_unreviewed_category_slug,
+              :month,
+              :year
             attribute(:previous_month) { |object| object.base_interval.month }
             attribute(:previous_year) { |object| object.base_interval.year }
 
@@ -30,8 +30,16 @@ module Budget
 
           nested_attribute :groups do
             one(:revenues, resource: GroupResource, source: proc { revenues })
-            one(:monthly_expenses, resource: GroupResource, source: proc { monthly_expenses })
-            one(:day_to_day_expenses, resource: GroupResource, source: proc { day_to_day_expenses })
+            one(
+              :monthly_expenses,
+              resource: GroupResource,
+              source: proc { monthly_expenses }
+            )
+            one(
+              :day_to_day_expenses,
+              resource: GroupResource,
+              source: proc { day_to_day_expenses }
+            )
 
             transform_keys :lower_camel
           end

@@ -2,23 +2,30 @@
 
 module Budget
   class CategoryMaturityInterval < ApplicationRecord
-    include BelongsToUserGroup::Through[association: :category, class_name: "Budget::Category"]
+    include BelongsToUserGroup::Through[association: :category,
+      class_name: "Budget::Category"]
 
-    belongs_to :interval, foreign_key: :budget_interval_id, inverse_of: :maturity_intervals
-    belongs_to :category, foreign_key: :budget_category_id, inverse_of: :maturity_intervals
+    belongs_to :interval,
+      foreign_key: :budget_interval_id,
+      inverse_of: :maturity_intervals
+    belongs_to :category,
+      foreign_key: :budget_category_id,
+      inverse_of: :maturity_intervals
 
     validates :category, uniqueness: { scope: :interval }
     validate :category_accrual?
 
     scope :ordered, -> { joins(:interval).merge(Interval.ordered) }
-    scope :on_or_after, ->(month:, year:) { joins(:interval).merge(Interval.on_or_after(month: month, year: year)) }
+    scope :on_or_after, lambda { |month:, year:|
+      joins(:interval).merge(Interval.on_or_after(month:, year:))
+    }
 
     delegate :month, :year, to: :interval
 
     accepts_nested_attributes_for :interval, reject_if: proc { true }
 
     def date_hash
-      { month: month, year: year }
+      { month:, year: }
     end
 
     private

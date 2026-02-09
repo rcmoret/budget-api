@@ -30,7 +30,7 @@ RSpec.describe API::Budget::Events::ResponseSerializer do
 
     let(:interval) { create(:budget_interval, user_group: user.group) }
     let(:budget_items) do
-      [budget_item1, budget_item2, budget_item3]
+      [ budget_item1, budget_item2, budget_item3 ]
     end
     let(:budget_item_keys) { budget_items.map(&:key) }
 

@@ -17,15 +17,18 @@ module Forms
 
       def formatted_params
         params.tap do |parameters|
-          parameters.merge!(maturity_intervals_attributes: maturity_intervals_attributes) if maturity_interval_data?
-          parameters.merge!(icon_id: icon_id) if icon_id.present?
+          if maturity_interval_data?
+            parameters.merge!(maturity_intervals_attributes:)
+          end
+          parameters.merge!(icon_id:) if icon_id.present?
         end
       end
 
       def maturity_intervals_attributes
-        @maturity_intervals_attributes ||= params.delete(:maturity_intervals).filter_map do |attributes|
-          handle_maturity_interval(attributes)
-        end
+        @maturity_intervals_attributes ||=
+          params.delete(:maturity_intervals).filter_map do |attributes|
+            handle_maturity_interval(attributes)
+          end
       end
 
       def icon_id
@@ -33,13 +36,24 @@ module Forms
       end
 
       def handle_maturity_interval(attributes)
-        interval = ::Budget::Interval.fetch(user, key: attributes.slice("month", "year"))
+        interval = ::Budget::Interval.fetch(
+          user,
+          key: attributes.slice("month", "year")
+        )
 
         return { budget_interval_id: interval.id } unless attributes[:_destroy]
 
-        maturity_interval = ::Budget::CategoryMaturityInterval.find_by(interval: interval, category: category)
+        maturity_interval = ::Budget::CategoryMaturityInterval.find_by(
+          interval:,
+          category:
+        )
 
-        { id: maturity_interval.id, _destroy: true } if maturity_interval.present?
+        return if maturity_interval.blank?
+
+        {
+          id: maturity_interval.id,
+          _destroy: true,
+        }
       end
 
       def maturity_interval_data? = params.key?(:maturity_intervals)

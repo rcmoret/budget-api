@@ -3,12 +3,14 @@ require "rails_helper"
 RSpec.describe "POST /api/accounts/transfers" do
   subject do
     post(api_accounts_transfers_path(month, year),
-         headers: headers,
-         params: params)
+      headers:,
+      params:)
   end
 
   shared_context "when user has budget interval" do
-    let(:interval) { create(:budget_interval, :current, user_group: user.group) }
+    let(:interval) do
+      create(:budget_interval, :current, user_group: user.group)
+    end
     let(:month) { interval.month }
     let(:year) { interval.year }
   end
@@ -42,7 +44,7 @@ RSpec.describe "POST /api/accounts/transfers" do
       let(:params) do
         {
           transfer: {
-            amount: amount,
+            amount:,
             from_account_key: from_account.key,
             to_account_key: to_account.key,
           },
@@ -87,7 +89,7 @@ RSpec.describe "POST /api/accounts/transfers" do
       subject
       expect(response).to have_http_status :not_found
       body = response.parsed_body.deep_symbolize_keys
-      expect(body).to eq(from_account: ["can't be blank"])
+      expect(body).to eq(from_account: [ "can't be blank" ])
     end
   end
 
@@ -110,7 +112,7 @@ RSpec.describe "POST /api/accounts/transfers" do
       subject
       expect(response).to have_http_status :not_found
       body = response.parsed_body.deep_symbolize_keys
-      expect(body).to eq(to_account: ["can't be blank"])
+      expect(body).to eq(to_account: [ "can't be blank" ])
     end
   end
 
@@ -134,7 +136,7 @@ RSpec.describe "POST /api/accounts/transfers" do
       subject
       expect(response).to have_http_status :unprocessable_entity
       body = response.parsed_body.deep_symbolize_keys
-      expect(body).to eq(amount: ["must be greater than 0"])
+      expect(body).to eq(amount: [ "must be greater than 0" ])
     end
   end
 

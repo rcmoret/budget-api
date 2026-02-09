@@ -5,7 +5,7 @@ module WebApp
     class UpdateController < BaseController
       include Mixins::HasRedirectParams
       before_action -> { redirect_to accounts_manage_path },
-                    if: -> { account.nil? }
+        if: -> { account.nil? }
 
       def call
         if account.update(update_params)

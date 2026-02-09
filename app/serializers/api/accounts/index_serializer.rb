@@ -8,7 +8,9 @@ module API
           user_accounts.map do |account|
             {
               account: account,
-              balance: balances_by_account_id.find { |struct| struct.account_id == account.id }&.balance.to_i,
+              balance: balances_by_account_id.find do |struct|
+                struct.account_id == account.id
+              end&.balance.to_i,
             }
           end
         end

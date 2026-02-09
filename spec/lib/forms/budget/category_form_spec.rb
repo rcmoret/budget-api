@@ -82,8 +82,8 @@ describe Forms::Budget::CategoryForm do
         before do
           create(
             :maturity_interval,
-            category: category,
-            interval: interval
+            category:,
+            interval:
           )
         end
 
@@ -109,8 +109,8 @@ describe Forms::Budget::CategoryForm do
         before do
           create(
             :maturity_interval,
-            category: category,
-            interval: interval
+            category:,
+            interval:
           )
         end
 
@@ -138,8 +138,8 @@ describe Forms::Budget::CategoryForm do
         before do
           create(
             :maturity_interval,
-            category: category,
-            interval: interval
+            category:,
+            interval:
           )
         end
 

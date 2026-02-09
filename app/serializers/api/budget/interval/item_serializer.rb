@@ -8,15 +8,15 @@ module API
         end
 
         attributes :key,
-                   :amount,
-                   :budget_category_key,
-                   :currently_budgeted,
-                   :difference,
-                   :icon_class_name,
-                   :name,
-                   :previously_budgeted,
-                   :remaining,
-                   :spent
+          :amount,
+          :budget_category_key,
+          :currently_budgeted,
+          :difference,
+          :icon_class_name,
+          :name,
+          :previously_budgeted,
+          :remaining,
+          :spent
         attribute :is_accrual, alias_of: :accrual?
         attribute :is_deletable, alias_of: :deletable?
         attribute :is_deleted, alias_of: :deleted?
@@ -27,16 +27,16 @@ module API
         attribute :maturity_year, conditional: :accrual?
         attribute :events
         attribute :transaction_details,
-                  each_serializer: Items::TransactionDetailSerializer,
-                  on_render: :render
+          each_serializer: Items::TransactionDetailSerializer,
+          on_render: :render
 
         delegate :name,
-                 :accrual?,
-                 :expense?,
-                 :icon_class_name,
-                 :monthly?,
-                 :per_diem_enabled?,
-                 to: :category
+          :accrual?,
+          :expense?,
+          :icon_class_name,
+          :monthly?,
+          :per_diem_enabled?,
+          to: :category
 
         def budget_category_key
           category.key

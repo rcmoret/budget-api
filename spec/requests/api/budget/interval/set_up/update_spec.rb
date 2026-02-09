@@ -4,8 +4,8 @@ RSpec.describe "PUT /api/budget/intervals/set_up/:month/:year" do
   subject do
     put(
       api_budget_interval_set_up_path(month, year),
-      params: params,
-      headers: headers
+      params:,
+      headers:
     )
   end
 
@@ -27,10 +27,10 @@ RSpec.describe "PUT /api/budget/intervals/set_up/:month/:year" do
           {
             key: event_key,
             budget_item_key: item_key,
-            amount: amount,
-            event_type: event_type,
-            month: month,
-            year: year,
+            amount:,
+            event_type:,
+            month:,
+            year:,
             budget_category_key: category.key,
           },
         ],

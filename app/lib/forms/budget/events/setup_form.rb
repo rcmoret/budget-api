@@ -7,7 +7,10 @@ module Forms
         validate :interval_needs_setup!
 
         def initialize(user:, interval:, **options)
-          @events_form = Forms::Budget::EventsForm.new(user, events: options.delete(:events))
+          @events_form = Forms::Budget::EventsForm.new(
+            user,
+            events: options.delete(:events)
+          )
           @interval = interval
           @options = default_options.merge(options)
         end

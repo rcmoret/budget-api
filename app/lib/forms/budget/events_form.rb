@@ -7,7 +7,7 @@ module Forms
 
       def initialize(current_user, change_set, events_data)
         @current_user = current_user
-        @events_data = events_data.symbolize_keys.fetch(:events, [{}])
+        @events_data = events_data.symbolize_keys.fetch(:events, [ {} ])
         @change_set = change_set
       end
 
@@ -41,11 +41,15 @@ module Forms
       end
 
       def forms
-        @forms ||= events_data.map { |event_data| form_gateway.form_for(current_user, change_set, event_data) }
+        @forms ||= events_data.map do |event_data|
+          form_gateway.form_for(current_user, change_set, event_data)
+        end
       end
 
       def promote_errors(model)
-        model_errors = model.errors.each_with_object(Hash.new { |h, k| h[k] = [] }) do |error, memo|
+        model_errors = model.errors.each_with_object(Hash.new do |h, k|
+          h[k] = []
+        end) do |error, memo|
           memo[error.attribute] << error.message
         end
         model_errors.each_pair do |key, value|

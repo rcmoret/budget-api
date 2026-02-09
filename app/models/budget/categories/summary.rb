@@ -4,9 +4,9 @@ module Budget
       include Intervals::DateScopes
 
       belongs_to :category,
-                 class_name: "Budget::Category",
-                 inverse_of: :summaries,
-                 foreign_key: :budget_category_id
+        class_name: "Budget::Category",
+        inverse_of: :summaries,
+        foreign_key: :budget_category_id
 
       def self.most_recent(limit = nil)
         if limit.nil?

@@ -47,5 +47,8 @@ User::Group.find_by!(name: "Initial User Group").then do |group|
     priority: 300,
   )
 
-  archived_account.update!(key: KeyGenerator.call, archived_at: 1.day.ago) if archived_account.new_record?
+  if archived_account.new_record?
+    archived_account.update!(key: KeyGenerator.call,
+      archived_at: 1.day.ago)
+  end
 end

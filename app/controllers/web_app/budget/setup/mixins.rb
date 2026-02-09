@@ -8,17 +8,21 @@ module WebApp
           def change_set_scope
             ::Budget::Changes::Setup
               .belonging_to(current_user_profile)
-              .where(interval: interval)
+              .where(interval:)
           end
         end
 
+        # This concern adds methods to fetch and validate budget intervals by
+        #   month/year params.
+        # Includes all of the behavior of `WebApp::Mixins::HasBudgetInterval`
+        #   Plus a check to ensure the interval was not already set up
         module HasBudgetInterval
           extend ActiveSupport::Concern
           include WebApp::Mixins::HasBudgetInterval
 
           included do
             before_action -> { redirect_to(budget_path) },
-                          if: -> { interval.set_up? }
+              if: -> { interval.set_up? }
           end
         end
 
@@ -28,7 +32,7 @@ module WebApp
 
           included do
             before_action -> { redirect_to budget_setup_form_path },
-                          if: -> { change_set.nil? }
+              if: -> { change_set.nil? }
           end
 
           def change_set
@@ -47,7 +51,7 @@ module WebApp
 
           included do
             before_action -> { redirect_to budget_setup_form_path },
-                          if: -> { budget_category_record.nil? }
+              if: -> { budget_category_record.nil? }
           end
 
           def budget_category_record

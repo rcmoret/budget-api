@@ -10,7 +10,7 @@ module WebApp
       private
 
       def props
-        API::Accounts::IndexSerializer.new(
+        WebApp::Accounts::IndexSerializer.new(
           Account.active.belonging_to(current_user_profile)
         ).render
       end

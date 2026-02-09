@@ -20,7 +20,7 @@ RSpec.describe API::Budget::Interval::DraftDiscretionarySerializer do
 
     context "when passing an updated item" do
       let(:items) do
-        [salary.decorated, updated_groceries]
+        [ salary.decorated, updated_groceries ]
       end
       let(:updated_groceries) do
         Budget::DraftItem.new(
@@ -53,7 +53,9 @@ RSpec.describe API::Budget::Interval::DraftDiscretionarySerializer do
     end
 
     context "when passing a new item" do
-      let(:util_category) { create(:category, :monthly, :expense, name: "Utilities", user_group: group) }
+      let(:util_category) do
+        create(:category, :monthly, :expense, name: "Utilities", user_group: group)
+      end
       let(:item_key) { KeyGenerator.call }
       let(:utilities) do
         Budget::DraftItem.new(

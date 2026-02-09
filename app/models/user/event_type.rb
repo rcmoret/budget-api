@@ -12,12 +12,12 @@ module User
       def initialize(*); end
 
       def call
-        [:ok]
+        [ :ok ]
       end
     end
 
     def self.for(name)
-      find_or_create_by(name: name)
+      find_or_create_by(name:)
     end
 
     def subscriber

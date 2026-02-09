@@ -42,7 +42,9 @@ RSpec.describe API::Budget::Interval::Finalize::CategoriesSerializer do
       let(:interval) { create(:budget_interval, user_group: user_group) }
 
       before do
-        allow(API::Budget::Interval::Finalize::CreateEventSerializer).to receive(:new).and_call_original
+        allow(API::Budget::Interval::Finalize::CreateEventSerializer)
+          .to receive(:new)
+          .and_call_original
       end
 
       context "when the crategory is monthly" do
@@ -99,8 +101,12 @@ RSpec.describe API::Budget::Interval::Finalize::CategoriesSerializer do
       let(:interval) { create(:budget_interval, user_group: user_group) }
 
       before do
-        allow(API::Budget::Interval::Finalize::CreateEventSerializer).to receive(:new).and_call_original
-        allow(API::Budget::Interval::Finalize::AdjustEventSerializer).to receive(:new).and_call_original
+        allow(API::Budget::Interval::Finalize::CreateEventSerializer)
+          .to receive(:new)
+          .and_call_original
+        allow(API::Budget::Interval::Finalize::AdjustEventSerializer)
+          .to receive(:new)
+          .and_call_original
       end
 
       context "when the category is monthly" do
@@ -133,8 +139,10 @@ RSpec.describe API::Budget::Interval::Finalize::CategoriesSerializer do
         let(:category) { create(:category, :weekly, :accrual, user_group: user_group) }
 
         before do
-          create(:budget_item, category: category, interval: interval, key: "1234567890ab").then do |item|
-            create(:budget_item_event, :create_event, item: item, amount: -100_00, key: "1234567890ab")
+          create(:budget_item, category: category, interval: interval,
+            key: "1234567890ab").then do |item|
+            create(:budget_item_event, :create_event, item: item, amount: -100_00,
+              key: "1234567890ab")
             create(:transaction_detail, budget_item: item, amount: -20_00)
           end
           create(:budget_item, category: category, interval: interval.next).then do |item|
@@ -143,7 +151,8 @@ RSpec.describe API::Budget::Interval::Finalize::CategoriesSerializer do
         end
 
         it "responds with an adjust event only" do
-          expect(rendered.first.deep_symbolize_keys[:events].first).to include(rolloverAmount: -80_00)
+          expect(rendered.first.deep_symbolize_keys[:events].first)
+            .to include(rolloverAmount: -80_00)
           expect(subject.size).to be 1
           expect(rendered.first.deep_symbolize_keys[:events].size).to be 1
         end

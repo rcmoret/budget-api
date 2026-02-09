@@ -4,18 +4,18 @@ RSpec.describe Forms::Budget::DraftChangeForm do
   subject do
     described_class.new(
       interval,
-      budget_item_key: budget_item_key,
-      budget_category_key: budget_category_key,
-      amount: amount,
+      budget_item_key:,
+      budget_category_key:,
+      amount:,
     )
   end
 
   let(:user_group) { create(:user_group) }
-  let(:interval) { create(:budget_interval, user_group: user_group) }
+  let(:interval) { create(:budget_interval, user_group:) }
 
   describe "amount validations" do
-    let(:category) { create(:category, user_group: user_group) }
-    let(:item) { create(:budget_item, category: category, interval: interval) }
+    let(:category) { create(:category, user_group:) }
+    let(:item) { create(:budget_item, category:, interval:) }
     let(:budget_category_key) { category.key }
     let(:budget_item_key) { item.key }
 
@@ -49,13 +49,13 @@ RSpec.describe Forms::Budget::DraftChangeForm do
 
     it "is invalid; returns an error" do
       expect(subject.valid?).to be false
-      expect(subject.errors[:category_id]).to eq ["can't be blank"]
+      expect(subject.errors[:category_id]).to eq [ "can't be blank" ]
     end
   end
 
   describe "the public methods" do
-    let(:category) { create(:category, user_group: user_group) }
-    let(:item) { create(:budget_item, category: category, interval: interval) }
+    let(:category) { create(:category, user_group:) }
+    let(:item) { create(:budget_item, category:, interval:) }
     let(:budget_category_key) { category.key }
     let(:budget_item_key) { item.key }
     let(:amount) { 55_00 }

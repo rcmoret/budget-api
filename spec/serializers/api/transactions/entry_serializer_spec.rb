@@ -23,7 +23,7 @@ RSpec.describe API::Transactions::EntrySerializer do
           check_number: check_number,
           clearance_date: interval.first_date,
           notes: notes,
-          details_attributes: [{ amount: detail_amount, key: detail_key }],
+          details_attributes: [ { amount: detail_amount, key: detail_key } ],
         )
       end
       let!(:transfer) do

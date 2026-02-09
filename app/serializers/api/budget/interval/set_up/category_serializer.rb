@@ -11,10 +11,10 @@ module API
           end
 
           attributes :key,
-                     :name,
-                     :slug,
-                     :default_amount,
-                     :icon_class_name
+            :name,
+            :slug,
+            :default_amount,
+            :icon_class_name
           attribute :is_accrual, &:accrual?
           attribute :is_expense, &:expense?
           attribute :is_monthly, &:monthly?

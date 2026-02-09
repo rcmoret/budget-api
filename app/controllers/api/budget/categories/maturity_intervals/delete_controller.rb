@@ -40,7 +40,7 @@ module API
 
           def render_maturity_interval_not_found
             render json: { budgetCategory: { maturityInterval: "not found" } },
-                   status: :not_found
+              status: :not_found
           end
         end
       end

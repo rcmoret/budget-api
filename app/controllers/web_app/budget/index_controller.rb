@@ -12,7 +12,10 @@ module WebApp
       private
 
       def props
-        API::Budget::Interval::ShowSerializer.new(current_user_profile, interval).render
+        WebApp::Budget::Interval::ShowSerializer.new(
+          current_user_profile,
+          interval
+        ).render
       end
 
       def metadata

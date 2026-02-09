@@ -6,6 +6,12 @@ module HasKeyIdentifier
   included do
     validates :key, uniqueness: true, presence: true, length: { is: 12 }
     validate :key_unchanged!
+
+    scope :by_keys, lambda { |*keys|
+      keys.map! { |k| k.to_s.downcase.strip }
+
+      where(arel_table[:key].lower.in(keys))
+    }
   end
 
   class_methods do
@@ -15,10 +21,6 @@ module HasKeyIdentifier
 
     def by_key!(key)
       find_by!(arel_table[:key].lower.eq(key.to_s.strip.downcase))
-    end
-
-    def by_keys(keys)
-      where(arel_table[:key].lower.in(keys.map(&:to_s).map(&:strip).map(&:downcase)))
     end
 
     def generate_key

@@ -17,12 +17,16 @@ module API
           private
 
           def create_events
-            case [monthly?, accrual?]
-            when [true, false]
+            case [ monthly?, accrual? ]
+            when [ true, false ]
               collect_create_events { :add_item }
             else
               collect_create_events do |array_size|
-                adjustment_events.size + array_size >= reviewable_items.size ? :skip_item : :add_item
+                if adjustment_events.size + array_size >= reviewable_items.size
+                  :skip_item
+                else
+                  :add_item
+                end
               end
             end
           end

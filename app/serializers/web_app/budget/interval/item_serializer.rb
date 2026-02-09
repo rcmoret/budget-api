@@ -1,0 +1,63 @@
+module WebApp
+  module Budget
+    module Interval
+      class ItemSerializer < ApplicationSerializer
+        def initialize(item_hash)
+          @maturity_interval = item_hash.fetch(:maturity_interval)
+          super(item_hash.fetch(:item))
+        end
+
+        attributes :key,
+          :amount,
+          :budget_category_key,
+          :currently_budgeted,
+          :difference,
+          :icon_class_name,
+          :name,
+          :previously_budgeted,
+          :remaining,
+          :spent
+        attribute :is_accrual, alias_of: :accrual?
+        attribute :is_deletable, alias_of: :deletable?
+        attribute :is_deleted, alias_of: :deleted?
+        attribute :is_expense, alias_of: :expense?
+        attribute :is_monthly, alias_of: :monthly?
+        attribute :is_per_diem_enabled, alias_of: :per_diem_enabled?
+        attribute :maturity_month, conditional: :accrual?
+        attribute :maturity_year, conditional: :accrual?
+        attribute :events
+        attribute :transaction_details,
+          each_serializer: Items::TransactionDetailSerializer,
+          on_render: :render
+
+        delegate :name,
+          :accrual?,
+          :expense?,
+          :icon_class_name,
+          :monthly?,
+          :per_diem_enabled?,
+          to: :category
+
+        def budget_category_key
+          category.key
+        end
+
+        def maturity_month
+          maturity_interval.month
+        end
+
+        def maturity_year
+          maturity_interval.year
+        end
+
+        def events
+          []
+        end
+
+        private
+
+        attr_reader :maturity_interval
+      end
+    end
+  end
+end

@@ -25,7 +25,8 @@ module WebApp
         end
 
         def category
-          @category ||= ::Budget::Category.belonging_to(current_user_profile).new
+          @category ||=
+            ::Budget::Category.belonging_to(current_user_profile).new
         end
 
         def create_params

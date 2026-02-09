@@ -17,23 +17,34 @@ module User
           end
 
           define_link :save_token_context do |payload|
-            auth_token_context = Auth::Token::Context.new(payload.fetch(:auth_token_context_attributes))
+            auth_token_context = Auth::Token::Context.new(
+              payload.fetch(:auth_token_context_attributes)
+            )
             if auth_token_context.save
-              [:ok, { auth_token_context: auth_token_context }]
+              [ :ok, { auth_token_context: } ]
             else
               errors = auth_token_context.errors.to_hash
-              User::EventForm.new(actor: payload.fetch(:actor), event_type: :token_error, event_data: errors).call
-              [:error, errors]
+
+              User::EventForm.new(
+                actor: payload.fetch(:actor),
+                event_type: :token_error,
+                event_data: errors
+              ).call
+
+              [ :error, errors ]
             end
           end
 
           define_link :generate_jwt do |payload|
             payload.fetch(:auth_token_context).then do |auth_token_context|
               token = Auth::Token::JWT.encode(
-                payload: { user_key: auth_token_context.user.key, token_identifier: auth_token_context.key },
+                payload: {
+                  user_key: auth_token_context.user.key,
+                  token_identifier: auth_token_context.key,
+                },
                 exp: auth_token_context.expires_at.to_i,
               )
-              [:ok, { token: token }]
+              [ :ok, { token: } ]
             end
           end
         end

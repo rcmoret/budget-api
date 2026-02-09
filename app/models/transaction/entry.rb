@@ -6,19 +6,19 @@ module Transaction
 
     belongs_to :account
     has_one :debit_transfer,
-            class_name: "Transfer",
-            foreign_key: :from_transaction_id,
-            dependent: :restrict_with_error,
-            inverse_of: :from_transaction
+      class_name: "Transfer",
+      foreign_key: :from_transaction_id,
+      dependent: :restrict_with_error,
+      inverse_of: :from_transaction
     has_one :credit_transfer,
-            class_name: "Transfer",
-            foreign_key: :to_transaction_id,
-            dependent: :restrict_with_error,
-            inverse_of: :to_transaction
+      class_name: "Transfer",
+      foreign_key: :to_transaction_id,
+      dependent: :restrict_with_error,
+      inverse_of: :to_transaction
     has_many :details,
-             foreign_key: :transaction_entry_id,
-             dependent: :destroy,
-             inverse_of: :entry
+      foreign_key: :transaction_entry_id,
+      dependent: :destroy,
+      inverse_of: :entry
     has_many :budget_items, through: :details
     accepts_nested_attributes_for :details, allow_destroy: true
 
@@ -29,16 +29,18 @@ module Transaction
 
     has_one_attached :receipt
 
+    # rubocop:disable Rails/I18nLocaleTexts
     validates :receipt,
-              content_type: {
-                in: %w[image/png image/jpeg application/pdf],
-                message: "must be a PNG, JPG, or PDF file"
-              },
-              size: {
-                less_than: 10.megabytes,
-                message: "must be less than 10MB"
-              },
-              if: -> { receipt.attached? }
+      content_type: {
+        in: %w[image/png image/jpeg application/pdf],
+        message: "must be a PNG, JPG, or PDF file",
+      },
+      size: {
+        less_than: 10.megabytes,
+        message: "must be less than 10MB",
+      },
+      if: -> { receipt.attached? }
+    # rubocop:enable Rails/I18nLocaleTexts
 
     scope :cleared, -> { where.not(clearance_date: nil) }
     scope :pending, -> { where(clearance_date: nil) }
@@ -51,7 +53,9 @@ module Transaction
       include_pending ? base_scope.or(pending) : base_scope
     }
     scope :in, ->(range) { where(clearance_date: range) }
-    scope :between, ->(range, include_pending: false) { include_pending ? self.in(range).or(pending) : self.in(range) }
+    scope :between, lambda { |range, include_pending: false|
+      include_pending ? self.in(range).or(pending) : self.in(range)
+    }
     scope :budget_inclusions, -> { where(budget_exclusion: false) }
     scope :budget_exclusions, -> { where(budget_exclusion: true) }
     scope :cash_flow, -> { joins(:account).merge(Account.cash_flow) }
@@ -101,8 +105,10 @@ module Transaction
       if details.none?
         record_no_details!
       else
-        errors.add(:budget_exclusion,
-                   "Cannot have multiple details for budget exclusion")
+        errors.add(
+          :budget_exclusion,
+          "Cannot have multiple details for budget exclusion"
+        )
       end
     end
 

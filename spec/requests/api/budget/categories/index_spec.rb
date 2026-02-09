@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "GET /api/budget/categories" do
-  subject { get(api_budget_categories_path, headers: headers) }
+  subject { get(api_budget_categories_path, headers:) }
 
   context "when passing a valid token" do
     include_context "with valid token"
@@ -11,7 +11,9 @@ RSpec.describe "GET /api/budget/categories" do
     let(:icon) { create(:icon) }
 
     context "when the category is non-accrual" do
-      let!(:grocery) { create(:category, :weekly, icon: icon, user_group: user.group) }
+      let!(:grocery) do
+        create(:category, :weekly, icon:, user_group: user.group)
+      end
 
       before { subject }
 
@@ -49,8 +51,9 @@ RSpec.describe "GET /api/budget/categories" do
       end
 
       before do
-        create(:maturity_interval, interval: interval, category: holiday_fund)
-        create(:maturity_interval, interval: next_years_interval, category: holiday_fund)
+        create(:maturity_interval, interval:, category: holiday_fund)
+        create(:maturity_interval, interval: next_years_interval,
+          category: holiday_fund)
         subject
       end
 
@@ -68,7 +71,9 @@ RSpec.describe "GET /api/budget/categories" do
     end
 
     context "when the category is archived" do
-      let!(:defunkt_category) { create(:category, :archived, user_group: user.group) }
+      let!(:defunkt_category) do
+        create(:category, :archived, user_group: user.group)
+      end
 
       it "returns the budget categories for the current user" do
         subject

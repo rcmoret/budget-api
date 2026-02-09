@@ -72,7 +72,9 @@ RSpec.describe API::Budget::Interval::DraftSerializer do
     end
 
     context "when adding a new item" do
-      let(:util_category) { create(:category, :monthly, :expense, name: "Utilities", user_group: group) }
+      let(:util_category) do
+        create(:category, :monthly, :expense, name: "Utilities", user_group: group)
+      end
       let(:item_key) { KeyGenerator.call }
       let(:changes) do
         [

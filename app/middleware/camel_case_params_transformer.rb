@@ -9,7 +9,9 @@ class CamelCaseParamsTransformer
     request = ActionDispatch::Request.new(env)
 
     # Transform parameters for multipart requests (file uploads)
-    transform_params(request.params) if request.content_type&.include?("multipart/form-data")
+    if request.content_type&.include?("multipart/form-data")
+      transform_params(request.params)
+    end
 
     @app.call(env)
   end

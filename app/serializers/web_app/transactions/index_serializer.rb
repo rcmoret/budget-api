@@ -3,11 +3,13 @@ module WebApp
     class IndexSerializer < ApplicationSerializer
       attributes :key, :name, :slug, :priority, :balance, :balance_prior_to
       attribute :transactions, on_render: :render,
-                               each_serializer: EntrySerializer,
-                               alias_of: :account_transactions
+        each_serializer: EntrySerializer,
+        alias_of: :account_transactions
       attribute :is_cash_flow, alias_of: :cash_flow?
       attribute :is_archived, alias_of: :deleted?
-      attribute :archived_at, on_render: proc { |timestamp| render_date_time(timestamp) }
+      attribute :archived_at, on_render: proc { |timestamp|
+        render_date_time(timestamp)
+      }
       attribute :metadata, on_render: :render
 
       def initialize(account:, interval:)
@@ -28,7 +30,10 @@ module WebApp
       end
 
       def balance_prior_to
-        account.balance_prior_to(interval.first_date, include_pending: interval.future?)
+        account.balance_prior_to(
+          interval.first_date,
+          include_pending: interval.future?
+        )
       end
 
       def metadata

@@ -86,13 +86,13 @@ module Forms
     def eligible_for_exclusion!
       if account.cash_flow?
         transaction_errors.add(:budget_exclusion,
-                               "Budget Exclusions only applicable for non-cash-flow accounts")
+          "Budget Exclusions only applicable for non-cash-flow accounts")
       end
 
       return if details.all? { |detail| detail.budget_item.nil? }
 
       transaction_errors.add(:budget_exclusion,
-                             "Budget Exclusions cannot be associated with a budget item")
+        "Budget Exclusions cannot be associated with a budget item")
     end
 
     def details_errors
@@ -111,7 +111,11 @@ module Forms
       end
     end
 
-    delegate :account, :account_id, :budget_exclusion?, :details, to: :transaction_entry
+    delegate :account,
+      :account_id,
+      :budget_exclusion?,
+      :details,
+      to: :transaction_entry
 
     attr_reader :user, :params, :transaction_entry
   end

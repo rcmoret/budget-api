@@ -6,7 +6,13 @@ RSpec.describe Forms::Budget::EventsForm do
   describe "validations" do
     context "when providing a single item array that is valid" do
       it "returns valid" do
-        params = { events: [{ event_type: Budget::EventTypes::CREATE_EVENTS.sample }] }
+        params = {
+          events: [
+            {
+              event_type: Budget::EventTypes::CREATE_EVENTS.sample,
+            },
+          ],
+        }
         form = described_class.new(user, params)
         expect(form).to be_valid
       end
@@ -14,7 +20,7 @@ RSpec.describe Forms::Budget::EventsForm do
 
     context "when providing a single item array that is invalid" do
       it "returns not valid" do
-        params = { events: [{ event_type: unregistered_event }] }
+        params = { events: [ { event_type: unregistered_event } ] }
         form = described_class.new(user, params)
         expect(form).not_to be_valid
       end
@@ -23,13 +29,16 @@ RSpec.describe Forms::Budget::EventsForm do
 
   describe "initializing the new event form objects" do
     context "when providing a single item array that is valid" do
-      let(:params) { { events: [{ event_type: Budget::EventTypes::CREATE_EVENTS.sample }] } }
+      let(:params) do
+        { events: [ { event_type: Budget::EventTypes::CREATE_EVENTS.sample } ] }
+      end
 
       before do
         allow(Forms::Budget::Events::CreateItemForm)
           .to receive(:new)
           .with(user, params[:events].first.symbolize_keys)
-          .and_return(instance_double(Forms::Budget::Events::CreateItemForm, save: true))
+          .and_return(instance_double(Forms::Budget::Events::CreateItemForm,
+            save: true))
       end
 
       it "initializes a create item event form object" do
@@ -44,16 +53,24 @@ RSpec.describe Forms::Budget::EventsForm do
   describe "#save" do
     context "when not valid" do
       it "returns false" do
-        params = { events: [{ event_type: Budget::EventTypes::CREATE_EVENTS.sample }] }
+        params = {
+          events: [
+            {
+              event_type: Budget::EventTypes::CREATE_EVENTS.sample,
+            },
+          ],
+        }
         form = described_class.new(user, params)
         expect(form.save).to be false
       end
     end
 
     context "when valid and the form objects all save" do
-      let(:form_double) { instance_double(Forms::Budget::Events::CreateItemForm, save: true) }
+      let(:form_double) do
+        instance_double(Forms::Budget::Events::CreateItemForm, save: true)
+      end
       let(:params) do
-        { events: [{ event_type: Budget::EventTypes::CREATE_EVENTS.sample }] }
+        { events: [ { event_type: Budget::EventTypes::CREATE_EVENTS.sample } ] }
       end
 
       before do
@@ -85,7 +102,14 @@ RSpec.describe Forms::Budget::EventsForm do
 
       let(:event_key) { KeyGenerator.call }
       let(:params) do
-        { events: [{ key: event_key, event_type: Budget::EventTypes::CREATE_EVENTS.sample }] }
+        {
+          events: [
+            {
+              key: event_key,
+              event_type: Budget::EventTypes::CREATE_EVENTS.sample,
+            },
+          ],
+        }
       end
 
       it "returns false" do
@@ -96,7 +120,8 @@ RSpec.describe Forms::Budget::EventsForm do
       it "calls surfaces the form object errors" do
         form = described_class.new(user, params)
         form.save
-        expect(form.errors[event_key]).to include(category: ["can't be blank"])
+        expect(form.errors[event_key])
+          .to include(category: [ "can't be blank" ])
       end
     end
   end

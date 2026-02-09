@@ -3,15 +3,15 @@ module API
     module Items
       class ItemSerializer < ApplicationSerializer
         attributes :amount,
-                   :budget_category_key,
-                   :currently_budgeted,
-                   :difference,
-                   :icon_class_name,
-                   :key,
-                   :name,
-                   :previously_budgeted,
-                   :remaining,
-                   :spent
+          :budget_category_key,
+          :currently_budgeted,
+          :difference,
+          :icon_class_name,
+          :key,
+          :name,
+          :previously_budgeted,
+          :remaining,
+          :spent
         attribute :is_accrual, alias_of: :accrual?
         attribute :is_deleted, alias_of: :deleted?
         attribute :is_expense, alias_of: :expense?
@@ -20,12 +20,12 @@ module API
         has_many :events, each_serializer: EventSerializer
 
         delegate :accrual?,
-                 :expense?,
-                 :icon_class_name,
-                 :monthly?,
-                 :name,
-                 :per_diem_enabled?,
-                 to: :category
+          :expense?,
+          :icon_class_name,
+          :monthly?,
+          :name,
+          :per_diem_enabled?,
+          to: :category
 
         def budget_category_key
           category.key

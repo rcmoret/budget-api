@@ -154,7 +154,12 @@ User::Group.find_by!(name: "Initial User Group").then do |group|
     expense: true,
   )
 
-  extra_liability.update(default_amount: 0, key: KeyGenerator.call) if extra_liability.new_record?
+  if extra_liability.new_record?
+    extra_liability.update(
+      default_amount: 0,
+      key: KeyGenerator.call
+    )
+  end
 
   extra_income = Budget::Category.find_or_initialize_by(
     name: "Extra Income",
@@ -164,7 +169,12 @@ User::Group.find_by!(name: "Initial User Group").then do |group|
     expense: false,
   )
 
-  extra_income.update(default_amount: 0, key: KeyGenerator.call) if extra_liability.new_record?
+  if extra_liability.new_record?
+    extra_income.update(
+      default_amount: 0,
+      key: KeyGenerator.call
+    )
+  end
 
   rolled_change = Budget::Category.find_or_initialize_by(
     name: "Rolled Change",
@@ -174,5 +184,10 @@ User::Group.find_by!(name: "Initial User Group").then do |group|
     expense: false,
   )
 
-  rolled_change.update(default_amount: 0, key: KeyGenerator.call) if rolled_change.new_record?
+  if rolled_change.new_record?
+    rolled_change.update(
+      default_amount: 0,
+      key: KeyGenerator.call
+    )
+  end
 end

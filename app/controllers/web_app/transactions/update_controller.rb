@@ -16,7 +16,12 @@ module WebApp
         [
           :account_key,
           *BASE_TRANSACTION_ENTRY_PERMITTED_PARAMS,
-          { details_attributes: [*BASE_TRANSACTION_DETAIL_PARAMS, :_destroy] },
+          {
+            details_attributes: [
+              *BASE_TRANSACTION_DETAIL_PARAMS,
+              :_destroy,
+            ],
+          },
         ]
       end
     end

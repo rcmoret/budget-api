@@ -31,9 +31,9 @@ module Auth
           algorithm: SIGNATURE_ALGORITHM,
           **options.merge(default_options),
         )
-        [:ok, payload.deep_symbolize_keys]
+        [ :ok, payload.deep_symbolize_keys ]
       rescue ::JWT::DecodeError => e
-        [:error, { token: e.message }]
+        [ :error, { token: e.message } ]
       end
 
       private

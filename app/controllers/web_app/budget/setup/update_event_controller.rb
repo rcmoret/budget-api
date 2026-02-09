@@ -17,7 +17,11 @@ module WebApp
           if next_category_slug.present?
             redirect_to budget_setup_form_path(month, year, next_category_slug)
           else
-            redirect_to budget_setup_form_path(month, year, budget_category_record.slug)
+            redirect_to budget_setup_form_path(
+              month,
+              year,
+              budget_category_record.slug
+            )
           end
         end
 
@@ -51,7 +55,12 @@ module WebApp
         def permitted_params
           params.require(:events)
           params
-            .permit(events: [:budget_item_key, { adjustment: %i[display cents] }])
+            .permit(
+              events: [
+                :budget_item_key,
+                { adjustment: %i[display cents] },
+              ]
+            )
             .fetch(:events)
         end
       end

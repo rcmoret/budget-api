@@ -17,7 +17,7 @@ RSpec.describe API::Budget::Interval::Finalize::CategorySerializer do
         create(:budget_item_event, :create_event, item: item, amount: -200_00)
       end
     end
-    let(:reviewable_items) { [reviewable_item.decorated] }
+    let(:reviewable_items) { [ reviewable_item.decorated ] }
   end
 
   shared_context "with a single target item" do
@@ -26,7 +26,7 @@ RSpec.describe API::Budget::Interval::Finalize::CategorySerializer do
         create(:budget_item_event, :create_event, item: item, amount: -130_00)
       end
     end
-    let(:target_items) { [target_item] }
+    let(:target_items) { [ target_item ] }
   end
 
   shared_context "with no target items" do
@@ -112,7 +112,8 @@ RSpec.describe API::Budget::Interval::Finalize::CategorySerializer do
 
         it "returns create events for each reviewable item" do
           expect(subject.events.size).to be 2
-          expect(subject.events.map(&:event_type)).to contain_exactly("rollover_item_create", "rollover_item_create")
+          expect(subject.events.map(&:event_type)).to contain_exactly("rollover_item_create",
+            "rollover_item_create")
         end
       end
 
@@ -120,10 +121,11 @@ RSpec.describe API::Budget::Interval::Finalize::CategorySerializer do
         include_context "with two reviewable items"
         include_context "with a single target item"
 
-        it "returns create events for each reviewable item and adjust events for each target item" do
+        it "returns create events for each reviewable item, adjust events for each target item" do
           expect(subject.events.size).to be 3
           expect(subject.events.map(&:event_type))
-            .to contain_exactly("rollover_item_create", "rollover_item_create", "rollover_item_adjust")
+            .to contain_exactly("rollover_item_create", "rollover_item_create",
+              "rollover_item_adjust")
         end
       end
     end
@@ -137,7 +139,8 @@ RSpec.describe API::Budget::Interval::Finalize::CategorySerializer do
 
         it "returns create events for each reviewable item" do
           expect(subject.events.size).to be 2
-          expect(subject.events.map(&:event_type)).to contain_exactly("rollover_item_create", "rollover_item_create")
+          expect(subject.events.map(&:event_type)).to contain_exactly("rollover_item_create",
+            "rollover_item_create")
         end
       end
 
@@ -155,9 +158,11 @@ RSpec.describe API::Budget::Interval::Finalize::CategorySerializer do
         include_context "with two reviewable items"
         include_context "with a single target item"
 
-        it "returns adjust events for each target item and create events for the difference in count" do
+        it "returns adjust events for each target item,
+          create events for the difference in count" do
           expect(subject.events.size).to be 2
-          expect(subject.events.map(&:event_type)).to contain_exactly("rollover_item_create", "rollover_item_adjust")
+          expect(subject.events.map(&:event_type)).to contain_exactly("rollover_item_create",
+            "rollover_item_adjust")
         end
       end
     end

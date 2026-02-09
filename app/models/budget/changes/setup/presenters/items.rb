@@ -11,7 +11,8 @@ module Budget
               @item = item
               @budget_item_key = item.key
               @adjustment = adjustment[:display] || ""
-              @adjustment_cents = adjustment[:cents] || numeric_string_to_cents(@adjustment).to_i
+              @adjustment_cents = adjustment[:cents] ||
+                                  numeric_string_to_cents(@adjustment).to_i
             end
 
             attr_reader :item, :adjustment, :adjustment_cents, :budget_item_key
@@ -79,11 +80,11 @@ module Budget
             end
 
             delegate :category,
-                     :monthly?,
-                     :revenue?,
-                     :expense?,
-                     :spent,
-                     to: :item
+              :monthly?,
+              :revenue?,
+              :expense?,
+              :spent,
+              to: :item
           end
         end
 

@@ -9,8 +9,7 @@ module WebApp
 
       included do
         before_action -> { @effective_timestamp = Time.current }
-        after_action -> { change_set.update(effective_at: @effective_timestamp) },
-                     if: -> { form.errors.none? }
+        after_action :set_effective_at!, if: -> { form.errors.none? }
       end
 
       def call
@@ -24,14 +23,18 @@ module WebApp
       private
 
       def props
-        API::Budget::Interval::SetUp::CategoriesSerializer.new(interval).render.merge(
-          errors: form_errors
-        )
+        WebApp::Budget::Interval::SetUp::CategoriesSerializer
+          .new(interval)
+          .render.merge(errors: form_errors)
+      end
+
+      def set_effective_at!
+        change_set.update(effective_at: @effective_timestamp)
       end
 
       def form_errors
         form.errors.to_hash.reduce([]) do |arr, (key, vals)|
-          arr << vals.reduce(key: key, &:merge)
+          arr << vals.reduce(key:, &:merge)
         end
       end
 

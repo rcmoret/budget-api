@@ -9,7 +9,9 @@ class JSONParamsTransformer
     request = ActionDispatch::Request.new(env)
 
     # Transform parameters for application/json
-    transform_params(request.params) if request.content_type.to_s == "application/json"
+    if request.content_type.to_s == "application/json"
+      transform_params(request.params)
+    end
 
     @app.call(env)
   end

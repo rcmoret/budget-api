@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "DELETE /api/account/:key" do
-  subject { delete(api_account_path(account_key), headers: headers) }
+  subject { delete(api_account_path(account_key), headers:) }
 
   context "when passing a valid token" do
     let(:user) { create(:user) }
@@ -26,7 +26,7 @@ RSpec.describe "DELETE /api/account/:key" do
       let(:account_key) { account.key }
 
       before do
-        create_list(:transaction_entry, 2, account: account)
+        create_list(:transaction_entry, 2, account:)
       end
 
       it "archives the account" do
@@ -57,9 +57,13 @@ RSpec.describe "DELETE /api/account/:key" do
 
     context "when the deletion does not process successfully" do
       let(:account_key) { KeyGenerator.call }
-      let(:account_double) { instance_double(Account, destroy: nil, errors: errors_double, archived_at: nil) }
+      let(:account_double) do
+        instance_double(Account, destroy: nil, errors: errors_double,
+          archived_at: nil)
+      end
       let(:errors_double) do
-        instance_double(ActiveModel::Errors, any?: true, to_hash: { account: "could not be saved" })
+        instance_double(ActiveModel::Errors, any?: true,
+          to_hash: { account: "could not be saved" })
       end
 
       before do

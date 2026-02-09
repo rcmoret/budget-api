@@ -3,15 +3,17 @@ require "rails_helper"
 RSpec.describe "POST /api/budget/events" do
   subject do
     post(api_budget_items_events_path(month, year),
-         params: params,
-         headers: headers)
+      params:,
+      headers:)
   end
 
   context "when passing a single, valid event" do
     include_context "with valid token"
 
     let(:icon) { create(:icon) }
-    let(:category) { create(:category, :expense, icon: icon, user_group: user.group) }
+    let(:category) do
+      create(:category, :expense, icon:, user_group: user.group)
+    end
     let(:interval) { create(:budget_interval, :set_up, user_group: user.group) }
     let(:event_type) { "item_create" }
     let(:month) { interval.month }
@@ -24,10 +26,10 @@ RSpec.describe "POST /api/budget/events" do
         {
           key: event_key,
           budget_item_key: item_key,
-          amount: amount,
-          event_type: event_type,
-          month: month,
-          year: year,
+          amount:,
+          event_type:,
+          month:,
+          year:,
           budget_category_key: category.key,
         },
       ]
@@ -36,7 +38,7 @@ RSpec.describe "POST /api/budget/events" do
     let(:expected_response) do
       {
         discretionary: {
-          amount: amount,
+          amount:,
           overUnderBudget: 0,
           transactionDetails: [],
           transactionsTotal: 0,
@@ -46,7 +48,7 @@ RSpec.describe "POST /api/budget/events" do
             key: item_key,
             name: category.name,
             budgetCategoryKey: category.key,
-            amount: amount,
+            amount:,
             difference: amount,
             remaining: amount,
             spent: 0,
@@ -87,7 +89,9 @@ RSpec.describe "POST /api/budget/events" do
     include_context "with valid token"
 
     let(:icon) { create(:icon) }
-    let(:category) { create(:category, :expense, icon: icon, user_group: user.group) }
+    let(:category) do
+      create(:category, :expense, icon:, user_group: user.group)
+    end
     let(:interval) { create(:budget_interval, :set_up, user_group: user.group) }
     let(:month) { interval.month }
     let(:year) { interval.year }
@@ -99,10 +103,10 @@ RSpec.describe "POST /api/budget/events" do
         {
           key: event_key,
           budget_item_key: item_key,
-          amount: amount,
-          event_type: event_type,
-          month: month,
-          year: year,
+          amount:,
+          event_type:,
+          month:,
+          year:,
           budget_category_key: category.key,
         },
       ]
@@ -119,7 +123,7 @@ RSpec.describe "POST /api/budget/events" do
         body = response.parsed_body
         expect(body).to eq(
           "eventsForm" => {
-            "formErrors" => ["No registered handler for #{event_type}"],
+            "formErrors" => [ "No registered handler for #{event_type}" ],
             "events" => [],
           }
         )
@@ -141,7 +145,7 @@ RSpec.describe "POST /api/budget/events" do
               {
                 "key" => event_key,
                 "errors" => {
-                  "amount" => ["expense items must be less than or equal to 0"],
+                  "amount" => [ "expense items must be less than or equal to 0" ],
                 },
               },
             ],

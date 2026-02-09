@@ -19,8 +19,12 @@ module Budget
           nested_attribute(:metadata) do
             attribute(:sum) { |object| object.categories.sum(&:sum) }
             attribute(:count) { |object| object.categories.count }
-            attribute(:unreviewed) { |object| object.categories.count(&:unreviewed?) }
-            attribute(:is_reviewed) { |object| object.categories.count(&:reviewed?) }
+            attribute(:unreviewed) do |object|
+              object.categories.count(&:unreviewed?)
+            end
+            attribute(:is_reviewed) do |object|
+              object.categories.count(&:reviewed?)
+            end
 
             attributes :is_selected
 

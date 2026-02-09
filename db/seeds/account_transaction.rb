@@ -61,13 +61,14 @@ User::Group.find_by!(name: "Initial User Group").then do |group|
   today = Time.current
   month = today.month
   year = today.year
-  interval = Budget::Interval.fetch!(group, key: { month: month, year: year })
+  interval = Budget::Interval.fetch!(group, key: { month:, year: })
 
   budget_attributes.each do |budget_attrs|
-    category = Budget::Category.belonging_to(group).by_slug!(budget_attrs[:slug])
+    category =
+      Budget::Category.belonging_to(group).by_slug!(budget_attrs[:slug])
     item = Budget::Item.find_by!({
-      category: category,
-      interval: interval,
+      category:,
+      interval:,
       key: budget_attrs[:key],
     }.compact)
     Transaction::Entry.create!(
@@ -85,7 +86,7 @@ User::Group.find_by!(name: "Initial User Group").then do |group|
     )
   end
   category = Budget::Category.belonging_to(group).by_slug!("groceries")
-  item = Budget::Item.find_by!(category: category, interval: interval)
+  item = Budget::Item.find_by!(category:, interval:)
   Transaction::Entry.create!(
     key: KeyGenerator.call,
     account: checking_account,

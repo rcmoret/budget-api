@@ -29,7 +29,10 @@ module Forms
         private
 
         def budget_item
-          @budget_item ||= ::Budget::Item.fetch(current_user, key: budget_item_key)
+          @budget_item ||= ::Budget::Item.fetch(
+            current_user,
+            key: budget_item_key
+          )
         end
 
         def event_amount
@@ -63,12 +66,12 @@ module Forms
         def no_transaction_details_present!
           return if transaction_details.empty?
 
-          errors.add(:budget_item, "cannot delete an item with transaction details")
+          errors.add(:budget_item,
+            "cannot delete an item with transaction details")
         end
 
         def no_delete_events_present!
-          return if budget_item.nil?
-          return unless ::Budget::ItemEvent.item_delete.exists?(item_id: budget_item.id)
+          return if budget_item.nil? || budget_item.events.item_delete.none?
 
           errors.add(:budget_item, "cannot record a subsequent delete event")
         end

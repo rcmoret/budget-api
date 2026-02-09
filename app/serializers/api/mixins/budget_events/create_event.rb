@@ -11,13 +11,13 @@ module API
 
         included do
           attributes :name,
-                     :amount,
-                     :budget_category_key,
-                     :budgeted,
-                     :spent,
-                     :budget_item_key,
-                     :event_type,
-                     :data
+            :amount,
+            :budget_category_key,
+            :budgeted,
+            :spent,
+            :budget_item_key,
+            :event_type,
+            :data
           attribute :key, alias_of: :event_key
         end
 

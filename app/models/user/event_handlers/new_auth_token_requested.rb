@@ -15,23 +15,24 @@ module User
       end
 
       execution_chain :generate_new_auth_token,
-                      functions: %i[
-                        verify_actor_is_target_user
-                        verify_password
-                        find_existing_token_contexts_by_ip_address
-                        expire_existing_token_contexts
-                        build_token_context_attributes
-                        save_token_context
-                        generate_jwt
-                        record_token_generated_event
-                      ]
+        functions: %i[
+          verify_actor_is_target_user
+          verify_password
+          find_existing_token_contexts_by_ip_address
+          expire_existing_token_contexts
+          build_token_context_attributes
+          save_token_context
+          generate_jwt
+          record_token_generated_event
+        ]
 
       def call
-        generate_new_auth_token.call(:ok, **data, transient_data: transient_data) do |result|
+        generate_new_auth_token.call(:ok, **data,
+          transient_data:) do |result|
           if result.ok?
-            [:ok, { token: result.fetch(:token) }]
+            [ :ok, { token: result.fetch(:token) } ]
           else
-            [:error, result.errors]
+            [ :error, result.errors ]
           end
         end
       end

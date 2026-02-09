@@ -7,14 +7,14 @@ module WebApp
         include Mixins::Data::HasBudgetInterval
 
         def call
-          render json: { events: events }, status: :ok
+          render json: { events: }, status: :ok
         end
 
         private
 
         def events
           ::Budget::CreateEventsService.call(
-            interval: interval,
+            interval:,
             **params
               .permit(:event_context, scopes: [], excluded_keys: [])
               .to_h

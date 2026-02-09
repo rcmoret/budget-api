@@ -62,7 +62,9 @@ module WebApp
       end
 
       def resolve_transactions_path(slug, *args)
-        return accounts_index_path unless Account.belonging_to(current_user_profile).exists?(slug: slug)
+        unless Account.belonging_to(current_user_profile).exists?(slug:)
+          return accounts_index_path
+        end
 
         case args
         in [month, year, *]

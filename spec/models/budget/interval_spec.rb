@@ -29,7 +29,8 @@ RSpec.describe Budget::Interval do
         end
       end
 
-      context "when at the end of the calendar month is part of the next month" do
+      context "when at the end of the calendar month " \
+              "is part of the next month" do
         before { travel_to(Date.new(2023, 3, 31)) }
 
         it "returns the interval for April 2023" do
@@ -39,7 +40,8 @@ RSpec.describe Budget::Interval do
         end
       end
 
-      context "when at the start of the calendar month is part of the previous month" do
+      context "when at the start of the calendar month " \
+              "is part of the previous month" do
         before { travel_to(Date.new(2023, 3, 1)) }
 
         it "returns the interval for Feb 2023" do
@@ -141,21 +143,24 @@ RSpec.describe Budget::Interval do
       end
     end
 
-    context "when the first is New Year's Day" do # (1/1/24 is a Monday which is an edge case)
+    # (1/1/24 is a Monday which is an edge case)
+    context "when the first is New Year's Day" do
       specify do
         subject = build(:budget_interval, month: 1, year: 2024)
         expect(subject.first_date).to eq Date.new(2023, 12, 29)
       end
     end
 
-    context "when the first is a Monday and Labor Day" do # (9/1/25 is a Monday which is an edge case)
+    # (9/1/25 is a Monday which is an edge case)
+    context "when the first is a Monday and Labor Day" do
       specify do
         subject = build(:budget_interval, month: 9, year: 2025)
         expect(subject.first_date).to eq Date.new(2025, 8, 29)
       end
     end
 
-    context "when the Labor Day lands on a non-Monday" do # (9/1/22 is a Thursday)
+    # (9/1/22 is a Thursday)
+    context "when the Labor Day lands on a non-Monday" do
       specify do
         subject = build(:budget_interval, month: 9, year: 2022)
         expect(subject.first_date).to eq Date.new(2022, 9, 1)
@@ -171,21 +176,24 @@ RSpec.describe Budget::Interval do
       end
     end
 
-    context "when the first day of the next month lands on a Sunday" do # (8/1/21 is a Sunday)
+    # (8/1/21 is a Sunday)
+    context "when the first day of the next month lands on a Sunday" do
       specify do
         subject = build(:budget_interval, month: 7, year: 2021)
         expect(subject.last_date).to eq Date.new(2021, 7, 29)
       end
     end
 
-    context "when the first day of the next month lands on a Saturday" do # (5/1/21 is a Saturday)
+    # (5/1/21 is a Saturday)
+    context "when the first day of the next month lands on a Saturday" do
       specify do
         subject = build(:budget_interval, month: 4, year: 2021)
         expect(subject.last_date).to eq Date.new(2021, 4, 29)
       end
     end
 
-    context "when the first of the next month is New Year's Day" do # (1/1/24 is a Monday)
+    # (1/1/24 is a Monday)
+    context "when the first of the next month is New Year's Day" do
       specify do
         subject = build(:budget_interval, month: 12, year: 2023)
         expect(subject.last_date).to eq Date.new(2023, 12, 28)

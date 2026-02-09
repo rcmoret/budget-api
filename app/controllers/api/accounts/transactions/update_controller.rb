@@ -18,8 +18,8 @@ module API
         private
 
         def accounts
-          keys = [account_key, params.fetch(:transaction)[:account_key]].compact.uniq
-          return [account] if keys.one?
+          keys = [ account_key, params.fetch(:transaction)[:account_key] ].compact.uniq
+          return [ account ] if keys.one?
 
           Account.fetch_collection(api_user, keys: keys)
         end

@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "GET /api/budget/:month/:year" do
-  subject { get(api_budget_path(month, year), headers: headers) }
+  subject { get(api_budget_path(month, year), headers:) }
 
   context "with a valid request" do
     include_context "with valid token"
@@ -9,21 +9,26 @@ RSpec.describe "GET /api/budget/:month/:year" do
     let(:user) { create(:user) }
     let(:category) { create(:category, user_group: user.group) }
     let(:account) { create(:account, user_group: user.group) }
-    let(:budget_item) { create(:budget_item, category: category, interval: interval) }
-    let!(:event) { create(:budget_item_event, :create_event, item: budget_item) }
+    let(:budget_item) do
+      create(:budget_item, category:, interval:)
+    end
+    let!(:event) do
+      create(:budget_item_event, :create_event, item: budget_item)
+    end
     let!(:transaction_entry) do
-      create(:transaction_entry, :discretionary, clearance_date: interval.first_date, account: account)
+      create(:transaction_entry, :discretionary, clearance_date: interval.first_date,
+        account:)
     end
     let(:detail_key) { KeyGenerator.call }
     let!(:item_transaction_entry) do
       create(
         :transaction_entry,
-        account: account,
+        account:,
         details_attributes: [
           {
             key: detail_key,
             amount: rand(-100_00..100_00),
-            budget_item: budget_item,
+            budget_item:,
           },
         ]
       )

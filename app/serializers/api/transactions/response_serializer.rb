@@ -7,7 +7,8 @@ module API
       attribute :deleted_transaction_keys, conditional: proc { deleted_transaction_keys.any? }
 
       # rubocop:disable Lint/MissingSuper
-      def initialize(accounts:, transactions:, interval:, deleted_transaction_keys: [], budget_items: [])
+      def initialize(accounts:, transactions:, interval:, deleted_transaction_keys: [],
+                     budget_items: [])
         @included_accounts = accounts
         @included_transactions = transactions
         @included_budget_items = budget_items
@@ -17,7 +18,8 @@ module API
       # rubocop:enable Lint/MissingSuper
 
       def accounts
-        SerializableCollection.new(serializer: API::Accounts::Transactions::BalanceSerializer, interval: interval) do
+        SerializableCollection.new(serializer: API::Accounts::Transactions::BalanceSerializer,
+          interval: interval) do
           included_accounts
         end
       end
@@ -43,10 +45,10 @@ module API
       private
 
       attr_reader :deleted_transaction_keys,
-                  :included_accounts,
-                  :included_transactions,
-                  :included_budget_items,
-                  :interval
+        :included_accounts,
+        :included_transactions,
+        :included_budget_items,
+        :interval
     end
   end
 end

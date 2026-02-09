@@ -10,7 +10,10 @@ module Forms
 
       def initialize(interval, budget_item_key:, budget_category_key:, amount:)
         @interval = interval
-        @category_id = ::Budget::Category.fetch(user_group, key: budget_category_key)&.id
+        @category_id = ::Budget::Category.fetch(
+          user_group,
+          key: budget_category_key
+        )&.id
         @budget_item_key = budget_item_key
         @amount = amount
       end

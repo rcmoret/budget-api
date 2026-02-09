@@ -8,8 +8,8 @@ module WebApp
         include Mixins::HasBudgetInterval
 
         before_action -> { @effective_timestamp = Time.current }
-
-        after_action :update_close_out_completed_at!, if: -> { form.errors.none? }
+        after_action :update_close_out_completed_at!,
+          if: -> { form.errors.none? }
         after_action :update_effective_start!, if: -> { form.errors.none? }
 
         private
@@ -17,7 +17,7 @@ module WebApp
         def error_component = "budget/finalize/index"
 
         def form_props
-          API::Budget::Interval::Finalize::CategoriesSerializer.new(interval)
+          WebApp::Budget::Interval::Finalize::CategoriesSerializer.new(interval)
         end
 
         def update_close_out_completed_at!
@@ -32,7 +32,7 @@ module WebApp
         end
 
         def change_set
-          @change_set ||= ::Budget::Changes::Rollover.create(interval: interval)
+          @change_set ||= ::Budget::Changes::Rollover.create(interval:)
         end
 
         def metadata
@@ -40,8 +40,8 @@ module WebApp
             namespace: "budget",
             page: {
               name: "budget/finalize",
-              month: month,
-              year: year,
+              month:,
+              year:,
             },
           }
         end

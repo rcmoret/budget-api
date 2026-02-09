@@ -2,14 +2,16 @@ require "rails_helper"
 
 RSpec.describe "GET /api/budget/intervals/finalize/(:month)/(:year)" do
   subject do
-    get(api_budget_interval_finalize_path(*url_args), headers: headers)
+    get(api_budget_interval_finalize_path(*url_args), headers:)
   end
 
   context "when specifiying month and year in the url" do
     include_context "with valid token"
 
-    let(:url_args) { [interval.month, interval.year] }
-    let(:interval) { create(:budget_interval, :current, user_group: user.group) }
+    let(:url_args) { [ interval.month, interval.year ] }
+    let(:interval) do
+      create(:budget_interval, :current, user_group: user.group)
+    end
 
     before { interval }
 
@@ -25,7 +27,8 @@ RSpec.describe "GET /api/budget/intervals/finalize/(:month)/(:year)" do
             lastDate: interval.last_date.strftime("%F"),
             categories: [],
             data: {
-              daysRemaining: [(interval.last_date.to_date - Time.current.to_date + 1).to_i.abs, 1].max,
+              daysRemaining: [ (interval.last_date.to_date - Time.current.to_date + 1).to_i.abs,
+                               1, ].max,
               firstDate: interval.first_date.strftime("%F"),
               lastDate: interval.last_date.strftime("%F"),
               isClosedOut: interval.closed_out?,
@@ -36,7 +39,9 @@ RSpec.describe "GET /api/budget/intervals/finalize/(:month)/(:year)" do
               totalDays: (interval.last_date.to_date - interval.first_date.to_date).to_i + 1,
             },
             target: {
-              daysRemaining: (interval.next.last_date.to_date - interval.next.first_date.to_date).to_i + 1,
+              daysRemaining: (
+                interval.next.last_date.to_date - interval.next.first_date.to_date
+              ).to_i + 1,
               firstDate: interval.next.first_date.strftime("%F"),
               lastDate: interval.next.last_date.strftime("%F"),
               isClosedOut: interval.next.closed_out?,
@@ -44,7 +49,9 @@ RSpec.describe "GET /api/budget/intervals/finalize/(:month)/(:year)" do
               isSetUp: interval.next.set_up?,
               month: interval.next.month,
               year: interval.next.year,
-              totalDays: (interval.next.last_date.to_date - interval.next.first_date.to_date).to_i + 1,
+              totalDays: (
+                interval.next.last_date.to_date - interval.next.first_date.to_date
+              ).to_i + 1,
             },
           }
         )
@@ -53,11 +60,15 @@ RSpec.describe "GET /api/budget/intervals/finalize/(:month)/(:year)" do
 
     context "when a budget category has a base items, no target items" do
       context "when the category is monthly" do
-        let(:category) { create(:category, :monthly, :expense, user_group: user.group) }
+        let(:category) do
+          create(:category, :monthly, :expense, user_group: user.group)
+        end
         let(:amount) { rand(-100_00..-100) }
         let!(:budget_item) do
-          create(:budget_item, category: category, interval: interval.prev).tap do |item|
-            create(:budget_item_event, :create_event, item: item, amount: amount)
+          create(:budget_item, category:,
+            interval: interval.prev).tap do |item|
+            create(:budget_item_event, :create_event, item:,
+              amount:)
           end
         end
 
@@ -96,8 +107,10 @@ RSpec.describe "GET /api/budget/intervals/finalize/(:month)/(:year)" do
         let(:category) { create(:category, :weekly, user_group: user.group) }
         let(:amount) { rand(-100_00..-100) }
         let!(:budget_item) do
-          create(:budget_item, category: category, interval: interval.prev).tap do |item|
-            create(:budget_item_event, :create_event, item: item, amount: amount)
+          create(:budget_item, category:,
+            interval: interval.prev).tap do |item|
+            create(:budget_item_event, :create_event, item:,
+              amount:)
           end
         end
 
@@ -135,16 +148,22 @@ RSpec.describe "GET /api/budget/intervals/finalize/(:month)/(:year)" do
 
     context "when a budget category has a base items, and a target items" do
       context "when the category is monthly" do
-        let(:category) { create(:category, :expense, :monthly, user_group: user.group) }
+        let(:category) do
+          create(:category, :expense, :monthly, user_group: user.group)
+        end
         let(:amount) { rand(-100_00..-100) }
         let!(:previous_budget_item) do
-          create(:budget_item, category: category, interval: interval.prev).tap do |item|
-            create(:budget_item_event, :create_event, item: item, amount: amount)
+          create(:budget_item, category:,
+            interval: interval.prev).tap do |item|
+            create(:budget_item_event, :create_event, item:,
+              amount:)
           end
         end
         let!(:upcoming_budget_item) do
-          create(:budget_item, category: category, interval: interval).tap do |item|
-            create(:budget_item_event, :create_event, item: item, amount: amount)
+          create(:budget_item, category:,
+            interval:).tap do |item|
+            create(:budget_item_event, :create_event, item:,
+              amount:)
           end
         end
 
@@ -159,7 +178,7 @@ RSpec.describe "GET /api/budget/intervals/finalize/(:month)/(:year)" do
           )
           expect(body.dig(:data, :categories, 0, :events).size).to be 2
           expect(body.dig(:data, :categories, 0, :events, 0)).to include(
-            amount: amount,
+            amount:,
             budgetItemKey: upcoming_budget_item.key,
             data: {},
             eventType: "rollover_item_adjust",
@@ -179,15 +198,22 @@ RSpec.describe "GET /api/budget/intervals/finalize/(:month)/(:year)" do
       end
 
       context "when the category is a monthly accrual" do
-        let(:category) { create(:category, :accrual, :expense, :monthly, user_group: user.group) }
+        let(:category) do
+          create(:category, :accrual, :expense, :monthly,
+            user_group: user.group)
+        end
         let(:amount) { rand(-100_00..-100) }
 
         before do
-          create(:budget_item, category: category, interval: interval.prev).tap do |item|
-            create(:budget_item_event, :create_event, item: item, amount: amount)
+          create(:budget_item, category:,
+            interval: interval.prev).tap do |item|
+            create(:budget_item_event, :create_event, item:,
+              amount:)
           end
-          create(:budget_item, category: category, interval: interval).tap do |item|
-            create(:budget_item_event, :create_event, item: item, amount: amount)
+          create(:budget_item, category:,
+            interval:).tap do |item|
+            create(:budget_item_event, :create_event, item:,
+              amount:)
           end
           subject
         end
@@ -196,7 +222,7 @@ RSpec.describe "GET /api/budget/intervals/finalize/(:month)/(:year)" do
           body = response.parsed_body.deep_symbolize_keys
           expect(body.dig(:data, :categories, 0, :events).size).to be 1
           expect(body.dig(:data, :categories, 0, :events, 0)).to include(
-            amount: amount,
+            amount:,
             data: {},
             eventType: "rollover_item_adjust",
             spent: 0,
@@ -206,17 +232,23 @@ RSpec.describe "GET /api/budget/intervals/finalize/(:month)/(:year)" do
       end
 
       context "when the category is weekly" do
-        let(:category) { create(:category, :expense, :weekly, user_group: user.group) }
+        let(:category) do
+          create(:category, :expense, :weekly, user_group: user.group)
+        end
         let(:amount) { rand(-100_00..-100) }
         let!(:upcoming_budget_item) do
-          create(:budget_item, category: category, interval: interval).tap do |item|
-            create(:budget_item_event, :create_event, item: item, amount: amount)
+          create(:budget_item, category:,
+            interval:).tap do |item|
+            create(:budget_item_event, :create_event, item:,
+              amount:)
           end
         end
 
         before do
-          create(:budget_item, category: category, interval: interval.prev).tap do |item|
-            create(:budget_item_event, :create_event, item: item, amount: amount)
+          create(:budget_item, category:,
+            interval: interval.prev).tap do |item|
+            create(:budget_item_event, :create_event, item:,
+              amount:)
           end
           subject
         end
@@ -231,7 +263,7 @@ RSpec.describe "GET /api/budget/intervals/finalize/(:month)/(:year)" do
           expect(body.dig(:data, :categories, 0, :events).size).to be 1
           expect(body.dig(:data, :categories, 0, :events, 0)).to include(
             budgetItemKey: upcoming_budget_item.key,
-            amount: amount,
+            amount:,
             data: {},
             eventType: "rollover_item_adjust",
             spent: 0,
@@ -265,7 +297,7 @@ RSpec.describe "GET /api/budget/intervals/finalize/(:month)/(:year)" do
   context "when passing invalid month / year combination" do
     include_context "with valid token"
 
-    let(:url_args) { [month, year] }
+    let(:url_args) { [ month, year ] }
 
     it_behaves_like "endpoint requires budget interval"
   end

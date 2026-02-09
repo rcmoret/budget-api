@@ -10,7 +10,7 @@ module User
             if payload.fetch(:actor) == payload.fetch(:target_user)
               :ok
             else
-              [:error, { user: ["actor and target user mismatch"] }]
+              [ :error, { user: [ "actor and target user mismatch" ] } ]
             end
           end
 
@@ -19,8 +19,9 @@ module User
               if user.valid_password?(transient_data.fetch(:password))
                 :ok
               else
-                User::EventForm.new(actor: payload.fetch(:actor), event_type: :incorrect_password_attempt).call
-                [:error, { password: [INVALID_LOGIN_MESSAGE] }]
+                User::EventForm.new(actor: payload.fetch(:actor),
+                  event_type: :incorrect_password_attempt).call
+                [ :error, { password: [ INVALID_LOGIN_MESSAGE ] } ]
               end
             end
           end

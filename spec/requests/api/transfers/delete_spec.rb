@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe "DELETE /api/accounts/transfer/:key/(:month)/(:year)" do
   subject do
-    delete(api_accounts_transfer_path(transfer_key), headers: headers)
+    delete(api_accounts_transfer_path(transfer_key), headers:)
   end
 
   context "when deleting a transfer" do
@@ -48,7 +48,8 @@ RSpec.describe "DELETE /api/accounts/transfer/:key/(:month)/(:year)" do
   end
 
   def create_transfer_for(user, **options)
-    Forms::TransferForm.new(user: user, params: transfer_params(user, options)).then do |form|
+    Forms::TransferForm.new(user:,
+      params: transfer_params(user, options)).then do |form|
       form.call => [:ok, { transfer: transfer }]
 
       transfer
@@ -56,8 +57,12 @@ RSpec.describe "DELETE /api/accounts/transfer/:key/(:month)/(:year)" do
   end
 
   def transfer_params(user, options)
-    to_account = options.fetch(:to_account) { create(:account, user_group: user.group) }
-    from_account = options.fetch(:from_account) { create(:account, user_group: user.group) }
+    to_account = options.fetch(:to_account) do
+      create(:account, user_group: user.group)
+    end
+    from_account = options.fetch(:from_account) do
+      create(:account, user_group: user.group)
+    end
 
     {
       amount: options.fetch(:amount) { rand(100_00) },

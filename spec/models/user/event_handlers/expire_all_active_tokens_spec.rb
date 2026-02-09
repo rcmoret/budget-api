@@ -6,7 +6,7 @@ RSpec.describe User::EventHandlers::ExpireAllActiveTokens do
     let(:event) { create(:user_event, actor: user) }
     let(:success_event) { User::EventType.for(:user_expired_all_tokens) }
 
-    before { create_list(:auth_token_context, 5, user: user) }
+    before { create_list(:auth_token_context, 5, user:) }
 
     it "expires all active tokens for a user" do
       expect { described_class.new(event).call }
@@ -17,7 +17,9 @@ RSpec.describe User::EventHandlers::ExpireAllActiveTokens do
 
     it "records a success event" do
       expect { described_class.new(event).call }
-        .to(change { User::Event.where(actor: user, event_type: success_event).count }.by(+1))
+        .to(change do
+              User::Event.where(actor: user, event_type: success_event).count
+            end.by(+1))
     end
   end
 end

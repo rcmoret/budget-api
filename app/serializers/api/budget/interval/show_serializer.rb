@@ -3,7 +3,8 @@ module API
     module Interval
       class ShowSerializer < ApplicationSerializer
         attribute :discretionary, on_render: :render
-        attribute :items, on_render: :render, each_serializer: ItemSerializer, alias_of: :item_objects
+        attribute :items, on_render: :render, each_serializer: ItemSerializer,
+          alias_of: :item_objects
         attribute :data, on_render: :render
         attribute :categories, on_render: :render
         attribute :accounts
@@ -37,11 +38,15 @@ module API
         end
 
         def accounts
-          SerializableCollection.new(serializer: WebApp::DashboardSerializer::LocalAccountSerializer) do
+          SerializableCollection.new(
+            serializer: WebApp::DashboardSerializer::LocalAccountSerializer
+          ) do
             user_accounts.map do |account|
               {
                 account: account,
-                balance: balances_by_account_id.find { |struct| struct.account_id == account.id }&.balance.to_i,
+                balance: balances_by_account_id.find do |struct|
+                  struct.account_id == account.id
+                end&.balance.to_i,
               }
             end
           end
@@ -72,7 +77,10 @@ module API
             .where(entry: { account: user_accounts })
             .group(:account_id)
             .sum(:amount)
-            .map { |id, balance| WebApp::DashboardSerializer::AccountIdWithBalance.new(id, balance) }
+            .map do |id, balance|
+              WebApp::DashboardSerializer::AccountIdWithBalance.new(id,
+                balance)
+            end
         end
       end
     end

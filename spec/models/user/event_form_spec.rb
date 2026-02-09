@@ -4,21 +4,26 @@ RSpec.describe User::EventForm do
   describe "#call" do
     context "when the event saves successfully" do
       before do
-        allow(User::Event).to receive(:new).and_return(instance_double(User::Event, save: true))
+        allow(User::Event).to receive(:new).and_return(instance_double(
+          User::Event, save: true
+        ))
       end
 
       let(:actor) { create(:user) }
 
       context "when a passing the minumum arguments" do
         subject do
-          described_class.new(actor: actor, event_type: event_type_name)
+          described_class.new(actor:, event_type: event_type_name)
         end
 
         let(:event_type) { User::EventType.for(event_type_name) }
         let(:event_type_name) { :user_update_requested }
 
-        it "records an event where the target user is the same user as the actor, emtpy data" do
-          expect(User::Event).to receive(:new).with(hash_including(target_user: actor, data: {}))
+        it "records an event where the target user is " \
+           "the same user as the actor, emtpy data" do
+          expect(User::Event).to receive(:new).with(hash_including(
+            target_user: actor, data: {}
+          ))
 
           subject.call
         end
@@ -26,7 +31,8 @@ RSpec.describe User::EventForm do
 
       context "when an actor and target_user are provided" do
         subject do
-          described_class.new(actor: actor, event_type: event_type_name, target_user: target_user)
+          described_class.new(actor:, event_type: event_type_name,
+            target_user:)
         end
 
         let(:target_user) { create(:user) }
@@ -36,7 +42,8 @@ RSpec.describe User::EventForm do
         it "records an event with the target user, the actor, emtpy data" do
           expect(User::Event)
             .to receive(:new)
-            .with(hash_including(target_user: target_user, actor: actor, data: {}, event_type: event_type))
+            .with(hash_including(target_user:, actor:, data: {},
+              event_type:))
 
           subject.call
         end
@@ -44,20 +51,26 @@ RSpec.describe User::EventForm do
 
       context "when there is a registered subscriber" do
         before do
-          allow(User::EventHandlers::NewAuthTokenRequested).to receive(:new).and_return(event_handler_double)
+          allow(User::EventHandlers::NewAuthTokenRequested)
+            .to receive(:new)
+            .and_return(event_handler_double)
         end
 
         let(:event_type_name) { :user_auth_token_requested }
-        let(:event_handler_double) { instance_double(User::EventHandlers::NewAuthTokenRequested, call: [:ok]) }
+        let(:event_handler_double) do
+          instance_double(User::EventHandlers::NewAuthTokenRequested,
+            call: [ :ok ])
+        end
         let(:actor) { create(:user) }
 
         context "when no data or transient data is passed" do
           subject do
-            described_class.new(actor: actor, event_type: event_type_name)
+            described_class.new(actor:, event_type: event_type_name)
           end
 
           it "calls the registered subscriber" do
-            expect(User::EventHandlers::NewAuthTokenRequested).to receive(:new).with(anything, {})
+            expect(User::EventHandlers::NewAuthTokenRequested)
+              .to receive(:new).with(anything, {})
             expect(event_handler_double).to receive(:call)
 
             subject.call
@@ -67,25 +80,30 @@ RSpec.describe User::EventForm do
         context "when data and transient data is passed" do
           subject do
             described_class.new(
-              actor: actor,
+              actor:,
               event_type: event_type_name,
               event_data: data,
-              transient_data: transient_data,
+              transient_data:,
             )
           end
 
           let(:data) { { key: KeyGenerator.call, time: Time.current } }
           let(:transient_data) { { password: SecureRandom.hex(10) } }
 
-          it "creates an event with the data and transient data but where the values are filtered" do
+          it "creates an event with the data, transient data but " \
+             "where the values are filtered" do
             expected_data = data.merge(password: "[FILTERED]")
-            expect(User::Event).to receive(:new).with(hash_including(data: expected_data))
+            expect(User::Event)
+              .to receive(:new)
+              .with(hash_including(data: expected_data))
 
             subject.call
           end
 
           it "calls the registered subscriber with transient data" do
-            expect(User::EventHandlers::NewAuthTokenRequested).to receive(:new).with(anything, transient_data)
+            expect(User::EventHandlers::NewAuthTokenRequested)
+              .to receive(:new)
+              .with(anything, transient_data)
             expect(event_handler_double).to receive(:call)
 
             subject.call
@@ -95,21 +113,27 @@ RSpec.describe User::EventForm do
 
       context "when there is no registered subscriber" do
         before do
-          allow(User::EventType::NullEventHandler).to receive(:new).and_return(event_handler_double)
+          allow(User::EventType::NullEventHandler)
+            .to receive(:new)
+            .and_return(event_handler_double)
         end
 
-        let(:event_handler_double) { instance_double(User::EventType::NullEventHandler, call: [:ok]) }
+        let(:event_handler_double) do
+          instance_double(User::EventType::NullEventHandler, call: [ :ok ])
+        end
 
         context "when no data or transient data is passed" do
           subject do
-            described_class.new(actor: actor, event_type: event_type_name)
+            described_class.new(actor:, event_type: event_type_name)
           end
 
           let(:event_type) { User::EventType.for(event_type_name) }
           let(:event_type_name) { :user_update_requested }
 
           it "calls to the user event type null event handler" do
-            expect(User::EventType::NullEventHandler).to receive(:new).with(anything, {})
+            expect(User::EventType::NullEventHandler).to receive(:new).with(
+              anything, {}
+            )
             expect(event_handler_double).to receive(:call)
 
             subject.call
@@ -119,10 +143,10 @@ RSpec.describe User::EventForm do
         context "when data and transient data is passed" do
           subject do
             described_class.new(
-              actor: actor,
+              actor:,
               event_type: event_type_name,
               event_data: data,
-              transient_data: transient_data,
+              transient_data:,
             )
           end
 
@@ -131,15 +155,19 @@ RSpec.describe User::EventForm do
           let(:data) { { key: KeyGenerator.call, time: Time.current } }
           let(:transient_data) { { password: SecureRandom.hex(10) } }
 
-          it "creates an event with the data and transient data but where the values are filtered" do
+          it "creates an event with data and transient data " \
+             "but the values are filtered" do
             expected_data = data.merge(password: "[FILTERED]")
-            expect(User::Event).to receive(:new).with(hash_including(data: expected_data))
+            expect(User::Event)
+              .to receive(:new)
+              .with(hash_including(data: expected_data))
 
             subject.call
           end
 
           it "calls to the user event type null event handler" do
-            expect(User::EventType::NullEventHandler).to receive(:new).with(anything, transient_data)
+            expect(User::EventType::NullEventHandler)
+              .to receive(:new).with(anything, transient_data)
             expect(event_handler_double).to receive(:call)
 
             subject.call
@@ -156,7 +184,9 @@ RSpec.describe User::EventForm do
       let(:user) { create(:user) }
 
       before do
-        allow(User::Event).to receive(:new).and_return(instance_double(User::Event, save: false))
+        allow(User::Event).to receive(:new).and_return(instance_double(
+          User::Event, save: false
+        ))
       end
 
       it "raises an error" do

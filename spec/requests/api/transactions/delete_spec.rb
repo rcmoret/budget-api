@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe "DELETE /api/account/:account_key/transactions/:key/:month/:year" do
   subject do
     delete(api_account_transaction_path(account_key, transaction_key),
-           headers: headers)
+      headers:)
   end
 
   context "when the account is not found" do
@@ -32,7 +32,7 @@ RSpec.describe "DELETE /api/account/:account_key/transactions/:key/:month/:year"
   context "when providing an invalid interval" do
     subject do
       delete(api_account_transaction_path(account_key, transaction_key, month, year),
-             headers: headers)
+        headers:)
     end
 
     let(:transaction_key) { KeyGenerator.call }
@@ -46,7 +46,7 @@ RSpec.describe "DELETE /api/account/:account_key/transactions/:key/:month/:year"
 
     let(:account) { create(:account, user_group: user.group) }
     let(:account_key) { account.key }
-    let!(:transaction) { create(:transaction_entry, account: account) }
+    let!(:transaction) { create(:transaction_entry, account:) }
     let(:transaction_key) { transaction.key }
 
     it "deletes the transaction, returns accepted status and a response" do
@@ -54,8 +54,8 @@ RSpec.describe "DELETE /api/account/:account_key/transactions/:key/:month/:year"
       expect(response).to have_http_status :accepted
       body = response.parsed_body.deep_symbolize_keys
       expect(body).to eq(
-        accounts: [{ key: account.key, balance: 0, balancePriorTo: 0 }],
-        deletedTransactionKeys: [transaction.key],
+        accounts: [ { key: account.key, balance: 0, balancePriorTo: 0 } ],
+        deletedTransactionKeys: [ transaction.key ],
         transactions: [],
       )
     end
@@ -68,7 +68,7 @@ RSpec.describe "DELETE /api/account/:account_key/transactions/:key/:month/:year"
     let(:savings_account) { create(:savings_account, user_group: user.group) }
     let(:transfer_result) do
       Forms::TransferForm.new(
-        user: user,
+        user:,
         params: {
           amount: rand(100_00),
           from_account_key: account.key,
@@ -86,7 +86,7 @@ RSpec.describe "DELETE /api/account/:account_key/transactions/:key/:month/:year"
       body = response.parsed_body.deep_symbolize_keys
       expect(body).to eq(
         transaction: {
-          base: ["Cannot delete record because a dependent credit transfer exists"],
+          base: [ "Cannot delete record because a dependent credit transfer exists" ],
         },
       )
     end

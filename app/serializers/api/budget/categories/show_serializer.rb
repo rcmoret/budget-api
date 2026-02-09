@@ -12,7 +12,8 @@ module API
         attribute :is_accrual, alias_of: :accrual?
         attribute :is_expense, alias_of: :expense?
         attribute :is_monthly, alias_of: :monthly?
-        attribute :maturity_intervals, each_serializer: MaturityIntervalSerializer, conditional: :accrual?
+        attribute :maturity_intervals, each_serializer: MaturityIntervalSerializer,
+          conditional: :accrual?
       end
     end
   end

@@ -2,7 +2,8 @@ require "rails_helper"
 
 RSpec.describe "GET /api/budget/interval/draft/:month/:year" do
   subject do
-    get api_budget_interval_draft_path(month, year), headers: headers, params: params
+    get api_budget_interval_draft_path(month, year), headers:,
+      params:
   end
 
   context "when making a request with valid token" do
@@ -10,20 +11,26 @@ RSpec.describe "GET /api/budget/interval/draft/:month/:year" do
 
     let(:user) { create(:user) }
     let(:group) { user.group }
-    let(:groc_category) { create(:category, :expense, :weekly, user_group: group) }
-    let(:salary_category) { create(:category, :revenue, :monthly, user_group: group) }
+    let(:groc_category) do
+      create(:category, :expense, :weekly, user_group: group)
+    end
+    let(:salary_category) do
+      create(:category, :revenue, :monthly, user_group: group)
+    end
     let(:interval) { create(:budget_interval, user_group: group) }
-    let(:groceries) { create(:budget_item, category: groc_category, interval: interval) }
+    let(:groceries) do
+      create(:budget_item, category: groc_category, interval:)
+    end
     let(:month) { interval.month }
     let(:year) { interval.year }
 
     context "when passing an invalid budget category key" do
       let(:budget_item_key)  { KeyGenerator.call }
-      let(:params) { { changes: changes } }
+      let(:params) { { changes: } }
       let(:changes) do
         [
           {
-            budget_item_key: budget_item_key,
+            budget_item_key:,
             budget_category_key: KeyGenerator.call,
             amount: 20_00,
           },
@@ -36,7 +43,7 @@ RSpec.describe "GET /api/budget/interval/draft/:month/:year" do
           [
             {
               budget_item_key => {
-                "category_id" => ["can't be blank"],
+                "category_id" => [ "can't be blank" ],
               },
             },
           ]
@@ -45,7 +52,7 @@ RSpec.describe "GET /api/budget/interval/draft/:month/:year" do
     end
 
     context "when passing an invalid amount" do
-      let(:params) { { changes: changes } }
+      let(:params) { { changes: } }
       let(:changes) do
         [
           {
@@ -62,7 +69,7 @@ RSpec.describe "GET /api/budget/interval/draft/:month/:year" do
           [
             {
               groceries.key => {
-                "amount" => ["must be an integer"],
+                "amount" => [ "must be an integer" ],
               },
             },
           ]
@@ -93,7 +100,7 @@ RSpec.describe "GET /api/budget/interval/draft/:month/:year" do
 
     context "when passing valid changes" do
       let(:salary_key) { KeyGenerator.call }
-      let(:params) { { changes: changes } }
+      let(:params) { { changes: } }
       let(:changes) do
         [
           {
@@ -110,7 +117,8 @@ RSpec.describe "GET /api/budget/interval/draft/:month/:year" do
       end
 
       before do
-        create(:budget_item_event, :create_event, item: groceries, amount: -100_00)
+        create(:budget_item_event, :create_event, item: groceries,
+          amount: -100_00)
         create(:transaction_detail, budget_item: groceries, amount: -130_00)
       end
 

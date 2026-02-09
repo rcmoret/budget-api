@@ -4,15 +4,17 @@ RSpec.describe "POST /api/budget/interval/finalize/(:month)/(:year)" do
   subject do
     post(
       api_budget_interval_finalize_events_path(*url_args),
-      params: params,
-      headers: headers
+      params:,
+      headers:
     )
   end
 
   context "when providing a events" do
     include_context "with valid token"
 
-    let(:interval) { create(:budget_interval, :current, user_group: user.group) }
+    let(:interval) do
+      create(:budget_interval, :current, user_group: user.group)
+    end
     let(:category) { create(:category, :expense, user_group: user.group) }
     let(:amount) { rand(-100_00..-100) }
     let(:url_args) { [] }
@@ -21,7 +23,7 @@ RSpec.describe "POST /api/budget/interval/finalize/(:month)/(:year)" do
         interval: {
           events: [
             {
-              amount: amount,
+              amount:,
               budget_category_key: category.key,
               budget_item_key: KeyGenerator.call,
               event_type: Budget::EventTypes::CREATE_EVENTS.sample,
@@ -47,7 +49,7 @@ RSpec.describe "POST /api/budget/interval/finalize/(:month)/(:year)" do
 
     let(:params) { { interval: { events: [] } } }
     let(:interval) { create(:budget_interval, :past, user_group: user.group) }
-    let(:url_args) { [interval.month, interval.year] }
+    let(:url_args) { [ interval.month, interval.year ] }
 
     it "closes out the provided interval" do
       expect { subject }
@@ -62,7 +64,9 @@ RSpec.describe "POST /api/budget/interval/finalize/(:month)/(:year)" do
 
     let(:url_args) { [] }
     let(:params) { { interval: { events: [] } } }
-    let(:interval) { create(:budget_interval, :current, user_group: user.group) }
+    let(:interval) do
+      create(:budget_interval, :current, user_group: user.group)
+    end
 
     it "closes out the current interval" do
       expect { subject }
@@ -75,7 +79,7 @@ RSpec.describe "POST /api/budget/interval/finalize/(:month)/(:year)" do
   context "when passing invalid month / year params" do
     include_context "with valid token"
 
-    let(:url_args) { [month, year] }
+    let(:url_args) { [ month, year ] }
     let(:params) { {} }
 
     it_behaves_like "endpoint requires budget interval"
@@ -85,7 +89,7 @@ RSpec.describe "POST /api/budget/interval/finalize/(:month)/(:year)" do
     include_context "with valid token"
 
     let(:params) { { interval: {} } }
-    let(:url_args) { [rand(1..12), Time.current.year] }
+    let(:url_args) { [ rand(1..12), Time.current.year ] }
 
     it "responds with a 400, errors" do
       subject

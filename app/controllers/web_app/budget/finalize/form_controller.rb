@@ -15,7 +15,7 @@ module WebApp
         def props = serializer.render
 
         def serializer
-          API::Budget::Interval::Finalize::CategoriesSerializer.new(interval)
+          WebApp::Budget::Interval::Finalize::CategoriesSerializer.new(interval)
         end
 
         def metadata
@@ -23,8 +23,8 @@ module WebApp
             namespace: "budget",
             page: {
               name: "budget/finalize",
-              month: month,
-              year: year,
+              month:,
+              year:,
             },
           }
         end

@@ -13,7 +13,11 @@ class ApplicationSerializer < SimpleDelegator
     # rubocop:disable Naming/PredicateName
     def has_many(name, options = {})
       method_name = options.fetch(:alias_of, name)
-      defaults = { method_name: method_name, conditional: proc { true }, on_render: :render }
+      defaults = {
+        method_name:,
+        on_render: :render,
+        conditional: proc { true },
+      }
       attribute(name, defaults.merge(options))
     end
     # rubocop:enable Naming/PredicateName
@@ -21,9 +25,9 @@ class ApplicationSerializer < SimpleDelegator
     def attribute(name, options = {})
       case options
       in { serializer: serializer, **association_options }
-        add_association(name, serializer: serializer, **association_options)
+        add_association(name, serializer:, **association_options)
       in { each_serializer: serializer, **relation_options }
-        add_relation(name, serializer: serializer, **relation_options)
+        add_relation(name, serializer:, **relation_options)
       else
         add_attribute(name, options)
       end
@@ -37,19 +41,34 @@ class ApplicationSerializer < SimpleDelegator
       else
         define_method(name) { serializer.new(instance_eval(&method_name)) }
       end
-      class_attributes << { name: name, method_name: name, conditional: conditional, on_render: :render }
+
+      class_attributes << {
+        name:,
+        method_name: name,
+        conditional:,
+        on_render: :render,
+      }
     end
 
     def add_relation(name, serializer:, **options)
       method_name = options.fetch(:alias_of, name)
       conditional = options.fetch(:conditional) { proc { true } }
       if name == method_name
-        define_method(name) { SerializableCollection.new(serializer: serializer) { super() } }
+        define_method(name) do
+          SerializableCollection.new(serializer:) do
+            super()
+          end
+        end
       else
-        define_method(name) { SerializableCollection.new(serializer: serializer) { instance_eval(&method_name) } }
+        define_method(name) do
+          SerializableCollection.new(serializer:) do
+            instance_eval(&method_name)
+          end
+        end
       end
 
-      class_attributes << { name: name, method_name: name, conditional: conditional, on_render: :render }
+      class_attributes << { name:, method_name: name, conditional:,
+on_render: :render, }
     end
 
     def add_attribute(name, options = {})
@@ -57,8 +76,8 @@ class ApplicationSerializer < SimpleDelegator
       define_method(name) { send(method_name) } if name != method_name
 
       class_attributes << {
-        name: name,
-        method_name: method_name,
+        name:,
+        method_name:,
         conditional: options.fetch(:conditional) { proc { true } },
         on_render: options.fetch(:on_render, :itself),
       }
@@ -67,7 +86,12 @@ class ApplicationSerializer < SimpleDelegator
 
   def render(camelize: :lower)
     self.class.class_attributes.reduce({}) do |memo, attr|
-      name, method_name, on_render, conditional = attr.values_at(:name, :method_name, :on_render, :conditional)
+      name, method_name, on_render, conditional = attr.values_at(
+        :name,
+        :method_name,
+        :on_render,
+        :conditional
+      )
 
       next memo unless instance_eval(&conditional)
 
@@ -84,7 +108,7 @@ class ApplicationSerializer < SimpleDelegator
   def handle_render(on_render, value, camelize)
     case on_render
     in :render
-      value.render(camelize: camelize)
+      value.render(camelize:)
     in Symbol
       value.public_send(on_render)
     in Proc

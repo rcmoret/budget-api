@@ -1,7 +1,10 @@
 module Budget
   class ChangeSet < ApplicationRecord
     include HasKeyIdentifier
-    include BelongsToUserGroup::Through[association: :interval, class_name: "Budget::Interval"]
+    include BelongsToUserGroup::Through[
+      association: :interval,
+      class_name: "Budget::Interval"
+    ]
 
     TYPE_MAP = [
       { type: :adjust, key: 10 },
@@ -11,22 +14,23 @@ module Budget
     ].freeze
 
     enum :type_key,
-         TYPE_MAP.to_h(&:values)
+      TYPE_MAP.to_h(&:values)
 
     belongs_to :interval,
-               class_name: "Interval",
-               inverse_of: :change_sets,
-               foreign_key: :budget_interval_id
+      class_name: "Interval",
+      inverse_of: :change_sets,
+      foreign_key: :budget_interval_id
     alias_attribute :interval_id, :budget_interval_id
 
     after_initialize :set_type_key!
-    after_initialize -> { assign_attributes(key: KeyGenerator.call) if key.blank? }
+    after_initialize -> { assign_attributes(key: KeyGenerator.call) },
+      if: -> { key.blank? }
 
     has_many :events,
-             dependent: :destroy,
-             foreign_key: :budget_change_set_id,
-             inverse_of: :change_set,
-             class_name: "ItemEvent"
+      dependent: :destroy,
+      foreign_key: :budget_change_set_id,
+      inverse_of: :change_set,
+      class_name: "ItemEvent"
 
     scope :incomplete, -> { where(effective_at: nil) }
 

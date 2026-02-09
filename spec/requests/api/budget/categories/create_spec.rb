@@ -4,8 +4,8 @@ RSpec.describe "POST /api/budget/categories" do
   subject do
     post(
       api_budget_categories_path,
-      params: params,
-      headers: headers
+      params:,
+      headers:
     )
   end
 
@@ -19,15 +19,15 @@ RSpec.describe "POST /api/budget/categories" do
     let(:params) do
       {
         budget_category: {
-          key: key,
-          default_amount: default_amount,
-          is_accrual: is_accrual,
-          is_expense: is_expense,
+          key:,
+          default_amount:,
+          is_accrual:,
+          is_expense:,
           icon_id: icon.id,
-          is_per_diem_enabled: is_per_diem_enabled,
-          is_monthly: is_monthly,
-          name: name,
-          slug: slug,
+          is_per_diem_enabled:,
+          is_monthly:,
+          name:,
+          slug:,
         },
       }
     end
@@ -36,7 +36,7 @@ RSpec.describe "POST /api/budget/categories" do
       let(:is_accrual) { false }
       let(:is_expense) { false }
       let(:is_per_diem_enabled) { false }
-      let(:is_monthly) { [true, false].sample }
+      let(:is_monthly) { [ true, false ].sample }
       let(:default_amount) { rand(10_00..100_00) }
 
       it "creates a new record and returns the new record information" do
@@ -47,7 +47,7 @@ RSpec.describe "POST /api/budget/categories" do
         body = response.parsed_body.deep_symbolize_keys
         expect(body).to eq(
           budgetCategory: {
-            key: key,
+            key:,
             archivedAt: nil,
             defaultAmount: default_amount,
             isAccrual: is_accrual,
@@ -55,8 +55,8 @@ RSpec.describe "POST /api/budget/categories" do
             iconClassName: icon.class_name,
             isPerDiemEnabled: is_per_diem_enabled,
             isMonthly: is_monthly,
-            name: name,
-            slug: slug,
+            name:,
+            slug:,
           }
         )
       end
@@ -65,7 +65,7 @@ RSpec.describe "POST /api/budget/categories" do
     context "when creating a expense category" do
       let(:is_accrual) { false }
       let(:is_expense) { true }
-      let(:is_per_diem_enabled) { [true, false].sample }
+      let(:is_per_diem_enabled) { [ true, false ].sample }
       let(:is_monthly) { false }
       let(:default_amount) { rand(-100_00..-10_00) }
 
@@ -77,7 +77,7 @@ RSpec.describe "POST /api/budget/categories" do
         body = response.parsed_body.deep_symbolize_keys
         expect(body).to eq(
           budgetCategory: {
-            key: key,
+            key:,
             archivedAt: nil,
             defaultAmount: default_amount,
             isAccrual: is_accrual,
@@ -85,8 +85,8 @@ RSpec.describe "POST /api/budget/categories" do
             iconClassName: icon.class_name,
             isPerDiemEnabled: is_per_diem_enabled,
             isMonthly: is_monthly,
-            name: name,
-            slug: slug,
+            name:,
+            slug:,
           }
         )
       end
@@ -95,7 +95,7 @@ RSpec.describe "POST /api/budget/categories" do
     context "when creating an accruing expense category" do
       let(:is_accrual) { true }
       let(:is_expense) { true }
-      let(:is_per_diem_enabled) { [true, false].sample }
+      let(:is_per_diem_enabled) { [ true, false ].sample }
       let(:is_monthly) { false }
       let(:default_amount) { rand(-100_00..-10_00) }
 
@@ -107,7 +107,7 @@ RSpec.describe "POST /api/budget/categories" do
         body = response.parsed_body.deep_symbolize_keys
         expect(body).to eq(
           budgetCategory: {
-            key: key,
+            key:,
             archivedAt: nil,
             defaultAmount: default_amount,
             isAccrual: is_accrual,
@@ -115,8 +115,8 @@ RSpec.describe "POST /api/budget/categories" do
             iconClassName: icon.class_name,
             isPerDiemEnabled: is_per_diem_enabled,
             isMonthly: is_monthly,
-            name: name,
-            slug: slug,
+            name:,
+            slug:,
             maturityIntervals: [],
           }
         )
@@ -134,25 +134,31 @@ RSpec.describe "POST /api/budget/categories" do
     let(:params) do
       {
         budget_category: {
-          key: key,
+          key:,
           default_amount: 100_00,
           is_accrual: false,
           is_expense: true,
           icon_id: icon.id,
           is_per_diem_enabled: false,
           is_monthly: false,
-          name: name,
-          slug: slug,
+          name:,
+          slug:,
         },
       }
     end
 
     it "does not create a new catgory, returns the errors" do
-      expect { subject }.not_to(change { Budget::Category.belonging_to(user).count })
+      expect { subject }.not_to(change do
+        Budget::Category.belonging_to(user).count
+      end)
       expect(response).to have_http_status :unprocessable_entity
       body = response.parsed_body.deep_symbolize_keys
       expect(body).to eq(
-        budgetCategory: { defaultAmount: ["expense items must be less than or equal to 0"] }
+        budgetCategory: {
+          defaultAmount: [
+            "expense items must be less than or equal to 0",
+          ],
+        }
       )
     end
   end

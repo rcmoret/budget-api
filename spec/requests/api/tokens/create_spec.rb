@@ -3,16 +3,16 @@ require "rails_helper"
 RSpec.describe "POST /api/tokens" do
   describe "a successful request" do
     subject do
-      post "/api/tokens", params: params
+      post "/api/tokens", params:
     end
 
     let(:password) { Faker::Internet.password }
     let(:email) { Faker::Internet.email }
     let(:params) do
-      { user: { email: email, password: password } }
+      { user: { email:, password: } }
     end
 
-    before { create(:user, email: email, password: password) }
+    before { create(:user, email:, password:) }
 
     it "returns a token" do
       subject
@@ -24,7 +24,7 @@ RSpec.describe "POST /api/tokens" do
 
   describe "an unsuccessful request" do
     subject do
-      post "/api/tokens", params: params
+      post "/api/tokens", params:
     end
 
     let(:password) { Faker::Internet.password }
@@ -32,34 +32,35 @@ RSpec.describe "POST /api/tokens" do
     let(:email) { Faker::Internet.email }
 
     context "when passing an incorrect password" do
-      before { create(:user, email: email, password: password) }
+      before { create(:user, email:, password:) }
 
       let(:params) do
-        { user: { email: email, password: incorrect_password } }
+        { user: { email:, password: incorrect_password } }
       end
 
       it "an error message, not found status" do
         subject
-        expect(response.parsed_body).to eq("password" => ["incorrect email or password"])
+        expect(response.parsed_body).to eq("password" => [ "incorrect email or password" ])
         expect(response).to have_http_status :not_found
       end
     end
 
     context "when user is not found" do
       let(:params) do
-        { user: { email: Faker::Internet.email, password: Faker::Internet.password } }
+        { user: { email: Faker::Internet.email,
+                  password: Faker::Internet.password, } }
       end
 
       it "an error message, not found status" do
         subject
-        expect(response.parsed_body).to eq("password" => ["incorrect email or password"])
+        expect(response.parsed_body).to eq("password" => [ "incorrect email or password" ])
         expect(response).to have_http_status :not_found
       end
     end
 
     context "when the params are not correctly nested" do
       let(:params) do
-        { email: email, password: incorrect_password }
+        { email:, password: incorrect_password }
       end
 
       it "returns a 400, errors" do

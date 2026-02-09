@@ -5,7 +5,7 @@ class IndividualSerializer
   end
 
   def render(camelize: :lower)
-    hash = { key => serializable.render(camelize: camelize) }
+    hash = { key => serializable.render(camelize:) }
 
     return hash unless camelize
 

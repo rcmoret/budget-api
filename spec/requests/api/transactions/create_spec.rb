@@ -4,8 +4,8 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
   subject do
     post(
       api_account_transactions_path(account_key, month, year),
-      params: params,
-      headers: headers
+      params:,
+      headers:
     )
   end
 
@@ -24,9 +24,11 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
       subject
       expect(response).to have_http_status :created
       body = response.parsed_body.deep_symbolize_keys
-      expect(body.fetch(:accounts)).to eq([{ key: account_key, balance: amount, balancePriorTo: 0 }])
+      expect(body.fetch(:accounts)).to eq([ { key: account_key, balance: amount,
+                                              balancePriorTo: 0, } ])
       expect(body.fetch(:budgetItems))
-        .to eq([{ key: budget_item.key, remaining: 0, isDeletable: false, isMonthly: true }])
+        .to eq([ { key: budget_item.key, remaining: 0, isDeletable: false,
+                   isMonthly: true, } ])
       expect(body.fetch(:transactions))
         .to eq(
           [
@@ -34,7 +36,7 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
               key: params.fetch("transaction").fetch("key"),
               accountKey: account_key,
               accountSlug: account.slug,
-              amount: amount,
+              amount:,
               clearanceDate: params.fetch("transaction").fetch("clearance_date"),
               description: params.fetch("transaction").fetch("description"),
               checkNumber: nil,
@@ -43,8 +45,9 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
               updatedAt: Time.current.strftime("%FT%TZ"),
               details: [
                 {
-                  key: params.dig("transaction", "details_attributes", 0, "key"),
-                  amount: amount,
+                  key: params.dig("transaction", "details_attributes", 0,
+                    "key"),
+                  amount:,
                   budgetCategoryName: budget_category.name,
                   budgetItemKey: budget_item.key,
                   iconClassName: budget_category.icon_class_name,
@@ -62,15 +65,17 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
     include_context "with valid token"
     include_context "when user posts transaction with multiple details"
     let(:account_key) { account.key }
-    let(:total) { [first_amount, second_amount].sum }
+    let(:total) { [ first_amount, second_amount ].sum }
 
     it "returns a created status, the account and transaction" do
       subject
       expect(response).to have_http_status :created
       body = response.parsed_body.deep_symbolize_keys
-      expect(body.fetch(:accounts)).to eq([{ key: account_key, balance: total, balancePriorTo: 0 }])
+      expect(body.fetch(:accounts)).to eq([ { key: account_key, balance: total,
+                                              balancePriorTo: 0, } ])
       expect(body.fetch(:budgetItems))
-        .to eq([{ key: budget_item.key, remaining: 0, isDeletable: false, isMonthly: true }])
+        .to eq([ { key: budget_item.key, remaining: 0, isDeletable: false,
+                   isMonthly: true, } ])
       expect(body.fetch(:transactions))
         .to eq(
           [
@@ -87,14 +92,16 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
               updatedAt: Time.current.strftime("%FT%TZ"),
               details: [
                 {
-                  key: params.dig("transaction", "details_attributes", 0, "key"),
+                  key: params.dig("transaction", "details_attributes", 0,
+                    "key"),
                   amount: first_amount,
                   budgetCategoryName: budget_category.name,
                   budgetItemKey: budget_item.key,
                   iconClassName: budget_category.icon_class_name,
                 },
                 {
-                  key: params.dig("transaction", "details_attributes", 1, "key"),
+                  key: params.dig("transaction", "details_attributes", 1,
+                    "key"),
                   amount: second_amount,
                   budgetCategoryName: nil,
                   budgetItemKey: nil,
@@ -149,7 +156,7 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
       expect(response).to have_http_status :unprocessable_entity
       body = response.parsed_body.deep_symbolize_keys
       expect(body)
-        .to eq(transaction: { details: ["Must have at least one detail for this entry"] })
+        .to eq(transaction: { details: [ "Must have at least one detail for this entry" ] })
     end
   end
 
@@ -209,7 +216,11 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
         expect(response).to have_http_status :unprocessable_entity
         body = response.parsed_body.deep_symbolize_keys
         expect(body[:transaction])
-          .to eq(budgetExclusion: ["Budget Exclusions only applicable for non-cash-flow accounts"])
+          .to eq(
+            budgetExclusion: [
+              "Budget Exclusions only applicable for non-cash-flow accounts",
+            ]
+          )
       end
     end
 
@@ -229,7 +240,8 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
         subject
         expect(response).to have_http_status :created
         body = response.parsed_body.deep_symbolize_keys
-        expect(body.fetch(:accounts)).to eq([{ key: account_key, balance: amount, balancePriorTo: 0 }])
+        expect(body.fetch(:accounts)).to eq([ { key: account_key, balance: amount,
+                                                balancePriorTo: 0, } ])
         expect(body[:budgetItems]).to be_nil
         expect(body.fetch(:transactions))
           .to eq(
@@ -238,7 +250,7 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
                 key: params.fetch("transaction").fetch("key"),
                 accountKey: account_key,
                 accountSlug: account.slug,
-                amount: amount,
+                amount:,
                 clearanceDate: params.fetch("transaction").fetch("clearance_date"),
                 description: params.fetch("transaction").fetch("description"),
                 checkNumber: nil,
@@ -247,8 +259,9 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
                 updatedAt: Time.current.strftime("%FT%TZ"),
                 details: [
                   {
-                    key: params.dig("transaction", "details_attributes", 0, "key"),
-                    amount: amount,
+                    key: params.dig("transaction", "details_attributes", 0,
+                      "key"),
+                    amount:,
                     budgetCategoryName: nil,
                     budgetItemKey: nil,
                     iconClassName: nil,
@@ -277,9 +290,11 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
       subject
       expect(response).to have_http_status :created
       body = response.parsed_body.deep_symbolize_keys
-      expect(body.fetch(:accounts)).to eq([{ key: account_key, balance: amount, balancePriorTo: amount }])
+      expect(body.fetch(:accounts)).to eq([ { key: account_key, balance: amount,
+                                              balancePriorTo: amount, } ])
       expect(body.fetch(:budgetItems))
-        .to eq([{ key: budget_item.key, remaining: 0, isDeletable: false, isMonthly: true }])
+        .to eq([ { key: budget_item.key, remaining: 0, isDeletable: false,
+                   isMonthly: true, } ])
       expect(body.fetch(:transactions))
         .to eq(
           [
@@ -287,7 +302,7 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
               key: params.fetch("transaction").fetch("key"),
               accountKey: account_key,
               accountSlug: account.slug,
-              amount: amount,
+              amount:,
               clearanceDate: params.fetch("transaction").fetch("clearance_date").strftime("%F"),
               description: params.fetch("transaction").fetch("description"),
               checkNumber: nil,
@@ -296,8 +311,9 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
               updatedAt: Time.current.strftime("%FT%TZ"),
               details: [
                 {
-                  key: params.dig("transaction", "details_attributes", 0, "key"),
-                  amount: amount,
+                  key: params.dig("transaction", "details_attributes", 0,
+                    "key"),
+                  amount:,
                   budgetCategoryName: budget_category.name,
                   budgetItemKey: budget_item.key,
                   iconClassName: budget_category.icon_class_name,
@@ -319,7 +335,7 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
     let(:budget_exclusion) { false }
 
     before do
-      create(:transaction_detail, budget_item: budget_item)
+      create(:transaction_detail, budget_item:)
     end
 
     it "returns an unprocessable entity status, an error message" do
@@ -330,8 +346,9 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
         .to include(
           "detailItems" => [
             {
-              "identifier" => params.dig("transaction", "details_attributes", 0, "key"),
-              "budgetItemId" => ["has already been taken"],
+              "identifier" => params.dig("transaction", "details_attributes",
+                0, "key"),
+              "budgetItemId" => [ "has already been taken" ],
             },
           ]
         )
@@ -374,7 +391,7 @@ RSpec.describe "POST /api/accounts/:account_key/transactions/:month/:year" do
       expect(response).to have_http_status :unprocessable_entity
       body = response.parsed_body
       expect(body["transaction"]["detailItems"])
-        .to eq(["key" => ["must be unique"], "identifier" => detail_key])
+        .to eq([ "key" => [ "must be unique" ], "identifier" => detail_key ])
     end
   end
 

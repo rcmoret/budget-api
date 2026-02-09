@@ -1,7 +1,10 @@
 module Budget
   module Changes
     class Setup < ChangeSet
-      include BelongsToUserGroup::Through[association: :interval, class_name: "Budget::Interval"]
+      include BelongsToUserGroup::Through[
+        association: :interval,
+        class_name: "Budget::Interval"
+      ]
 
       validates :interval_id, uniqueness: true
 
@@ -19,7 +22,11 @@ module Budget
       attr_accessor :user_profile
 
       def events_form
-        Forms::Budget::EventsForm.new(user_profile, self, events: reducer.events)
+        Forms::Budget::EventsForm.new(
+          user_profile,
+          self,
+          events: reducer.events
+        )
       end
 
       def reset_data!
@@ -35,23 +42,25 @@ module Budget
 
       def refresh_category!(category_record)
         update_category_data(slug: category_record.slug) do |_, events, keys|
-          presenter_for(category_record, keys: keys) do
+          presenter_for(category_record, keys:) do
             events.map(&:adjustment_hash).reduce(&:merge)
           end
         end
       end
 
       def update_category_events(category_record, events: {})
-        update_category_data(slug: category_record.slug) do |category_data, _, keys|
-          presenter_for(category_record, keys: keys) do
-            category_data.events.map(&:adjustment_hash).reduce(&:merge).merge(events)
+        update_category_data(slug: category_record.slug) do |category, _, keys|
+          presenter_for(category_record, keys:) do
+            category.events.map(&:adjustment_hash).reduce(&:merge).merge(events)
           end
         end
       end
 
       def remove_event(slug:, key:)
-        update_category_data(slug: slug) do |category_data, _, _|
-          events = category_data.events.reject { |ev| ev.budget_item_key == key }
+        update_category_data(slug:) do |category_data, _, _|
+          events = category_data.events.reject do |ev|
+            ev.budget_item_key == key
+          end
 
           next if events.empty?
 
@@ -61,8 +70,8 @@ module Budget
 
       def assign_categories
         presenter = Presenters::ChangePresenter.new(
-          interval: interval,
-          category_scope: category_scope,
+          interval:,
+          category_scope:,
           budget_items: setup_budget_items.to_a,
         )
         self.events_data ||= {}
@@ -74,7 +83,11 @@ module Budget
         next_categories = categories.filter_map do |category_data|
           next category_data.to_h unless category_data.slug == slug
 
-          block.call(category_data, category_data.events, category_data.budget_item_keys)
+          block.call(
+            category_data,
+            category_data.events,
+            category_data.budget_item_keys
+          )
         end
 
         update_categories(*next_categories)
@@ -82,9 +95,9 @@ module Budget
 
       def add_item_event(category_record)
         if slugs.include?(category_record.slug)
-          append_category_event(category_record: category_record)
+          append_category_event(category_record:)
         else
-          add_new_category(category_record: category_record)
+          add_new_category(category_record:)
         end
       end
 
@@ -96,7 +109,7 @@ module Budget
           .includes(:transaction_details, :events)
           .active
           .belonging_to(user_group)
-          .where(interval: [interval, interval.prev])
+          .where(interval: [ interval, interval.prev ])
           .map(&:decorated)
       end
 
@@ -115,7 +128,7 @@ module Budget
 
       def append_category_event(category_record:)
         update_category_data(slug: category_record.slug) do |_, events, keys|
-          presenter_for(category_record, keys: keys) do
+          presenter_for(category_record, keys:) do
             events.map(&:adjustment_hash).reduce(NEW_ADJUSTMENT.call, &:merge)
           end
         end
@@ -124,7 +137,7 @@ module Budget
       def add_new_category(category_record:)
         key = KeyGenerator.call
         new_category = presenter_for(category_record, keys: Array.wrap(key)) do
-          NEW_ADJUSTMENT.call(key: key)
+          NEW_ADJUSTMENT.call(key:)
         end
 
         update_categories(*categories, new_category)
@@ -137,8 +150,8 @@ module Budget
       def presenter_for(category_record, keys:, &block)
         Presenters::CategoryPresenter.hashify(
           category_record,
-          interval: interval,
-          keys: keys,
+          interval:,
+          keys:,
           adjustments: block.call
         )
       end

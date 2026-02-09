@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "POST /api/accounts" do
-  subject { post("/api/accounts", params: params, headers: headers) }
+  subject { post("/api/accounts", params:, headers:) }
 
   context "when passing a valid token" do
     let(:user) { create(:user) }

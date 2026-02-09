@@ -12,17 +12,17 @@ module Forms
         validates :amount, numericality: { only_integer: true }
         validates :budget_item, presence: true
         validates :amount,
-                  numericality: {
-                    less_than_or_equal_to: 0,
-                    message: EXPENSE_AMOUNT_VALIDATION_MESSAGE,
-                  },
-                  if: :expense?
+          numericality: {
+            less_than_or_equal_to: 0,
+            message: EXPENSE_AMOUNT_VALIDATION_MESSAGE,
+          },
+          if: :expense?
         validates :amount,
-                  numericality: {
-                    greater_than_or_equal_to: 0,
-                    message: REVENUE_AMOUNT_VALIDATION_MESSAGE,
-                  },
-                  if: :revenue?
+          numericality: {
+            greater_than_or_equal_to: 0,
+            message: REVENUE_AMOUNT_VALIDATION_MESSAGE,
+          },
+          if: :revenue?
 
         def initialize(current_user, change_set, params)
           super
@@ -46,7 +46,10 @@ module Forms
         private
 
         def budget_item
-          @budget_item ||= ::Budget::Item.fetch(current_user, key: budget_item_key)
+          @budget_item ||= ::Budget::Item.fetch(
+            current_user,
+            key: budget_item_key
+          )
         end
 
         def event_amount

@@ -2,7 +2,8 @@
 
 module WebApp
   module Mixins
-    # This concern adds methods to fetch and validate budget intervals based on month/year params.
+    # This concern adds methods to fetch and validate budget intervals based on
+    #   month/year params.
     # Returns the current interval if no month / year params are provided
     # @param month [String, null]
     # @param year [String, null]
@@ -31,11 +32,13 @@ module WebApp
       # @return [Budget::Interval] the budget interval for the current request
       # @return [nil] if interval cannot be found/created
       def interval
-        @interval ||= if month.nil? || year.nil?
-                        ::Budget::Interval.belonging_to(current_user_profile).current
-                      else
-                        ::Budget::Interval.fetch(current_user_profile, key: { month: month, year: year })
-                      end
+        @interval ||=
+          if month.nil? || year.nil?
+            ::Budget::Interval.belonging_to(current_user_profile).current
+          else
+            ::Budget::Interval.fetch(current_user_profile,
+              key: { month:, year: })
+          end
       end
 
       # Extracts the month parameter from the request.
@@ -52,8 +55,7 @@ module WebApp
         params.permit(:year)[:year]
       end
 
-      # Before action callback that renders an error page if interval is not found.
-      # Does nothing if interval is present.
+      # Before action callback renders an error page if interval is not found.
       #
       # @return [void]
       def redirect_if_blank!
@@ -64,7 +66,8 @@ module WebApp
 
       # Returns validation errors for the current request.
       #
-      # @return [Hash{Symbol => Symbol}] hash with :interval => :not_found if interval missing
+      # @return [Hash{Symbol => Symbol}] hash with :interval => :not_found
+      #   if interval missing
       # @return [Hash] empty hash if interval is present
       def errors
         return {} if interval.present?

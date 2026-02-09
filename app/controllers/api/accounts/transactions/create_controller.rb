@@ -21,7 +21,7 @@ module API
         end
 
         def accounts
-          [account]
+          [ account ]
         end
 
         def transaction_entry_permitted_params

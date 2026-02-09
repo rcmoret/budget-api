@@ -8,12 +8,12 @@ module API
         end
 
         attributes :key,
-                   :name,
-                   :amount,
-                   :icon_class_name,
-                   :maturity_month,
-                   :maturity_year,
-                   :remaining
+          :name,
+          :amount,
+          :icon_class_name,
+          :maturity_month,
+          :maturity_year,
+          :remaining
         attribute :is_accrual, alias_of: :accrual?
         attribute :is_deleted, alias_of: :deleted?
         attribute :is_deletable, alias_of: :deletable?
@@ -22,11 +22,11 @@ module API
         attribute :transaction_details, each_serializer: Budget::Items::TransactionDetailSerializer
 
         delegate :name,
-                 :accrual?,
-                 :expense?,
-                 :icon_class_name,
-                 :monthly?,
-                 to: :category
+          :accrual?,
+          :expense?,
+          :icon_class_name,
+          :monthly?,
+          to: :category
 
         def maturity_month
           maturity_interval.month

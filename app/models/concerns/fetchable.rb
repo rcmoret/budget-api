@@ -16,9 +16,9 @@ module Fetchable
     def fetch!(user_or_group, **find_by)
       case find_by
       in { key: }
-        fetch(user_or_group, key: key)
+        fetch(user_or_group, key:)
       in { slug: }
-        fetch(user_or_group, slug: slug)
+        fetch(user_or_group, slug:)
       end.tap do |result|
         raise ActiveRecord::RecordNotFound if result.nil?
       end

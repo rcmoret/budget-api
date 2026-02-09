@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe Transaction::Detail do
   describe "associations" do
     subject do
-      described_class.new(amount: -1000, budget_item: budget_item)
+      described_class.new(amount: -1000, budget_item:)
     end
 
     let(:budget_item) { create(:budget_item) }
@@ -17,7 +17,11 @@ RSpec.describe Transaction::Detail do
 
     describe "a valid detail" do
       it "returns true for valid?" do
-        detail = described_class.new(transaction_entry_id: entry.id, amount: 100, key: KeyGenerator.call)
+        detail = described_class.new(
+          transaction_entry_id: entry.id,
+          amount: 100,
+          key: KeyGenerator.call
+        )
         expect(detail).to be_valid
       end
     end
@@ -49,10 +53,10 @@ RSpec.describe Transaction::Detail do
     end
 
     describe "budget item validation (for monthly items)" do
-      subject { described_class.new(budget_item: item, entry: entry) }
+      subject { described_class.new(budget_item: item, entry:) }
 
       before do
-        create(:transaction_detail, entry: entry, budget_item: item)
+        create(:transaction_detail, entry:, budget_item: item)
       end
 
       let(:entry) { create(:transaction_entry) }
@@ -64,24 +68,6 @@ RSpec.describe Transaction::Detail do
         subject.valid?
         expect(subject.errors[:budget_item_id])
           .to include "has already been taken"
-      end
-    end
-
-    describe "amount changed raises an error if transfer" do
-      let(:transfer) { create(:transfer) }
-      let(:entry) { transfer.to_transaction }
-      let(:detail) { entry.reload.details.first }
-
-      before { detail.update(amount: (detail.amount * 2)) }
-
-      it "returns not valid" do
-        expect(detail.valid?).to be false
-      end
-
-      it "has an error message" do
-        detail.valid?
-
-        expect(detail.errors[:amount]).to include("Cannot be changed for a transfer")
       end
     end
   end

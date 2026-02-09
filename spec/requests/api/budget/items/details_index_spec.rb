@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "GET /api/budget/item/:key/details" do
-  subject { get api_budget_item_details_path(item_key), headers: headers }
+  subject { get api_budget_item_details_path(item_key), headers: }
 
   context "with a valid token" do
     include_context "with valid token"
@@ -11,10 +11,10 @@ RSpec.describe "GET /api/budget/item/:key/details" do
 
     context "when the item is findable" do
       let(:category) { create(:category, user_group: group) }
-      let(:item) { create(:budget_item, category: category) }
+      let(:item) { create(:budget_item, category:) }
       let(:item_key) { item.key }
       let!(:event) do
-        create(:budget_item_event, :create_event, item: item)
+        create(:budget_item_event, :create_event, item:)
       end
       let!(:transaction_detail) do
         create(:transaction_detail, budget_item: item)

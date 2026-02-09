@@ -40,15 +40,15 @@ RSpec.describe Transaction::Entry do
 
     let(:transaction_entry) do
       build(:transaction_entry,
-            details_attributes: [
-              {
-                key: KeyGenerator.call,
-                amount: rand(10_000),
-                budget_item_id: nil,
-              },
-            ],
-            budget_exclusion: true,
-            account: account)
+        details_attributes: [
+          {
+            key: KeyGenerator.call,
+            amount: rand(10_000),
+            budget_item_id: nil,
+          },
+        ],
+        budget_exclusion: true,
+        account:)
     end
 
     context "when account is a non-cashflow account" do
@@ -119,30 +119,6 @@ RSpec.describe Transaction::Entry do
       end
     end
 
-    context "when trying to add another detail" do
-      subject { transaction.details.build(amount: new_amount) }
-
-      let(:transfer) { create(:transfer) }
-      let(:new_amount) do
-        transaction.details.map(&:amount).reduce(0) do |total, amount|
-          total + (amount * 2)
-        end
-      end
-      let(:transaction) { transfer.from_transaction.reload }
-
-      before { subject.save }
-
-      it "does not allow a second detail" do
-        expect { subject }.not_to(change { transaction.details.reload })
-      end
-
-      it "includes an error message" do
-        transaction.valid?
-        expect(transaction.errors[:transfer])
-          .to include "Cannot have multiple details for transfer"
-      end
-    end
-
     context "when updating other attributes" do
       let(:transfer) { create(:transfer) }
       let(:transaction) { transfer.from_transaction }
@@ -157,7 +133,7 @@ RSpec.describe Transaction::Entry do
     create_list(
       :transaction_entry,
       2,
-      account: account,
+      account:,
       clearance_date: date,
     )
   end

@@ -2,7 +2,10 @@ require "rails_helper"
 
 RSpec.describe "GET /api/accounts/:account_key/transactions/:month/:year" do
   context "when passing valid month, year combination" do
-    subject { get(api_account_transactions_path(account_key, month, year), headers: headers) }
+    subject do
+      get(api_account_transactions_path(account_key, month, year),
+        headers:)
+    end
 
     include_context "with valid token"
     let(:user) { create(:user) }
@@ -16,7 +19,7 @@ RSpec.describe "GET /api/accounts/:account_key/transactions/:month/:year" do
       create_list(
         :transaction_entry,
         10,
-        account: account,
+        account:,
         clearance_date: interval.prev.date_range.to_a.sample,
       )
     end
@@ -24,7 +27,7 @@ RSpec.describe "GET /api/accounts/:account_key/transactions/:month/:year" do
       create_list(
         :transaction_entry,
         10,
-        account: account,
+        account:,
         clearance_date: interval.date_range.to_a.sample,
       )
     end
@@ -32,12 +35,12 @@ RSpec.describe "GET /api/accounts/:account_key/transactions/:month/:year" do
       create_list(
         :transaction_entry,
         10,
-        account: account,
+        account:,
         clearance_date: interval.next.date_range.to_a.sample,
       )
     end
     let(:account_transactions) do
-      [*current_transactions, *previous_transactions, *future_transactions]
+      [ *current_transactions, *previous_transactions, *future_transactions ]
     end
 
     before do
@@ -67,7 +70,9 @@ RSpec.describe "GET /api/accounts/:account_key/transactions/:month/:year" do
   end
 
   context "when not passing a month and year" do
-    subject { get(api_account_transactions_path(account_key), headers: headers) }
+    subject do
+      get(api_account_transactions_path(account_key), headers:)
+    end
 
     include_context "with valid token"
     let(:user) { create(:user) }
@@ -78,7 +83,7 @@ RSpec.describe "GET /api/accounts/:account_key/transactions/:month/:year" do
       create_list(
         :transaction_entry,
         10,
-        account: account,
+        account:,
         clearance_date: interval.prev.date_range.to_a.sample,
       )
     end
@@ -86,7 +91,7 @@ RSpec.describe "GET /api/accounts/:account_key/transactions/:month/:year" do
       create_list(
         :transaction_entry,
         10,
-        account: account,
+        account:,
         clearance_date: interval.date_range.to_a.sample,
       )
     end
@@ -94,12 +99,12 @@ RSpec.describe "GET /api/accounts/:account_key/transactions/:month/:year" do
       create_list(
         :transaction_entry,
         10,
-        account: account,
+        account:,
         clearance_date: interval.next.date_range.to_a.sample,
       )
     end
     let(:account_transactions) do
-      [*current_transactions, *previous_transactions, *future_transactions]
+      [ *current_transactions, *previous_transactions, *future_transactions ]
     end
 
     before do
@@ -129,7 +134,10 @@ RSpec.describe "GET /api/accounts/:account_key/transactions/:month/:year" do
   end
 
   context "when the account is not found" do
-    subject { get(api_account_transactions_path(account_key, month, year), headers: headers) }
+    subject do
+      get(api_account_transactions_path(account_key, month, year),
+        headers:)
+    end
 
     let(:account_key) { KeyGenerator.call }
 
@@ -138,7 +146,10 @@ RSpec.describe "GET /api/accounts/:account_key/transactions/:month/:year" do
   end
 
   context "when passing an unrelated account's key" do
-    subject { get(api_account_transactions_path(account_key, month, year), headers: headers) }
+    subject do
+      get(api_account_transactions_path(account_key, month, year),
+        headers:)
+    end
 
     include_context "with valid token"
     include_context "with an account belonging to a different user group"
@@ -148,14 +159,20 @@ RSpec.describe "GET /api/accounts/:account_key/transactions/:month/:year" do
   end
 
   context "when providing invalid month/year combination" do
-    subject { get(api_account_transactions_path(account_key, month, year), headers: headers) }
+    subject do
+      get(api_account_transactions_path(account_key, month, year),
+        headers:)
+    end
 
     include_context "with valid token"
     include_examples "endpoint requires budget interval"
   end
 
   describe "token authentication" do
-    subject { get(api_account_transactions_path(account_key, month, year), headers: headers) }
+    subject do
+      get(api_account_transactions_path(account_key, month, year),
+        headers:)
+    end
 
     let(:account_key) { KeyGenerator.call }
     let(:month) { rand(1..12) }

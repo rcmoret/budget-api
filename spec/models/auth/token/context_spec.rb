@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Auth::Token::Context do
-  subject { described_class.new(user: user) }
+  subject { described_class.new(user:) }
 
   let(:user) { create(:user) }
 

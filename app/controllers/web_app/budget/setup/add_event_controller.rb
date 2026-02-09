@@ -13,7 +13,11 @@ module WebApp
         def call
           change_set.add_item_event(budget_category_record)
 
-          redirect_to budget_setup_form_path(month, year, budget_category_record.slug)
+          redirect_to budget_setup_form_path(
+            month,
+            year,
+            budget_category_record.slug
+          )
         end
 
         private
@@ -21,7 +25,7 @@ module WebApp
         def permitted_params
           params.require(:event)
           params
-            .permit(event: [{ adjustment: %i[display cents] }])
+            .permit(event: [ { adjustment: %i[display cents] } ])
             .fetch(:event)
         end
       end

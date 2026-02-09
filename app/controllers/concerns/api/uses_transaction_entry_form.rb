@@ -24,7 +24,7 @@ module API
     def serializer
       Transactions::ResponseSerializer.new(
         accounts: accounts,
-        transactions: [transaction_entry],
+        transactions: [ transaction_entry ],
         interval: interval,
         budget_items: budget_items,
       )
@@ -38,7 +38,9 @@ module API
     end
 
     def permitted_parameters
-      transaction_entry_permitted_params << { details_attributes: transaction_details_permitted_params }
+      transaction_entry_permitted_params << {
+        details_attributes: transaction_details_permitted_params,
+      }
     end
 
     def formatted_params
@@ -58,7 +60,7 @@ module API
 
     # rubocop:disable Metrics/CyclomaticComplexity
     def handle_attribute(key, value)
-      case [key, value]
+      case [ key, value ]
       in [:account_key, *]
         value.blank? ? {} : { account: Account.fetch(api_user, key: value) }
       in [:details_attributes, *]

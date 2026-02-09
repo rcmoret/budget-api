@@ -5,23 +5,23 @@ RSpec.describe Forms::TransactionForm do
     context "when creating a new transaction" do
       let(:user) { create(:user) }
       let(:account) { create(:account, user_group: user.user_group) }
-      let(:transaction_entry) { Transaction::Entry.new(account: account) }
+      let(:transaction_entry) { Transaction::Entry.new(account:) }
       let(:params) do
         {
-          budget_exclusion: budget_exclusion,
+          budget_exclusion:,
           check_number: nil,
           clearance_date: Time.current.to_date,
           key: KeyGenerator.call,
           notes: nil,
           receipt: nil,
-          details_attributes: details_attributes,
+          details_attributes:,
         }
       end
       let(:budget_exclusion) { false }
 
       context "when passing valid params" do
         let(:category) { create(:category, user_group: user.group) }
-        let(:budget_item) { create(:budget_item, category: category) }
+        let(:budget_item) { create(:budget_item, category:) }
         let(:details_attributes) do
           [
             {
@@ -47,18 +47,24 @@ RSpec.describe Forms::TransactionForm do
         context "when creating a single detail" do
           it "creates a single transaction detail" do
             expect { described_class.new(user, transaction_entry, params).save }
-              .to change { Transaction::Detail.where(budget_item: budget_item).count }
+              .to change {
+                    Transaction::Detail.where(budget_item:).count
+                  }
               .by(+1)
           end
         end
 
         context "when creating multiple details" do
           let(:category) { create(:category, user_group: user.user_group) }
-          let(:additional_budget_item) { create(:budget_item, category: category) }
+          let(:additional_budget_item) do
+            create(:budget_item, category:)
+          end
           let(:details_attributes) do
             [
-              { key: KeyGenerator.call, amount: 100_00, budget_item_id: additional_budget_item.id },
-              { key: KeyGenerator.call, amount: 100_00, budget_item_id: budget_item.id },
+              { key: KeyGenerator.call, amount: 100_00,
+                budget_item_id: additional_budget_item.id, },
+              { key: KeyGenerator.call, amount: 100_00,
+                budget_item_id: budget_item.id, },
             ]
           end
 
@@ -74,9 +80,13 @@ RSpec.describe Forms::TransactionForm do
         let(:budget_exclusion) { true }
 
         context "when the account is non-cash-flow" do
-          let(:account) { create(:account, :non_cash_flow, user_group: user.group) }
-          let(:transaction_entry) { Transaction::Entry.new(account: account) }
-          let(:details_attributes) { [{ key: KeyGenerator.call, amount: 250_00 }] }
+          let(:account) do
+            create(:account, :non_cash_flow, user_group: user.group)
+          end
+          let(:transaction_entry) { Transaction::Entry.new(account:) }
+          let(:details_attributes) do
+            [ { key: KeyGenerator.call, amount: 250_00 } ]
+          end
 
           it "returns true" do
             expect(described_class.new(user, transaction_entry, params).save)
@@ -92,8 +102,10 @@ RSpec.describe Forms::TransactionForm do
 
         context "when the account is cash-flow" do
           let(:account) { create(:account, :cash_flow, user_group: user.group) }
-          let(:transaction_entry) { Transaction::Entry.new(account: account) }
-          let(:details_attributes) { [{ key: KeyGenerator.call, amount: 250_00 }] }
+          let(:transaction_entry) { Transaction::Entry.new(account:) }
+          let(:details_attributes) do
+            [ { key: KeyGenerator.call, amount: 250_00 } ]
+          end
 
           it "returns false" do
             expect(described_class.new(user, transaction_entry, params).save)
@@ -106,17 +118,26 @@ RSpec.describe Forms::TransactionForm do
           end
 
           it "includes an error" do
-            subject = described_class.new(user, transaction_entry, params).tap(&:save)
+            subject = described_class.new(
+              user,
+              transaction_entry,
+              params
+            ).tap(&:save)
+            error_message =
+              "Budget Exclusions only applicable for non-cash-flow accounts"
+
             expect(subject.errors[:budget_exclusion])
-              .to eq(["Budget Exclusions only applicable for non-cash-flow accounts"])
+              .to eq([ error_message ])
           end
         end
 
         context "when providing a budget item with the detail" do
-          let(:account) { create(:account, :non_cash_flow, user_group: user.group) }
-          let(:transaction_entry) { Transaction::Entry.new(account: account) }
+          let(:account) do
+            create(:account, :non_cash_flow, user_group: user.group)
+          end
+          let(:transaction_entry) { Transaction::Entry.new(account:) }
           let(:category) { create(:category, user_group: user.group) }
-          let(:budget_item) { create(:budget_item, category: category) }
+          let(:budget_item) { create(:budget_item, category:) }
           let(:details_attributes) do
             [
               {
@@ -138,15 +159,20 @@ RSpec.describe Forms::TransactionForm do
           end
 
           it "includes an error" do
-            subject = described_class.new(user, transaction_entry, params).tap(&:save)
+            subject = described_class.new(user, transaction_entry,
+              params).tap(&:save)
+            error_message =
+              "Budget Exclusions cannot be associated with a budget item"
             expect(subject.errors[:budget_exclusion])
-              .to eq(["Budget Exclusions cannot be associated with a budget item"])
+              .to eq([ error_message ])
           end
         end
 
         context "when providing multiple details" do
-          let(:account) { create(:account, :non_cash_flow, user_group: user.group) }
-          let(:transaction_entry) { Transaction::Entry.new(account: account) }
+          let(:account) do
+            create(:account, :non_cash_flow, user_group: user.group)
+          end
+          let(:transaction_entry) { Transaction::Entry.new(account:) }
           let(:details_attributes) do
             [
               { key: KeyGenerator.call, amount: 250_00 },
@@ -165,23 +191,27 @@ RSpec.describe Forms::TransactionForm do
           end
 
           it "includes an error" do
-            subject = described_class.new(user, transaction_entry, params).tap(&:save)
+            subject = described_class.new(user, transaction_entry,
+              params).tap(&:save)
             expect(subject.errors[:budget_exclusion])
-              .to eq(["Cannot have multiple details for budget exclusion"])
+              .to eq([ "Cannot have multiple details for budget exclusion" ])
           end
         end
       end
 
       context "when creating multiple details with the same key" do
-        let(:budget_item) { create(:budget_item, category: category) }
+        let(:budget_item) { create(:budget_item, category:) }
         let(:category) { create(:category, user_group: user.group) }
         let(:second_category) { create(:category, user_group: user.group) }
-        let(:additional_budget_item) { create(:budget_item, category: second_category) }
+        let(:additional_budget_item) do
+          create(:budget_item, category: second_category)
+        end
         let(:key) { KeyGenerator.call }
         let(:details_attributes) do
           [
-            { key: key, amount: 100_00, budget_item_id: additional_budget_item.id },
-            { key: key, amount: 100_00, budget_item_id: budget_item.id },
+            { key:, amount: 100_00,
+              budget_item_id: additional_budget_item.id, },
+            { key:, amount: 100_00, budget_item_id: budget_item.id },
           ]
         end
 
@@ -196,80 +226,96 @@ RSpec.describe Forms::TransactionForm do
         end
 
         it "includes an error" do
-          subject = described_class.new(user, transaction_entry, params).tap(&:save)
+          subject = described_class.new(user, transaction_entry,
+            params).tap(&:save)
           expect(subject.errors[:detail_items])
-            .to eq([{ identifier: key, key: ["must be unique"] }])
+            .to eq([ { identifier: key, key: [ "must be unique" ] } ])
         end
       end
 
-      context "when creating multiple details with the same monthly budget item" do
-        let(:budget_item) { create(:budget_item, category: category) }
-        let(:category) { create(:category, :monthly, user_group: user.group) }
+      context "when creating multiple details with the same monthly item" do
+        let(:budget_item) { create(:budget_item, category:) }
+        let(:category) do
+          create(:category, :monthly, user_group: user.group)
+        end
         let(:detail_1_key) { KeyGenerator.call }
         let(:detail_2_key) { KeyGenerator.call }
         let(:details_attributes) do
           [
-            { key: detail_1_key, amount: 40_00, budget_item_id: budget_item.id },
-            { key: detail_2_key, amount: 25_00, budget_item_id: budget_item.id },
+            { key: detail_1_key, amount: 40_00,
+              budget_item_id: budget_item.id, },
+            { key: detail_2_key, amount: 25_00,
+              budget_item_id: budget_item.id, },
           ]
         end
 
         it "does not create a transaction entry" do
-          expect { described_class.new(user, transaction_entry, params).save }
+          expect do
+            described_class.new(user, transaction_entry, params).save
+          end
             .not_to(change { Transaction::Entry.count })
         end
 
         it "returns false" do
-          expect(described_class.new(user, transaction_entry, params).save)
+          expect(described_class.new(user, transaction_entry,
+            params).save)
             .to be false
         end
 
-        # rubocop:disable RSpec/ExampleLength
         it "includes an error" do
-          subject = described_class.new(user, transaction_entry, params).tap(&:save)
+          subject = described_class.new(user, transaction_entry,
+            params).tap(&:save)
           expect(subject.errors[:detail_items]).to contain_exactly(
             {
               identifier: detail_1_key,
-              budget_item_id: ["has already been taken"],
+              budget_item_id: [ "has already been taken" ],
             },
             {
               identifier: detail_2_key,
-              budget_item_id: ["has already been taken"],
+              budget_item_id: [ "has already been taken" ],
             }
           )
         end
-        # rubocop:enable RSpec/ExampleLength
       end
 
       context "when passing empty details" do
-        let(:budget_item) { create(:budget_item, category: category) }
+        let(:budget_item) { create(:budget_item, category:) }
         let(:category) { create(:category, :monthly, user_group: user.group) }
         let(:details_attributes) { [] }
 
         it "return errors" do
-          subject = described_class.new(user, transaction_entry, params).tap(&:save)
+          subject = described_class.new(user, transaction_entry,
+            params).tap(&:save)
 
-          expect(subject.errors[:details]).to eq(["Must have at least one detail for this entry"])
+          error_message =
+            "Must have at least one detail for this entry"
+          expect(subject.errors[:details]).to eq([ error_message ])
         end
       end
 
       context "when passing a user that does not have access to the account" do
         let(:other_user) { create(:user) }
-        let(:details_attributes) { [{ key: KeyGenerator.call, amount: 100_00 }] }
+        let(:details_attributes) do
+          [ { key: KeyGenerator.call, amount: 100_00 } ]
+        end
 
         it "does not create a transaction entry" do
-          expect { described_class.new(other_user, transaction_entry, params).save }
+          expect do
+            described_class.new(other_user, transaction_entry, params).save
+          end
             .not_to(change { Transaction::Entry.count })
         end
 
         it "returns false" do
-          expect(described_class.new(other_user, transaction_entry, params).save)
+          expect(described_class.new(other_user, transaction_entry,
+            params).save)
             .to be false
         end
 
         it "includes an error message" do
-          subject = described_class.new(other_user, transaction_entry, params).tap(&:save)
-          expect(subject.errors[:account]).to eq(["not found"])
+          subject = described_class.new(other_user, transaction_entry,
+            params).tap(&:save)
+          expect(subject.errors[:account]).to eq([ "not found" ])
         end
       end
 
@@ -287,9 +333,10 @@ RSpec.describe Forms::TransactionForm do
         end
 
         it "includes an error message" do
-          subject = described_class.new(user, transaction_entry, params).tap(&:save)
+          subject = described_class.new(user, transaction_entry,
+            params).tap(&:save)
           expect(subject.errors[:details])
-            .to eq(["Must have at least one detail for this entry"])
+            .to eq([ "Must have at least one detail for this entry" ])
         end
       end
     end
@@ -297,47 +344,55 @@ RSpec.describe Forms::TransactionForm do
     context "when updating an existing transaction" do
       let(:user) { create(:user) }
       let(:account) { create(:account, user_group: user.group) }
-      let(:transaction_entry) { create(:transaction_entry, account: account) }
+      let(:transaction_entry) { create(:transaction_entry, account:) }
 
       context "when updating the account" do
         context "when switching to another account the user has access to" do
-          let(:alternate_account) { create(:savings_account, user_group: user.group) }
+          let(:alternate_account) do
+            create(:savings_account, user_group: user.group)
+          end
 
           it "updates the account id" do
-            expect { described_class.new(user, transaction_entry, { account: alternate_account }).save }
+            expect do
+              described_class.new(user, transaction_entry,
+                { account: alternate_account }).save
+            end
               .to change { transaction_entry.reload.account_id }
               .from(account.id)
               .to(alternate_account.id)
           end
         end
 
-        context "when switching to another account the user does not have access to" do
+        context "when switching to an account the user lacks access to" do
           let(:alternate_account) { create(:account) }
 
           it "does not update the account it" do
-            subject = described_class.new(user, transaction_entry, { account: alternate_account })
+            subject = described_class.new(user, transaction_entry,
+              { account: alternate_account })
             expect { subject.save }
               .not_to(change { transaction_entry.reload.account_id })
           end
 
           it "includes an error" do
-            subject = described_class.new(user, transaction_entry, { account: alternate_account }).tap(&:save)
+            subject = described_class.new(user, transaction_entry,
+              { account: alternate_account }).tap(&:save)
             expect(subject.errors[:account])
-              .to eq(["not found"])
+              .to eq([ "not found" ])
           end
         end
       end
 
       context "when adding a transaction detail" do
         let(:category) { create(:category, user_group: user.group) }
-        let(:budget_item) { create(:budget_item, category: category) }
+        let(:budget_item) { create(:budget_item, category:) }
 
         it "creates a transaction detail" do
           expect do
             described_class.new(
               user,
               transaction_entry,
-              details_attributes: [{ key: KeyGenerator.call, amount: 45_00, budget_item_id: budget_item.id }],
+              details_attributes: [ { key: KeyGenerator.call, amount: 45_00,
+                                      budget_item_id: budget_item.id, } ],
             ).save
           end.to change { transaction_entry.reload.details.count }.by(+1)
         end
@@ -360,7 +415,7 @@ RSpec.describe Forms::TransactionForm do
 
       context "when deleting a transaction detail" do
         let(:transaction_entry) do
-          create(:transaction_entry, :with_multiple_details, account: account)
+          create(:transaction_entry, :with_multiple_details, account:)
         end
 
         it "deletes the transaction detail" do
@@ -379,7 +434,7 @@ RSpec.describe Forms::TransactionForm do
 
       context "when updating one (of multiple) transaction detail" do
         let(:transaction_entry) do
-          create(:transaction_entry, :with_multiple_details, account: account)
+          create(:transaction_entry, :with_multiple_details, account:)
         end
 
         it "updates the targeted detail" do
@@ -397,8 +452,15 @@ RSpec.describe Forms::TransactionForm do
 
         it "does not change the other details" do
           detail = transaction_entry.details.first
-          updated_at = -> { transaction_entry.reload.details.where.not(id: detail.id).pluck(:updated_at) }
-          params = { details_attributes: [{ id: detail.id, amount: 342_25 }] }
+          updated_at = lambda {
+            transaction_entry
+              .reload
+              .details
+              .where
+              .not(id: detail.id)
+              .pluck(:updated_at)
+          }
+          params = { details_attributes: [ { id: detail.id, amount: 342_25 } ] }
 
           expect { described_class.new(user, transaction_entry, params).save }
             .not_to(change { updated_at.call })
@@ -406,30 +468,44 @@ RSpec.describe Forms::TransactionForm do
       end
 
       context "when the transaction entry is a budget exclusion" do
-        let(:savings_account) { create(:savings_account, user_group: user.group) }
+        let(:savings_account) do
+          create(:savings_account, user_group: user.group)
+        end
         let(:transaction_entry) do
-          create(:transaction_entry, :budget_exclusion, account: savings_account)
+          create(:transaction_entry, :budget_exclusion,
+            account: savings_account)
         end
 
         context "when the updated account is cash flow" do
           it "does not update the transaction entry's account id" do
-            expect { described_class.new(user, transaction_entry, account: account).save }
+            expect do
+              described_class.new(user, transaction_entry,
+                account:).save
+            end
               .not_to(change { transaction_entry.reload.account_id })
           end
 
           it "includes an error" do
-            subject = described_class.new(user, transaction_entry, account: account).tap(&:save)
+            subject = described_class.new(user, transaction_entry,
+              account:).tap(&:save)
 
+            error_message =
+              "Budget Exclusions only applicable for non-cash-flow accounts"
             expect(subject.errors[:budget_exclusion])
-              .to eq(["Budget Exclusions only applicable for non-cash-flow accounts"])
+              .to eq([ error_message ])
           end
         end
 
         context "when the updated account is non cash flow" do
-          let(:alt_savings_account) { create(:savings_account, user_group: user.group) }
+          let(:alt_savings_account) do
+            create(:savings_account, user_group: user.group)
+          end
 
           it "updates the transaction entry's account id" do
-            expect { described_class.new(user, transaction_entry, account: alt_savings_account).save }
+            expect do
+              described_class.new(user, transaction_entry,
+                account: alt_savings_account).save
+            end
               .to change { transaction_entry.reload.account_id }
               .from(savings_account.id)
               .to(alt_savings_account.id)
@@ -438,29 +514,39 @@ RSpec.describe Forms::TransactionForm do
 
         context "when adding a detail" do
           it "does not create a detail" do
-            params = { details_attributes: [{ key: KeyGenerator.call, amount: 55_82 }] }
+            params = { details_attributes: [ { key: KeyGenerator.call,
+                                               amount: 55_82, } ] }
 
             expect { described_class.new(user, transaction_entry, params).save }
               .not_to(change { transaction_entry.reload.details.count })
           end
 
           it "includes an error" do
-            params = { details_attributes: [{ key: KeyGenerator.call, amount: 55_82 }] }
+            params = { details_attributes: [ { key: KeyGenerator.call,
+                                               amount: 55_82, } ] }
 
-            subject = described_class.new(user, transaction_entry, params).tap(&:save)
+            subject = described_class.new(user, transaction_entry,
+              params).tap(&:save)
 
             expect(subject.errors[:budget_exclusion])
-              .to eq(["Cannot have multiple details for budget exclusion"])
+              .to eq([ "Cannot have multiple details for budget exclusion" ])
           end
         end
 
         context "when updating the single detail with a budget item" do
           let(:category) { create(:category, user_group: user.group) }
-          let(:budget_item) { create(:budget_item, category: category) }
+          let(:budget_item) { create(:budget_item, category:) }
 
           it "does not change the detail" do
             detail = transaction_entry.details.first
-            params = { details_attributes: [{ id: detail.id, budget_item_id: budget_item.id }] }
+            params = {
+              details_attributes: [
+                {
+                  id: detail.id,
+                  budget_item_id: budget_item.id,
+                },
+              ],
+            }
 
             expect { described_class.new(user, transaction_entry, params).save }
               .not_to(change { detail.reload })
@@ -468,50 +554,77 @@ RSpec.describe Forms::TransactionForm do
 
           it "includes an error" do
             detail = transaction_entry.details.first
-            params = { details_attributes: [{ id: detail.id, budget_item_id: budget_item.id }] }
+            params = {
+              details_attributes: [
+                {
+                  id: detail.id,
+                  budget_item_id: budget_item.id,
+                },
+              ],
+            }
 
-            subject = described_class.new(user, transaction_entry, params).tap(&:save)
+            subject = described_class.new(user, transaction_entry,
+              params).tap(&:save)
 
+            error_message =
+              "Budget Exclusions cannot be associated with a budget item"
             expect(subject.errors[:budget_exclusion])
-              .to eq(["Budget Exclusions cannot be associated with a budget item"])
+              .to eq([ error_message ])
           end
         end
       end
 
       context "when the transaction entry is a part of a transfer" do
-        let(:savings_account) { create(:savings_account, user_group: user.group) }
-        let(:to_transaction) { create(:transaction_entry, :discretionary, account: savings_account) }
-        let(:from_transaction) { create(:transaction_entry, :discretionary, account: account) }
+        let(:savings_account) do
+          create(:savings_account, user_group: user.group)
+        end
+        let(:to_transaction) do
+          create(:transaction_entry, :discretionary, account: savings_account)
+        end
+        let(:from_transaction) do
+          create(:transaction_entry, :discretionary, account:)
+        end
 
         before do
-          create(:transfer, to_transaction: to_transaction, from_transaction: from_transaction)
+          create(:transfer, to_transaction:,
+            from_transaction:)
         end
 
         context "when adding a detail" do
           it "does not create a detail" do
-            params = { details_attributes: [{ key: KeyGenerator.call, amount: 55_82 }] }
+            params = { details_attributes: [ { key: KeyGenerator.call,
+                                               amount: 55_82, } ] }
 
             expect { described_class.new(user, to_transaction, params).save }
               .not_to(change { to_transaction.reload.details.count })
           end
 
           it "includes an error" do
-            params = { details_attributes: [{ key: KeyGenerator.call, amount: 55_82 }] }
+            params = { details_attributes: [ { key: KeyGenerator.call,
+                                               amount: 55_82, } ] }
 
-            subject = described_class.new(user, to_transaction, params).tap(&:save)
+            subject = described_class.new(user, to_transaction,
+              params).tap(&:save)
 
             expect(subject.errors[:transfer])
-              .to eq(["Cannot have multiple details for transfer"])
+              .to eq([ "Cannot have multiple details for transfer" ])
           end
         end
 
         context "when updating the single detail with a budget item" do
           let(:category) { create(:category, user_group: user.group) }
-          let(:budget_item) { create(:budget_item, category: category) }
+          let(:budget_item) { create(:budget_item, category:) }
 
           it "does not change the detail" do
             detail = to_transaction.details.first
-            params = { details_attributes: [{ id: detail.id, budget_item_id: budget_item.id }] }
+            params = {
+              details_attributes: [
+                {
+                  id: detail.id,
+                  budget_item_id: budget_item.id,
+                },
+              ],
+            }
 
             expect { described_class.new(user, to_transaction, params).save }
               .not_to(change { detail.reload })
@@ -519,12 +632,20 @@ RSpec.describe Forms::TransactionForm do
 
           it "includes an error" do
             detail = to_transaction.details.first
-            params = { details_attributes: [{ id: detail.id, budget_item_id: budget_item.id }] }
+            params = {
+              details_attributes: [
+                {
+                  id: detail.id,
+                  budget_item_id: budget_item.id,
+                },
+              ],
+            }
 
-            subject = described_class.new(user, to_transaction, params).tap(&:save)
+            subject = described_class.new(user, to_transaction,
+              params).tap(&:save)
 
             expect(subject.errors[:transfer])
-              .to eq(["Transfer cannot be associated with a budget item"])
+              .to eq([ "Transfer cannot be associated with a budget item" ])
           end
         end
       end

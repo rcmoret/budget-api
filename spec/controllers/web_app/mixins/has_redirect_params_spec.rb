@@ -20,7 +20,11 @@ RSpec.describe WebApp::Mixins::HasRedirectParams do
   end
 
   context "when redirect params include 'dashboard' only" do
-    subject { klass.new.tap { |controller| controller.redirect_params = ["dashboard"] } }
+    subject do
+      klass.new.tap do |controller|
+        controller.redirect_params = [ "dashboard" ]
+      end
+    end
 
     it "returns dashboard path" do
       expect(subject.redirect_path).to eq dashboard_path
@@ -28,16 +32,23 @@ RSpec.describe WebApp::Mixins::HasRedirectParams do
   end
 
   context "when the redirect params include 'budget' only" do
-    subject { klass.new.tap { |controller| controller.redirect_params = ["budget"] } }
+    subject do
+      klass.new.tap do |controller|
+        controller.redirect_params = [ "budget" ]
+      end
+    end
 
     it "returns the budget index path with no params" do
       expect(subject.redirect_path).to eq "/budget"
     end
   end
 
-  context "when the redirect params include 'budget' and month (no year) params" do
+  context "when the redirect params include 'budget' " \
+          "and month (no year) params" do
     subject do
-      klass.new.tap { |controller| controller.redirect_params = ["budget", month] }
+      klass.new.tap do |controller|
+        controller.redirect_params = [ "budget", month ]
+      end
     end
 
     let(:month) { rand(1..12).to_s }
@@ -49,7 +60,9 @@ RSpec.describe WebApp::Mixins::HasRedirectParams do
 
   context "when the redirect params include 'budget' and month, year params" do
     subject do
-      klass.new.tap { |controller| controller.redirect_params = %W[budget #{month} #{year}] }
+      klass.new.tap do |controller|
+        controller.redirect_params = %W[budget #{month} #{year}]
+      end
     end
 
     let(:month) { rand(1..12).to_s }
@@ -60,9 +73,12 @@ RSpec.describe WebApp::Mixins::HasRedirectParams do
     end
   end
 
-  context "when the redirect params include 'budget' and month, year and extra params" do
+  context "when the redirect params include 'budget' " \
+          "and month, year and extra params" do
     subject do
-      klass.new.tap { |controller| controller.redirect_params = %W[budget #{month} #{year} junk] }
+      klass.new.tap do |controller|
+        controller.redirect_params = %W[budget #{month} #{year} junk]
+      end
     end
 
     let(:month) { rand(1..12).to_s }
@@ -73,9 +89,12 @@ RSpec.describe WebApp::Mixins::HasRedirectParams do
     end
   end
 
-  context "when the redirect params include 'budget' and an invalid month, year params" do
+  context "when the redirect params include 'budget' " \
+          "and an invalid month, year params" do
     subject do
-      klass.new.tap { |controller| controller.redirect_params = ["budget", month, year] }
+      klass.new.tap do |controller|
+        controller.redirect_params = [ "budget", month, year ]
+      end
     end
 
     let(:month) { rand(13..20).to_s }
@@ -88,7 +107,9 @@ RSpec.describe WebApp::Mixins::HasRedirectParams do
 
   context "when the redirect params include 'budget' and 'categories'" do
     subject do
-      klass.new.tap { |controller| controller.redirect_params = %w[budget categories] }
+      klass.new.tap do |controller|
+        controller.redirect_params = %w[budget categories]
+      end
     end
 
     it "returns the budget index path with no params" do
@@ -106,7 +127,8 @@ RSpec.describe WebApp::Mixins::HasRedirectParams do
     end
   end
 
-  context "when the redirect params includes 'accounts', slug and 'transactions'" do
+  context "when the redirect params includes " \
+          "'accounts', slug and 'transactions'" do
     let(:account) { create(:account) }
     let(:user_profile) { account.user_group.users.first }
 
@@ -119,14 +141,16 @@ RSpec.describe WebApp::Mixins::HasRedirectParams do
       end
 
       it "returns the transactions index path with no month or year params" do
-        expect(subject.redirect_path).to eq "/account/#{account.slug}/transactions"
+        expect(subject.redirect_path)
+          .to eq "/account/#{account.slug}/transactions"
       end
     end
 
     context "when month and year params are present" do
       subject do
         klass.new.tap do |controller|
-          controller.redirect_params = %W[account #{account.slug} transactions #{month} #{year}]
+          controller.redirect_params = %W[account #{account.slug} transactions
+                                          #{month} #{year}]
           controller.current_user_profile = user_profile
         end
       end
@@ -135,14 +159,22 @@ RSpec.describe WebApp::Mixins::HasRedirectParams do
       let(:year) { Time.current.year.to_s }
 
       it "returns the transactions index path with no month or year params" do
-        expect(subject.redirect_path).to eq "/account/#{account.slug}/transactions/#{month}/#{year}"
+        expect(subject.redirect_path)
+          .to eq "/account/#{account.slug}/transactions/#{month}/#{year}"
       end
     end
 
     context "when month and year params are present - also junk" do
       subject do
         klass.new.tap do |controller|
-          controller.redirect_params = %W[account #{account.slug} transactions #{month} #{year} junk]
+          controller.redirect_params = %W[
+            account
+            #{account.slug}
+            transactions
+            #{month}
+            #{year}
+            junk
+          ]
           controller.current_user_profile = user_profile
         end
       end
@@ -151,14 +183,16 @@ RSpec.describe WebApp::Mixins::HasRedirectParams do
       let(:year) { Time.current.year.to_s }
 
       it "returns the transactions index path with no month or year params" do
-        expect(subject.redirect_path).to eq "/account/#{account.slug}/transactions/#{month}/#{year}"
+        expect(subject.redirect_path)
+          .to eq "/account/#{account.slug}/transactions/#{month}/#{year}"
       end
     end
 
     context "when an invalid month and year params are present" do
       subject do
         klass.new.tap do |controller|
-          controller.redirect_params = %W[account #{account.slug} transactions #{month} #{year}]
+          controller.redirect_params = %W[account #{account.slug} transactions
+                                          #{month} #{year}]
           controller.current_user_profile = user_profile
         end
       end
@@ -167,14 +201,16 @@ RSpec.describe WebApp::Mixins::HasRedirectParams do
       let(:year) { Time.current.year.to_s }
 
       it "returns the transactions index path with no month or year params" do
-        expect(subject.redirect_path).to eq "/account/#{account.slug}/transactions"
+        expect(subject.redirect_path)
+          .to eq "/account/#{account.slug}/transactions"
       end
     end
 
     context "when month but no year params are present" do
       subject do
         klass.new.tap do |controller|
-          controller.redirect_params = %W[account #{account.slug} transactions #{month}]
+          controller.redirect_params = %W[account #{account.slug} transactions
+                                          #{month}]
           controller.current_user_profile = user_profile
         end
       end
@@ -182,7 +218,8 @@ RSpec.describe WebApp::Mixins::HasRedirectParams do
       let(:month) { rand(1..12).to_s }
 
       it "returns the transactions index path with no month or year params" do
-        expect(subject.redirect_path).to eq "/account/#{account.slug}/transactions"
+        expect(subject.redirect_path)
+          .to eq "/account/#{account.slug}/transactions"
       end
     end
   end

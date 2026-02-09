@@ -13,7 +13,9 @@ module WebApp
         if defined?(current_user_profile)
           current_user_profile.configuration(:timezone)
         else
-          User::ConfigurationOption.find_by(description: :timezone).default_value
+          User::ConfigurationOption
+            .find_by(description: :timezone)
+            .default_value
         end
       end
     end

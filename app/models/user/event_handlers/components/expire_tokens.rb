@@ -7,7 +7,10 @@ module User
         included do
           define_link :find_all_active_tokens_by_user do |payload|
             payload.fetch(:target_user).then do |user|
-              [:ok, { auth_token_contexts: Auth::Token::Context.active.belonging_to(user) }]
+              auth_token_contexts =
+                Auth::Token::Context
+                .active.belonging_to(user)
+              [ :ok, { auth_token_contexts: } ]
             end
           end
 
@@ -39,7 +42,9 @@ module User
 
           define_link :expire_existing_token_contexts do |payload|
             payload.delete(:auth_token_contexts).then do |auth_token_contexts|
-              auth_token_contexts.update(manually_expired_at: Time.current) if auth_token_contexts.any?
+              if auth_token_contexts.any?
+                auth_token_contexts.update(manually_expired_at: Time.current)
+              end
               :ok
             end
           end

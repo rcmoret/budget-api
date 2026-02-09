@@ -5,7 +5,7 @@ FactoryBot.define do
     key { KeyGenerator.call }
 
     trait :with_user do
-      users { [association(:user)] }
+      users { [ association(:user) ] }
     end
   end
 end

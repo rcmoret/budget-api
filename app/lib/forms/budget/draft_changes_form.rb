@@ -5,7 +5,9 @@ module Forms
     class DraftChangesForm
       def initialize(interval, changes: [])
         @interval = interval
-        @changes = changes.map { |change| DraftChangeForm.new(interval, **change) }
+        @changes = changes.map do |change|
+          DraftChangeForm.new(interval, **change)
+        end
       end
 
       def errors

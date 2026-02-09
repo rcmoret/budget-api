@@ -36,12 +36,19 @@ module WebApp
       private
 
       def transaction_form
-        @transaction_form ||= Forms::TransactionForm.new(current_user_profile, transaction, form_parameters)
+        @transaction_form ||= Forms::TransactionForm.new(
+          current_user_profile,
+          transaction,
+          form_parameters
+        )
       end
 
       def handle_detail(detail_attrs)
         detail_id = transaction.details.by_key(detail_attrs.fetch("key"))&.id
-        detail_attrs.merge!(id: detail_id, budget_item_key: detail_attrs.delete("budget_item_key"))
+        detail_attrs.merge!(
+          id: detail_id,
+          budget_item_key: detail_attrs.delete("budget_item_key")
+        )
       end
 
       def form_parameters
@@ -58,23 +65,39 @@ module WebApp
       end
 
       # rubocop:disable Metrics/CyclomaticComplexity
+      # rubocop:disable Metrics/MethodLength
       # rubocop:disable Metrics/PerceivedComplexity
       def handle_attribute(key, value)
-        case [key, value]
+        case [ key, value ]
         in ["account_key", *]
-          value.blank? ? {} : { account: Account.fetch(current_user_profile, key: value) }
+          if value.blank?
+            {}
+          else
+            {
+              account: Account.fetch(current_user_profile, key: value),
+            }
+          end
         in ["details_attributes", Hash => details_hash]
-          { details_attributes: details_hash.values.map { |detail_attrs| handle_detail(detail_attrs) } }
+          {
+            details_attributes: details_hash.values.map do |detail_attrs|
+              handle_detail(detail_attrs)
+            end,
+          }
         in ["details_attributes", Array => details_array]
-          { details_attributes: details_array.map { |detail_attrs| handle_detail(detail_attrs) } }
+          {
+            details_attributes: details_array.map do |detail_attrs|
+              handle_detail(detail_attrs)
+            end,
+          }
         in [^key, String => string]
           string.blank? ? { key => nil } : { key => string.strip }
         in [^key, ^value]
           { key => value }
         end
       end
-      # rubocop:enable Metrics/PerceivedComplexity
       # rubocop:enable Metrics/CyclomaticComplexity
+      # rubocop:enable Metrics/MethodLength
+      # rubocop:enable Metrics/PerceivedComplexity
 
       def budget_item_look_up(budget_item_key)
         return if budget_item_key.nil?

@@ -4,8 +4,8 @@ RSpec.describe "PUT /api/budget/category/:category_key" do
   subject do
     put(
       api_budget_category_path(category_key),
-      params: params,
-      headers: headers
+      params:,
+      headers:
     )
   end
 
@@ -39,7 +39,7 @@ RSpec.describe "PUT /api/budget/category/:category_key" do
       subject
       expect(response).to have_http_status :unprocessable_entity
       body = response.parsed_body.deep_symbolize_keys
-      expect(body).to eq(budgetCategory: { expense: ["cannot be changed after creation"] })
+      expect(body).to eq(budgetCategory: { expense: [ "cannot be changed after creation" ] })
     end
   end
 

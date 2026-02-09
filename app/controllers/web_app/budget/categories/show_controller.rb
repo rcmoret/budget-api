@@ -5,7 +5,7 @@ module WebApp
     module Categories
       class ShowController < BaseController
         before_action -> { redirect_to budget_index_path },
-                      if: -> { category.nil? }
+          if: -> { category.nil? }
 
         def call
           render inertia: "budget/categories/show", props: page_props
@@ -16,7 +16,7 @@ module WebApp
         def props
           @props ||= ShowSerializer.new(
             category,
-            current_user_profile: current_user_profile,
+            current_user_profile:,
             chart_params: chart_params.to_h.deep_symbolize_keys
           ).render
         end

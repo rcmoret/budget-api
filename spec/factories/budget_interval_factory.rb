@@ -24,7 +24,8 @@ FactoryBot.define do
 
     trait :closed_out do
       after(:create) do |interval, _evaluator|
-        interval.update(close_out_completed_at: Date.new(interval.year, interval.month, -1))
+        interval.update(close_out_completed_at: Date.new(interval.year,
+          interval.month, -1))
         # close_out_completed_at { Date.new(month, year, -1) }
       end
     end

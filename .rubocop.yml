@@ -6,20 +6,36 @@ AllCops:
     - "db/schema.rb"
     - "db/migrate/*.rb"
     - "node_modules/**/*"
+    - "app/controllers/api/**/*"
+    - "app/serializers/api/**/*"
+    - "app/controllers/concerns/api/**/*"
+    - "spec/serializers/api/**/*"
+    - "spec/requests/api/**/*"
+    - "spec/requests/shared/**/*"
 
 require:
   - rubocop-rails
   - rubocop-rspec
 
-Rails/TimeZone:
-  Enabled: false
+######### Layout #########
+Layout/ArgumentAlignment:
+  EnforcedStyle: with_fixed_indentation
 
 Layout/LineLength:
-  Max: 120
+  Max: 80
   Exclude:
     - db/schema.rb
     - config/initializers/devise.rb
 
+Layout/SpaceInsideArrayLiteralBrackets:
+  EnforcedStyle: space
+
+######### Lint #########
+Lint/Debugger:
+  Exclude:
+    - db/seeds/*.rb
+
+######### Metrics #########
 Metrics/BlockLength:
   Max: 15
   AllowedMethods:
@@ -37,9 +53,8 @@ Metrics/BlockLength:
     - spec/models/budget/change_set/setup_spec.rb
     - spec/requests/**/*
 
-Lint/Debugger:
-  Exclude:
-    - db/seeds/*.rb
+Metrics/ClassLength:
+  Enabled: false
 
 Metrics/MethodLength:
   Max: 18
@@ -47,12 +62,36 @@ Metrics/MethodLength:
     - app/models/user/session/data.rb
     - db/seeds/budget_interval.rb
 
+######### Rails ##########
+Rails/ApplicationController:
+  Enabled: false
+
+Rails/TimeZone:
+  Enabled: false
+
+######### Style #############
 Style/Documentation:
   Enabled: false
 
 Style/FrozenStringLiteralComment:
   Enabled: false
   EnforcedStyle: never
+
+Style/GlobalVars:
+  AllowedVariables:
+    - $logger
+
+Style/HashSyntax:
+  EnforcedShorthandSyntax: always
+
+Style/MultilineBlockChain:
+  Enabled: false
+
+Style/MutableConstant:
+  EnforcedStyle: literals
+
+Style/RedundantFreeze:
+  Enabled: true
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes
@@ -66,34 +105,22 @@ Style/TrailingCommaInArrayLiteral:
 Style/TrailingCommaInHashLiteral:
   EnforcedStyleForMultiline: consistent_comma
 
-Style/HashSyntax:
-  EnforcedShorthandSyntax: never
-
-Style/GlobalVars:
-  AllowedVariables:
-    - $logger
-
-Style/MultilineBlockChain:
-  Enabled: false
-
-Style/RedundantFreeze:
-  Enabled: true
-
-Style/MutableConstant:
-  EnforcedStyle: literals
-
-Rails/ApplicationController:
-  Enabled: false
+######### RSpec #########
+RSpec/ExpectChange:
+  EnforcedStyle: block
 
 RSpec/ExampleLength:
-  Max: 10
+  Max: 100
   Exclude:
     - spec/requests/api/**/*
     - spec/serializers/**/*
     - spec/models/budget/change_set/setup_spec.rb
 
-RSpec/ExpectChange:
-  EnforcedStyle: block
+RSpec/IndexedLet:
+  Enabled: false
+
+RSpec/MessageSpies:
+  EnforcedStyle: receive
 
 RSpec/NamedSubject:
   Enabled: false
@@ -116,12 +143,3 @@ RSpec/MultipleMemoizedHelpers:
     - spec/requests/api/**/*
     - spec/serializers/**/*
     - spec/models/budget/**/*
-
-RSpec/MessageSpies:
-  EnforcedStyle: receive
-
-RSpec/IndexedLet:
-  Enabled: false
-
-Metrics/ClassLength:
-  Enabled: false

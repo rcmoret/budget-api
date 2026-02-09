@@ -30,9 +30,9 @@ module API
             ]
           in [:error, body]
             if body.values.flatten.include?("can't be blank")
-              [:not_found, body]
+              [ :not_found, body ]
             else
-              [:error, body]
+              [ :error, body ]
             end
           end
         end

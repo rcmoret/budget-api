@@ -22,13 +22,15 @@ module Budget
           def catergory_presenter(category)
             CategoryPresenter.new(
               category,
-              interval: interval,
+              interval:,
               keys: keys_for(category)
             )
           end
 
           def keys_for(category)
-            budget_items.filter_map { |item| item.key if item.budget_category_id == category.id }
+            budget_items.filter_map do |item|
+              item.key if item.budget_category_id == category.id
+            end
           end
         end
       end

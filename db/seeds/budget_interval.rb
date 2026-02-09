@@ -7,19 +7,29 @@ def amount_handler(amount)
   end
 end
 
-def event_form(user, interval, amount, category_key, budget_item_key: KeyGenerator.call)
-  @adjustment ||= Budget::Changes::Adjust.where(interval: interval).create!(key: KeyGenerator.call, type_key: "setup")
+def event_form(
+  user,
+  interval,
+  amount,
+  category_key,
+  budget_item_key: KeyGenerator.call
+)
+  @adjustment ||=
+    Budget::Changes::Adjust
+    .where(interval:)
+    .create!(key: KeyGenerator.call, type_key: "setup")
+
   Forms::Budget::EventsForm.new(
     user,
-    events: [{
+    events: [ {
       adjustment: @adjustment,
-      amount: amount,
+      amount:,
       month: interval.month,
       year: interval.year,
       budget_category_key: category_key,
-      budget_item_key: budget_item_key,
+      budget_item_key:,
       event_type: Budget::EventTypes::ITEM_CREATE,
-    }]
+    } ]
   )
 end
 
@@ -52,7 +62,11 @@ end
 User::Group.find_by!(name: "Initial User Group").then do |group|
   today = Time.current
 
-  base_interval = Budget::Interval.for({ month: today.month, year: today.year, user_group: group })
+  base_interval = Budget::Interval.for(
+    month: today.month,
+    year: today.year,
+    user_group: group
+  )
 
   base_interval.update(
     start_date: today.beginning_of_month,

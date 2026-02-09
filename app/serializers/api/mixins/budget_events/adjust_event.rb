@@ -7,10 +7,10 @@ module API
         included do
           attribute :amount, alias_of: :budgeted
           attributes :budget_item_key,
-                     :budgeted,
-                     :data,
-                     :event_type,
-                     :spent
+            :budgeted,
+            :data,
+            :event_type,
+            :spent
           attribute :key, alias_of: :event_key
         end
 

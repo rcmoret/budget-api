@@ -3,25 +3,32 @@ require "rails_helper"
 RSpec.describe Forms::Budget::FinalizeIntervalForm do
   describe "#save" do
     subject do
-      described_class.new(user: user, interval: interval, events: events, **optional_args)
+      described_class.new(user:, interval:, events:,
+**optional_args)
     end
 
     let(:optional_args) { {} }
 
     context "when the interval is closed out" do
       let(:user) { create(:user) }
-      let(:interval) { create(:budget_interval, :closed_out, user_group: user.group) }
+      let(:interval) do
+        create(:budget_interval, :closed_out, user_group: user.group)
+      end
       let(:events) { [] }
-      let(:form_double) { instance_double(Forms::Budget::EventsForm, valid?: true) }
+      let(:form_double) do
+        instance_double(Forms::Budget::EventsForm, valid?: true)
+      end
 
       before do
-        allow(Forms::Budget::EventsForm).to receive(:new).and_return(form_double)
+        allow(Forms::Budget::EventsForm)
+          .to receive(:new)
+          .and_return(form_double)
       end
 
       it "returns false and the form has errors" do
         expect(form_double).not_to receive(:save)
         expect(subject.save).to be false
-        expect(subject.errors[:interval]).to eq ["has already been finalized"]
+        expect(subject.errors[:interval]).to eq [ "has already been finalized" ]
       end
     end
 
@@ -33,7 +40,7 @@ RSpec.describe Forms::Budget::FinalizeIntervalForm do
       let(:events) do
         [
           {
-            amount: amount,
+            amount:,
             month: interval.month,
             year: interval.year,
             budget_category_key: category.key,

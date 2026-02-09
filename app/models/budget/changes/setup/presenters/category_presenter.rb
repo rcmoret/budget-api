@@ -8,20 +8,26 @@ module Budget
 
           attr_reader :interval, :budget_items, :adjustments
 
-          NEW_ADJUSTMENT = ->(item) { { item.key => { display: "", cents: 0 } } }
+          NEW_ADJUSTMENT = lambda { |item|
+            { item.key => { display: "", cents: 0 } }
+          }
 
           def initialize(category, interval:, keys:, adjustments: {})
             super(category)
             @interval = interval
             @budget_items = items.by_keys(keys)
-            @adjustments = budget_items.map(&NEW_ADJUSTMENT).reduce(adjustments, &:reverse_merge)
+            @adjustments = budget_items
+                           .map(&NEW_ADJUSTMENT)
+                           .reduce(adjustments, &:reverse_merge)
           end
 
           def events
             @events ||= adjustments.map do |item_key, adjustment|
-              item = budget_items.find { |i| i.key == item_key } || category.items.build(key: item_key)
+              item = budget_items.find do |i|
+                i.key == item_key
+              end || category.items.build(key: item_key)
 
-              event_presenter_for(item, adjustment: adjustment)
+              event_presenter_for(item, adjustment:)
             end
           end
 
@@ -39,7 +45,7 @@ module Budget
 
           def upcoming_maturity_intervals
             maturity_intervals
-              .on_or_after(month: month, year: year)
+              .on_or_after(month:, year:)
               .map(&:date_hash)
           end
 
@@ -48,9 +54,9 @@ module Budget
 
           def event_presenter_for(item, adjustment:)
             if item.budget_interval_id == interval.id
-              AdjustPresenter.new(item, adjustment: adjustment)
+              AdjustPresenter.new(item, adjustment:)
             else
-              CreatePresenter.new(item, adjustment: adjustment)
+              CreatePresenter.new(item, adjustment:)
             end
           end
 
@@ -65,7 +71,7 @@ module Budget
           private
 
           def items
-            category.items.where(interval: [interval, interval.prev])
+            category.items.where(interval: [ interval, interval.prev ])
           end
 
           def category

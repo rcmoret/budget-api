@@ -103,9 +103,11 @@ RSpec.shared_context "when there is a current interval and item" do
   let(:year) { interval.year }
   let(:interval) { create(:budget_interval, :current, user_group: user.group) }
   let(:icon) { create(:icon) }
-  let(:budget_category) { create(:category, :monthly, user_group: user.group, icon: icon) }
+  let(:budget_category) do
+    create(:category, :monthly, user_group: user.group, icon:)
+  end
   let(:budget_item) do
-    create(:budget_item, interval: interval, category: budget_category)
+    create(:budget_item, interval:, category: budget_category)
   end
 
   before do

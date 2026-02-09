@@ -27,12 +27,13 @@ RSpec.describe API::Budget::Interval::ItemSerializer do
     context "when a non-accrual" do
       let(:category) { create(:category, icon: icon, user_group: user_group) }
       let(:maturity_interval_double) do
-        instance_double(Budget::UpcomingMaturityIntervalQuery::NullSerializer, month: nil, year: nil)
+        instance_double(Budget::UpcomingMaturityIntervalQuery::NullSerializer, month: nil,
+          year: nil)
       end
       let(:budget_item) do
         create(:budget_item,
-               interval: interval,
-               category: category).decorated
+          interval: interval,
+          category: category).decorated
       end
 
       # rubocop:disable RSpec/ExampleLength
@@ -66,8 +67,8 @@ RSpec.describe API::Budget::Interval::ItemSerializer do
       end
       let(:budget_item) do
         create(:budget_item,
-               interval: interval,
-               category: category).decorated
+          interval: interval,
+          category: category).decorated
       end
 
       # rubocop:disable RSpec/ExampleLength

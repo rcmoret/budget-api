@@ -45,7 +45,12 @@ RSpec.describe API::Budget::Interval::SetUp::CategoriesSerializer do
       it "calls the serializer with the category, and the base item" do
         expect(API::Budget::Interval::SetUp::CategorySerializer)
           .to receive(:new)
-          .with(category, interval: target_interval, base_items: [], target_items: [budget_item.decorated])
+          .with(
+            category,
+            interval: target_interval,
+            base_items: [],
+            target_items: [ budget_item.decorated ]
+          )
 
         subject.categories
       end
@@ -70,7 +75,12 @@ RSpec.describe API::Budget::Interval::SetUp::CategoriesSerializer do
       it "calls the serializer with the category, and the base item" do
         expect(API::Budget::Interval::SetUp::CategorySerializer)
           .to receive(:new)
-          .with(category, interval: target_interval, base_items: [budget_item.decorated], target_items: [])
+          .with(
+            category,
+            interval: target_interval,
+            base_items: [ budget_item.decorated ],
+            target_items: []
+          )
 
         subject.categories
       end
@@ -106,9 +116,9 @@ RSpec.describe API::Budget::Interval::SetUp::CategoriesSerializer do
         expect(API::Budget::Interval::SetUp::CategorySerializer)
           .to receive(:new)
           .with(category,
-                interval: target_interval,
-                base_items: [base_interval_item.decorated],
-                target_items: [target_interval_item.decorated])
+            interval: target_interval,
+            base_items: [ base_interval_item.decorated ],
+            target_items: [ target_interval_item.decorated ])
 
         subject.categories
       end

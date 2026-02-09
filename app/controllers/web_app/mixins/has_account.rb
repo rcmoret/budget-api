@@ -17,7 +17,8 @@ module WebApp
       end
 
       def store_selected_account_path
-        session[:selected_account_path] = transactions_index_path(account, month, year)
+        session[:selected_account_path] =
+          transactions_index_path(account, month, year)
       end
     end
   end

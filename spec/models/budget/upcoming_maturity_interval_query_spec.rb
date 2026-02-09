@@ -11,17 +11,21 @@ RSpec.describe Budget::UpcomingMaturityIntervalQuery do
 
   before do
     create(:category, :accrual, user_group: user.group)
-    create(:maturity_interval, category: category, interval: upcoming_interval)
-    create(:maturity_interval, category: category, interval: upcoming_interval.next)
+    create(:maturity_interval, category:, interval: upcoming_interval)
+    create(:maturity_interval, category:,
+      interval: upcoming_interval.next)
   end
 
-  # rubocop:disable RSpec/ExampleLength
   it "returns the budget category id and a date string" do
     expect(subject).to eq(
       [
-        Budget::UpcomingMaturityIntervalQuery::UpcomingMaturityIntervalSerializer.new(
+        described_class::UpcomingMaturityIntervalSerializer.new(
           "budget_category_id" => category.id,
-          "upcoming_date" => Date.new(upcoming_interval.year, upcoming_interval.month, 1).strftime("%F"),
+          "upcoming_date" => Date.new(
+            upcoming_interval.year,
+            upcoming_interval.month,
+            1
+          ).strftime("%F"),
         ),
       ]
     )
@@ -36,5 +40,4 @@ RSpec.describe Budget::UpcomingMaturityIntervalQuery do
       "year" => nil,
     )
   end
-  # rubocop:enable RSpec/ExampleLength
 end

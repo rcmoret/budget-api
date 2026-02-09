@@ -22,7 +22,10 @@ module BelongsToUserGroup
         module_args =
           case args
           in Symbol => association
-            module_body(class_name: association.to_s.classify, association: association)
+            module_body(
+              class_name: association.to_s.classify,
+              association:
+            )
           in { class_name: _, association: }
             module_body(**args)
           end

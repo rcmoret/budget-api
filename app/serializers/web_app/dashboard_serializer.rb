@@ -16,9 +16,9 @@ module WebApp
     include Mixins::AvailableCash
 
     attributes :available_cash,
-               :spent,
-               :total_budgeted,
-               :total_remaining
+      :spent,
+      :total_budgeted,
+      :total_remaining
     attribute :accounts, on_render: :render
 
     def total_budgeted
@@ -49,8 +49,10 @@ module WebApp
       SerializableCollection.new(serializer: LocalAccountSerializer) do
         user_accounts.map do |account|
           {
-            account: account,
-            balance: balances_by_account_id.find { |struct| struct.account_id == account.id }&.balance.to_i,
+            account:,
+            balance: balances_by_account_id.find do |struct|
+              struct.account_id == account.id
+            end&.balance.to_i,
           }
         end
       end

@@ -4,6 +4,9 @@ module API
       skip_before_action :authenticate_token!
       before_action :user_lookup!
 
+      INVALID_LOGIN_MESSAGE =
+        ::User::EventHandlers::Components::UserVerification::INVALID_LOGIN_MESSAGE
+
       def call
         case event.call
         in [:ok, token_payload]
@@ -35,8 +38,7 @@ module API
       def user_lookup!
         return if user.present?
 
-        render json: { password: [::User::EventHandlers::Components::UserVerification::INVALID_LOGIN_MESSAGE] },
-               status: :not_found
+        render json: { password: [ INVALID_LOGIN_MESSAGE ] }, status: :not_found
       end
     end
   end

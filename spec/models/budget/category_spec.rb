@@ -13,7 +13,10 @@ RSpec.describe Budget::Category do
     subject { create(:category) }
 
     it { is_expected.to validate_presence_of(:name) }
-    it { is_expected.to validate_uniqueness_of(:name).scoped_to(:user_group_id) }
+
+    it {
+      expect(subject).to validate_uniqueness_of(:name).scoped_to(:user_group_id)
+    }
 
     describe "accrual on expense" do
       subject { build(:category, :revenue, :accrual) }
@@ -31,8 +34,10 @@ RSpec.describe Budget::Category do
       subject { create(:category, :revenue) }
 
       it "returns false and the object has errors" do
-        expect(subject.update(expense: true, default_amount: -10_00)).to be false
-        expect(subject.errors.to_hash).to eq(expense: ["cannot be changed after creation"])
+        expect(subject.update(expense: true,
+          default_amount: -10_00)).to be false
+        expect(subject.errors.to_hash)
+          .to eq(expense: [ "cannot be changed after creation" ])
       end
     end
 
@@ -41,7 +46,8 @@ RSpec.describe Budget::Category do
 
       it "returns false and the object has errors" do
         expect(subject.update(monthly: false)).to be false
-        expect(subject.errors.to_hash).to eq(monthly: ["cannot be changed after creation"])
+        expect(subject.errors.to_hash)
+          .to eq(monthly: [ "cannot be changed after creation" ])
       end
     end
   end
@@ -85,7 +91,7 @@ RSpec.describe Budget::Category do
   describe "#archived?" do
     subject { category.archived? }
 
-    let(:category) { create(:category, archived_at: archived_at) }
+    let(:category) { create(:category, archived_at:) }
 
     context "when category was archived" do
       let(:archived_at) { 1.day.ago }
@@ -143,7 +149,7 @@ RSpec.describe Budget::Category do
 
     context "when there are associated items" do
       before do
-        create(:budget_item, category: category)
+        create(:budget_item, category:)
         allow(category).to receive(:update).and_call_original
       end
 

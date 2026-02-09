@@ -34,14 +34,14 @@ module API
 
         class LocalItemSerializer < ApplicationSerializer
           attributes :key,
-                     :budget_category_key,
-                     :budget_category_name,
-                     :icon_class_name,
-                     :name,
-                     :amount,
-                     :difference,
-                     :remaining,
-                     :spent
+            :budget_category_key,
+            :budget_category_name,
+            :icon_class_name,
+            :name,
+            :amount,
+            :difference,
+            :remaining,
+            :spent
           attribute :is_new_item, alias_of: :new_record?
           attribute :is_monthly, alias_of: :monthly?
 

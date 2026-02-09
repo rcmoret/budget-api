@@ -19,7 +19,7 @@ module WebApp
       end
 
       def draft_serializer
-        API::Budget::Interval::DraftSerializer.new(
+        WebApp::Budget::Interval::DraftSerializer.new(
           interval,
           changes: form.changes
         )
@@ -44,7 +44,11 @@ module WebApp
       end
 
       def form
-        @form ||= Forms::Budget::DraftChangesForm.new(interval, changes: change_params)
+        @form ||=
+          Forms::Budget::DraftChangesForm.new(
+            interval,
+            changes: change_params
+          )
       end
 
       def error_component = "budget/dashboard/index"
@@ -52,9 +56,9 @@ module WebApp
       def change_set
         @change_set ||=
           if interval.set_up?
-            Budget::ChangeSet.adjust.create(interval: interval)
+            Budget::ChangeSet.adjust.create(interval:)
           else
-            Budget::ChangeSet.pre_setup.create(interval: interval)
+            Budget::ChangeSet.pre_setup.create(interval:)
           end
       end
     end

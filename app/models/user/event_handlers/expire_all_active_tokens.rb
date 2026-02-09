@@ -5,12 +5,12 @@ module User
       include Components::UserVerification
 
       execution_chain :expire_all_active_user_tokens,
-                      functions: %i[
-                        verify_actor_is_target_user
-                        find_all_active_tokens_by_user
-                        expire_existing_token_contexts
-                        record_expiration_success
-                      ]
+        functions: %i[
+          verify_actor_is_target_user
+          find_all_active_tokens_by_user
+          expire_existing_token_contexts
+          record_expiration_success
+        ]
 
       def call
         expire_all_active_user_tokens.call(:ok, data)

@@ -5,20 +5,22 @@ module WebApp
     module Categories
       class SummariesController < BaseController
         before_action -> { render json: {}, status: :not_found },
-                      if: -> { category.nil? }
+          if: -> { category.nil? }
 
         def call
-          render json: payload.deep_transform_keys { |key| key.to_s.camelize(:lower) }
+          render json: payload.deep_transform_keys { |key|
+            key.to_s.camelize(:lower)
+          }
         end
 
         def payload
           {
             category: {
               id: category.id,
-              budgeted_average: budgeted_average,
-              transactions_total_average: transactions_total_average,
+              budgeted_average:,
+              transactions_total_average:,
               limit: count,
-              data: data,
+              data:,
             },
           }
         end
@@ -37,7 +39,9 @@ module WebApp
           category
             .summaries
             .then do |scope|
-              scope = scope.before(**before_params.to_h.symbolize_keys) unless before_params.empty?
+              unless before_params.empty?
+                scope = scope.before(**before_params.to_h.symbolize_keys)
+              end
 
               scope.most_recent(limit)
             end

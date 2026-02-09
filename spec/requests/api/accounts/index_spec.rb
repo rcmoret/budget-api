@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "GET /api/accounts" do
-  subject { get(api_accounts_path, headers: headers) }
+  subject { get(api_accounts_path, headers:) }
 
   context "when providing a valid token" do
     include_context "with valid token"
@@ -9,18 +9,23 @@ RSpec.describe "GET /api/accounts" do
 
     let(:user) { create(:user) }
     let(:user_group) { user.user_group }
-    let(:spend_account) { create(:account, user_group: user_group) }
+    let(:spend_account) { create(:account, user_group:) }
     let(:transactions) do
       user_accounts.map do |user_account|
-        create_list(:transaction_entry, (1..10).to_a.sample, account: user_account)
+        create_list(:transaction_entry, (1..10).to_a.sample,
+          account: user_account)
       end
     end
-    let(:save_account) { create(:account, :non_cash_flow, user_group: user_group) }
-    let(:archived_account) { create(:account, :archived, user_group: user_group) }
+    let(:save_account) do
+      create(:account, :non_cash_flow, user_group:)
+    end
+    let(:archived_account) do
+      create(:account, :archived, user_group:)
+    end
     let(:collection) do
       response.parsed_body.fetch("accounts").map(&:deep_symbolize_keys)
     end
-    let(:user_accounts) { [spend_account, save_account, archived_account] }
+    let(:user_accounts) { [ spend_account, save_account, archived_account ] }
 
     let!(:expected_collection) do
       user_accounts.map do |account|

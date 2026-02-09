@@ -2,7 +2,8 @@ require "rails_helper"
 
 RSpec.describe "DELETE /api/budget/category/:category_key/maturity_interals/:month/:year" do
   subject do
-    delete(api_budget_category_maturity_intervals_path(category_key, *optional_path_args), headers: headers)
+    delete(api_budget_category_maturity_intervals_path(category_key, *optional_path_args),
+      headers:)
   end
 
   let(:optional_path_args) { [] }
@@ -16,17 +17,20 @@ RSpec.describe "DELETE /api/budget/category/:category_key/maturity_interals/:mon
       let(:interval) { Budget::Interval.belonging_to(user).current }
 
       before do
-        create(:maturity_interval, category: category, interval: interval)
+        create(:maturity_interval, category:, interval:)
       end
 
       it "creates a new maturity interval" do
-        expect { subject }.to change { Budget::CategoryMaturityInterval.count }.by(-1)
+        expect { subject }.to change {
+          Budget::CategoryMaturityInterval.count
+        }.by(-1)
         expect(response).to have_http_status :accepted
         body = response.parsed_body.deep_symbolize_keys
         expect(body).to eq(
           budgetCategory: {
             key: category_key,
-            maturityIntervals: [{ month: interval.month, year: interval.year }],
+            maturityIntervals: [ { month: interval.month,
+                                   year: interval.year, } ],
           }
         )
       end
@@ -35,21 +39,26 @@ RSpec.describe "DELETE /api/budget/category/:category_key/maturity_interals/:mon
     context "when passing a specific month / year" do
       let(:category) { create(:category, :accrual, user_group: user.group) }
       let(:category_key) { category.key }
-      let(:interval) { create(:budget_interval, :future, user_group: user.group) }
-      let(:optional_path_args) { [interval.month, interval.year] }
+      let(:interval) do
+        create(:budget_interval, :future, user_group: user.group)
+      end
+      let(:optional_path_args) { [ interval.month, interval.year ] }
 
       before do
-        create(:maturity_interval, category: category, interval: interval)
+        create(:maturity_interval, category:, interval:)
       end
 
       it "deletes a maturity interval" do
-        expect { subject }.to change { Budget::CategoryMaturityInterval.count }.by(-1)
+        expect { subject }.to change {
+          Budget::CategoryMaturityInterval.count
+        }.by(-1)
         expect(response).to have_http_status :accepted
         body = response.parsed_body.deep_symbolize_keys
         expect(body).to eq(
           budgetCategory: {
             key: category_key,
-            maturityIntervals: [{ month: interval.month, year: interval.year }],
+            maturityIntervals: [ { month: interval.month,
+                                   year: interval.year, } ],
           }
         )
       end
@@ -62,7 +71,7 @@ RSpec.describe "DELETE /api/budget/category/:category_key/maturity_interals/:mon
     let(:category) { create(:category, :accrual, user_group: user.group) }
     let(:category_key) { category.key }
     let(:interval) { create(:budget_interval, :future, user_group: user.group) }
-    let(:optional_path_args) { [interval.month, interval.year] }
+    let(:optional_path_args) { [ interval.month, interval.year ] }
 
     it "returns a 404, error message" do
       subject
@@ -83,7 +92,7 @@ RSpec.describe "DELETE /api/budget/category/:category_key/maturity_interals/:mon
 
   context "when passing invalid month / year params" do
     include_context "with valid token"
-    let(:optional_path_args) { [month, year] }
+    let(:optional_path_args) { [ month, year ] }
     let(:category_key) { KeyGenerator.call }
 
     before do

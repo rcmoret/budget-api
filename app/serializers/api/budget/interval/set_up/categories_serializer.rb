@@ -46,7 +46,7 @@ module API
               ::Budget::Item
               .includes(:transaction_details, :events)
               .belonging_to(user_group)
-              .where(interval: [interval, base_interval])
+              .where(interval: [ interval, base_interval ])
               .map(&:decorated)
               .group_by(&:budget_interval_id)
           end

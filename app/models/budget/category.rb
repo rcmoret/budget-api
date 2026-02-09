@@ -6,35 +6,36 @@ module Budget
     include Messages
     include Slugable
 
-    has_many :items, foreign_key: :budget_category_id, inverse_of: :category, dependent: :restrict_with_exception
+    has_many :items, foreign_key: :budget_category_id, inverse_of: :category,
+      dependent: :restrict_with_exception
     has_many :transaction_details, through: :items
     has_many :events, through: :items
     has_many :maturity_intervals,
-             -> { ordered },
-             class_name: "CategoryMaturityInterval",
-             dependent: :destroy,
-             inverse_of: :category,
-             foreign_key: :budget_category_id
+      -> { ordered },
+      class_name: "CategoryMaturityInterval",
+      dependent: :destroy,
+      inverse_of: :category,
+      foreign_key: :budget_category_id
     has_many :summaries,
-             class_name: "Budget::Categories::Summary",
-             inverse_of: :category,
-             dependent: nil,
-             foreign_key: :budget_category_id
+      class_name: "Budget::Categories::Summary",
+      inverse_of: :category,
+      dependent: nil,
+      foreign_key: :budget_category_id
     belongs_to :icon, optional: true
 
     validates :default_amount, numericality: { only_integer: true }
     validates :default_amount,
-              numericality: {
-                less_than_or_equal_to: 0,
-                message: EXPENSE_AMOUNT_VALIDATION_MESSAGE,
-              },
-              if: :expense?
+      numericality: {
+        less_than_or_equal_to: 0,
+        message: EXPENSE_AMOUNT_VALIDATION_MESSAGE,
+      },
+      if: :expense?
     validates :default_amount,
-              numericality: {
-                greater_than_or_equal_to: 0,
-                message: REVENUE_AMOUNT_VALIDATION_MESSAGE,
-              },
-              if: :revenue?
+      numericality: {
+        greater_than_or_equal_to: 0,
+        message: REVENUE_AMOUNT_VALIDATION_MESSAGE,
+      },
+      if: :revenue?
 
     validates :name, uniqueness: { scope: :user_group_id }
     validates :default_amount, :name, presence: true

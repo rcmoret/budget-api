@@ -6,7 +6,7 @@ module WebApp
 
         included do
           before_action :render_interval_not_found,
-                        if: :valid_interval_not_found?
+            if: :valid_interval_not_found?
         end
 
         private
@@ -16,11 +16,13 @@ module WebApp
         end
 
         def interval
-          @interval ||= if month.blank? || year.blank?
-                          ::Budget::Interval.belonging_to(current_user_profile).current
-                        else
-                          ::Budget::Interval.fetch(current_user_profile, key: { month: month, year: year })
-                        end
+          @interval ||=
+            if month.blank? || year.blank?
+              ::Budget::Interval.belonging_to(current_user_profile).current
+            else
+              ::Budget::Interval.fetch(current_user_profile,
+                key: { month:, year: })
+            end
         end
 
         def month
