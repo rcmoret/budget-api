@@ -25,10 +25,10 @@ const SliderSVG = (props: { fillColor?: FillColor; className?: string }) => {
   );
 };
 
-const TruthySlider = () => <SliderSVG fillColor="green" />;
-const FalsySlider = () => (
-  <SliderSVG fillColor="black" className="rotate-180" />
+const TruthySlider = () => (
+  <SliderSVG fillColor="green" className="rotate-180" />
 );
+const FalsySlider = () => <SliderSVG fillColor="black" />;
 
 const ToggleSlider = (props: {
   toggleValue: boolean;

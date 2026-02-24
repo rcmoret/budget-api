@@ -97,6 +97,7 @@ const FormSubmitButton = (props: {
   return (
     <button
       type="submit"
+      onClick={props.onSubmit}
       className={buttonClassName}
       disabled={!isEnabled}
       title={props.title}
