@@ -7,7 +7,7 @@ import { AccountTransaction } from "@/types/transaction";
 
 import { InitialBalance } from "@/pages/accounts/transactions/partials/initial-balance";
 import { TransactionForm } from "@/pages/accounts/transactions/form";
-import { TransactionShow } from "@/pages/accounts/transactions/show";
+import { TransactionShow } from "@/pages/accounts/transactions/show-v2";
 import { useState } from "react";
 import { AddNewComponent } from "./transactions/partials/add-new";
 import { useAppConfigContext } from "@/components/layout/Provider";
