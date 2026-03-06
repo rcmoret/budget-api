@@ -52,6 +52,10 @@ module Budget
       effective_at.nil?
     end
 
+    def net_change
+      events.sum(:amount)
+    end
+
     delegate :month, :year, to: :interval
   end
 end
