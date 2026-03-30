@@ -53,7 +53,7 @@ type ChangeHandlers = {
 type CategoryFormContext = CategoryFormProps & {
   isNew: boolean;
   data: FormData;
-  changeHanlders: ChangeHandlers;
+  changeHandlers: ChangeHandlers;
   formHeadingId: string;
   onSubmit: () => void;
   onChange: (ev: React.ChangeEvent<HTMLInputElement>) => void;
@@ -159,7 +159,7 @@ const CategoryFormProvider = (props: {
 
   const value: CategoryFormContext = {
     category,
-    changeHanlders,
+    changeHandlers: changeHanlders,
     closeForm,
     data,
     formHeadingId: `category-form-heading-${key}`,

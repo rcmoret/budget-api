@@ -56,6 +56,17 @@ module Budget
       events.sum(:amount)
     end
 
+    def events_hash
+      events.includes(:type, item: [ :category ]).map do |event|
+        {
+          key: event.key,
+          category: event.item.name,
+          type: event.type_name,
+          amout: event.amount,
+        }
+      end
+    end
+
     delegate :month, :year, to: :interval
   end
 end

@@ -41,7 +41,11 @@ const LocalSelectableOption = (props: {
 };
 
 const AccrualFormComponent = () => {
-  const { data, formHeadingId, changeHanlders } = useCategoryFormContext();
+  const {
+    data,
+    formHeadingId,
+    changeHandlers: changeHanlders,
+  } = useCategoryFormContext();
   const { key } = data;
   const labelId = `category-accrual-label-${key}`;
 
@@ -59,7 +63,11 @@ const AccrualFormComponent = () => {
 };
 
 const PerDayCalculationsFormComponent = () => {
-  const { data, formHeadingId, changeHanlders } = useCategoryFormContext();
+  const {
+    data,
+    formHeadingId,
+    changeHandlers: changeHanlders,
+  } = useCategoryFormContext();
   const { key } = data;
   const labelId = `category-per-diem-label-${key}`;
 
@@ -77,9 +85,9 @@ const PerDayCalculationsFormComponent = () => {
 };
 
 const MonthlyFormComponent = () => {
-  const { changeHanlders, data } = useCategoryFormContext();
-  const setMonthly = () => changeHanlders.updateMonthlyOrDayToDay(true);
-  const setDayToDay = () => changeHanlders.updateMonthlyOrDayToDay(false);
+  const { changeHandlers, data } = useCategoryFormContext();
+  const setMonthly = () => changeHandlers.updateMonthlyOrDayToDay(true);
+  const setDayToDay = () => changeHandlers.updateMonthlyOrDayToDay(false);
 
   const isMonthly = data.isMonthly ?? false;
   const isDayToDay = !(data.isMonthly ?? true);
@@ -100,7 +108,7 @@ const MonthlyFormComponent = () => {
 };
 
 const ExpenseFormComponent = () => {
-  const { changeHanlders, data } = useCategoryFormContext();
+  const { changeHandlers: changeHanlders, data } = useCategoryFormContext();
   const setExpense = () => changeHanlders.updateExpenseOrRevenue(true);
   const setRevenue = () => changeHanlders.updateExpenseOrRevenue(false);
 
@@ -123,7 +131,7 @@ const ExpenseFormComponent = () => {
 };
 
 const DefaultAmountComponent = () => {
-  const { data, changeHanlders } = useCategoryFormContext();
+  const { data, changeHandlers: changeHanlders } = useCategoryFormContext();
   const { key, name } = data;
 
   return (
@@ -147,7 +155,7 @@ const DefaultAmountComponent = () => {
 const CategoryForm = () => {
   const {
     category,
-    changeHanlders,
+    changeHandlers: changeHanlders,
     closeForm,
     data,
     isNew,
