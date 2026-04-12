@@ -12,7 +12,7 @@ const ClearanceDateDisplay = (props: ClearanceDateDisplayProps) => {
   const { clearanceDate, shortClearanceDate, onClick } = props;
 
   return (
-    <div className="w-3/12">
+    <span>
       <Button
         type="button"
         onClick={onClick || (() => {})}
@@ -21,7 +21,7 @@ const ClearanceDateDisplay = (props: ClearanceDateDisplayProps) => {
         <span className="max-sm:hidden">{clearanceDate}</span>
         <span className="sm:hidden">{shortClearanceDate}</span>
       </Button>
-    </div>
+    </span>
   );
 };
 

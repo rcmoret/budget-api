@@ -18,10 +18,16 @@ const TransactionAmountComponent = () => {
   const { transaction, showForm } = useTransactionContext();
 
   return (
-    <div className="w-full">
+    <div className="w-full text-right">
       <Button type="button" onClick={showForm}>
         <AmountSpan amount={transaction.amount} negativeColor="text-red-400" />
       </Button>
+      {transaction.details.length > 1 &&
+        transaction.details.map((d) => (
+          <div className="text-sm">
+            <AmountSpan amount={d.amount} negativeColor="text-red-400" />
+          </div>
+        ))}
     </div>
   );
 };
@@ -31,49 +37,42 @@ const TransactionShowContent = () => {
 
   const bgColor = isOdd ? "bg-sky-100" : "bg-sky-50";
 
+  const outerClassName = [
+    "grid",
+    "grid-cols-[minmax(125px,auto)_minmax(200px,auto)_minmax(125px,auto)_minmax(125px,auto)_1fr]",
+    "gap-x-4",
+  ].join(" ");
+
+  const subgridClassName = [
+    "col-span-5",
+    "grid",
+    "grid-cols-subgrid",
+    "items-start",
+    "px-4",
+    "py-2",
+    bgColor,
+  ].join(" ");
+
   return (
-    <Row
-      styling={{
-        backgroundColor: bgColor,
-        flexAlign: "justify-start",
-        flexWrap: "flex-wrap",
-        padding: "px-4 py-2",
-      }}
-    >
-      <div className="flex w-full md:w-6/12">
-        <Cell
-          styling={{
-            width: "w-full",
-            flexAlign: "justify-between",
-            display: "flex",
-            gap: "gap-2",
-            flexWrap: "flex-wrap md:flex-nowrap",
-          }}
-        >
+    <div>
+      <div className={outerClassName}>
+        <div className={subgridClassName}>
           <ClearanceDateComponent />
-          <div className="w-4/12">
-            <DescriptionComponent />
-          </div>
-          <div className="w-4/12 flex flex-row justify-end gap-12 text-right">
+          <DescriptionComponent />
+          <div className="flex flex-col items-end">
             <TransactionAmountComponent />
           </div>
-          <div className="w-full md:w-4/12 flex flex-row justify-between mt-4 md:mt-0">
-            <BalanceComponent />
+          <BalanceComponent />
+          <div className="flex justify-between items-end px-2">
+            <EntryDetailsComponent />
+            <EntryActionsComponent />
           </div>
-        </Cell>
+        </div>
       </div>
-      <EntryDetailsComponent />
-      <Cell
-        styling={{
-          width: "md:w-[14%] w-full",
-          flexAlign: "md:justify-start justify-end",
-          margin: "md:mr-4",
-        }}
-      >
-        <EntryActionsComponent />
-      </Cell>
-      <ReceiptDisplayComponent />
-    </Row>
+      <div className={`w-full p-4 ${bgColor}`}>
+        <ReceiptDisplayComponent />
+      </div>
+    </div>
   );
 };
 

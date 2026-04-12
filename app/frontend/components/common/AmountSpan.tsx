@@ -39,7 +39,7 @@ const AmountSpan = (suppliedProps: ComponentProps) => {
   } else {
     textColor = negativeColor;
   }
-  const className = [textColor, ...classes].join(" ");
+  const className = [textColor, "text-right", ...classes].join(" ");
 
   return (
     <span className={className}>

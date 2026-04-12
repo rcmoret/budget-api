@@ -12,9 +12,9 @@ module WebApp
       def props = { accounts: accounts.render }
 
       def accounts
-        SerializableCollection.new(serializer: ShowSerializer) do
+        WebApp::Accounts::IndexSerializer.new(
           Account.belonging_to(current_user_profile)
-        end
+        ).render
       end
 
       def namespace = "accounts"
