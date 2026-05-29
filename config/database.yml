@@ -5,7 +5,7 @@ default: &default
 
 development:
   <<: *default
-  database: budget_app
+  database: budget_app_inertia
 
 test:
   <<: *default

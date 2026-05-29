@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-PORT="${PORT:-3010}"
+PORT="${PORT:-3707}"
 export PORT
 
 if command -v overmind > /dev/null 2>&1; then
