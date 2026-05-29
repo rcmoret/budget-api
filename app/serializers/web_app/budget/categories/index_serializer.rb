@@ -3,36 +3,21 @@
 module WebApp
   module Budget
     module Categories
-      class IndexSerializer < ApplicationSerializer
-        IconSerializer = Class.new(ApplicationSerializer) do
-          attributes :key, :name, :class_name
-        end
-        private_constant :IconSerializer
+      class IndexSerializer
+        include Alba::Resource
 
-        def initialize(current_user_profile, &block)
-          super(block.call)
-          @current_user_profile = current_user_profile
-        end
+        many :categories, resource: CategoryResource
 
-        attribute :categories, on_render: :render
-        attribute :icons, on_render: :render
+        one :metadata, resource: MetadataSerializer
 
-        def icons
-          SerializableCollection.new(serializer: IconSerializer) do
-            Icon.all
-          end
+        nested_attribute :notifications do
+          attributes :alerts,
+            :info,
+            :notices,
+            :warnings
         end
 
-        def categories
-          SerializableCollection.new(serializer: CategorySerializer,
-            current_user_profile:) do
-            __getobj__
-          end
-        end
-
-        private
-
-        attr_reader :current_user_profile
+        transform_keys :lower_camel
       end
     end
   end

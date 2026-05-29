@@ -15,6 +15,7 @@ module Budget
             :is_expense,
             :is_monthly,
             :is_per_diem_enabled
+
           attribute(:archived_at) { nil }
           attributes :upcoming_maturity_intervals,
             if: proc { |category| category.is_accrual }

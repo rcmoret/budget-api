@@ -3,21 +3,30 @@
 module WebApp
   module Accounts
     class ManageController < BaseController
+      before_action -> { presenter.flash = flash }
+
       def call
-        render inertia: "accounts/manage", props: page_props
+        render inertia: "accounts/manage/index", props: serializer.to_h
       end
 
       private
 
-      def props = { accounts: accounts.render }
-
-      def accounts
-        WebApp::Accounts::IndexSerializer.new(
-          Account.belonging_to(current_user_profile)
-        ).render
+      def serializer
+        IndexSerializerV2.new(presenter)
       end
 
-      def namespace = "accounts"
+      def presenter
+        @presenter ||=
+          Presenters::Accounts::IndexPresenter
+          .new(current_user_profile, metadata)
+      end
+
+      def metadata
+        @metadata ||= Presenters::ControllerMetadata.new(
+          namespace: "budget",
+          prev_selected_account_path:
+        )
+      end
     end
   end
 end

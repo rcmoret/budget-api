@@ -3,7 +3,6 @@ User::Group.find_by!(name: "Initial User Group").then do |group|
     name: "Checking",
     slug: "checking",
     cash_flow: true,
-    priority: 100,
   )
 
   regular_account.update!(key: KeyGenerator.call) if regular_account.new_record?
@@ -23,7 +22,6 @@ User::Group.find_by!(name: "Initial User Group").then do |group|
     name: "Savings",
     slug: "savings",
     cash_flow: false,
-    priority: 200,
   )
 
   savings_account.update!(key: KeyGenerator.call) if savings_account.new_record?
@@ -44,7 +42,6 @@ User::Group.find_by!(name: "Initial User Group").then do |group|
     name: "Defunct Account",
     slug: "defunct",
     cash_flow: true,
-    priority: 300,
   )
 
   if archived_account.new_record?

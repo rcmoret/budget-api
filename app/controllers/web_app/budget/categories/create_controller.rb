@@ -8,7 +8,8 @@ module WebApp
 
         def call
           if form.save
-            redirect_to redirect_path
+            redirect_to redirect_path,
+              notice: "Created category: #{category.name}"
           else
             redirect_to budget_index_path
           end

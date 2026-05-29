@@ -6,6 +6,8 @@ module Budget
     include Messages
     include Slugable
 
+    before_validation -> { self.default_amount ||= 0 }
+
     has_many :items, foreign_key: :budget_category_id, inverse_of: :category,
       dependent: :restrict_with_exception
     has_many :transaction_details, through: :items

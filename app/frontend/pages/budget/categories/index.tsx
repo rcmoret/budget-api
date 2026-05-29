@@ -1,104 +1,60 @@
-import { useState } from "react";
-import { byName as sortByName } from "@/lib/sort_functions";
-import { BudgetCategory } from "@/types/budget";
-import { CardWrapper as Card, TIcon } from "@/pages/budget/categories/Card";
 import {
-  CategoryForm,
-  NewBudgetCategory,
-} from "@/pages/budget/categories/Form";
-import { Button } from "@/components/common/Button";
-import { generateKeyIdentifier } from "@/lib/KeyIdentifier";
-import { Icon } from "@/components/common/Icon";
+  CategoryList,
+  Header,
+  RightColumn,
+} from "@/pages/budget/categories/manage";
+import { BudgetCategoryType } from "@/types/budget";
+import { MainComponent } from "@frontend/layout";
+import {
+  useActiveBudgetCategories,
+  useArchivedBudgetCategories,
+  useInitBudgetCategoriesStore,
+  useBudgetCategoriesStore,
+  useShowNewCategoryForm,
+} from "@/pages/budget/categories/store";
+import { NewCategoryForm } from "@/pages/budget/categories/manage/new-category-form";
 
-const AddNewComponent = (props: {
-  icons: Array<TIcon>;
-  isFormShown: boolean;
-  closeForm: () => void;
-  openForm: () => void;
-}) => {
-  const { isFormShown, openForm, closeForm } = props;
-
-  if (!isFormShown) {
-    return (
-      <div>
-        <Button
-          type="button"
-          onClick={openForm}
-          styling={{
-            backgroundColor: "bg-blue-300",
-            color: "text-white",
-            rounded: "rounded",
-            padding: "px-2 py-1",
-            fontWeight: "font-bold",
-          }}
-        >
-          ADD NEW{" "}
-          <span className="text-sky-200">
-            <Icon name="plus-circle" />
-          </span>
-        </Button>
-      </div>
-    );
-  } else {
-    const category: NewBudgetCategory = {
-      key: generateKeyIdentifier(),
-      name: "",
-      slug: "",
-      archivedAt: null,
-      defaultAmount: 0,
-      iconKey: null,
-      isAccrual: false,
-      isArchived: false,
-      isExpense: null,
-      isMonthly: null,
-      isPerDiemEnabled: false,
-    };
-
-    return (
-      <div>
-        <CategoryForm
-          category={category}
-          icons={props.icons}
-          isNew={true}
-          closeForm={closeForm}
-        />
-      </div>
-    );
-  }
-};
-
-const BudgetCategoryIndexComponent = (props: {
-  categories: Array<BudgetCategory>;
-  icons: Array<TIcon>;
-}) => {
-  const categories = props.categories.sort(sortByName);
-
-  const [showFormKey, setShowFormKey] = useState<null | string>(null);
+const CategoryIndex = (props: { metadata: { namespace: string } }) => {
+  const { metadata } = props;
+  const activeCategories = useActiveBudgetCategories();
+  const filteredArchivedCategories = useArchivedBudgetCategories();
+  const showArchivedCategories = useBudgetCategoriesStore(
+    (s) => s.showArchivedCategories,
+  );
+  const showNewCategoryForm = useShowNewCategoryForm();
 
   return (
-    <div className="w-full px-4">
-      <div className="text-xl">Manage Categories</div>
-      <div className="w-full flex flex-col gap-4">
-        <AddNewComponent
-          icons={props.icons}
-          isFormShown={showFormKey === "__new__"}
-          closeForm={() => setShowFormKey(null)}
-          openForm={() => setShowFormKey("__new__")}
-        />
-        {categories.map((category) => {
-          return (
-            <Card
-              key={category.key}
-              category={category}
-              icons={props.icons}
-              isFormShown={showFormKey === category.key}
-              setShowFormKey={setShowFormKey}
-            />
-          );
-        })}
+    <MainComponent
+      header={<Header />}
+      namespace={metadata.namespace}
+      rightColumn={<RightColumn />}
+    >
+      {showNewCategoryForm && <NewCategoryForm />}
+      <div id="category-list" className="flex flex-col gap-2">
+        <CategoryList categories={activeCategories} />
+        {showArchivedCategories && (
+          <>
+            <div className="text-lg my-4">Archived Categories</div>
+            <CategoryList categories={filteredArchivedCategories} />
+          </>
+        )}
       </div>
-    </div>
+    </MainComponent>
   );
 };
 
-export default BudgetCategoryIndexComponent;
+type ManageCategoriesProps = {
+  categories: Array<BudgetCategoryType>;
+  metadata: {
+    namespace: string;
+  };
+};
+
+const Categories = (props: ManageCategoriesProps) => {
+  const { metadata, categories } = props;
+  useInitBudgetCategoriesStore(categories);
+
+  return <CategoryIndex metadata={metadata} />;
+};
+
+export default Categories;

@@ -1,0 +1,48 @@
+import { useState } from "react";
+
+const KeyIdentifierIcon = (props: { fill: string; className?: string }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    height="24px"
+    viewBox="0 -960 960 960"
+    width="24px"
+    fill={props.fill}
+    className={props.className}
+  >
+    <path d="M443.5-736.5Q467-760 500-760t56.5 23.5Q580-713 580-680t-23.5 56.5Q533-600 500-600t-56.5-23.5Q420-647 420-680t23.5-56.5ZM500 0 320-180l60-80-60-80 60-85v-47q-54-32-87-86.5T260-680q0-100 70-170t170-70q100 0 170 70t70 170q0 67-33 121.5T620-472v352L500 0ZM340-680q0 56 34 98.5t86 56.5v125l-41 58 61 82-55 71 75 75 40-40v-371q52-14 86-56.5t34-98.5q0-66-47-113t-113-47q-66 0-113 47t-47 113Z" />
+  </svg>
+);
+
+const KeyIdentifier = (props: {
+  identifier: string;
+  fill?: string;
+  className?: string;
+}) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleClick = async () => {
+    await navigator.clipboard.writeText(props.identifier);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+
+  const tip = copied ? "Copied!" : props.identifier;
+
+  return (
+    <div className="tooltip" data-tip={tip}>
+      <button
+        type="button"
+        onClick={handleClick}
+        className="cursor-pointer"
+        title="copy identifier"
+      >
+        <KeyIdentifierIcon
+          fill={props.fill ?? "currentColor"}
+          className={props.className}
+        />
+      </button>
+    </div>
+  );
+};
+
+export { KeyIdentifier };

@@ -21,6 +21,7 @@ def event_form(
 
   Forms::Budget::EventsForm.new(
     user,
+    @adjustment,
     events: [ {
       adjustment: @adjustment,
       amount:,

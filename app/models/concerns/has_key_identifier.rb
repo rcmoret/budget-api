@@ -15,6 +15,10 @@ module HasKeyIdentifier
   end
 
   class_methods do
+    def object_prefix
+      to_s.downcase.parameterize(separator: "-")
+    end
+
     def by_key(key)
       find_by(arel_table[:key].lower.eq(key.to_s.strip.downcase))
     end
@@ -26,6 +30,12 @@ module HasKeyIdentifier
     def generate_key
       KeyGenerator.call
     end
+  end
+
+  delegate :object_prefix, to: :class
+
+  def object_key
+    "#{object_prefix}-#{key}"
   end
 
   private

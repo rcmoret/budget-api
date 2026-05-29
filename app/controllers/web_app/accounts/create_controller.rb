@@ -7,7 +7,8 @@ module WebApp
 
       def call
         if account.save
-          redirect_to redirect_path
+          redirect_to redirect_path,
+            notice: "Created account: #{account.name}"
         else
           redirect_to accounts_manage_path
         end

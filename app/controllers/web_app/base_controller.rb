@@ -33,6 +33,10 @@ module WebApp
 
     def errors = {}
 
+    def prev_selected_account_path
+      session[:selected_account_path].to_s
+    end
+
     def set_current_user!
       Current.user_profile = current_user_profile
     end

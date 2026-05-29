@@ -146,7 +146,6 @@ module Budget
           def category_struct(category_data)
             category_data.deep_symbolize_keys!
 
-            # binding.pry
             category_data[:events].map! do |ev|
               next ev unless ev.is_a? Hash
 

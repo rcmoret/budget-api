@@ -1,26 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html data-theme="merrimack-dark">
   <head>
     <title>Budget App</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <link rel="shortcut icon" href="/favicon.png">
 
-    <link rel="stylesheet" media="screen" href="https://fonts.googleapis.com/css?family=Questrial">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="https://kit.fontawesome.com/50bb231d0e.js" crossorigin="anonymous"></script>
-    <%= stylesheet_link_tag("application") %>
-    <style>
-      html { font-family: Questrial, Arial; }
-      body {
-        margin: 0;
-        padding: 0;
-        background-color: #9CA3AF;
-        background-image: url('/black-linen-2.png');
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-      }
-    </style>
+    <%# <script src="https://kit.fontawesome.com/50bb231d0e.js" crossorigin="anonymous"></script> %>
 
     <%= vite_client_tag %>
     <%= vite_react_refresh_tag %>
@@ -28,8 +15,6 @@
   </head>
 
   <body>
-    <div class="w-full overflow-y-scroll">
       <%= yield %>
-    </div>
   </body>
 </html>

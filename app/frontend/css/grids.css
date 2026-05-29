@@ -1,0 +1,13 @@
+@utility grid-page-split {
+  display: flex;
+  flex-direction: column-reverse;
+  /* grid-template-columns: 1fr; */
+  min-height: calc(100vh - 5rem);
+
+  @media (width >= theme(--breakpoint-md)) {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    height: calc(100vh - 5rem);
+    min-height: 0;
+  }
+}

@@ -4,20 +4,36 @@ module WebApp
   module Budget
     module Categories
       class IndexController < BaseController
+        before_action -> { presenter.flash = flash }
+
         def call
-          render inertia: "budget/categories/index", props: page_props
+          render inertia: "budget/categories/index", props: serializer.to_h
         end
 
         private
 
-        def props = serializer.render
-
         def serializer
-          IndexSerializer.new(current_user_profile) do
-            ::Budget::Category
-              .includes(:icon, maturity_intervals: :interval)
-              .belonging_to(current_user_profile)
-          end
+          IndexSerializer.new(
+            presenter,
+            params: {
+              timezone: current_user_profile.configuration(:timezone),
+            }
+          )
+        end
+
+        def presenter
+          @presenter ||=
+            ::Presenters::Budget::Categories::CollectionPresenter.new(
+              current_user_profile,
+              metadata:
+            )
+        end
+
+        def metadata
+          @metadata ||= Presenters::ControllerMetadata.new(
+            namespace: "budget",
+            prev_selected_account_path:
+          )
         end
 
         def namespace = "budget"
