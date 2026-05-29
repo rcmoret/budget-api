@@ -1,13 +1,13 @@
 namespace :budget do
   get "/", to: "index#call", as: :home
 
-  namespace :category, module: :categories do
-    put "/:key", to: "update#call", as: :update
-    get "/:slug", to: "show#call", as: :show
-  end
+  get "/categories",
+    to: WebApp::Budget::Categories::IndexController.action(:call),
+    as: :categories_index
 
-  namespace :categories do
-    get "/", to: "index#call", as: :index
+  namespace :category, module: :categories do
+    get "/:slug", to: "show#call", as: :show
+    put "/:key", to: "update#call", as: :update
     post "/", to: "create#call"
   end
 

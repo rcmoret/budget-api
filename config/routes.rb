@@ -3,13 +3,6 @@ Rails.application.routes.draw do
 
   devise_for :user_profiles, class_name: "User::Profile"
 
-  # API is deprecated
-  # namespace :api do
-  #   draw("api/accounts")
-  #   draw("api/budget")
-  #   draw("api/tokens")
-  # end
-
   scope "/", module: :web_app do
     get "/dashboard", to: "dashboard#call", as: :dashboard
 
