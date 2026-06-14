@@ -17,7 +17,9 @@ module Presenters
 
       def initialize(user_profile, metadata)
         @accounts =
-          Account.belonging_to(user_profile).by_priority.with_balance
+          Account
+          .belonging_to(user_profile)
+          .by_priority.with_balance
         @metadata = metadata
       end
 

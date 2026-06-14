@@ -12,7 +12,7 @@ module WebApp
       private
 
       def serializer
-        IndexSerializerV2.new(presenter)
+        IndexSerializer.new(presenter)
       end
 
       def presenter

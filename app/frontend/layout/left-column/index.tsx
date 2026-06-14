@@ -1,17 +1,13 @@
 import { SelectedLabel, UnselectedLabel } from "./label";
 import { MenuItems } from "./menu-item";
 import {
-  useIsDarkTheme,
   useNamespace,
-  useShowAccruals,
-  useToggleShowAccruals,
-  useToggleTheme,
 } from "@frontend/layout/app-config-store";
-import { ToggleSlider } from "@frontend/components/slider";
 import { Link } from "@inertiajs/react";
+import { AppConfigItems } from "./config-items";
 
 const accountsIndexUrl = "/accounts";
-const budgetCategoryIndexUrl = "/budget/categories";
+const budgetCategoryIndexUrl = "/budget";
 
 const TopMenuItems = () => {
   const namespace = useNamespace();
@@ -26,7 +22,7 @@ const TopMenuItems = () => {
   } else if (namespace === "budget") {
     return (
       <MenuItems label="Budget">
-        <SelectedLabel name="Budget" />
+        <SelectedLabel name="Budget" href={budgetCategoryIndexUrl} />
         <UnselectedLabel name="Accounts" href={accountsIndexUrl} />
       </MenuItems>
     );
@@ -40,49 +36,7 @@ const TopMenuItems = () => {
   }
 };
 
-const outerButtonClassName = [
-  "w-full",
-  "overflow-hidden",
-  "not-last:border-b",
-  "not-last:border-neutral",
-].join(" ");
-const innerButtonClassName = [
-  "px-2",
-  "py-1",
-  "flex",
-  "flex-row",
-  "items-center",
-  "justify-between",
-  "gap-2",
-  "text-xs",
-  "text-base-content",
-  "w-full",
-].join(" ");
-
-const ThemeToggle = () => {
-  const isDark = useIsDarkTheme();
-  const toggleTheme = useToggleTheme();
-
-  return (
-    <button
-      type="button"
-      onClick={toggleTheme}
-      className={outerButtonClassName}
-    >
-      <div className={innerButtonClassName}>
-        <div>Dark Mode</div>
-        <div className="grid items-center">
-          <ToggleSlider toggleValue={isDark} ariaLabel="toggle dark mode" />
-        </div>
-      </div>
-    </button>
-  );
-};
-
 const BottomMenuItems = () => {
-  const showAccruals = useShowAccruals();
-  const toggleShowAccruals = useToggleShowAccruals();
-
   const menuLabelClassName = [
     "flex",
     "flex-row",
@@ -102,34 +56,7 @@ const BottomMenuItems = () => {
       <div className={menuLabelClassName}>
         <Link href="/budget/categories">Manage Categories</Link>
       </div>
-      <details className="collapse rounded-none pb-4" name="my-accordion-det-1">
-        <summary className="list-none [&::-webkit-details-marker]:hidden">
-          <div className={menuLabelClassName}>
-            <div>&#9965;</div>
-            <div>Config Options</div>
-          </div>
-        </summary>
-        <div className="collapse-content w-full px-2 py-1 mt-2 ">
-          <div className="bg-secondary text-secondary-content rounded">
-            <button
-              type="button"
-              onClick={toggleShowAccruals}
-              className={outerButtonClassName}
-            >
-              <div className={innerButtonClassName}>
-                <div>Toggle Accrual Items</div>
-                <div className="grid items-center">
-                  <ToggleSlider
-                    toggleValue={showAccruals}
-                    ariaLabel="toggle accrual items"
-                  />
-                </div>
-              </div>
-            </button>
-            <ThemeToggle />
-          </div>
-        </div>
-      </details>
+      <AppConfigItems />
       <div className="text-primary-content text-sm mx-2 pt-4 pb-8 border-t border-neutral">
         Logout
       </div>

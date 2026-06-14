@@ -36,7 +36,6 @@ const AmountSpan = (suppliedProps: ComponentProps) => {
   const colorize: ColorizeOption = props.colorize || "none";
 
   let textColor = "";
-  console.log({ colorize });
   if (amount === 0 || colorize === "none") {
     textColor = BaseColor;
   } else if (amount > 0) {

@@ -3,8 +3,9 @@ module Transaction
     include HasKeyIdentifier
     include Fetchable
     include BelongsToUserGroup::Through[:account]
+    include Scopes::Accounts
+    include Scopes::ClearanceDate
 
-    belongs_to :account
     has_one :debit_transfer,
       class_name: "Transfer",
       foreign_key: :from_transaction_id,
@@ -42,24 +43,7 @@ module Transaction
       if: -> { receipt.attached? }
     # rubocop:enable Rails/I18nLocaleTexts
 
-    scope :cleared, -> { where.not(clearance_date: nil) }
-    scope :pending, -> { where(clearance_date: nil) }
-    scope :prior_to, lambda { |date, include_pending: false|
-      base_scope = cleared.where(arel_table[:clearance_date].lt(date))
-      include_pending ? base_scope.or(pending) : base_scope
-    }
-    scope :on_or_prior_to, lambda { |date, include_pending: false|
-      base_scope = cleared.where(arel_table[:clearance_date].lteq(date))
-      include_pending ? base_scope.or(pending) : base_scope
-    }
-    scope :in, ->(range) { where(clearance_date: range) }
-    scope :between, lambda { |range, include_pending: false|
-      include_pending ? self.in(range).or(pending) : self.in(range)
-    }
     scope :budget_inclusions, -> { where(budget_exclusion: false) }
-    scope :budget_exclusions, -> { where(budget_exclusion: true) }
-    scope :cash_flow, -> { joins(:account).merge(Account.cash_flow) }
-    scope :non_cash_flow, -> { joins(:account).merge(Account.non_cash_flow) }
     scope :non_transfer, lambda {
       where
         .not(id: Transfer.select(:to_transaction_id))

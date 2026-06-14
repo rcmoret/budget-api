@@ -13,7 +13,9 @@ namespace :budget do
 
   post "/events/(:month)/(:year)", to: "events#call", as: :events
 
-  get "(/:month)(/:year)", to: "index#call", as: :index
+  get "(/:month)(/:year)",
+    to: WebApp::Budget::IndexController.action(:call),
+    as: :index
 
   scope "/:month/:year" do
     put "/", to: "update#call"

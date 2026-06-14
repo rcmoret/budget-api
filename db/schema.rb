@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2026_04_01_213657) do
+ActiveRecord::Schema[7.0].define(version: 2026_06_14_134701) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -319,6 +319,91 @@ ActiveRecord::Schema[7.0].define(version: 2026_04_01_213657) do
        JOIN budget_item_event_types event_types ON ((event_types.id = events.budget_item_event_type_id)))
        JOIN budget_intervals intervals ON ((intervals.id = items.budget_interval_id)))
     GROUP BY c.id, intervals.id;
+  SQL
+  create_view "budget_details", sql_definition: <<-SQL
+      WITH event_type_ids AS (
+           SELECT budget_item_event_types.id,
+              ((budget_item_event_types.name)::text = ANY ((ARRAY['rollover_extra_target_create'::character varying, 'rollover_item_create'::character varying, 'rollover_item_adjust'::character varying])::text[])) AS is_previous
+             FROM budget_item_event_types
+          ), transaction_totals AS (
+           SELECT transaction_details.budget_item_id,
+              count(*) AS transaction_detail_count,
+              sum(transaction_details.amount) AS transaction_detail_total
+             FROM transaction_details
+            GROUP BY transaction_details.budget_item_id
+          ), event_totals AS (
+           SELECT e.budget_item_id,
+              sum(e.amount) FILTER (WHERE et.is_previous) AS previously_budgeted,
+              sum(e.amount) FILTER (WHERE (NOT et.is_previous)) AS currently_budgeted
+             FROM (budget_item_events e
+               JOIN event_type_ids et ON ((et.id = e.budget_item_event_type_id)))
+            GROUP BY e.budget_item_id
+          )
+   SELECT i.id,
+      i.budget_category_id,
+      i.budget_interval_id,
+      i.created_at,
+      i.updated_at,
+      i.deleted_at,
+      i.key,
+      bi.month,
+      bi.year,
+      c.key AS budget_category_key,
+      c.name,
+      c.expense,
+      c.monthly,
+      c.accrual,
+      COALESCE(icons.class_name, ''::character varying) AS icon_class_name,
+      COALESCE(tt.transaction_detail_count, (0)::bigint) AS transaction_detail_count,
+      COALESCE(tt.transaction_detail_total, (0)::bigint) AS transaction_detail_total,
+      COALESCE(ev.previously_budgeted, (0)::bigint) AS previously_budgeted,
+      COALESCE(ev.currently_budgeted, (0)::bigint) AS currently_budgeted,
+      nm.maturity_month,
+      nm.maturity_year,
+          CASE
+              WHEN c.monthly THEN 'Budget::Details::Fixed'::text
+              WHEN c.expense THEN 'Budget::Details::VariableExpense'::text
+              ELSE 'Budget::Details::VariableRevenue'::text
+          END AS type
+     FROM ((((((budget_items i
+       JOIN budget_categories c ON ((c.id = i.budget_category_id)))
+       LEFT JOIN icons ON ((c.icon_id = icons.id)))
+       JOIN budget_intervals bi ON ((bi.id = i.budget_interval_id)))
+       LEFT JOIN transaction_totals tt ON ((tt.budget_item_id = i.id)))
+       LEFT JOIN event_totals ev ON ((ev.budget_item_id = i.id)))
+       LEFT JOIN LATERAL ( SELECT mi.month AS maturity_month,
+              mi.year AS maturity_year
+             FROM (budget_category_maturity_intervals cmi
+               JOIN budget_intervals mi ON ((mi.id = cmi.budget_interval_id)))
+            WHERE ((cmi.budget_category_id = c.id) AND (ROW(mi.year, mi.month) >= ROW(bi.year, bi.month)))
+            ORDER BY mi.year, mi.month
+           LIMIT 1) nm ON (true));
+  SQL
+  create_view "transaction_budget_details", sql_definition: <<-SQL
+      SELECT td.id,
+      td.transaction_entry_id,
+      td.budget_item_id,
+      td.amount,
+      td.created_at,
+      td.updated_at,
+      td.key,
+      te.clearance_date,
+      ((td.budget_item_id IS NOT NULL) AND (te.budget_exclusion = false) AND (NOT (te.id IN ( SELECT transfers.to_transaction_id
+             FROM transfers
+          UNION
+           SELECT transfers.from_transaction_id
+             FROM transfers)))) AS budget_inclusion,
+      a.name AS account_name,
+      a.id AS account_id,
+      b.month,
+      b.year,
+      COALESCE(c.name, ''::character varying) AS budget_category_name
+     FROM (((((transaction_details td
+       JOIN transaction_entries te ON ((te.id = td.transaction_entry_id)))
+       JOIN accounts a ON ((a.id = te.account_id)))
+       LEFT JOIN budget_items bi ON ((bi.id = td.budget_item_id)))
+       LEFT JOIN budget_categories c ON ((c.id = bi.budget_category_id)))
+       LEFT JOIN budget_intervals b ON ((b.id = bi.budget_interval_id)));
   SQL
   create_view "user_configuration_view", sql_definition: <<-SQL
       SELECT up.id AS user_profile_id,

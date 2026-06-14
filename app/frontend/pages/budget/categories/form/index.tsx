@@ -88,7 +88,7 @@ const DefaultAmountInput = () => {
   const { data, setData } = useBudgetCategoryFormContext();
 
   return (
-    <CardRow>
+    <FormRow>
       <label htmlFor={inputid}>Default Amount</label>
       <div>
         <input
@@ -100,7 +100,7 @@ const DefaultAmountInput = () => {
           onChange={(e) => setData("defaultAmount", e.target.value)}
         />
       </div>
-    </CardRow>
+    </FormRow>
   );
 };
 
@@ -166,8 +166,9 @@ const FormRow = (props: {
 
   const rowClassName = [
     "border-b",
-    "border-accent/50",
-    "pb-4",
+    "border-base-300",
+    "mb-2",
+    "py-4",
     ...providedClasses,
   ].join(" ");
 
@@ -184,7 +185,7 @@ const FormComponent = () => {
     <div>
       <NameInput />
       <SlugInput />
-      <div className="grid gap-4">
+      <div className="grid">
         <fieldset disabled={!isNewForm}>
           <FormRow classes={["mt-4", "pt-2"]}>
             <ExpenseOrRevenueRadioInput />

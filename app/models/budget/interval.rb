@@ -4,8 +4,15 @@ module Budget
     include Fetchable
     include Intervals::DateScopes
 
-    has_many :items, foreign_key: :budget_interval_id, inverse_of: :interval,
+    has_many :items,
+      foreign_key: :budget_interval_id,
+      inverse_of: :interval,
       dependent: :restrict_with_exception
+    has_many :detailed_items,
+      foreign_key: :budget_interval_id,
+      inverse_of: :interval,
+      class_name: "Budget::Details::Base",
+      dependent: :nullify
     has_many :change_sets,
       class_name: "ChangeSet",
       dependent: :destroy,

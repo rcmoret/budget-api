@@ -8,10 +8,10 @@ module Budget
         scope :order_desc, -> { order(year: :desc, month: :desc) }
         scope :on, ->(month:, year:) { where(month:, year:) }
         scope :before, lambda { |month:, year:|
-          where(year: ...year).or(where(year:, month: ...month))
+          where("(year, month) < (:year, :month)", year:, month:)
         }
         scope :after, lambda { |month:, year:|
-          where(year: (year + 1)..).or(where(year:, month: (month + 1)..))
+          where("(year, month) > (:year, :month)", year:, month:)
         }
         scope :on_or_after, lambda { |month:, year:|
           on(year:, month:).or(after(month:, year:))

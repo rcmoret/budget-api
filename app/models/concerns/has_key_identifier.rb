@@ -3,6 +3,46 @@
 module HasKeyIdentifier
   extend ActiveSupport::Concern
 
+  module LookupMethods
+    extend ActiveSupport::Concern
+
+    class_methods do
+      def by_key(key)
+        find_by(arel_table[:key].lower.eq(key.to_s.strip.downcase))
+      end
+
+      def by_key!(key)
+        find_by!(arel_table[:key].lower.eq(key.to_s.strip.downcase))
+      end
+    end
+  end
+
+  module ObjectKey
+    extend ActiveSupport::Concern
+
+    class_methods do
+      def object_prefix(class_name = nil)
+        (class_name || to_s).downcase.parameterize(separator: "-")
+      end
+    end
+
+    delegate :object_prefix, to: :class
+
+    def object_key
+      "#{object_prefix}-#{key}"
+    end
+  end
+
+  module ReadOnly
+    extend ActiveSupport::Concern
+
+    include LookupMethods
+    include ObjectKey
+  end
+
+  include LookupMethods
+  include ObjectKey
+
   included do
     validates :key, uniqueness: true, presence: true, length: { is: 12 }
     validate :key_unchanged!
@@ -12,30 +52,6 @@ module HasKeyIdentifier
 
       where(arel_table[:key].lower.in(keys))
     }
-  end
-
-  class_methods do
-    def object_prefix
-      to_s.downcase.parameterize(separator: "-")
-    end
-
-    def by_key(key)
-      find_by(arel_table[:key].lower.eq(key.to_s.strip.downcase))
-    end
-
-    def by_key!(key)
-      find_by!(arel_table[:key].lower.eq(key.to_s.strip.downcase))
-    end
-
-    def generate_key
-      KeyGenerator.call
-    end
-  end
-
-  delegate :object_prefix, to: :class
-
-  def object_key
-    "#{object_prefix}-#{key}"
   end
 
   private

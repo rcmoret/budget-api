@@ -3,6 +3,7 @@ import { redirectQueryParams } from "@/utils/redirect_params";
 import { router } from "@inertiajs/react";
 import { KeyIdentifier } from "@/components/key-identifier";
 import { useBudgetCategoryContext } from "@/pages/budget/categories/context-provider";
+import { Pill } from "@/components/pill";
 
 const budgetCategoryManageReturnQueryParams = redirectQueryParams([
   "budget",
@@ -53,15 +54,15 @@ const BudgetCategoryShow = () => {
           {category.isExpense ? "Expense" : "Revenue"}
         </div>
       </CardRow>
-      {category.isAccrual && (
-        <CardRow>
-          <span className="underline">Accrual</span>
-        </CardRow>
-      )}
       <CardRow>
         <div>Slug</div>
         <div>{category.slug}</div>
       </CardRow>
+      {category.isAccrual && (
+        <CardRow>
+          <Pill>Accrual</Pill>
+        </CardRow>
+      )}
       <CardRow>
         <BudgetCategoryCardBottomRow />
       </CardRow>

@@ -1,18 +1,35 @@
 module WebApp
   module Mixins
     module SharedInterval
-      def total_days
-        (last_date.to_date - first_date.to_date).to_i + 1
+      extend ActiveSupport::Concern
+
+      included do
+        attributes :total_days
+
+        attribute :days_remaining do |budget_month|
+          if budget_month.current?
+            [ (last_date.to_date - Time.current.to_date + 1).to_i.abs, 1 ].max
+          elsif budget_month.past?
+            0
+          else
+            total_days
+          end
+        end
       end
 
-      def days_remaining
-        if current?
+      def days_remaining(budget_month)
+        if budget_month.current?
           [ (last_date.to_date - Time.current.to_date + 1).to_i.abs, 1 ].max
-        elsif past?
+        elsif budget_month.past?
           0
         else
-          total_days
+          total_days(budget_month)
         end
+      end
+
+      def total_days(budget_month)
+        (budget_month.last_date.to_date - budget_month.first_date.to_date)
+          .to_i + 1
       end
     end
   end

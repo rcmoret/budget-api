@@ -1,38 +1,20 @@
 module WebApp
   module Accounts
     class IndexSerializer < ApplicationSerializer
-      attribute :accounts, on_render: :render
+      include Alba::Resource
 
-      def accounts
-        SerializableCollection.new(serializer: ShowSerializer) do
-          user_accounts.map do |account|
-            {
-              account:,
-              balance: balances_by_account_id.find do |struct|
-                struct.account_id == account.id
-              end&.balance.to_i,
-            }
-          end
-        end
+      many :accounts, resource: AccountResource
+
+      one :metadata, resource: MetadataSerializer
+
+      nested_attribute :notifications do
+        attributes :alerts,
+          :info,
+          :notices,
+          :warnings
       end
 
-      private
-
-      def balances_by_account_id
-        @balances_by_account_id ||=
-          Transaction::Detail
-          .joins(:entry)
-          .where(entry: { account: user_accounts })
-          .group(:account_id)
-          .sum(:amount)
-          .map { |id, balance| AccountIdWithBalance.new(id, balance) }
-      end
-
-      def user_accounts
-        __getobj__
-      end
-
-      AccountIdWithBalance = Struct.new(:account_id, :balance)
+      transform_keys :lower_camel
     end
   end
 end

@@ -2,9 +2,6 @@
 
 module Budget
   class CategoryMaturityInterval < ApplicationRecord
-    include BelongsToUserGroup::Through[association: :category,
-      class_name: "Budget::Category"]
-
     belongs_to :interval,
       foreign_key: :budget_interval_id,
       inverse_of: :maturity_intervals

@@ -87,7 +87,7 @@ const CardLabel = (props: {
     "font-medium",
     "pb-1",
     "border-b",
-    "border-accent/70",
+    "border-base-300/70",
   ].join(" ");
 
   return (
@@ -117,11 +117,11 @@ const ArchivedAtRow = (props: { archivedAt: string | null }) => {
 
 const ActiveItemCard = (props: {
   children: React.ReactNode;
-  isFormShown: boolean;
+  isFormShown?: boolean;
   label: React.ReactNode;
   id: string;
 }) => {
-  const { children, isFormShown, label, id } = props;
+  const { children, isFormShown = false, label, id } = props;
   // when I want to highlight add
   // const isOutlined = id === "account-218b5f598fcb";
   //

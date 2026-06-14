@@ -6,14 +6,12 @@ module WebApp
       def available_cash
         cash_flow_transaction_detail_scope
           .or(non_cash_flow_budget_inclusion_scope)
-          .joins(:account)
-          .merge(::Account.belonging_to(Current.user_group))
-          .joins(:details)
+          .belonging_to(user_group)
           .sum(:amount)
       end
 
       def cash_flow_transaction_detail_scope
-        ::Transaction::Entry.cash_flow.then do |scope|
+        ::Transaction::BudgetDetail.cash_flow.then do |scope|
           if future?
             scope.between(date_range)
           else
@@ -23,9 +21,9 @@ module WebApp
       end
 
       def non_cash_flow_budget_inclusion_scope
-        ::Transaction::Entry
+        ::Transaction::BudgetDetail
           .non_cash_flow
-          .where(budget_exclusion: false)
+          .budget_inclusions
           .between(date_range, include_pending: current?)
       end
     end

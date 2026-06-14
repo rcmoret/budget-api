@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   devise_for :user_profiles, class_name: "User::Profile"
 
   scope "/", module: :web_app do
-    get "/dashboard", to: "dashboard#call", as: :dashboard
+    get "/dashboard", to: "budget/index#call", as: :dashboard
 
     draw("web_app/accounts")
     draw("web_app/budget")

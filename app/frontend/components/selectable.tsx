@@ -1,6 +1,6 @@
 import { useContext, createContext } from "react";
 
-type SelectableVariant = "accent" | "secondary";
+type SelectableVariant = "base-300" | "base-300";
 
 type SelectableGroupContextValue = {
   disabled: boolean;
@@ -58,7 +58,7 @@ const SelectableGroup = (props: SelectableGroupProps) => {
 
   return (
     <div className={formSelectableRowClassName}>
-      <label className="text-sm">{groupLabel}</label>
+      <div className="text-sm">{groupLabel}</div>
       <SelectableGroupProvider name={name} disabled={disabled}>
         {children}
       </SelectableGroupProvider>
@@ -93,17 +93,17 @@ const SelectableInputContainer = (props: {
   const { checked, type } = props;
   const { disabled, name } = useSelectableGroupContext();
 
-  const inputClassName = ["radio", "radio-sm", "radio-accent", "relative"].join(
+  const inputClassName = ["radio", "radio-sm", "radio-base-300", "relative"].join(
     " ",
   );
 
   const labelClassName = [
     ...selectableItemBaseClasses,
-    "outline-accent",
+    "outline-base-300",
     "has-checked:outline-2",
     "has-checked:bg-white/100",
-    "hover:outline-accent",
-    "has-disabled:outline-accent/70",
+    "hover:outline-base-300",
+    "has-disabled:outline-base-300/70",
     "has-disabled:cursor-default",
     "has-[input:checked:disabled]:bg-white/90",
     "has-disabled:bg-white/60",

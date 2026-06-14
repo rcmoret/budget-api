@@ -2,8 +2,6 @@ module WebApp
   module Budget
     module Interval
       class DataSerializer < ApplicationSerializer
-        include Mixins::SharedInterval
-
         attributes :month, :year, :days_remaining, :total_days
         attribute :first_date,
           on_render: proc { |timestamp| render_date_time(timestamp) }

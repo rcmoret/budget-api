@@ -33,15 +33,6 @@ module BelongsToUserGroup
       end
     end
 
-    # extend ActiveSupport::Concern
-
-    # included do
-    #   scope :belonging_to, lambda { |user_or_group|
-    #     joins(:interval).merge(Interval.belonging_to(user_or_group))
-    #   }
-    # end
-
-    # delegate :user_group, to: :interval
     def self.module_body(class_name:, association:)
       [
         <<-THROUGH, __FILE__, __LINE__ + 1,

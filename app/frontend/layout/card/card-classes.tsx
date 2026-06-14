@@ -1,5 +1,5 @@
-const cardBgValue = "bg-accent/15";
-const formBgValue = "bg-accent/30";
+const cardBgValue = "bg-base-300/25";
+const formBgValue = "bg-base-300/25";
 const rowClassName = ["flex", "flex-row", "justify-between"].join(" ");
 
 const outerCardClassName = (props: {

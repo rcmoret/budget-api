@@ -51,7 +51,6 @@ const Header = () => {
 // };
 
 const AccountTransactionsIndex = (props: any) => {
-  console.log({ props });
   return (
     <MainComponent namespace="accounts" header={<Header />} rightColumn={null}>
       Foo bar

@@ -12,7 +12,7 @@ const outerClassName = [
 const innerClassName = (props: { isSelected: boolean }) => {
   return [
     ...(props.isSelected
-      ? ["dark:bg-base-100/30", "bg-base-100/15", "font-semibold"]
+      ? ["bg-base-300", "font-semibold"]
       : []),
     "text-primary-content",
     "text-xl",
@@ -27,7 +27,18 @@ const innerClassName = (props: { isSelected: boolean }) => {
   ].join(" ");
 };
 
-const SelectedLabel = (props: { name: string }) => {
+const SelectedLabel = (props: { name: string; href?: string; }) => {
+  if (!!props.href) {
+    return (
+      <div className={outerClassName}>
+        <Link href={props.href}>
+          <div className={innerClassName({ isSelected: true })}>
+            {props.name}
+          </div>
+        </Link>
+      </div>
+    )
+  }
   return (
     <div className={outerClassName}>
       <div className={innerClassName({ isSelected: true })}>{props.name}</div>

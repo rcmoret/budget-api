@@ -65,19 +65,23 @@
   color: var(--color-error-content);
 }
 
+.radio-base-300 {
+  --input-color: var(--color-base-300);
+}
+
 :root,
 [data-theme="merrimack"] {
   color-scheme: light;
   --color-base-100: oklch(0.99 0.012 206);
   --color-base-200: oklch(0.94 0.009 206);
-  --color-base-300: oklch(0.9 0.015 233);
+  --color-base-300: oklch(0.734 0.086 237);
   --color-base-content: oklch(0.2 0 0);
   --color-primary: oklch(0.2629 0.2559 206);
   --color-primary-content: oklch(1 0 0);
   --color-secondary: oklch(0.715 0.089 155);
   --color-secondary-content: oklch(0.98 0.003 247.858);
-  --color-accent: oklch(0.734 0.086 237);
-  --color-accent-content: oklch(0.2 0 0);
+  --color-accent: oklch(0.926 0.127 100);
+  --color-accent-content: oklch(0.2629 0.2559 206);
   --color-neutral: oklch(0.83 0 90);
   --color-neutral-content: oklch(0.98 0 0);
   --color-info: oklch(0.75 0.14 236);
@@ -109,8 +113,8 @@
   --color-primary-content: oklch(1 0 0);
   --color-secondary: oklch(0.72 0.089 155);
   --color-secondary-content: oklch(0.15 0.02 155);
-  --color-accent: oklch(0.7 0.086 237);
-  --color-accent-content: oklch(0.15 0.015 237);
+  --color-accent: oklch(0.926 0.127 100);
+  --color-accent-content: oklch(0.2629 0.2559 206);
   --color-neutral: oklch(0.35 0 90);
   --color-neutral-content: oklch(0.95 0 0);
   --color-info: oklch(0.72 0.14 236);

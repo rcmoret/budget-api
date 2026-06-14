@@ -1,5 +1,5 @@
 //
-// type RadioVariant = "accent" | "secondary";
+// type RadioVariant = "base-300" | "base-300";
 // variant?: RadioVariant;
 
 const RadioInput = (props: {
@@ -11,7 +11,7 @@ const RadioInput = (props: {
 }) => {
   const { defaultChecked, disabled = false, name, value } = props;
 
-  const inputClassName = ["relative", "radio", "radio-sm", "radio-accent"].join(
+  const inputClassName = ["relative", "radio", "radio-sm", "radio-base-300"].join(
     " ",
   );
 
@@ -27,7 +27,7 @@ const RadioInput = (props: {
     "rounded",
     "bg-white/100",
     "has-checked:outline-2",
-    "has-checked:outline-accent",
+    "has-checked:outline-base-300",
     "cursor-pointer",
     "disabled:cursor-default",
   ].join(" ");
