@@ -7,6 +7,10 @@
   themes: false;
 }
 
+html {
+  scrollbar-gutter: stable;
+}
+
 /* Unlayered overrides — sit above all @layer rules, fixing Tailwind v4 + DaisyUI v5 cascade issue */
 .btn-primary {
   --btn-color: var(--color-primary);

@@ -1,5 +1,5 @@
 import { createFilterGroup } from "@/components/filter-button";
-import { ExpenseFilterItem, FixedOrVariableFilterItem, useBudgetDashboardStore } from "../store";
+import { ExpenseFilterItem, FixedOrVariableFilterType, useBudgetDashboardStore } from "../store";
 
 const Row = (props: { children: React.ReactNode }) => {
   const className = ["w-full", "flex", "justify-between"].join(" ");
@@ -49,7 +49,7 @@ const ExpenseFilters = () => {
 
 const CategoryTypeFilters = () => {
   const { FilterButtonGroup, FilterButton } =
-    createFilterGroup<FixedOrVariableFilterItem>();
+    createFilterGroup<FixedOrVariableFilterType>();
   const fixedOrVariableFilter = useBudgetDashboardStore(
     (s) => s.fixedOrVariableFilter,
   );

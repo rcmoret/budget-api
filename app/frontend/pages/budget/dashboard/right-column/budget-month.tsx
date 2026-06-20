@@ -1,11 +1,13 @@
 import { ToggleSlider } from "@/components/slider";
 import { useShowAccruals, useToggleShowAccruals } from "@/layout/app-config-store";
-import { useBudgetDashboardStore, useClearedItemsVisibilityToggle } from "../store";
+import { getBudgetMonth } from "@/pages/budget/month-store"
+import { useClearedItemsVisibilityToggle } from "../store";
 import {
   CategoryTypeFilters,
   ExpenseFilters,
 } from "./filter-buttons";
-import { Link } from "@inertiajs/react";
+import { Discretionary } from "./discretionary"
+import { BudgetMonthSummary } from "@/components/budget-month";
 
 const DaysRemaining = (props: { daysRemaining: number }) => {
   return (
@@ -16,52 +18,11 @@ const DaysRemaining = (props: { daysRemaining: number }) => {
 }
 
 const ProgressBar = () => {
-  const budgetMonth = useBudgetDashboardStore(({ budgetMonth }) => budgetMonth)
+  const budgetMonth = getBudgetMonth()
   const daysElapsed = budgetMonth.totalDays - budgetMonth.daysRemaining
   const percentCompleted = (100.0 * daysElapsed / budgetMonth.totalDays)
   return (
     <progress className="progress w-full progress-secondary" value={percentCompleted} max="100" />
-  )
-}
-
-const NeighborLink = (props: { children: React.ReactNode; href: string }) => {
-  const { children, href } = props
-  return (
-    <div className="bg-primary py-2 rounded shadow-md">
-      <Link href={href} className="bg-primary text-primary-content w-full">
-        <div className="h-full flex justify-center gap-2 w-full items-center">
-          {children}
-        </div>
-      </Link>
-    </div>
-  )
-}
-
-const NeighborLinks = () => {
-  const budgetMonth = useBudgetDashboardStore(({ budgetMonth }) => budgetMonth)
-  console.log({ budgetMonth })
-  const { previousMonth, nextMonth } = budgetMonth
-
-  return (
-    <div className="grid grid-cols-[5fr_3fr_5fr] w-full">
-      <NeighborLink href={previousMonth.href}>
-        <div className="text-info text-lg">
-          &#x2190;
-        </div>
-        <div>
-          {previousMonth.monthName}
-        </div>
-      </NeighborLink>
-      <div></div>
-      <NeighborLink href={nextMonth.href}>
-        <div>
-          {nextMonth.monthName}
-        </div>
-        <div className="text-info text-lg">
-          &#x2192;
-        </div>
-      </NeighborLink>
-    </div>
   )
 }
 
@@ -109,21 +70,17 @@ const ClearedItemsToggle = () => {
 }
 
 const BudgetMonth = () => {
-  const budgetMonth = useBudgetDashboardStore(({ budgetMonth }) => budgetMonth)
-
   return (
-    <div className="grid gap-2">
-      <div className="text-lg">
-        {budgetMonth.firstDate} to {budgetMonth.lastDate}
+    <div className="grid gap-8">
+      <BudgetMonthSummary />
+      <div className="pt-4 border-t border-neutral">
+        <Discretionary />
       </div>
-      {budgetMonth.isCurrent && <DaysRemaining daysRemaining={budgetMonth.daysRemaining} />}
-      <div>
-        Total Days: {budgetMonth.totalDays}
+      <div className="pt-4 border-t border-neutral">
+        <ExpenseFilters />
+        <CategoryTypeFilters />
       </div>
-      {budgetMonth.isCurrent && <ProgressBar />}
-      <ExpenseFilters />
-      <CategoryTypeFilters />
-      <div className="grid gap-0 px-4 pt-2 border-t border-neutral">
+      <div className="grid gap-0 px-4 pt-4 border-t border-neutral">
         <AccrualToggle />
         <ClearedItemsToggle />
       </div>
@@ -131,4 +88,4 @@ const BudgetMonth = () => {
   )
 }
 
-export { BudgetMonth, NeighborLinks }
+export { BudgetMonth }

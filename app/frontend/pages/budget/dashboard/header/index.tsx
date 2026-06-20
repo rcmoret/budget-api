@@ -1,15 +1,37 @@
-import { pageHeaderClassName, pageHeadingClassName } from "@/layout";
-import { useBudgetDashboardStore } from "../store";
+import { pageHeadingClassName } from "@/layout";
+import { getBudgetMonth } from "@/pages/budget/month-store"
+import { NeighborLinks } from "@/components/neighbor-links"
 
-const Header = () => {
-  const budgetMonth = useBudgetDashboardStore((s) => s.budgetMonth)
+const BudgetDashboardNeighborLinks = () => {
+  const budgetMonth = getBudgetMonth()
+
+  const nextMonth = {
+    href: budgetMonth.nextMonth.href,
+    label: budgetMonth.nextMonth.monthName
+  }
+  const previousMonth = {
+    href: budgetMonth.previousMonth.href,
+    label: budgetMonth.previousMonth.monthName
+  }
 
   return (
-    <div className={pageHeaderClassName}>
+    <NeighborLinks
+      nextMonth={nextMonth}
+      previousMonth={previousMonth}
+    />
+  )
+}
+
+const Header = () => {
+  const budgetMonth = getBudgetMonth()
+
+  return (
+    <>
       <h1 className={pageHeadingClassName}>
-        Budget: {budgetMonth.monthName} {budgetMonth.year}
+        {budgetMonth.monthName} {budgetMonth.year} Budget
       </h1>
-    </div>
+      <BudgetDashboardNeighborLinks />
+    </>
   );
 };
 

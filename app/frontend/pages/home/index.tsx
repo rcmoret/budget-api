@@ -1,5 +1,5 @@
 import {
-  MainComponent,
+  PageComponent,
   pageHeaderClassName,
   pageHeadingClassName,
 } from "@frontend/layout";
@@ -14,9 +14,9 @@ const Header = () => {
 
 const Home = () => {
   return (
-    <MainComponent namespace="" header={<Header />} rightColumn={null}>
+    <PageComponent mainId="home" metadata={{ namespace: "", pageName: "home" }} header={<Header />} rightColumn={null}>
       <div className="p-8"></div>
-    </MainComponent>
+    </PageComponent>
   );
 };
 

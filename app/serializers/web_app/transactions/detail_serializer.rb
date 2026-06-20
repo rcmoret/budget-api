@@ -1,20 +1,18 @@
 module WebApp
   module Transactions
-    class DetailSerializer < ApplicationSerializer
-      attributes :key,
-        :amount,
-        :budget_item_key,
-        :budget_category_name,
-        :icon_class_name
-      delegate :key, to: :budget_item, prefix: true, allow_nil: true
-      delegate :name, to: :budget_category, prefix: true, allow_nil: true
-      delegate :icon_class_name, to: :budget_category, allow_nil: true
-
-      private
-
-      def budget_category
-        budget_item&.category
+    class DetailSerializer
+      include Alba::Resource
+      attributes :key
+      one :amount, resource: MonetaryAmountSerializer
+      attribute(:budget_item_key) { |detail| detail.budget_item&.key }
+      attribute(:budget_category_name) do |detail|
+        detail.budget_item&.name.presence || "-"
       end
+      attribute(:icon_class_name) do |detail|
+        detail.budget_item&.category&.icon_class_name
+      end
+
+      transform_keys :lower_camel
     end
   end
 end

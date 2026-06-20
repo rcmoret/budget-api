@@ -1,12 +1,10 @@
-import { usePage } from "@inertiajs/react";
 import { DndContext } from "@dnd-kit/core";
 import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import {
-  MainComponent,
-  pageHeaderClassName,
+  PageComponent,
   pageHeadingClassName,
 } from "@frontend/layout";
 import { AccountProps } from "@frontend/types/account";
@@ -25,6 +23,7 @@ import { NewForm } from "./form";
 type Metadata = {
   userKey: string;
   namespace: string;
+  pageName: string;
   prevSelectedAccountPath: string;
 };
 
@@ -72,7 +71,9 @@ const ArchivedAccountsComponent = () => {
 
 const AccountsManager = (props: AccountManageProps) => {
   useInitAccountsManagerStore(props.accounts);
-  return <Accounts namespace={props.metadata.namespace} />;
+  console.log(props.metadata)
+
+  return <Accounts metadata={props.metadata} />;
 };
 
 const ArchievedAccountsList = () => {
@@ -100,7 +101,7 @@ const NewFormButton = () => {
 
   if (showNewAccountForm) {
     return (
-      <div>
+      <div className="flex justify-end">
         <button
           type="button"
           className={className}
@@ -113,7 +114,7 @@ const NewFormButton = () => {
     );
   } else {
     return (
-      <div>
+      <div className="flex justify-end">
         <button
           type="button"
           className={className}
@@ -128,10 +129,10 @@ const NewFormButton = () => {
 };
 const Header = () => {
   return (
-    <div className={pageHeaderClassName}>
+    <>
       <h1 className={pageHeadingClassName}>Manage Accounts</h1>
       <NewFormButton />
-    </div>
+    </>
   );
 };
 
@@ -145,8 +146,7 @@ const RightColumn = () => {
   }
 };
 
-const Accounts = (props: { namespace: string }) => {
-  const { namespace } = props;
+const Accounts = (props: { metadata: Metadata }) => {
   const activeAccounts = useAccountsManagerStore((s) => s.activeAccounts);
   const handleDragEnd = useAccountsManagerStore((s) => s.handleDragEnd);
   const showArchivedAccounts = useAccountsManagerStore(
@@ -155,8 +155,9 @@ const Accounts = (props: { namespace: string }) => {
   const showNewAccountForm = useShowNewAccountForm();
 
   return (
-    <MainComponent
-      namespace={namespace}
+    <PageComponent
+      mainId="accounts-manage"
+      metadata={props.metadata}
       header={<Header />}
       rightColumn={<RightColumn />}
     >
@@ -172,7 +173,7 @@ const Accounts = (props: { namespace: string }) => {
         </SortableContext>
       </DndContext>
       {showArchivedAccounts && <ArchievedAccountsList />}
-    </MainComponent>
+    </PageComponent>
   );
 };
 

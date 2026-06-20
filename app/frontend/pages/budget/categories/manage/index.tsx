@@ -25,10 +25,10 @@ const CategoryList = (props: { categories: Array<BudgetCategoryType> }) => {
 
 const Header = () => {
   return (
-    <div className={pageHeaderClassName}>
+    <>
       <h1 className={pageHeadingClassName}>Manage Budget Categories</h1>
       <NewFormButton />
-    </div>
+    </>
   );
 };
 

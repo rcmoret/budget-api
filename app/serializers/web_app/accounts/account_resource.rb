@@ -4,11 +4,13 @@ module WebApp
   module Accounts
     class AccountResource
       include Alba::Resource
+      include Rails.application.routes.url_helpers
 
       attributes :key,
         :archived_at,
         :balance,
         :created_at,
+        :href,
         :name,
         :object_key,
         :priority,
@@ -30,6 +32,18 @@ module WebApp
           .archived_at
           .in_time_zone(params[:timezone])
           .strftime("%B %-d, %Y %Z")
+      end
+
+      def href(account)
+        if params[:month].present? && params[:year].present?
+          transactions_index_path(
+            account,
+            month: params[:month],
+            year: params[:year],
+          )
+        else
+          transactions_index_path(account)
+        end
       end
 
       transform_keys :lower_camel

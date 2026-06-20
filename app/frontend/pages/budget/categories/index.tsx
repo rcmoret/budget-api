@@ -4,7 +4,7 @@ import {
   RightColumn,
 } from "@/pages/budget/categories/manage";
 import { BudgetCategoryType } from "@/types/budget";
-import { MainComponent } from "@frontend/layout";
+import { PageComponent } from "@frontend/layout";
 import {
   useActiveBudgetCategories,
   useArchivedBudgetCategories,
@@ -14,7 +14,7 @@ import {
 } from "@/pages/budget/categories/store";
 import { NewCategoryForm } from "@/pages/budget/categories/manage/new-category-form";
 
-const CategoryIndex = (props: { metadata: { namespace: string } }) => {
+const CategoryIndex = (props: { metadata: { pageName: string; namespace: string } }) => {
   const { metadata } = props;
   const activeCategories = useActiveBudgetCategories();
   const filteredArchivedCategories = useArchivedBudgetCategories();
@@ -24,9 +24,10 @@ const CategoryIndex = (props: { metadata: { namespace: string } }) => {
   const showNewCategoryForm = useShowNewCategoryForm();
 
   return (
-    <MainComponent
+    <PageComponent
+      mainId="manage-budget-categories"
       header={<Header />}
-      namespace={metadata.namespace}
+      metadata={metadata}
       rightColumn={<RightColumn />}
     >
       {showNewCategoryForm && <NewCategoryForm />}
@@ -39,7 +40,7 @@ const CategoryIndex = (props: { metadata: { namespace: string } }) => {
           </>
         )}
       </div>
-    </MainComponent>
+    </PageComponent>
   );
 };
 
@@ -47,6 +48,7 @@ type ManageCategoriesProps = {
   categories: Array<BudgetCategoryType>;
   metadata: {
     namespace: string;
+    pageName: string;
   };
 };
 

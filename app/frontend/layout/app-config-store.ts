@@ -24,6 +24,8 @@ const applyTheme = (theme: Theme) => {
 
 type AppConfigState = {
   namespace: string;
+  pageName: null | string;
+  setPageName: (p: string) => void;
   budgetMonth: null;
   setNamespace: (namespace: string) => void;
   showAccruals: boolean;
@@ -35,10 +37,12 @@ type AppConfigState = {
 const useAppConfigStore = create<AppConfigState>((set) => ({
   namespace: "",
   budgetMonth: null,
+  pageName: null,
   setNamespace: (namespace) => set({ namespace }),
   showAccruals: false,
   toggleShowAccruals: () => set((s) => ({ showAccruals: !s.showAccruals })),
   theme: getInitialTheme(),
+  setPageName: (pageName: string) => set({ pageName }),
   toggleTheme: () =>
     set((s) => {
       const next: Theme = s.theme === LIGHT_THEME ? DARK_THEME : LIGHT_THEME;
@@ -51,6 +55,7 @@ const useAppConfigStore = create<AppConfigState>((set) => ({
 }));
 
 const useNamespace = () => useAppConfigStore((s) => s.namespace);
+const getPageName = () => useAppConfigStore((s) => s.pageName);
 const useShowAccruals = () => useAppConfigStore((s) => s.showAccruals);
 const useToggleShowAccruals = () =>
   useAppConfigStore((s) => s.toggleShowAccruals);
@@ -58,8 +63,9 @@ const useTheme = () => useAppConfigStore((s) => s.theme);
 const useToggleTheme = () => useAppConfigStore((s) => s.toggleTheme);
 const useIsDarkTheme = () => useAppConfigStore((s) => s.theme === DARK_THEME);
 
-const useInitAppConfigStore = (namespace: string) => {
+const useInitAppConfigStore = (namespace: string, pageName: string) => {
   const setNamespace = useAppConfigStore((s) => s.setNamespace);
+  const setPageName = useAppConfigStore((s) => s.setPageName);
   const theme = useAppConfigStore((s) => s.theme);
 
   useEffect(() => {
@@ -67,11 +73,16 @@ const useInitAppConfigStore = (namespace: string) => {
   }, [namespace, setNamespace]);
 
   useEffect(() => {
+    setPageName(pageName)
+  }, [pageName, setPageName])
+
+  useEffect(() => {
     applyTheme(theme);
   }, [theme]);
 };
 
 export {
+  getPageName,
   useAppConfigStore,
   useInitAppConfigStore,
   useIsDarkTheme,

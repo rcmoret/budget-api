@@ -1,17 +1,17 @@
-// import { Link } from "@inertiajs/react";
-import { MainComponent, pageHeadingClassName } from "@frontend/layout";
+import { PageComponent, pageHeadingClassName } from "@frontend/layout";
 import { AccountProps } from "@frontend/types/account";
 
 type AccountIndexProps = {
   accounts: Array<AccountProps>;
   metadata: {
     namespace: string;
+    pageName: string;
   };
 };
 
 const Header = () => {
   return (
-    <div className="flex flex-row justify-between items-center p-4 border-b border-base-200">
+    <div className="flex flex-row justify-between items-center p-4 border-b border-seconary">
       <h1 className={pageHeadingClassName}>Accounts</h1>
     </div>
   );
@@ -21,8 +21,9 @@ const Accounts = (props: AccountIndexProps) => {
   const { accounts, metadata } = props;
 
   return (
-    <MainComponent
-      namespace={metadata.namespace}
+    <PageComponent
+      mainId="manage-accounts"
+      metadata={metadata}
       header={<Header />}
       rightColumn={null}
     >
@@ -31,7 +32,7 @@ const Accounts = (props: AccountIndexProps) => {
           <div key={a.key}>{a.name}</div>
         ))}
       </div>
-    </MainComponent>
+    </PageComponent>
   );
 };
 

@@ -1,3 +1,6 @@
+import { MonetaryAmount } from "./amount";
+import { AccountTransaction } from "@/types/transaction"
+
 type AccountProps = {
   key: string;
   objectKey: string;
@@ -5,8 +8,16 @@ type AccountProps = {
   balance: number;
   isCashFlow: boolean;
   name: string;
+  href: string;
   priority: number | null;
   slug: string;
 };
 
-export { type AccountProps };
+type FeaturedAccountType = Pick<
+  AccountProps,
+  "key" |
+  "name" |
+  "slug"
+> & { balancePriorTo: MonetaryAmount; transactions: Array<AccountTransaction> }
+
+export { type AccountProps, type FeaturedAccountType };

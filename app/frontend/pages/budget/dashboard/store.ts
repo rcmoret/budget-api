@@ -12,31 +12,7 @@ type FilterKeys = {
   type: Exclude<ExpenseFilterItem, null>
 }
 
-const emptyBudgetMonth: BudgetMonthData = {
-  month: 0,
-  monthName: "",
-  year: 0,
-  totalDays: 0,
-  daysRemaining: 0,
-  isCurrent: false,
-  firstDate: "",
-  lastDate: "",
-  previousMonth: {
-    month: 0,
-    year: 0,
-    monthName: "",
-    href: ""
-  },
-  nextMonth: {
-    month: 0,
-    year: 0,
-    monthName: "",
-    href: ""
-  }
-}
-
 type BudgetDashboardState = {
-  budgetMonth: BudgetMonthData;
   items: BudgetItemCollections;
   discretionary: DiscretionaryDetails;
   expenseOrRevenueFilter: ExpenseFilterItem;
@@ -47,7 +23,6 @@ type BudgetDashboardState = {
   setFilterTerm: (term: string | null) => void;
   setFixedOrVariableFilter: (f: FixedOrVariableFilterType) => void;
   setItems: (items: BudgetItemCollections) => void;
-  setBudgetMonth: (budgetMonth: BudgetMonthData) => void;
   setDiscretionary: (discretionary: DiscretionaryDetails) => void;
   toggleItemVisibility: (b: boolean) => void;
 }
@@ -65,13 +40,11 @@ const useBudgetDashboardStore = create<BudgetDashboardState>((set) => ({
     remaining: { display: "", cents: 0 },
     transactionsTotal: { display: "", cents: 0 },
   },
-  budgetMonth: emptyBudgetMonth,
   clearedItemVisibilityToggle: false,
   expenseOrRevenueFilter: null,
   filterTerm: null,
   fixedOrVariableFilter: null,
 
-  setBudgetMonth: (budgetMonth) => set({ budgetMonth }),
   setDiscretionary: (discretionary) => set({ discretionary }),
   setItems: (items) => set({ items }),
 
@@ -137,17 +110,13 @@ const useVisibleBudgetItems = () => {
 }
 
 const useInitBudgetDashboardStore = (props: { items: BudgetItemCollections, budgetMonth: BudgetMonthData }) => {
-  const { items, budgetMonth } = props
+  const { items } = props
 
   const setItems = useBudgetDashboardStore((s) => s.setItems)
-  const setBudgetMonth = useBudgetDashboardStore((s) => s.setBudgetMonth)
 
   useEffect(() => {
     setItems(items);
   }, [items, setItems])
-  useEffect(() => {
-    setBudgetMonth(budgetMonth);
-  }, [budgetMonth, setBudgetMonth])
 }
 
 const useClearedItemsVisibilityToggle = () => {
@@ -157,4 +126,13 @@ const useClearedItemsVisibilityToggle = () => {
   return [value, () => toggleFn(!value)] as const
 }
 
-export { useBudgetDashboardStore, useBudgetItemGroups, useInitBudgetDashboardStore, useVisibleBudgetItems, type ExpenseFilterItem, useClearedItemsVisibilityToggle }
+export {
+  useBudgetDashboardStore,
+  useBudgetItemGroups,
+  useInitBudgetDashboardStore,
+  useVisibleBudgetItems,
+  useClearedItemsVisibilityToggle,
+  type ExpenseFilterItem,
+  type FixedOrVariableFilterType,
+  type ItemGroup
+}

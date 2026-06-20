@@ -1,28 +1,50 @@
 import { SelectedLabel, UnselectedLabel } from "./label";
 import { MenuItems } from "./menu-item";
 import {
+  getPageName,
   useNamespace,
 } from "@frontend/layout/app-config-store";
 import { Link } from "@inertiajs/react";
 import { AppConfigItems } from "./config-items";
+import { AccountLinks } from "./account-links";
 
 const accountsIndexUrl = "/accounts";
 const budgetCategoryIndexUrl = "/budget";
 
-const TopMenuItems = () => {
-  const namespace = useNamespace();
+const dropDownClasses: Array<string> = [
+  "dropdown dropdown-hover"
+]
 
-  if (namespace === "accounts") {
+const AccountNamespaceMenuItems = () => {
+  const pageName = getPageName()
+
+  if (pageName === "transactions_index") {
+    return (
+      <MenuItems label="Accounts">
+        <UnselectedLabel name="Budget" href={budgetCategoryIndexUrl} />
+        <SelectedLabel name="Accounts" classes={dropDownClasses} >
+          <AccountLinks />
+        </SelectedLabel>
+      </MenuItems>
+    );
+  } else {
     return (
       <MenuItems label="Accounts">
         <UnselectedLabel name="Budget" href={budgetCategoryIndexUrl} />
         <SelectedLabel name="Accounts" />
       </MenuItems>
     );
+  }
+}
+const TopMenuItems = () => {
+  const namespace = useNamespace();
+
+  if (namespace === "accounts") {
+    return <AccountNamespaceMenuItems />
   } else if (namespace === "budget") {
     return (
       <MenuItems label="Budget">
-        <SelectedLabel name="Budget" href={budgetCategoryIndexUrl} />
+        <SelectedLabel name="Budget" />
         <UnselectedLabel name="Accounts" href={accountsIndexUrl} />
       </MenuItems>
     );

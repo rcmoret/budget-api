@@ -1,26 +1,31 @@
-import { MainComponent } from "@frontend/layout";
+import { PageComponent } from "@frontend/layout";
 import { Header } from "./header";
 import { RightColumn } from "./right-column";
 import { BudgetMonthIndex } from "@/types/budget";
 import { useInitBudgetDashboardStore } from "./store";
 import { ItemsContainer } from "./items";
+import { initBudgetMonthStore } from "../month-store";
 
 const DashboardComponent = () => {
   return (
-    <MainComponent
+    <PageComponent
       header={<Header />}
-      namespace="budget"
+      metadata={{ namespace: "budget", pageName: "page" }}
+      mainId="budget-dashboard"
+      mainComponentClassNames={["w-full"]}
       rightColumn={<RightColumn />}
     >
-      <div id="budget-item-list" className="flex flex-col gap-2">
-        <ItemsContainer />
-      </div>
-    </MainComponent>
+      <ItemsContainer />
+    </PageComponent>
   );
 };
 
 const BudgetDashboard = (props: BudgetMonthIndex) => {
-  useInitBudgetDashboardStore({ items: props.items, budgetMonth: props.budgetMonth })
+  const { items, budgetMonth } = props;
+
+  useInitBudgetDashboardStore({ items, budgetMonth })
+  initBudgetMonthStore({ budgetMonth })
+
   return <DashboardComponent />;
 };
 

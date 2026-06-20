@@ -5,16 +5,6 @@ module Presenters
     class IndexPresenter
       include Presenters::WebApp::FlashMessagesConcern
 
-      ACCOUNT_ATTRIBUTES = %i[
-        key
-        archived_at
-        cash_flow
-        created_at
-        name
-        priority
-        slug
-      ].freeze
-
       def initialize(user_profile, metadata)
         @accounts =
           Account

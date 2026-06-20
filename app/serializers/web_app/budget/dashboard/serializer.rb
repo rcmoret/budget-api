@@ -5,6 +5,7 @@ module WebApp
     module Dashboard
       class Serializer
         include Alba::Resource
+        include Mixins::NotificationsConcern
 
         attributes :create_item_events
 

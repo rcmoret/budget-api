@@ -1,14 +1,5 @@
 import { Link } from "@inertiajs/react";
 
-const outerClassName = [
-  "z-30",
-  "top-0",
-  "flex",
-  "flex-col",
-  "gap-2",
-  "bg-primary",
-].join(" ");
-
 const innerClassName = (props: { isSelected: boolean }) => {
   return [
     ...(props.isSelected
@@ -27,28 +18,40 @@ const innerClassName = (props: { isSelected: boolean }) => {
   ].join(" ");
 };
 
-const SelectedLabel = (props: { name: string; href?: string; }) => {
+type SelectedLabelProps = {
+  name: string;
+  href?: string;
+  classes?: Array<string>;
+  children?: React.ReactNode;
+}
+
+const SelectedLabel = (props: SelectedLabelProps) => {
+  const suppliedClasses = props.classes ?? []
+  const className = ["bg-primary", ...suppliedClasses].join(" ")
+
   if (!!props.href) {
     return (
-      <div className={outerClassName}>
+      <div className={className}>
         <Link href={props.href}>
           <div className={innerClassName({ isSelected: true })}>
             {props.name}
           </div>
         </Link>
+        {props.children}
       </div>
     )
   }
   return (
-    <div className={outerClassName}>
-      <div className={innerClassName({ isSelected: true })}>{props.name}</div>
+    <div className={className}>
+      <div tabIndex={0} role="button" className={innerClassName({ isSelected: true })}>{props.name}</div>
+      {props.children}
     </div>
   );
 };
 
 const UnselectedLabel = (props: { name: string; href: string }) => {
   return (
-    <div className={outerClassName}>
+    <div className="bg-primary">
       <Link href={props.href}>
         <div className={innerClassName({ isSelected: false })}>
           {props.name}

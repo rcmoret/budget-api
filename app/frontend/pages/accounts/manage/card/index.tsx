@@ -78,7 +78,7 @@ const Show = () => {
 const LabelLink = () => {
   const { account } = useAccountShowContext();
   return (
-    <Link href={`/account/${account.slug}/transactions`}>{account.name}</Link>
+    <Link href={account.href}>{account.name}</Link>
   );
 };
 

@@ -1,13 +1,50 @@
 import { moneyFormatter } from "@/lib/money-formatter";
-import { color } from "d3";
 
-const BaseColor = "text-content";
-const NegativeColor = "text-error";
-const PositiveColor = "text-success";
+const AmountSpanColors = ["text-content", "text-error", "text-success"] as const
 
-type ColorizeOption = "none" | "normal" | "reverse";
+const BaseColor: typeof AmountSpanColors[number] = "text-content";
+const NegativeColor: typeof AmountSpanColors[number] = "text-error";
+const PositiveColor: typeof AmountSpanColors[number] = "text-success";
 
-interface ComponentProps {
+
+type ColorizeOption = "none" | "normal" | "reverse" // | "positive-only" | "negative-only";
+
+type AmountSpanColorSchemeProps = {
+  option: ColorizeOption;
+  only: null | "positive" | "negative"
+}
+
+type ColorSchemeReturnType = {
+  zeroColor: "text-content";
+  negativeColor: typeof AmountSpanColors[number];
+  positiveColor: typeof AmountSpanColors[number];
+}
+
+const getColorScheme = (props: AmountSpanColorSchemeProps): ColorSchemeReturnType => {
+  const zeroColor = BaseColor
+
+  const { only, option } = props;
+
+  if (option === "none") {
+    return { zeroColor, positiveColor: BaseColor, negativeColor: BaseColor }
+  }
+
+  const colorMap = props.option === "reverse" ?
+    { zeroColor, negativeColor: PositiveColor, positiveColor: NegativeColor } :
+    { zeroColor, positiveColor: PositiveColor, negativeColor: NegativeColor }
+
+  if (only === "positive") {
+    return { ...colorMap, negativeColor: BaseColor }
+  }
+  if (only === "negative") {
+    return { ...colorMap, positiveColor: BaseColor }
+  }
+
+  // only is null
+  return colorMap
+}
+
+type ComponentProps = {
   absolute?: boolean;
   amount: number;
   classes?: string[];
@@ -15,6 +52,7 @@ interface ComponentProps {
   decorate?: boolean;
   showCents?: boolean;
   prefix?: string;
+  only?: "positive" | "negative"
 }
 
 const AmountSpan = (suppliedProps: ComponentProps) => {
@@ -23,27 +61,29 @@ const AmountSpan = (suppliedProps: ComponentProps) => {
     amount: 0,
     classes: [],
     color: "text-content",
+    colorize: !!suppliedProps.only ? "normal" : "none" as ColorizeOption,
     decorate: true,
     prefix: "",
+    only: null
   };
 
   const props = {
     ...defaultProps,
     ...suppliedProps,
   };
-  const { absolute, amount, classes, decorate, prefix } = props;
 
-  const colorize: ColorizeOption = props.colorize || "none";
+  const { absolute, amount, classes, colorize, decorate, prefix } = props;
 
-  let textColor = "";
-  if (amount === 0 || colorize === "none") {
-    textColor = BaseColor;
-  } else if (amount > 0) {
-    textColor = colorize === "normal" ? PositiveColor : NegativeColor;
-  } else {
-    textColor = colorize === "normal" ? NegativeColor : PositiveColor;
-  }
-  const className = [textColor, "text-right", ...classes].join(" ");
+  const { zeroColor, positiveColor, negativeColor } = getColorScheme({ option: colorize, only: props.only })
+
+  const className = [
+    ...(amount === 0 ?
+      [zeroColor] :
+      (amount > 0 ? [positiveColor] : [negativeColor])
+    ),
+    "text-right",
+    ...classes
+  ].join(" ");
 
   return (
     <span className={className}>

@@ -30,18 +30,22 @@ const Discretionary = () => {
   const valueMap = [
     {
       label: "Initial",
+      key: "initial",
       amount: discretionary.initialAmount
     },
     {
       label: "Over/Under Budget",
+      key: "overunder",
       amount: discretionary.overUnderBudget
     },
     {
       label: "Transactions Total",
+      key: "txn-total",
       amount: discretionary.transactionsTotal
     },
     {
       label: "Remaining",
+      key: "remaining",
       amount: discretionary.remaining
     }
   ]
@@ -53,7 +57,12 @@ const Discretionary = () => {
       </div>
       <div className="text-sm grid gap-0 py-2 pl-4 pr-2 bg-secondary/30 rounded shadow-md">
         {valueMap.map((tuple, index) => (
-          <Row index={index} label={tuple.label} amount={tuple.amount} />
+          <Row
+            key={tuple.key}
+            index={index}
+            label={tuple.label}
+            amount={tuple.amount}
+          />
         ))}
       </div>
     </div>

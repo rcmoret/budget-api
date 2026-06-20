@@ -12,7 +12,7 @@ module WebApp
       private
 
       def serializer
-        WebApp::Accounts::IndexSerializerV2
+        WebApp::Accounts::IndexSerializer
           .new(presenter)
       end
 

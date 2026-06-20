@@ -11,10 +11,14 @@ module Budget
         super("Budget::Item")
       end
 
-      scope :variable, -> { where(monthly: false) }
-      scope :fixed, -> { where(monthly: true) }
-      scope :revenues, -> { where(expense: false) }
-      scope :expenses, -> { where(expense: true) }
+      scope :variable, -> { active.where(monthly: false) }
+      scope :fixed, -> { active.where(monthly: true) }
+      scope :revenues, -> { active.where(expense: false) }
+      scope :expenses, -> { active.where(expense: true) }
+      scope :active, -> { where(deleted_at: nil) }
+      scope :available, lambda {
+        variable.or(fixed.where(transaction_detail_count: 0))
+      }
 
       belongs_to :interval,
         class_name: "Interval",

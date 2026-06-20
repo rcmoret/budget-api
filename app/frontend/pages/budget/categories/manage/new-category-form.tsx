@@ -55,7 +55,7 @@ const NewFormButton = () => {
   const className = ["btn", "btn-sm", "btn-success", "btn-wide"].join(" ");
   if (isNewCategoryFormShown) {
     return (
-      <div>
+      <div className="flex justify-end">
         <button
           type="button"
           className={className}
@@ -68,7 +68,7 @@ const NewFormButton = () => {
     );
   } else {
     return (
-      <div>
+      <div className="flex justify-end">
         <button
           type="button"
           className={className}

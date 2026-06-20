@@ -1,9 +1,7 @@
-import { useBudgetDashboardStore, useBudgetItemGroups } from "@/pages/budget/dashboard/store";
+import { useBudgetDashboardStore, useBudgetItemGroups as getBudgetItemGroup, FilterKeys, ItemGroup } from "@/pages/budget/dashboard/store";
 import { BudgetItemCard } from "./card";
 import { BudgetItem } from "@/types/budget";
 import { useShowAccruals } from "@/layout/app-config-store";
-
-type ItemGroupLabels = ["Fixed" | "Variable", "Expenses" | "Revenues"]
 
 const useShowClearedItems = () => {
   return useBudgetDashboardStore((s) => s.clearedItemVisibilityToggle)
@@ -66,22 +64,26 @@ const FilteredItemsDetail = (props: { items: Array<BudgetItem>; label: string; }
   }
 }
 
-const ItemGroup = (props: { labels: ItemGroupLabels; items: Array<BudgetItem> }) => {
-  const [expenseOrRevenue, fixedOrVariable] = props.labels
+const ItemGroupComponent = (props: { group: ItemGroup }) => {
+  const { group } = props
+  const [expenseOrRevenue, fixedOrVariable] = group.labels
+
   const showClearedItems = useShowClearedItems()
   const showAccruals = useShowAccruals()
 
-  const items = props.items.filter((item) => {
+  const items = group.items.filter((item) => {
     return accrualItemFilter({ item, showAccruals }) &&
       clearedItemFilter({ item, showClearedItems })
   })
 
-  const nonVisibleAccrualItems = props.items.filter((item) => {
+  const nonVisibleAccrualItems = group.items.filter((item) => {
     return !accrualItemFilter({ item, showAccruals }) || !clearedItemFilter({ item, showClearedItems })
   })
 
+  if (!group.visible || !group.items.length) return null
+
   return (
-    <div className="grid gap-2 border-b border-primary/75 pb-4 py-1">
+    <div className="flex flex-col gap-2 border-b border-primary/75 pb-4 py-1">
       <div className={groupLabelClassName}>
         <div>
           {expenseOrRevenue}
@@ -98,54 +100,37 @@ const ItemGroup = (props: { labels: ItemGroupLabels; items: Array<BudgetItem> })
   )
 }
 
-const FixedExpenses = () => {
-  const group = useBudgetItemGroups({ type: "expense", frequency: "fixed" })
-
-  if (!group.visible) return
-
-  return (
-    <ItemGroup labels={group.labels} items={group.items} />
-  )
-}
-
-const FixedRevenues = () => {
-  const group = useBudgetItemGroups({ type: "revenue", frequency: "fixed" })
-
-  if (!group.visible) return
-
-  return (
-    <ItemGroup labels={group.labels} items={group.items} />
-  )
-}
-
-const VariableExpenses = () => {
-  const group = useBudgetItemGroups({ type: "expense", frequency: "variable" })
-
-  if (!group.visible) return
-
-  return (
-    <ItemGroup labels={group.labels} items={group.items} />
-  )
-}
-
-const VariableRevenues = () => {
-  const group = useBudgetItemGroups({ type: "revenue", frequency: "variable" })
-
-  if (!group.visible) return
-
-  return (
-    <ItemGroup labels={group.labels} items={group.items} />
-  )
+type ItemTupleType = {
+  group: ItemGroup,
+  key: string,
 }
 
 const ItemsContainer = () => {
+  const groupMap: Array<ItemTupleType> = [
+    {
+      key: "fixed-revenue",
+      group: getBudgetItemGroup({ type: "revenue", frequency: "fixed" })
+    },
+    {
+      key: "fixed-expense",
+      group: getBudgetItemGroup({ type: "expense", frequency: "fixed" })
+    },
+    {
+      key: "variable-revenue",
+      group: getBudgetItemGroup({ type: "revenue", frequency: "variable" })
+    },
+    {
+      key: "variable-expense",
+      group: getBudgetItemGroup({ type: "expense", frequency: "variable" })
+    },
+  ]
+
   return (
-    <div className="grid gap-6">
-      <FixedRevenues />
-      <FixedExpenses />
-      <VariableRevenues />
-      <VariableExpenses />
-    </div>
+    <>
+      {groupMap.map(({ key, group }) => (
+        <ItemGroupComponent key={key} group={group} />
+      ))}
+    </>
   )
 }
 
