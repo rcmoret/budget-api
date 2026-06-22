@@ -17,7 +17,7 @@ const ProgressBar = () => {
   )
 }
 
-const BudgetMonthSummary = () => {
+const BudgetMonthSummary = (props: { children?: React.ReactNode }) => {
   const budgetMonth = getBudgetMonth()
   return (
     <div className="grid gap-2">
@@ -29,6 +29,7 @@ const BudgetMonthSummary = () => {
         Total Days: {budgetMonth.totalDays}
       </div>
       {budgetMonth.isCurrent && <ProgressBar />}
+      {props.children}
     </div>
   )
 }

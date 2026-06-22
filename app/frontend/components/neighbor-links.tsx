@@ -2,7 +2,8 @@ import { Link } from "@inertiajs/react";
 
 type NeighborLinkProps = {
   children: React.ReactNode;
-  href: string
+  href: string;
+  title: string;
 }
 
 type NeighborLinksProps = {
@@ -24,7 +25,7 @@ const ArrowComponent = (props: { children: React.ReactNode }) => {
   )
 }
 
-const LinkContainer = (props: { children: React.ReactNode; href: string; subtype: "next" | "previous" }) => {
+const LinkContainer = (props: { children: React.ReactNode; href: string; subtype: "next" | "previous"; title: string }) => {
   const innerLinkClassName = [
     "bg-primary",
     "py-3",
@@ -44,7 +45,7 @@ const LinkContainer = (props: { children: React.ReactNode; href: string; subtype
   ].join(" ")
 
   return (
-    <Link href={props.href}>
+    <Link href={props.href} title={props.title}>
       <div className={innerLinkClassName}>
         {props.children}
       </div>
@@ -53,10 +54,10 @@ const LinkContainer = (props: { children: React.ReactNode; href: string; subtype
 }
 
 const NextNeighborLink = (props: NeighborLinkProps) => {
-  const { children, href } = props
+  const { children, href, title } = props
 
   return (
-    <LinkContainer href={href} subtype="next">
+    <LinkContainer href={href} subtype="next" title={title}>
       <div>{children}</div>
       <ArrowComponent>
         &#x2192;
@@ -66,10 +67,10 @@ const NextNeighborLink = (props: NeighborLinkProps) => {
 }
 
 const PreviousNeighborLink = (props: NeighborLinkProps) => {
-  const { children, href } = props
+  const { children, href, title } = props
 
   return (
-    <LinkContainer href={href} subtype="previous">
+    <LinkContainer href={href} subtype="previous" title={title}>
       <ArrowComponent>
         &#x2190;
       </ArrowComponent>
@@ -81,11 +82,11 @@ const PreviousNeighborLink = (props: NeighborLinkProps) => {
 const NeighborLinks = (props: NeighborLinksProps) => {
   return (
     <div className="grid grid-cols-[4fr_2fr_4fr] px-2">
-      <PreviousNeighborLink href={props.previousMonth.href}>
+      <PreviousNeighborLink href={props.previousMonth.href} title={props.previousMonth.label}>
         {props.previousMonth.label}
       </PreviousNeighborLink>
       <div></div>
-      <NextNeighborLink href={props.nextMonth.href}>
+      <NextNeighborLink href={props.nextMonth.href} title={props.nextMonth.label}>
         {props.nextMonth.label}
       </NextNeighborLink>
     </div>
