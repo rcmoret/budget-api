@@ -1,10 +1,10 @@
 module Budget
   module Changes
-    class Setup
+    class Rollover
       module Presenters
         class CategoryPresenter < SimpleDelegator
-          include NumericStringToCents
-          include Items
+          # include NumericStringToCents
+          # include Items
 
           attr_reader :interval, :budget_items, :adjustments
 
@@ -22,16 +22,10 @@ module Budget
           end
 
           def events
-            @events ||= find_events
-          end
-
-          def find_events
-            adjustments.map do |item_key, adjustment|
-              potential_item = budget_items.find do |i|
+            @events ||= adjustments.map do |item_key, adjustment|
+              item = budget_items.find do |i|
                 i.key == item_key
-              end
-
-              item = potential_item || category.items.build(key: item_key)
+              end || category.items.build(key: item_key)
 
               event_presenter_for(item, adjustment:)
             end
@@ -77,7 +71,7 @@ module Budget
           private
 
           def items
-            category.items # .where(interval: [ interval, interval.prev ])
+            category.items.where(interval: [ interval, interval.prev ])
           end
 
           def category

@@ -3,8 +3,6 @@ module Budget
     class Setup
       module Presenters
         class DataModel
-          GroupStruct = Data.define(:label, :categories, :is_selected, :scopes)
-
           CATEGORY_ATTRIBUTES = %i[
             key
             name
@@ -93,10 +91,10 @@ module Budget
             @categories =
               change.events_data.fetch("categories").map do |category_data|
                 category_struct(category_data)
-              end
+              end.sort!
           end
 
-          attr_reader :change, :groups, :categories, :category_slug, :metadata
+          attr_reader :change, :categories
 
           attr_accessor :slug
 
@@ -106,97 +104,6 @@ module Budget
           end
 
           delegate :find, to: :categories
-
-          IndexStruct = Data.define(
-            :revenues,
-            :monthly_expenses,
-            :day_to_day_expenses,
-            :budget_total,
-            :month,
-            :year,
-            :selected_category,
-            :next_category_slug,
-            :next_unreviewed_category_slug,
-            :previous_category_slug,
-            :previous_unreviewed_category_slug,
-            :is_submittable,
-            :base_interval
-          )
-
-          # rubocop:disable Metrics/AbcSize
-          def index_serializer
-            IndexStruct.new(
-              revenues:,
-              monthly_expenses:,
-              day_to_day_expenses:,
-              budget_total: categories.sum(&:sum),
-              month: change.month,
-              year: change.year,
-              selected_category: selected_category_data,
-              next_category_slug:,
-              previous_category_slug:,
-              next_unreviewed_category_slug:,
-              previous_unreviewed_category_slug:,
-              is_submittable: submittable?,
-              base_interval: change.interval.prev
-            )
-          end
-          # rubocop:enable Metrics/AbcSize
-
-          def category_struct(category_data)
-            category_data.deep_symbolize_keys!
-
-            category_data[:events].map! do |ev|
-              next ev unless ev.is_a? Hash
-
-              EventStruct.new(*ev.values_at(*EVENT_ATTRIBUTES))
-            end
-            CategoryStruct.new(*category_data.values_at(*CATEGORY_ATTRIBUTES))
-          end
-
-          def selected_category_data
-            category.to_h
-          end
-
-          def next_category_slug
-            slugs.rotate(next_index).first
-          end
-
-          def next_unreviewed_category_slug
-            categories.rotate(next_index).reduce("") do |memo, category_data|
-              next memo if category_data.reviewed?
-
-              memo.presence || category_data.slug
-            end
-          end
-
-          def previous_unreviewed_category_slug
-            categories
-              .rotate(previous_index)
-              .reduce("") do |memo, category_data|
-                next memo if category_data.reviewed?
-
-                memo.presence || category_data.slug
-              end
-          end
-
-          def previous_category_slug
-            slugs.rotate(previous_index).first
-          end
-
-          def current_index
-            slugs.index(slug).to_i
-          end
-
-          def next_index
-            (current_index + 1).then do |index|
-              [ index, (0 if index == slugs.size) ].compact.min
-            end
-          end
-
-          def previous_index
-            current_index - 1
-          end
 
           def category
             if slug.blank?
@@ -210,41 +117,17 @@ module Budget
             categories.map(&:slug)
           end
 
-          def revenues
-            collection = categories.select(&:revenue?)
+          private
 
-            GroupStruct.new(
-              label: "Revenues",
-              categories: collection.to_a,
-              is_selected: collection.map(&:slug).include?(slug),
-              scopes: [ :revenues ]
-            )
-          end
+          def category_struct(category_data)
+            category_data.deep_symbolize_keys!
 
-          def day_to_day_expenses
-            collection = categories.select(&:day_to_day_expense?)
+            category_data[:events].map! do |ev|
+              next ev unless ev.is_a? Hash
 
-            GroupStruct.new(
-              label: "Day-to-Day Expenses",
-              categories: collection.to_a,
-              is_selected: collection.map(&:slug).include?(slug),
-              scopes: %i[weekly expenses]
-            )
-          end
-
-          def monthly_expenses
-            collection = categories.select(&:monthly_expense?)
-
-            GroupStruct.new(
-              label: "Monthly Expenses",
-              categories: collection.to_a,
-              is_selected: collection.map(&:slug).include?(slug),
-              scopes: %i[monthly expenses]
-            )
-          end
-
-          def submittable?
-            categories.all?(&:reviewed?)
+              EventStruct.new(*ev.values_at(*EVENT_ATTRIBUTES))
+            end
+            CategoryStruct.new(*category_data.values_at(*CATEGORY_ATTRIBUTES))
           end
         end
       end

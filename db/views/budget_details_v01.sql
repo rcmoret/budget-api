@@ -31,6 +31,7 @@ SELECT
   c.expense,
   c.monthly,
   c.accrual,
+  c.user_group_id,
   COALESCE(icons.class_name, '')
     AS icon_class_name,
   COALESCE(tt.transaction_detail_count, 0)

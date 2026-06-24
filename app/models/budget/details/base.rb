@@ -4,8 +4,10 @@ module Budget
   module Details
     class Base < ApplicationRecord
       include HasKeyIdentifier
+      include BelongsToUserGroup
 
       self.table_name = :budget_details
+      self.primary_key = :id
 
       def object_prefix
         super("Budget::Item")
@@ -24,6 +26,12 @@ module Budget
         class_name: "Interval",
         foreign_key: :budget_interval_id,
         inverse_of: :items
+      has_many :events,
+        class_name: "ItemEvent",
+        foreign_key: :budget_item_id,
+        inverse_of: :detail,
+        primary_key: :id,
+        dependent: nil
 
       def remaining
         raise NotImplementedError

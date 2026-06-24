@@ -30,8 +30,8 @@ const CategoryIndex = (props: { metadata: { pageName: string; namespace: string 
       metadata={metadata}
       rightColumn={<RightColumn />}
     >
-      {showNewCategoryForm && <NewCategoryForm />}
       <div id="category-list" className="flex flex-col gap-2">
+        {showNewCategoryForm && <NewCategoryForm />}
         <CategoryList categories={activeCategories} />
         {showArchivedCategories && (
           <>

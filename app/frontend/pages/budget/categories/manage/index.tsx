@@ -4,7 +4,7 @@ import { BudgetCategoryCard } from "@/pages/budget/categories/card";
 import { useArchivedBudgetCategories } from "@/pages/budget/categories/store";
 import { NewFormButton } from "@/pages/budget/categories/manage/new-category-form";
 import { ArchivedCategoriesComponent } from "./archived-category-container";
-import { pageHeaderClassName, pageHeadingClassName } from "@/layout";
+import { pageHeadingClassName } from "@/layout";
 import { FilterTermTextField } from "@/pages/budget/categories/manage/filter-field";
 import {
   CategoryTypeFilters,

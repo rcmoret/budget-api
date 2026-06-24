@@ -22,6 +22,7 @@ module WebApp
         budget_month.last_date.strftime(FORMAT)
       end
       attribute(:is_current, &:current?)
+      attribute(:is_set_up, &:set_up?)
 
       one :next_month, resource: NeighborSerializer
       one :previous_month, resource: NeighborSerializer

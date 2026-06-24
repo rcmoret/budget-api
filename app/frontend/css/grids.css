@@ -1,14 +1,16 @@
+:root {
+  --page-split-col-spacing: 0.75rem;
+}
+
 @utility grid-page-split {
   display: flex;
   flex-direction: column-reverse;
-  /* grid-template-columns: 1fr; */
-  /* min-height: calc(100vh - 5rem); */
 
   @media (width >= theme(--breakpoint-md)) {
     display: grid;
     grid-template-columns: 3fr 2fr;
-    grid-column-gap: 1.25em;
-    padding: 0 1.25em;
+    grid-column-gap: var(--page-split-col-spacing);
+    padding-inline: var(--page-split-col-spacing);
     align-content: start;
     height: 100vh;
     min-height: 0;
@@ -16,13 +18,41 @@
       min-width: 0; /* prevents grid items from overflowing their track */
       overflow-x: hidden;
     }
+    & > .grid-page-header {
+      grid-column: 1 / -1;
+      margin-inline: calc(-1 * var(--page-split-col-spacing));
+      padding-inline: var(--page-split-col-spacing);
+    }
   }
 }
 
 #account-transaction-container {
   display: grid;
-  padding: 1rem 0.1rem;
+  padding-top: 1rem;
   gap: 0.5rem;
   grid-column-gap: 1.5rem;
   grid-template-columns: auto 1fr auto auto
 }
+
+.budget-planning {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+}
+
+/* main.with-scroll-fixes { */
+/*   overflow-y: auto; */
+/*   scrollbar-gutter: stable;     /1* reserves space so content doesn't shift *1/ */
+/*   scrollbar-width: thin;          /1* Firefox *1/ */
+/*   scrollbar-color: #ccc transparent; */
+/* } */
+
+/* main.with-scroll-fixes::-webkit-scrollbar { */
+/*   width: 3px; */
+/* } */
+/* main.with-scroll-fixes::-webkit-scrollbar-track { */
+/*   background: transparent; */
+/* } */
+/* main.with-scroll-fixes::-webkit-scrollbar-thumb { */
+/*   background: #ccc; */
+/*   border-radius: 3px; */
+/* } */

@@ -20,12 +20,8 @@ module WebApp
 
         def call
           render(
-            inertia: "budget/set_up/index",
-            props: ::Budget::Changes::Setup::Resources::IndexResource.new(
-              data_model
-              .with(slug: category_slug || data_model.slugs.first)
-              .index_serializer
-            ).to_h
+            inertia: "budget/planning/setup/index",
+            props: serializer.to_h
           )
         end
 
@@ -34,6 +30,31 @@ module WebApp
         attr_reader :change_set
 
         delegate :data_model, to: :change_set
+
+        def serializer
+          @serializer ||=
+            WebApp::Budget::Planning::Setup::IndexSerializer.new(
+              presenter,
+              params: { month:, year: }
+            )
+        end
+
+        def presenter
+          @presenter ||=
+            ::Budget::Changes::Setup::Presenters::IndexPresenter.new(
+              data_model.with(slug: category_slug || data_model.slugs.first),
+              interval,
+              metadata
+            )
+        end
+
+        def metadata
+          Presenters::ControllerMetadata.new(
+            namespace: "budget",
+            page_name: "budget_planning_setup",
+            prev_selected_account_path: ""
+          )
+        end
 
         def budget_category_record
           @budget_category_record ||=

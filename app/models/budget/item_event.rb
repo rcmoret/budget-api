@@ -11,6 +11,10 @@ module Budget
       class_name: "Item",
       foreign_key: :budget_item_id,
       inverse_of: :events
+    belongs_to :detail,
+      class_name: "Details::Base",
+      foreign_key: :budget_item_id,
+      inverse_of: :events
     belongs_to :type,
       class_name: "ItemEventType",
       foreign_key: :budget_item_event_type_id,

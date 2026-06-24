@@ -353,6 +353,7 @@ ActiveRecord::Schema[7.0].define(version: 2026_06_14_134701) do
       c.expense,
       c.monthly,
       c.accrual,
+      c.user_group_id,
       COALESCE(icons.class_name, ''::character varying) AS icon_class_name,
       COALESCE(tt.transaction_detail_count, (0)::bigint) AS transaction_detail_count,
       COALESCE(tt.transaction_detail_total, (0)::bigint) AS transaction_detail_total,

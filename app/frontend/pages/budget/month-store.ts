@@ -11,6 +11,7 @@ const emptyBudgetMonth: BudgetMonthData = {
   isCurrent: false,
   firstDate: "",
   lastDate: "",
+  isSetUp: true,
   previousMonth: {
     month: 0,
     year: 0,

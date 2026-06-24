@@ -71,7 +71,6 @@ const ArchivedAccountsComponent = () => {
 
 const AccountsManager = (props: AccountManageProps) => {
   useInitAccountsManagerStore(props.accounts);
-  console.log(props.metadata)
 
   return <Accounts metadata={props.metadata} />;
 };
@@ -127,6 +126,7 @@ const NewFormButton = () => {
     );
   }
 };
+
 const Header = () => {
   return (
     <>

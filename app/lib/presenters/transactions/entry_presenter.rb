@@ -31,7 +31,7 @@ module Presenters
         return description if description.present?
 
         if itemized?
-          type_symbol
+          type_symbol.titleize
         else
           details.first.item.name
         end
@@ -41,6 +41,8 @@ module Presenters
 
       delegate :attached?, to: :receipt, prefix: true
 
+      delegate :key, to: :transfer, prefix: true
+
       private
 
       def itemized?
@@ -48,17 +50,17 @@ module Presenters
       end
 
       def type_inquiry
-        ActiveSupport::StringInquirer.new(type_symbol.to_s)
+        ActiveSupport::StringInquirer.new(type_symbol)
       end
 
       def type_symbol
         case amount
         when 0
-          :exchange
+          "exchange"
         when -Float::INFINITY..0
-          :expense
+          "expense"
         when 0..Float::INFINITY
-          :revenue
+          "revenue"
         end
       end
     end

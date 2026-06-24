@@ -7,17 +7,21 @@ module Budget
 
           attributes :label, :scopes
           attribute(:name) { |object| object.label.singularize }
-          attribute :categories do |object|
-            object.categories.map do |category|
-              category
-                .to_h
-                .merge(events: category.events.map(&:flags))
-                .deep_transform_keys { |k| k.to_s.camelize(:lower) }
-            end
-          end
+          attribute(:key) { |object| object.scopes.join("-") }
+          many :categories, resource: CategorySerializer
+          # attribute :categories do |object|
+          #   object.categories.map do |category|
+          #     category
+          #       .to_h
+          #       .merge(events: category.events.map(&:flags))
+          #       .deep_transform_keys { |k| k.to_s.camelize(:lower) }
+          #   end
+          # end
 
           nested_attribute(:metadata) do
-            attribute(:sum) { |object| object.categories.sum(&:sum) }
+            one :sum,
+              resource: WebApp::MonetaryAmountSerializer,
+              source: proc { categories.sum(&:sum) }
             attribute(:count) { |object| object.categories.count }
             attribute(:unreviewed) do |object|
               object.categories.count(&:unreviewed?)

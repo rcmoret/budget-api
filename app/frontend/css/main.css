@@ -77,13 +77,26 @@ html {
 [data-theme="merrimack"] {
   color-scheme: light;
   --color-base-100: oklch(0.99 0.012 206);
-  --color-base-200: oklch(0.94 0.009 206);
-  --color-base-300: oklch(0.734 0.086 237);
+  /* de-saturated green */
+  --color-base-200: oklch(0.92 0.028 155);
+  /* de-saturated blue */
+  /* --color-base-300: oklch(0.83 0.086 237); */
+  --color-base-300: oklch(0.92 0.024 237);
   --color-base-content: oklch(0.2 0 0);
   --color-primary: oklch(0.2629 0.2559 206);
   --color-primary-content: oklch(1 0 0);
   --color-secondary: oklch(0.715 0.089 155);
   --color-secondary-content: oklch(0.98 0.003 247.858);
+  /* purp */
+  /* --color-accent: hsl(262, 67%, 67%); */
+  /* --color-accent-content: oklch(1 0 0); */
+  /* baby blue */
+  /* --color-accent: oklch(0.734 0.086 237); */
+  /* --color-accent-content: oklch(0.2 0 0); */
+  /* Lemonade my townhouse in Miami,
+     I want yellow carpet (yeah)
+     Woke up in the mornin', "Fuck it, "
+     bought a yellow Aston Martin (fuck it) */
   --color-accent: oklch(0.926 0.127 100);
   --color-accent-content: oklch(0.2629 0.2559 206);
   --color-neutral: oklch(0.83 0 90);

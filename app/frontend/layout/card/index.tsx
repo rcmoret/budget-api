@@ -87,7 +87,7 @@ const CardLabel = (props: {
     "font-medium",
     "pb-1",
     "border-b",
-    "border-base-300/70",
+    "border-primary/40",
   ].join(" ");
 
   return (

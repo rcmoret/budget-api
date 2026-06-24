@@ -55,7 +55,7 @@ const Discretionary = () => {
       <div className="text-lg">
         Discretionary
       </div>
-      <div className="text-sm grid gap-0 py-2 pl-4 pr-2 bg-secondary/30 rounded shadow-md">
+      <div className="text-sm grid gap-0 py-2 pl-4 pr-2 bg-base-200 rounded shadow-md">
         {valueMap.map((tuple, index) => (
           <Row
             key={tuple.key}

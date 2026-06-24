@@ -1,11 +1,6 @@
 module Budget
   module Changes
     class Setup < ChangeSet
-      include BelongsToUserGroup::Through[
-        association: :interval,
-        class_name: "Budget::Interval"
-      ]
-
       validates :interval_id, uniqueness: true
 
       NEW_ADJUSTMENT = lambda { |key: KeyGenerator.call|
@@ -13,7 +8,7 @@ module Budget
       }
 
       def self.start!
-        change_set = new(key: generate_key)
+        change_set = new(key: KeyGenerator.call)
         raise ArgumentError, "must define interval" if new.interval.nil?
 
         change_set.assign_categories
@@ -105,12 +100,11 @@ module Budget
 
       def setup_budget_items
         @setup_budget_items ||=
-          ::Budget::Item
-          .includes(:transaction_details, :events)
+          ::Budget::Details::Base
+          .includes(:events)
           .active
           .belonging_to(user_group)
           .where(interval: [ interval, interval.prev ])
-          .map(&:decorated)
       end
 
       def category_scope

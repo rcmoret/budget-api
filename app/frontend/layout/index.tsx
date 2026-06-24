@@ -9,21 +9,6 @@ const pageHeadingClassName = [
   "tracking-wide",
 ].join(" ");
 
-//  removed these from header class
-// "md:flex",
-// "md:flex-row",
-// "md:justify-between",
-
-const pageHeaderClassName = [
-  // "grid",
-  // "gap-2",
-  // "items-center",
-  // "py-4",
-  // "min-h-20",
-  // "border-b",
-  // "border-base-200",
-].join(" ");
-
 type LayoutProps = {
   metadata: {
     namespace: string;
@@ -41,9 +26,16 @@ const PageComponent = (props: LayoutProps) => {
 
   const { mainComponentClassNames = [] } = props
 
-  const newpageHeaderClassName = [
+  const pageHeaderClassName = [
+    "grid-page-header",
     "grid",
-    "sticky top-0 z-10 bg-base-100 grid-cols-subgrid col-span-full",
+    "sticky",
+    "top-0",
+    "z-10",
+    "bg-base-100",
+    "grid-cols-subgrid",
+    "shadow-lg",
+    "col-span-full",
     "items-center",
     "min-h-20",
     "border-b-2",
@@ -54,7 +46,7 @@ const PageComponent = (props: LayoutProps) => {
     <div>
       <div className="grid-page-split">
         {props.header && (
-          <div className={newpageHeaderClassName}>{props.header}</div>
+          <div className={pageHeaderClassName}>{props.header}</div>
         )}
         <MainComponent classNames={mainComponentClassNames} id={props.mainId}>
           {props.children}
@@ -75,6 +67,7 @@ const MainComponent = (props: { id: string; classNames: Array<string>; children:
     "pt-4",
     "overflow-y-scroll",
     "scrollbar-gutter-stable",
+    "with-scroll-fixes",
     ...props.classNames,
   ].join(" ")
 
@@ -100,4 +93,4 @@ const PageLayout = (props: {
   );
 };
 
-export { PageLayout, PageComponent, pageHeaderClassName, pageHeadingClassName };
+export { PageLayout, PageComponent, pageHeadingClassName };

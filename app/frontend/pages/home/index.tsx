@@ -1,14 +1,11 @@
 import {
   PageComponent,
-  pageHeaderClassName,
   pageHeadingClassName,
 } from "@frontend/layout";
 
 const Header = () => {
   return (
-    <div className={pageHeaderClassName}>
-      <h1 className={pageHeadingClassName}>Budget App</h1>
-    </div>
+    <h1 className={pageHeadingClassName}>Budget App</h1>
   );
 };
 

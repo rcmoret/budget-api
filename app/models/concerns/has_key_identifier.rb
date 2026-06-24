@@ -48,6 +48,7 @@ module HasKeyIdentifier
     validate :key_unchanged!
 
     scope :by_keys, lambda { |*keys|
+      keys.flatten!
       keys.map! { |k| k.to_s.downcase.strip }
 
       where(arel_table[:key].lower.in(keys))

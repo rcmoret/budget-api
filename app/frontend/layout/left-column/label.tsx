@@ -3,9 +3,8 @@ import { Link } from "@inertiajs/react";
 const innerClassName = (props: { isSelected: boolean }) => {
   return [
     ...(props.isSelected
-      ? ["bg-base-300", "font-semibold"]
-      : []),
-    "text-primary-content",
+      ? ["bg-base-300", "font-semibold", "text-content"]
+      : ["text-primary-content"]),
     "text-xl",
     "py-2",
     "pl-2",

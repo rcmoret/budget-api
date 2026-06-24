@@ -1,4 +1,4 @@
-const cardBgValue = "bg-base-300/25";
+const cardBgValue = "bg-base-300";
 const formBgValue = "bg-base-300/25";
 const rowClassName = ["flex", "flex-row", "justify-between"].join(" ");
 

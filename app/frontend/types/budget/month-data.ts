@@ -7,6 +7,7 @@ type BudgetMonthData = {
   firstDate: string;
   lastDate: string;
   isCurrent: boolean;
+  isSetUp: boolean;
   nextMonth: {
     month: number;
     monthName: string;
