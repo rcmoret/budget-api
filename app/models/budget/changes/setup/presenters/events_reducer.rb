@@ -39,7 +39,7 @@ module Budget
                 attrs[:budget_category_key] = category_key
               else
                 attrs[:budget_item_key] = event_data.budget_item_key
-                attrs[:event_type] = EventTypes::SETUP_ITEM_DELETE if updated_amount.zero?
+                attrs[:event_type] = EventTypes::SETUP_ITEM_DELETE if event_data.updated_amount.zero?
               end
             end
           end
