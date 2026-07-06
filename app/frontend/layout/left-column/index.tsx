@@ -1,9 +1,5 @@
-import { SelectedLabel, UnselectedLabel } from "./label";
 import { MenuItems } from "./menu-item";
-import {
-  getPageName,
-  useNamespace,
-} from "@frontend/layout/app-config-store";
+import { useNamespace } from "@frontend/layout/app-config-store";
 import { Link } from "@inertiajs/react";
 import { AppConfigItems } from "./config-items";
 import { AccountLinks } from "./account-links";
@@ -11,51 +7,40 @@ import { AccountLinks } from "./account-links";
 const accountsIndexUrl = "/accounts";
 const budgetCategoryIndexUrl = "/budget";
 
-const dropDownClasses: Array<string> = [
-  "dropdown dropdown-hover"
-]
-
-const AccountNamespaceMenuItems = () => {
-  const pageName = getPageName()
-
-  if (pageName === "transactions_index") {
-    return (
-      <MenuItems label="Accounts">
-        <UnselectedLabel name="Budget" href={budgetCategoryIndexUrl} />
-        <SelectedLabel name="Accounts" classes={dropDownClasses} >
-          <AccountLinks />
-        </SelectedLabel>
-      </MenuItems>
-    );
-  } else {
-    return (
-      <MenuItems label="Accounts">
-        <UnselectedLabel name="Budget" href={budgetCategoryIndexUrl} />
-        <SelectedLabel name="Accounts" />
-      </MenuItems>
-    );
-  }
-}
 const TopMenuItems = () => {
   const namespace = useNamespace();
+  const label = namespace === "budget" ? "Budget" : "Accounts";
 
-  if (namespace === "accounts") {
-    return <AccountNamespaceMenuItems />
-  } else if (namespace === "budget") {
-    return (
-      <MenuItems label="Budget">
-        <SelectedLabel name="Budget" />
-        <UnselectedLabel name="Accounts" href={accountsIndexUrl} />
-      </MenuItems>
-    );
-  } else {
-    return (
-      <MenuItems label="Budget">
-        <UnselectedLabel name="Budget" href={budgetCategoryIndexUrl} />
-        <UnselectedLabel name="Accounts" href={accountsIndexUrl} />
-      </MenuItems>
-    );
-  }
+  return (
+    <MenuItems label={label}>
+      <Link href={budgetCategoryIndexUrl}>
+        <div
+          className="top-level-link"
+          aria-current={namespace === "budget" ? "page" : undefined}
+        >
+          Budget
+        </div>
+      </Link>
+
+      <div className="dropdown">
+        <div
+          className="top-level-link flex items-center"
+          aria-current={namespace === "accounts" ? "page" : undefined}
+        >
+          <Link href={accountsIndexUrl}>Accounts</Link>
+          <button
+            tabIndex={0}
+            aria-label="Toggle accounts menu"
+            aria-haspopup="true"
+            className="px-1"
+          >
+            ▾
+          </button>
+        </div>
+        <AccountLinks />
+      </div>
+    </MenuItems>
+  );
 };
 
 const BottomMenuItems = () => {
@@ -97,7 +82,6 @@ const LeftColumn = () => {
     "grid",
     "grid-rows-[1fr_auto]",
     "pt-4",
-    "bg-primary",
     "text-base-content",
   ].join(" ");
 

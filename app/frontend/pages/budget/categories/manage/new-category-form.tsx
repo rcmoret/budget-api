@@ -1,6 +1,6 @@
 import { NewBudgetCategoryType } from "@/types/budget";
 import { BudgetCategoryProvider } from "@/pages/budget/categories/context-provider";
-import { ActiveItemCard, CardLabel, CloseFormButton } from "@/layout/card";
+import { ActiveItemCard, CardLabel, CloseFormButton } from "@/components/card";
 import {
   useBudgetCategoriesStore,
   useShowNewCategoryForm,

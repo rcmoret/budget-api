@@ -1,10 +1,10 @@
 import { MonetaryAmount } from "@/types/amount";
 
-type TCategoryScope = "monthly" | "expenses" | "revenues" | "weekly"
+type TCategoryScope = "monthly" | "expenses" | "revenues" | "weekly";
 
-type GroupNameType = "revenues" | "fixedExpenses" | "variableExpenses"
+type GroupNameType = "revenues" | "fixedExpenses" | "variableExpenses";
 
-type GroupCollection<GenericGroup> = Record<GroupNameType, GenericGroup>
+type GroupCollection<GenericGroup> = Record<GroupNameType, GenericGroup>;
 
 type CategoryGroup<GenericCategory> = {
   label: string;
@@ -19,7 +19,7 @@ type CategoryGroup<GenericCategory> = {
     isReviewed: number;
     isSelected: boolean;
   };
-}
+};
 
 type BudgetPlanningEvent<GenericEventNames, GenericFlag> = {
   eventType: GenericEventNames;
@@ -27,9 +27,14 @@ type BudgetPlanningEvent<GenericEventNames, GenericFlag> = {
   budgetItemKey: string;
   updatedAmount: MonetaryAmount;
   previouslyBudgeted: MonetaryAmount;
-  spent: MonetaryAmount;
+  transactionsTotal: MonetaryAmount;
   adjustment: MonetaryAmount;
   flags: GenericFlag;
-}
+};
 
-export type { BudgetPlanningEvent, GroupCollection as GenericGroupCollection, CategoryGroup as GenericGroup };
+export type {
+  BudgetPlanningEvent,
+  GroupCollection as GenericGroupCollection,
+  CategoryGroup as GenericGroup,
+  TCategoryScope,
+};

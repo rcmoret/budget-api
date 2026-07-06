@@ -3,8 +3,8 @@ module WebApp
     class IndexSerializer
       include Alba::Resource
       include Mixins::NotificationsConcern
+      include Accounts::NavigationConcern
 
-      many :accounts, resource: Accounts::AccountResource
       many :budget_items, resource: BudgetItemSerializer
       one :budget_month, resource: BudgetMonthSerializer
       nested_attribute :featured_account do

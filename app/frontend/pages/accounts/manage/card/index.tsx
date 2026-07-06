@@ -14,7 +14,7 @@ import {
   CardRow,
   CloseFormButton,
   EditButton,
-} from "@/layout/card";
+} from "@/components/card";
 import { redirectQueryParams } from "@/utils/redirect_params";
 import { AmountSpan } from "@/components/amount-span";
 import { KeyIdentifier } from "@/components/key-identifier";

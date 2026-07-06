@@ -1,4 +1,4 @@
-import { ArchivedAtRow, ArchiveIcon, CardRow } from "@/layout/card";
+import { ArchivedAtRow, ArchiveIcon, CardRow } from "@/components/card";
 import { redirectQueryParams } from "@/utils/redirect_params";
 import { router } from "@inertiajs/react";
 import { KeyIdentifier } from "@/components/key-identifier";

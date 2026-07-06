@@ -1,27 +1,30 @@
 import { useToggle } from "@/utils/hooks/useToogle";
-import { CategoryComponent, FeaturedCategoryComponent } from "./category";
+import { CategoryListComponent, FeaturedCategoryComponent } from "./category";
 import { useCategoryGroupContext } from "./group-context";
-import { getFeaturedCategory } from "../store";
+import { useFeaturedCategory } from "../store";
 
 const GroupComponent = () => {
-  const group = useCategoryGroupContext()
-  const { isSelected } = group.metadata
-  const [showCategoryList, toggleCategoryList] = useToggle(isSelected)
+  const group = useCategoryGroupContext();
+  const { isSelected } = group.metadata;
+  const [showCategoryList, toggleCategoryList] = useToggle(isSelected);
 
-
-  const isCategoryListVisible = isSelected || showCategoryList
+  const isCategoryListVisible = isSelected || showCategoryList;
 
   return (
     <div className="grid grid-cols-subgrid col-span-full">
-      {isSelected ? <CurrentGroupLabel /> : <GroupLabelButton toggleCategoryList={toggleCategoryList} />}
+      {isSelected ? (
+        <CurrentGroupLabel />
+      ) : (
+        <GroupLabelButton toggleCategoryList={toggleCategoryList} />
+      )}
       <CategoryList isCategoryListVisible={isCategoryListVisible} />
     </div>
-  )
-}
+  );
+};
 
 const CategoryList = (props: { isCategoryListVisible: boolean }) => {
-  const group = useCategoryGroupContext()
-  const featuredCategory = getFeaturedCategory();
+  const group = useCategoryGroupContext();
+  const featuredCategory = useFeaturedCategory();
 
   return (
     <div
@@ -33,33 +36,29 @@ const CategoryList = (props: { isCategoryListVisible: boolean }) => {
     >
       <div className="overflow-hidden grid grid-cols-subgrid col-span-full">
         {group.categories.map((category) => (
-          featuredCategory.slug === category.slug ?
-            <FeaturedCategoryComponent key={category.key} category={category} /> :
-            <CategoryComponent key={category.key} category={category} />
+          <CategoryListComponent key={category.key} category={category} />
         ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
 const InnerGroupLabel = () => {
-  const group = useCategoryGroupContext()
+  const group = useCategoryGroupContext();
 
-  const { isReviewed, count, isSelected } = group.metadata
+  const { isReviewed, count, isSelected } = group.metadata;
 
-  const fontClasses = isSelected ? "text-lg font-bold" : "font-semi"
+  const fontClasses = isSelected ? "text-lg font-bold" : "font-semi";
 
   return (
     <>
-      <div className={fontClasses}>
-        &bull; {group.label}
-      </div>
+      <div className={fontClasses}>&bull; {group.label}</div>
       <div className="text-sm text-right">
         {isReviewed} / {count}
       </div>
     </>
-  )
-}
+  );
+};
 const groupLabelClasses = [
   "grid",
   "grid-cols-subgrid",
@@ -70,7 +69,7 @@ const groupLabelClasses = [
   "px-4",
   "py-1",
   "text-left",
-]
+];
 
 const CurrentGroupLabel = () => {
   const className = [
@@ -78,28 +77,28 @@ const CurrentGroupLabel = () => {
     "bg-base-200",
     "outline-2",
     "outline-secondary",
-    "mb-2"
-  ].join(" ")
+    "mb-2",
+  ].join(" ");
 
   return (
     <div className={className}>
       <InnerGroupLabel />
     </div>
-  )
-}
+  );
+};
 
 const GroupLabelButton = (props: { toggleCategoryList: () => void }) => {
-  const className = [
-    ...groupLabelClasses,
-    "bg-base-200/60"
-  ].join(" ")
-
+  const className = [...groupLabelClasses, "bg-base-200/60"].join(" ");
 
   return (
-    <button type="button" onClick={props.toggleCategoryList} className={className}>
+    <button
+      type="button"
+      onClick={props.toggleCategoryList}
+      className={className}
+    >
       <InnerGroupLabel />
     </button>
-  )
-}
+  );
+};
 
-export { GroupComponent }
+export { GroupComponent };

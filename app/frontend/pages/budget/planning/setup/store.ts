@@ -1,14 +1,19 @@
 import { create } from "zustand";
-import { CategoryGroups, FeaturedBudgetCategoryType, SetupData } from "@/types/budget/planning/setup";
-import { RefObject, useEffect, useRef } from "react";
+import {
+  CategoryGroup,
+  CategoryGroups,
+  FeaturedBudgetCategoryType,
+  SetupData,
+} from "@/types/budget/planning/setup";
+import { useEffect } from "react";
 
 const emptyMetadata = {
   count: 0,
   sum: { display: "", cents: 0 },
   unreviewed: 0,
   isReviewed: 0,
-  isSelected: false
-}
+  isSelected: false,
+};
 
 const emptyGroups: CategoryGroups = {
   revenues: {
@@ -17,7 +22,7 @@ const emptyGroups: CategoryGroups = {
     key: "revenue",
     scopes: [],
     categories: [],
-    metadata: { ...emptyMetadata }
+    metadata: { ...emptyMetadata },
   },
   fixedExpenses: {
     label: "Fixed Expenses",
@@ -25,7 +30,7 @@ const emptyGroups: CategoryGroups = {
     key: "fixed-expenses",
     scopes: [],
     categories: [],
-    metadata: { ...emptyMetadata }
+    metadata: { ...emptyMetadata },
   },
   variableExpenses: {
     label: "Variable Expenses",
@@ -33,9 +38,9 @@ const emptyGroups: CategoryGroups = {
     key: "variable-expenses",
     scopes: [],
     categories: [],
-    metadata: { ...emptyMetadata }
+    metadata: { ...emptyMetadata },
   },
-}
+};
 
 const emptyFeaturedCategory: FeaturedBudgetCategoryType = {
   key: "__initial__",
@@ -46,8 +51,8 @@ const emptyFeaturedCategory: FeaturedBudgetCategoryType = {
   isMonthly: false,
   isAccrual: false,
   iconClassName: "bars",
-  events: []
-}
+  events: [],
+};
 
 const emptySetupData: SetupData = {
   currentCategoryHref: "",
@@ -55,97 +60,184 @@ const emptySetupData: SetupData = {
   nextCategoryHref: "",
   previousCategoryHref: "",
   previousUnreviewedCategoryHref: "",
-}
+};
 
 type SetupStoreType = {
-  eventsRef: null | RefObject<Map<string, string>>;
+  events: Record<string, string>;
   featuredCategory: FeaturedBudgetCategoryType;
-  groups: CategoryGroups
+  groups: CategoryGroups;
+  finishSetupRoute: string;
   setupData: SetupData;
-  setEventsRef: (r: RefObject<Map<string, string>>) => void;
+  setEvents: (updates: Array<{ key: string; amount: string }>) => void;
+  showReviewedCategories: boolean;
+  setShowReviewedCategories: (toggle: boolean) => void;
+  clearEvents: () => void;
   setFeaturedCategory: (c: FeaturedBudgetCategoryType) => void;
+  setFinishSetupRoute: (s: string) => void;
   setGroups: (groups: CategoryGroups) => void;
   setSetupData: (l: SetupData) => void;
-}
+};
 
 const usePlanningSetupStore = create<SetupStoreType>((set) => ({
-  eventsRef: null,
+  events: {},
   featuredCategory: emptyFeaturedCategory,
+  finishSetupRoute: "",
   groups: emptyGroups,
+  setFinishSetupRoute: (finishSetupRoute) => set({ finishSetupRoute }),
   setupData: emptySetupData,
-  setEventsRef: (r: RefObject<Map<string, string>>) => set({ eventsRef: r }),
-  setFeaturedCategory: (c: FeaturedBudgetCategoryType) => set({ featuredCategory: c }),
+  setEvents: (updates) =>
+    set((s) => {
+      const events = { ...s.events };
+      updates.forEach(({ key, amount }) => {
+        events[key] = amount;
+      });
+      return { events };
+    }),
+  clearEvents: () => set({ events: {} }),
+  setFeaturedCategory: (c: FeaturedBudgetCategoryType) =>
+    set({ featuredCategory: c }),
   setGroups: (groups: CategoryGroups) => set({ groups }),
-  setSetupData: (setupData) => set({ setupData })
-}))
+  setSetupData: (setupData) => set({ setupData }),
+  showReviewedCategories: true,
+  setShowReviewedCategories: (showReviewedCategories: boolean) =>
+    set({ showReviewedCategories }),
+}));
 
 const initSetupStore = (props: {
   groups: CategoryGroups;
   featuredCategory: FeaturedBudgetCategoryType;
-  setupData: SetupData
+  setupData: SetupData;
+  finishSetupRoute: string;
 }) => {
-  const { featuredCategory, groups, setupData } = props
-  const setGroups = usePlanningSetupStore((s) => s.setGroups)
-  const setFeaturedCategory = usePlanningSetupStore((s) => s.setFeaturedCategory)
-  const setSetupData = usePlanningSetupStore((s) => s.setSetupData)
-  const setEventsRef = usePlanningSetupStore((s) => s.setEventsRef)
-
-  const refMap = useRef<Map<string, string>>(new Map())
+  const { featuredCategory, groups, setupData } = props;
+  const setGroups = usePlanningSetupStore((s) => s.setGroups);
+  const setFeaturedCategory = usePlanningSetupStore(
+    (s) => s.setFeaturedCategory,
+  );
+  const setSetupData = usePlanningSetupStore((s) => s.setSetupData);
+  const setFinishSetupRoute = usePlanningSetupStore(
+    (s) => s.setFinishSetupRoute,
+  );
 
   useEffect(() => {
-    setGroups(groups)
-  }, [groups, setGroups])
+    setGroups(groups);
+  }, [groups, setGroups]);
   useEffect(() => {
-    setFeaturedCategory(featuredCategory)
-  }, [featuredCategory, setFeaturedCategory])
+    setFeaturedCategory(featuredCategory);
+  }, [featuredCategory, setFeaturedCategory]);
   useEffect(() => {
-    setSetupData(setupData)
-  }, [setupData, setSetupData])
+    setSetupData(setupData);
+  }, [setupData, setSetupData]);
   useEffect(() => {
-    setEventsRef(refMap)
-  }, [refMap, setEventsRef])
-}
+    setFinishSetupRoute(props.finishSetupRoute);
+  }, [props.finishSetupRoute, setFinishSetupRoute]);
+};
 
-const getSetupGroups = () => usePlanningSetupStore((s) => s.groups)
-const getFeaturedCategory = () => usePlanningSetupStore((s) => s.featuredCategory)
-const getSetupData = () => usePlanningSetupStore((s) => s.setupData)
+const useSetupGroups = () => usePlanningSetupStore((s) => s.groups);
+const useFeaturedCategory = () =>
+  usePlanningSetupStore((s) => s.featuredCategory);
+const useSetupData = () => usePlanningSetupStore((s) => s.setupData);
 
-const useEventsRef = () => {
-  const featuredCategory = getFeaturedCategory()
+const useTrackedEvents = () => {
+  const featuredCategory = useFeaturedCategory();
 
-  const eventsRef = usePlanningSetupStore((s) => s.eventsRef) ?? useRef(new Map());
+  const events = usePlanningSetupStore((s) => s.events);
+  const setEvents = usePlanningSetupStore((s) => s.setEvents);
+  const clearRef = usePlanningSetupStore((s) => s.clearEvents);
 
-  const clearRef = () => eventsRef.current.clear()
+  const updateEvents = (updates: Array<{ key: string; amount: string }>) =>
+    setEvents(updates);
 
-  const updateEvents = (events: Array<{ key: string; amount: string }>) => {
-    events.forEach(({ key, amount }) => {
-      eventsRef.current.set(key, amount)
-    })
-  }
+  const getEvent = (p: { itemKey: string }): string | undefined =>
+    events[p.itemKey];
 
-  const getEvent = (p: { itemKey: string }) => eventsRef.current.get(p.itemKey)
+  const hasChanges = featuredCategory.events.some(
+    ({ adjustment, budgetItemKey }) => {
+      const latestAdjustment = getEvent({ itemKey: budgetItemKey });
 
-  const hasChanges = featuredCategory.events.some(({ adjustment, budgetItemKey }) => {
-    const latestAdjustment = getEvent({ itemKey: budgetItemKey })
+      if (latestAdjustment === undefined) {
+        return false;
+      }
 
-    if (latestAdjustment === undefined) {
-      return false;
-    }
+      const propDisplay = adjustment.display ?? "";
+      const trackedDisplay = latestAdjustment ?? "";
+      return propDisplay !== trackedDisplay;
+    },
+  );
 
-    const propDisplay = adjustment.display ?? "";
-    const trackedDisplay = latestAdjustment ?? "";
-    return propDisplay !== trackedDisplay;
-  })
+  return { getEvent, clearRef, hasChanges, updateEvents };
+};
 
-  return { getEvent, clearRef, hasChanges, updateEvents }
-}
+// Featured-category events with live review flags derived from the tracked
+// edits, so the list reflects the same "reviewed" state the editor shows.
+const useFeaturedEvents = () => {
+  const featuredCategory = useFeaturedCategory();
+  const events = usePlanningSetupStore((s) => s.events);
+
+  return featuredCategory.events.map((event) => {
+    const display =
+      events[event.budgetItemKey] ?? event.adjustment.display ?? "";
+    const isReviewed = !!display;
+
+    return {
+      ...event,
+      flags: {
+        ...event.flags,
+        unreviewed: !isReviewed,
+      },
+    };
+  });
+};
 
 const useCurrentFeaturedCategoryRoute = () => {
-  const setupData = getSetupData()
+  const setupData = useSetupData();
 
   return (slug?: string) =>
-    setupData.currentCategoryHref + (slug ? `?next-category=${slug}` : "")
+    setupData.currentCategoryHref + (slug ? `?next-category=${slug}` : "");
+};
 
-}
+const useToggleReviewedCategoryVisibility = () => {
+  const toggleValue = usePlanningSetupStore(
+    ({ showReviewedCategories }) => showReviewedCategories,
+  );
+  const setShowReviewedCategories = usePlanningSetupStore(
+    ({ setShowReviewedCategories }) => setShowReviewedCategories,
+  );
 
-export { initSetupStore, getSetupGroups, getFeaturedCategory, useEventsRef, getSetupData, useCurrentFeaturedCategoryRoute }
+  return {
+    toggleValue,
+    setShowReviewedCategories: () => setShowReviewedCategories(!toggleValue),
+  };
+};
+
+const nullGroup = {
+  label: "",
+  name: "",
+  key: "",
+  scopes: [],
+  categories: [],
+  metadata: { ...emptyMetadata },
+};
+
+const getCurrentGroup = (): CategoryGroup => {
+  const groups = usePlanningSetupStore((s) => s.groups);
+
+  const currentGroup = Object.values(groups).find(
+    ({ metadata }) => metadata.isSelected,
+  );
+
+  return currentGroup || nullGroup;
+};
+
+export {
+  getCurrentGroup,
+  initSetupStore,
+  useToggleReviewedCategoryVisibility,
+  useSetupGroups,
+  useFeaturedCategory,
+  useFeaturedEvents,
+  usePlanningSetupStore,
+  useTrackedEvents,
+  useSetupData,
+  useCurrentFeaturedCategoryRoute,
+};

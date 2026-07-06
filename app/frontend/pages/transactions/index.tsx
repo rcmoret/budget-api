@@ -1,5 +1,5 @@
 import { PageComponent } from "@frontend/layout";
-import { AccountTransaction, TransactionDetailBudgetItem } from "@/types/transaction"
+import { TransactionDetailBudgetItem } from "@/types/transaction"
 import { AccountProps, FeaturedAccountType } from "@/types/account"
 import { BudgetMonthData } from "@/types/budget/month-data"
 import { initBudgetMonthStore } from "../budget/month-store";
@@ -38,7 +38,7 @@ const TransactionsIndexComponent = (props: { metadata: { pageName: string; names
 }
 
 const IndexComponent = (props: TransactionsIndexProps) => {
-  const { metadata, budgetItems, accounts } = props;
+  const { metadata, budgetItems, accounts, budgetMonth } = props;
   const { transactions, ...featuredAccount } = props.featuredAccount;
 
   initTransactionIndexStore({
@@ -47,6 +47,7 @@ const IndexComponent = (props: TransactionsIndexProps) => {
     featuredAccount,
     transactions: [...transactions].reverse()
   })
+  initBudgetMonthStore({ budgetMonth })
 
   return <TransactionsIndexComponent metadata={metadata} />
 }

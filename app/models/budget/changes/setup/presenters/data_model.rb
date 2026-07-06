@@ -70,7 +70,7 @@ module Budget
             end
 
             def non_zero?
-              !!adjustment[:cents].non_zero?
+              !!adjustment[:cents].nonzero?
             end
 
             def zero?

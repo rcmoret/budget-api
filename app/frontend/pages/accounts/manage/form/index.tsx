@@ -6,7 +6,7 @@ import {
 import { AccountFormProvider, useAccountFormContext } from "./context-provider";
 import { useAccountsManagerStore, useShowNewAccountForm } from "../store";
 import { AccountCard } from "../card";
-import { CardRow } from "@/layout/card";
+import { CardRow } from "@/components/card";
 import { RadioInput } from "@/components/radio";
 
 const NewForm = () => {

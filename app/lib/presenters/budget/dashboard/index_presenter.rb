@@ -5,6 +5,7 @@ module Presenters
     module Dashboard
       class IndexPresenter
         include Presenters::WebApp::FlashMessagesConcern
+        include Mixins::ActiveUserAccounts
 
         def initialize(interval, metadata)
           @interval = interval
@@ -13,7 +14,7 @@ module Presenters
         end
 
         def items
-          @items ||= interval.detailed_items.order(name: :asc)
+          @items ||= interval.detailed_items.active.order(name: :asc).to_a
         end
 
         def budget_month
@@ -22,19 +23,19 @@ module Presenters
         end
 
         def fixed_expenses
-          items.fixed.expenses
+          items.select { |item| item.monthly? && item.expense? }
         end
 
         def fixed_revenues
-          items.fixed.revenues
+          items.select { |item| item.monthly? && !item.expense? }
         end
 
         def variable_expenses
-          items.variable.expenses
+          items.select { |item| !item.monthly? && item.expense? }
         end
 
         def variable_revenues
-          items.variable.revenues
+          items.select { |item| !item.monthly? && !item.expense? }
         end
 
         def create_item_events

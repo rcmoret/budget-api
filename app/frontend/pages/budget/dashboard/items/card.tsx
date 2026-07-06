@@ -1,4 +1,4 @@
-import { ActiveItemCard, CardLabel, CardRow } from "@/layout/card";
+import { ActiveItemCard, CardLabel, CardRow } from "@/components/card";
 import { ItemContextProvider, useBudgetItemContext } from "./context-provider";
 import { BudgetItem } from "@/types/budget";
 import { AmountSpan } from "@/components/amount-span";

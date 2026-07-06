@@ -1,6 +1,6 @@
 import { useBudgetCategoryContext } from "@/pages/budget/categories/context-provider";
 import { useBudgetCategoriesStore } from "@/pages/budget/categories/store";
-import { CardLabel, CloseFormButton, EditButton } from "@/layout/card";
+import { CardLabel, CloseFormButton, EditButton } from "@/components/card";
 import { Icon } from "@/components/icon";
 
 const NameComponent = () => {

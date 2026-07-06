@@ -6,7 +6,7 @@ import {
   BudgetCategoryFormProvider,
   useBudgetCategoryFormContext,
 } from "./context-provider";
-import { CardRow } from "@/layout/card";
+import { CardRow } from "@/components/card";
 import { useBudgetCategoryContext } from "@/pages/budget/categories/context-provider";
 import {
   useBudgetCategoriesStore,

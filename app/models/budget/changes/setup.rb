@@ -24,11 +24,6 @@ module Budget
         )
       end
 
-      def reset_data!
-        update_categories
-        assign_categories
-      end
-
       def data_model
         Presenters::DataModel.new(self)
       end
@@ -73,6 +68,11 @@ module Budget
         self.events_data[:categories] = presenter.categories.map(&:to_h)
         tap(&:save)
       end
+
+      # Resetting simply rebuilds the categories from the current items, which
+      # is exactly what assign_categories does (it overwrites events_data's
+      # categories wholesale).
+      alias reset_data! assign_categories
 
       def update_category_data(slug:, &block)
         next_categories = categories.filter_map do |category_data|

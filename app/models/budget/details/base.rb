@@ -56,7 +56,7 @@ module Budget
       def deleted? = deleted_at.present?
 
       def deletable?
-        transaction_detail_count.positive?
+        transaction_detail_count.zero?
       end
 
       def previously_budgeted_percentage

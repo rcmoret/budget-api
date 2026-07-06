@@ -4,18 +4,18 @@ const rowClassName = ["flex", "flex-row", "justify-between"].join(" ");
 
 const outerCardClassName = (props: {
   bgColor: string;
+  flex?: boolean;
   additional?: Array<string>;
 }) => {
+  const { bgColor, additional = [], flex = true } = props;
   return [
-    props.bgColor,
+    bgColor,
     "card",
     "shadow-md",
     "py-2",
     "px-4",
-    "flex",
-    "flex-col",
-    "gap-2",
-    ...(props.additional || []),
+    ...(flex ? ["flex", "flex-col", "gap-2"] : []),
+    ...additional,
   ].join(" ");
 };
 

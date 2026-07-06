@@ -4,13 +4,13 @@ import { BudgetMonthData } from "@/types/budget/month-data";
 import { DiscretionaryDetails } from "@/types/budget/discretionary";
 import { useEffect } from "react";
 
-type ItemGroupLabels = ["Fixed" | "Variable", "Expenses" | "Revenues"]
+type ItemGroupLabels = ["Fixed" | "Variable", "Expenses" | "Revenues"];
 type ExpenseFilterItem = "expense" | "revenue" | null;
 type FixedOrVariableFilterType = "fixed" | "variable" | null;
 type FilterKeys = {
-  frequency: Exclude<FixedOrVariableFilterType, null>
-  type: Exclude<ExpenseFilterItem, null>
-}
+  frequency: Exclude<FixedOrVariableFilterType, null>;
+  type: Exclude<ExpenseFilterItem, null>;
+};
 
 type BudgetDashboardState = {
   items: BudgetItemCollections;
@@ -25,7 +25,7 @@ type BudgetDashboardState = {
   setItems: (items: BudgetItemCollections) => void;
   setDiscretionary: (discretionary: DiscretionaryDetails) => void;
   toggleItemVisibility: (b: boolean) => void;
-}
+};
 
 const useBudgetDashboardStore = create<BudgetDashboardState>((set) => ({
   items: {
@@ -55,17 +55,17 @@ const useBudgetDashboardStore = create<BudgetDashboardState>((set) => ({
   setFixedOrVariableFilter: (fixedOrVariableFilter) =>
     set({ fixedOrVariableFilter }),
   toggleItemVisibility: (bool) => set({ clearedItemVisibilityToggle: bool }),
-}))
+}));
 
 type ItemGroup = {
   items: Array<BudgetItem>;
   labels: ItemGroupLabels;
   visible: boolean;
-}
+};
 
 const useBudgetItemGroups = (props: FilterKeys): ItemGroup => {
   const items = useBudgetDashboardStore((s) => s.items);
-  const { frequency, type } = props
+  const { frequency, type } = props;
 
   const expenseOrRevenueFilter = useBudgetDashboardStore(
     (s) => s.expenseOrRevenueFilter,
@@ -74,57 +74,62 @@ const useBudgetItemGroups = (props: FilterKeys): ItemGroup => {
     (s) => s.fixedOrVariableFilter,
   );
 
-  const typeMatches = expenseOrRevenueFilter === null || expenseOrRevenueFilter === type
-  const frequencyMatches = fixedOrVariableFilter === null || fixedOrVariableFilter === frequency
-  const visible = typeMatches && frequencyMatches
+  const typeMatches =
+    expenseOrRevenueFilter === null || expenseOrRevenueFilter === type;
+  const frequencyMatches =
+    fixedOrVariableFilter === null || fixedOrVariableFilter === frequency;
+  const visible = typeMatches && frequencyMatches;
 
   if (frequency === "fixed" && type === "revenue") {
     return {
       items: items.fixedRevenues,
       visible,
       labels: ["Fixed", "Revenues"],
-    }
+    };
   } else if (frequency === "fixed") {
     return {
       items: items.fixedExpenses,
       labels: ["Fixed", "Expenses"],
       visible,
-    }
+    };
   } else if (type === "revenue") {
     return {
       items: items.variableRevenues,
       labels: ["Variable", "Revenues"],
       visible,
-    }
+    };
   } else {
     return {
       items: items.variableExpenses,
       labels: ["Variable", "Expenses"],
       visible,
-    }
+    };
   }
-}
+};
 
 const useVisibleBudgetItems = () => {
   return useBudgetDashboardStore((s) => s.items);
-}
+};
 
-const useInitBudgetDashboardStore = (props: { items: BudgetItemCollections, budgetMonth: BudgetMonthData }) => {
-  const { items } = props
+const useInitBudgetDashboardStore = (props: {
+  items: BudgetItemCollections;
+  budgetMonth: BudgetMonthData;
+}) => {
+  const { items } = props;
 
-  const setItems = useBudgetDashboardStore((s) => s.setItems)
+  const setItems = useBudgetDashboardStore((s) => s.setItems);
 
   useEffect(() => {
     setItems(items);
-  }, [items, setItems])
-}
+  }, [items, setItems]);
+};
 
 const useClearedItemsVisibilityToggle = () => {
-  const value = useBudgetDashboardStore((s) => s.clearedItemVisibilityToggle)
-  const toggleFn = useBudgetDashboardStore((s) => s.toggleItemVisibility)
+  const value = useBudgetDashboardStore((s) => s.clearedItemVisibilityToggle);
+  const toggleFn = useBudgetDashboardStore((s) => s.toggleItemVisibility);
 
-  return [value, () => toggleFn(!value)] as const
-}
+  return [value, () => toggleFn(!value)] as const;
+};
 
 export {
   useBudgetDashboardStore,
@@ -134,5 +139,5 @@ export {
   useClearedItemsVisibilityToggle,
   type ExpenseFilterItem,
   type FixedOrVariableFilterType,
-  type ItemGroup
-}
+  type ItemGroup,
+};

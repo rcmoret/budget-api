@@ -3,13 +3,22 @@ default: &default
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
-development:
+# Local dev/test connect to the Postgres defined in compose.yaml, which binds
+# host port 5433 (see .env.example). Override via DATABASE_* env vars.
+local: &local
   <<: *default
-  database: budget_app_inertia
+  host: <%= ENV.fetch("DATABASE_HOST", "localhost") %>
+  port: <%= ENV.fetch("DATABASE_PORT", 5433) %>
+  username: <%= ENV.fetch("DATABASE_USER", "postgres") %>
+  password: <%= ENV.fetch("DATABASE_PASSWORD", "postgres") %>
+
+development:
+  <<: *local
+  database: <%= ENV.fetch("DATABASE_NAME", "budget_app_inertia") %>
 
 test:
-  <<: *default
-  database: api_test
+  <<: *local
+  database: <%= ENV.fetch("TEST_DATABASE_NAME", "api_test") %>
 
 production:
   <<: *default

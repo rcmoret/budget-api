@@ -1,4 +1,4 @@
-import { CardRow } from "@/layout/card";
+import { CardRow } from "@/components/card";
 import { AmountSpan } from "@/components/amount-span";
 import { useBudgetItemContext } from "./context-provider";
 

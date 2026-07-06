@@ -93,9 +93,12 @@ const SelectableInputContainer = (props: {
   const { checked, type } = props;
   const { disabled, name } = useSelectableGroupContext();
 
-  const inputClassName = ["radio", "radio-sm", "radio-base-300", "relative"].join(
-    " ",
-  );
+  const inputClassName = [
+    "radio",
+    "radio-sm",
+    "radio-base-300",
+    "relative",
+  ].join(" ");
 
   const labelClassName = [
     ...selectableItemBaseClasses,

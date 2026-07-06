@@ -30,8 +30,8 @@ A personal budgeting application built with Ruby on Rails and React for managing
 ## Prerequisites
 
 - Ruby 3.2.5
-- PostgreSQL
 - Node.js and Yarn
+- Docker (runs the local PostgreSQL database — see below)
 - AWS credentials (for Active Storage in production)
 
 ## Setup
@@ -57,12 +57,27 @@ A personal budgeting application built with Ruby on Rails and React for managing
    cp .env.example .env
    ```
    Edit `.env` and add your configuration:
-   - Database credentials
+   - Database credentials (defaults match the dev container below — no change needed)
    - AWS credentials (if using S3 for storage)
    - JWT secret key
    - Other environment-specific settings
 
-5. **Set up the database**
+5. **Start the database**
+
+   PostgreSQL runs in Docker via `compose.yaml`. It binds host port **5433**
+   (not the default 5432) so it won't collide with any other Postgres you have
+   running. Compose reads the `DATABASE_*` values from your `.env`.
+   ```bash
+   docker compose up -d db
+   ```
+   Useful commands:
+   ```bash
+   docker compose ps          # check status
+   docker compose down        # stop (data persists in a named volume)
+   docker compose down -v     # stop and wipe the database
+   ```
+
+6. **Set up the database schema**
    ```bash
    rails db:create
    rails db:migrate

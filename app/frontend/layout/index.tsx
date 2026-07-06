@@ -24,7 +24,7 @@ type LayoutProps = {
 const PageComponent = (props: LayoutProps) => {
   useInitAppConfigStore(props.metadata.namespace, props.metadata.pageName);
 
-  const { mainComponentClassNames = [] } = props
+  const { mainComponentClassNames = [] } = props;
 
   const pageHeaderClassName = [
     "grid-page-header",
@@ -40,27 +40,29 @@ const PageComponent = (props: LayoutProps) => {
     "min-h-20",
     "border-b-2",
     "border-secondary",
-  ].join(" ")
+  ].join(" ");
 
   return (
-    <div>
-      <div className="grid-page-split">
-        {props.header && (
-          <div className={pageHeaderClassName}>{props.header}</div>
-        )}
-        <MainComponent classNames={mainComponentClassNames} id={props.mainId}>
-          {props.children}
-        </MainComponent>
-        <div className="flex flex-col gap-2 py-4 overflow-y-scroll">
-          <Notifications />
-          {props.rightColumn}
-        </div>
-      </div>
+    <div className="grid-page-split">
+      {props.header && (
+        <header className={pageHeaderClassName}>{props.header}</header>
+      )}
+      <MainComponent classNames={mainComponentClassNames} id={props.mainId}>
+        {props.children}
+      </MainComponent>
+      <aside className="flex flex-col gap-2 py-4 overflow-y-scroll">
+        <Notifications />
+        {props.rightColumn}
+      </aside>
     </div>
   );
 };
 
-const MainComponent = (props: { id: string; classNames: Array<string>; children: React.ReactNode }) => {
+const MainComponent = (props: {
+  id: string;
+  classNames: Array<string>;
+  children: React.ReactNode;
+}) => {
   const mainComponentClassName = [
     "grid",
     "gap-2",
@@ -69,14 +71,14 @@ const MainComponent = (props: { id: string; classNames: Array<string>; children:
     "scrollbar-gutter-stable",
     "with-scroll-fixes",
     ...props.classNames,
-  ].join(" ")
+  ].join(" ");
 
   return (
     <main className={mainComponentClassName} id={props.id}>
       {props.children}
     </main>
-  )
-}
+  );
+};
 
 const PageLayout = (props: {
   children: React.ReactNode;

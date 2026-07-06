@@ -1,35 +1,42 @@
-import { getFeaturedCategory } from "../store"
-import { Suggestions } from "./suggestions"
-
-const groupLabelClassName = [
-  "from-accent/70",
-  "dark:from-accent/90",
-  "to-accent/40",
-  "dark:to-accent/66",
-  "shadow-md",
-  "text-base-content",
-  "dark:text-accent-content",
-  "flex",
-  "gap-2",
-  "px-4",
-  "py-2",
-  "rounded",
-  "text-xl",
-  "tracking-wide",
-  "bg-gradient-to-r"
-].join(" ")
-
+import { GroupLabel } from "@/components/group-label";
+import { useFeaturedCategory } from "../store";
+import { EventProvider, EventForm } from "./events/event-context";
 const FeaturedCategoryComponent = () => {
-  const featuredCategory = getFeaturedCategory()
+  const category = useFeaturedCategory();
+  const { events } = category;
+
+  const gridClasses = [
+    "grid",
+    "grid-cols-[auto_1fr_auto]",
+    "gap-x-2 gap-y-4 p-1",
+    "content-start",
+  ];
+
+  const categoryClassName = [
+    "bg-base-300",
+    "col-span-full",
+    "grid",
+    "grid-cols-subgrid",
+    "content-start",
+    "py-4",
+    "px-2",
+    "rounded",
+  ].join(" ");
 
   return (
-    <div className="content-start">
-      <div className={groupLabelClassName}>
-        {featuredCategory.name}
+    <div className={gridClasses.join(" ")}>
+      <div className="col-span-full">
+        <GroupLabel>{category.name}</GroupLabel>
       </div>
-      <Suggestions />
+      <div id={category.key} className={categoryClassName}>
+        {events.map((event) => (
+          <EventProvider key={event.budgetItemKey} event={event}>
+            <EventForm />
+          </EventProvider>
+        ))}
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export { FeaturedCategoryComponent }
+export { FeaturedCategoryComponent };

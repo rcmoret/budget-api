@@ -6,6 +6,7 @@ module WebApp
       class Serializer
         include Alba::Resource
         include Mixins::NotificationsConcern
+        include Accounts::NavigationConcern
 
         attributes :create_item_events
 
@@ -18,16 +19,8 @@ module WebApp
           transform_keys :lower_camel
         end
 
-        nested_attribute :discretionary do
-          one :initial_amount, resource: MonetaryAmountSerializer
-          one :over_under_budget, resource: MonetaryAmountSerializer
-          one :remaining, resource: MonetaryAmountSerializer
-          one :transactions_total, resource: MonetaryAmountSerializer
-
-          transform_keys :lower_camel
-        end
-
-        one :budget_month, resource: BudgetMonthSerializer
+        one :discretionary, resource: DiscretionarySerializer
+        one :budget_month, resource: WebApp::Budget::BudgetMonthSerializer
 
         transform_keys :lower_camel
       end

@@ -4,6 +4,8 @@ module WebApp
       module Setup
         class IndexSerializer
           include Alba::Resource
+          include Mixins::NotificationsConcern
+          include Presenters::Mixins::ActiveUserAccounts
 
           # rubocop:disable Metrics/BlockLength
           one :featured_category, source: proc { category } do
@@ -25,13 +27,15 @@ module WebApp
 
             many :events do
               attributes :event_type,
+                :adjustment,
                 :budget_item_key
 
               one :amount, resource: MonetaryAmountSerializer
               one :updated_amount, resource: MonetaryAmountSerializer
               one :previously_budgeted, resource: MonetaryAmountSerializer
-              attribute :transactions_total,
+              one :transactions_total,
                 resource: MonetaryAmountSerializer,
+                source: proc { spent },
                 &:spent
               one :flags, source: proc { flags } do
                 attributes :eq_prev_budgeted,
@@ -51,13 +55,14 @@ module WebApp
           # rubocop:enable Metrics/BlockLength
 
           attribute :is_submittable, &:submittable?
+          attributes :finish_setup_route
           one :budget_month,
             resource: WebApp::Budget::BudgetMonthSerializer
 
-          nested_attribute :setup_data do
+          nested_attribute :neighbor_links do
             attributes :next_unreviewed_category_href,
               :next_unreviewed_category_slug,
-              :current_category_route,
+              :current_category_href,
               :next_category_href,
               :next_category_slug,
               :previous_category_href,

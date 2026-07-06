@@ -55,7 +55,6 @@ const useAppConfigStore = create<AppConfigState>((set) => ({
 }));
 
 const useNamespace = () => useAppConfigStore((s) => s.namespace);
-const getPageName = () => useAppConfigStore((s) => s.pageName);
 const useShowAccruals = () => useAppConfigStore((s) => s.showAccruals);
 const useToggleShowAccruals = () =>
   useAppConfigStore((s) => s.toggleShowAccruals);
@@ -73,8 +72,8 @@ const useInitAppConfigStore = (namespace: string, pageName: string) => {
   }, [namespace, setNamespace]);
 
   useEffect(() => {
-    setPageName(pageName)
-  }, [pageName, setPageName])
+    setPageName(pageName);
+  }, [pageName, setPageName]);
 
   useEffect(() => {
     applyTheme(theme);
@@ -82,7 +81,6 @@ const useInitAppConfigStore = (namespace: string, pageName: string) => {
 };
 
 export {
-  getPageName,
   useAppConfigStore,
   useInitAppConfigStore,
   useIsDarkTheme,

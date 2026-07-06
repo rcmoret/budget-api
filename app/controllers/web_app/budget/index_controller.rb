@@ -13,14 +13,6 @@ module WebApp
 
       private
 
-      def props
-        {}
-      end
-
-      def namespace = "budget"
-
-      def error_component = "budget/dashboard/index"
-
       def presenter
         @presenter ||=
           Presenters::Budget::Dashboard::IndexPresenter
@@ -30,7 +22,15 @@ module WebApp
       def serializer
         @serializer ||=
           WebApp::Budget::Dashboard::Serializer
-          .new(presenter)
+          .new(
+            presenter,
+            params: {
+              current_user_profile:,
+              namespace: "budget",
+              month:,
+              year:,
+            }
+          )
       end
 
       def metadata

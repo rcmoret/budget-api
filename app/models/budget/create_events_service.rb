@@ -4,6 +4,21 @@ module Budget
   class CreateEventsService
     include EventTypes
 
+    EventSerializer = Class.new do
+      include Alba::Resource
+      attributes :name,
+        :slug
+
+      attribute(:budget_category_key, &:key)
+      attribute(:amount) { 0 }
+      attribute(:data) { {} }
+      attribute(:budget_item_key) { KeyGenerator.call }
+      attribute(:key) { KeyGenerator.call }
+      attribute(:event_type) { params[:event_type] }
+
+      transform_keys :lower_camel
+    end
+
     def self.call(...)
       new(...).call
     end
@@ -22,17 +37,8 @@ module Budget
     end
 
     def call
-      category_scope.map do |category|
-        {
-          name: category.name,
-          slug: category.slug,
-          budget_category_key: category.key,
-          amount: 0,
-          budget_item_key: KeyGenerator.call,
-          event_type:,
-          key: KeyGenerator.call,
-          data: {},
-        }
+      category_scope.order(name: :asc).map do |category|
+        EventSerializer.new(category, params: { event_type: }).to_h
       end
     end
 

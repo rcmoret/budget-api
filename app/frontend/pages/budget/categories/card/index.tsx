@@ -1,5 +1,5 @@
 import { CategoryCardLabel } from "./label";
-import { ActiveItemCard, ArchivedItemCard } from "@/layout/card";
+import { ActiveItemCard, ArchivedItemCard } from "@/components/card";
 import { router } from "@inertiajs/react";
 import { useBudgetCategoryContext } from "@/pages/budget/categories/context-provider";
 import { BudgetCategoryForm } from "@/pages/budget/categories/form";

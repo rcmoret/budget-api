@@ -6,7 +6,7 @@ import {
   formBgValue,
   rowClassName,
   innerCardClassName,
-} from "@/layout/card/card-classes";
+} from "@/components/card/card-classes";
 import { KeyIdentifier } from "@/components/key-identifier";
 
 const DragHandle = (props: {
@@ -120,6 +120,7 @@ const ActiveItemCard = (props: {
   isFormShown?: boolean;
   label: React.ReactNode;
   id: string;
+  additionalClasses?: Array<string>;
 }) => {
   const { children, isFormShown = false, label, id } = props;
   // when I want to highlight add
@@ -129,7 +130,9 @@ const ActiveItemCard = (props: {
   //   ...(isOutlined ? ["border", "border-2", "border-success"] : []),
 
   const bgColor = isFormShown ? formBgValue : cardBgValue;
-  const className = [outerCardClassName({ bgColor })].join(" ");
+  const className = [
+    outerCardClassName({ bgColor, additional: props.additionalClasses }),
+  ].join(" ");
   return (
     <div className={className} id={id}>
       {label}

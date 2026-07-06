@@ -1,0 +1,28 @@
+# Local development database for the budget app.
+#
+# This project keeps its own Postgres so it does not depend on any other
+# project's containers. It binds host port 5433 to avoid colliding with a
+# Postgres already running on the default 5432.
+#
+#   docker compose up -d db      # start
+#   docker compose down          # stop (data persists in the named volume)
+#   docker compose down -v       # stop and wipe data
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: ${DATABASE_USER:-postgres}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-postgres}
+      POSTGRES_DB: ${DATABASE_NAME:-budget_app_inertia}
+    ports:
+      - "${DATABASE_PORT:-5433}:5432"
+    volumes:
+      - budget_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USER:-postgres}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  budget_pg_data:

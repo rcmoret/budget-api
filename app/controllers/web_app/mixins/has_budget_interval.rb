@@ -45,14 +45,14 @@ module WebApp
       #
       # @return [String, nil] the month value from params
       def month
-        params.permit(:month)[:month]
+        params.permit(:month, :year)[:month]
       end
 
       # Extracts the year parameter from the request.
       #
       # @return [String, nil] the year value from params
       def year
-        params.permit(:year)[:year]
+        params.permit(:month, :year)[:year]
       end
 
       # Before action callback renders an error page if interval is not found.

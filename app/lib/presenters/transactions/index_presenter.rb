@@ -4,21 +4,14 @@ module Presenters
   module Transactions
     class IndexPresenter
       include Presenters::WebApp::FlashMessagesConcern
+      include Mixins::ActiveUserAccounts
 
       def initialize(user_profile, featured_account, budget_month, metadata)
         @featured_account = featured_account
         @user_profile = user_profile
         @budget_month = Budget::BudgetMonthPresenter.new(budget_month)
         @metadata = metadata
-      end
-
-      def accounts
-        @accounts ||=
-          Account
-          .belonging_to(user_profile)
-          .active
-          .by_priority
-          .with_balance
+        @accounts = accounts_for(user_profile)
       end
 
       def transactions
@@ -52,7 +45,8 @@ module Presenters
         :future?,
         to: :budget_month
 
-      attr_reader :budget_month,
+      attr_reader :accounts,
+        :budget_month,
         :featured_account,
         :metadata,
         :user_profile

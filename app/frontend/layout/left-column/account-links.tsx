@@ -4,13 +4,11 @@ import { AccountProps } from "@/types/account";
 import { Link } from "@inertiajs/react";
 
 const Symbol = () => (
-  <div className="inline-block -translate-y-0.5">
-    &#9900;
-  </div>
-)
+  <div className="inline-block -translate-y-0.5">&#9900;</div>
+);
 
 const AccountLink = (props: { account: AccountProps }) => {
-  const { account } = props
+  const { account } = props;
   const linkClassName = [
     "flex",
     "w-full",
@@ -19,8 +17,8 @@ const AccountLink = (props: { account: AccountProps }) => {
     "cursor-pointer",
     "border-neutral",
     "hover:bg-[#61a078]",
-    "not-last:border-b"
-  ].join(" ")
+    "not-last:border-b",
+  ].join(" ");
 
   return (
     <Link href={account.href} className={linkClassName}>
@@ -31,28 +29,32 @@ const AccountLink = (props: { account: AccountProps }) => {
         <AmountSpan amount={account.balance} />
       </div>
     </Link>
-  )
-}
+  );
+};
 
 const AccountLinks = () => {
-  const accounts = getAccounts()
+  const accounts = getAccounts();
+  // The accounts store is only populated on the transactions index page. When
+  // it's empty, render nothing so the dropdown doesn't open to an empty box.
+  if (accounts.length === 0) return null;
+
   const dropDownClassName = [
     "dropdown-content",
     "menu",
     "mt-0",
     "w-full",
     "z-1",
-  ].join(" ")
+  ].join(" ");
 
   return (
     <div tabIndex={-1} className={dropDownClassName}>
       <div className="overflow-hidden mx-1 rounded text-secondary-content bg-secondary text-sm">
         {accounts.map((a) => (
-          <AccountLink key={a.objectKey} account={a} />
+          <AccountLink key={a.slug} account={a} />
         ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export { AccountLinks }
+export { AccountLinks };

@@ -28,7 +28,8 @@ namespace :budget do
           to: WebApp::Budget::Setup::CategoryFormController.action(:call),
           as: :setup_form
       post "/",
-        to: WebApp::Budget::Setup::CreateEventsController.action(:call)
+        to: WebApp::Budget::Setup::CreateEventsController.action(:call),
+        as: :finish_setup
       post "/:slug/new-event",
            to: WebApp::Budget::Setup::AddEventController.action(:call)
       put "/:slug",
@@ -39,6 +40,12 @@ namespace :budget do
       delete "/",
         to: WebApp::Budget::Setup::CategoryFormResetController.action(:call)
     end
+    scope "/roll-over" do
+      get "(/:slug)",
+          to: WebApp::Budget::Rollover::FormController.action(:call),
+          as: :rollover_form
+    end
+
     get "/finalize", to: "finalize/form#call", as: :finalize_form
     post "/finalize", to: "finalize/create_events#call"
   end

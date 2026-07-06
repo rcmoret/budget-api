@@ -1,34 +1,36 @@
-import { BudgetPlanningEvent, GenericGroupCollection, GenericGroup } from "./index";
+import {
+  BudgetPlanningEvent,
+  GenericGroupCollection,
+  GenericGroup,
+} from "./index";
 import { BudgetCategoryType } from "../index";
-// "events": [],
+
 // "upcomingMaturityIntervals": null,
 
+// I think this get get moved to ./index
 type BudgetCategorySlice =
-  "key" |
-  "name" |
-  "slug" |
-  "archivedAt" |
-  "iconClassName" |
-  "isExpense" |
-  "isMonthly" |
-  "isAccrual"
+  | "key"
+  | "name"
+  | "slug"
+  | "archivedAt"
+  | "iconClassName"
+  | "isExpense"
+  | "isMonthly"
+  | "isAccrual";
 
-type CategoryType = Pick<
-  BudgetCategoryType,
-  BudgetCategorySlice
-> & {
+type CategoryType = Pick<BudgetCategoryType, BudgetCategorySlice> & {
   route: string;
   events: Array<BudgetCategoryEventFlagsType>;
-}
+};
 
-type SetupEvents = "setup_item_create" | "setup_item_adjust"
+type SetupEvents = "setup_item_create" | "setup_item_adjust";
 
 type FeaturedBudgetCategoryType = Pick<
   BudgetCategoryType,
   BudgetCategorySlice
 > & {
   events: Array<BudgetPlanningEvent<SetupEvents, BudgetCategoryEventFlagsType>>;
-}
+};
 
 type BudgetCategoryEventFlagsType = {
   eqPrevBudgeted: boolean;
@@ -37,19 +39,21 @@ type BudgetCategoryEventFlagsType = {
   unreviewed: boolean;
   hasDeleteIntent: boolean;
   isValid: boolean;
-}
+};
 
-type CategoryGroup = GenericGroup<CategoryType>
+type CategoryGroup = GenericGroup<CategoryType>;
 
-type CategoryGroups = GenericGroupCollection<CategoryGroup>
+type CategoryGroups = GenericGroupCollection<CategoryGroup>;
 
+// let's give this generic a name,
+// move it to ./index
 type SetupData = {
-  currentCategoryHref: string
+  currentCategoryHref: string;
   nextUnreviewedCategoryHref: string;
   nextCategoryHref: string;
   previousCategoryHref: string;
   previousUnreviewedCategoryHref: string;
-}
+};
 
 export type {
   BudgetCategoryEventFlagsType,
@@ -58,5 +62,5 @@ export type {
   CategoryGroup,
   FeaturedBudgetCategoryType,
   SetupData,
-  SetupEvents
+  SetupEvents,
 };

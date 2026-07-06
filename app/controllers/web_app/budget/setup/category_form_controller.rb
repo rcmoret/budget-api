@@ -8,15 +8,17 @@ module WebApp
         include Mixins::HasBudgetInterval
         include Mixins::HasSlugParams
         include Mixins::UserChangesScope
+        include Mixins::HasBudgetCategoryRecord
 
         before_action lambda {
           if change_set_scope.exists?
             @change_set = change_set_scope.first
-            refresh_category! if category_slug.present?
+            refresh_category! if budget_category_record.present?
           else
             @change_set = change_set_scope.start!
           end
         }
+        before_action -> { presenter.flash = flash }
 
         def call
           render(
@@ -30,6 +32,10 @@ module WebApp
         attr_reader :change_set
 
         delegate :data_model, to: :change_set
+
+        def missing_budget_category?
+          super && category_slug.present?
+        end
 
         def serializer
           @serializer ||=
@@ -54,14 +60,6 @@ module WebApp
             page_name: "budget_planning_setup",
             prev_selected_account_path: ""
           )
-        end
-
-        def budget_category_record
-          @budget_category_record ||=
-            ::Budget::Category.fetch(
-              current_user_profile,
-              slug: category_slug
-            )
         end
 
         def refresh_category!

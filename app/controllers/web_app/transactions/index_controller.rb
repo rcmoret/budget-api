@@ -26,11 +26,15 @@ module WebApp
       end
 
       def serializer
-        IndexSerializer.new(presenter, params: {
-          featured_account: account,
-          month:,
-          year:,
-        })
+        IndexSerializer.new(
+          presenter,
+          params: {
+            featured_account: account,
+            current_user_profile:,
+            month: interval.month,
+            year: interval.year,
+          }
+        )
       end
 
       def metadata

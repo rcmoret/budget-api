@@ -4,6 +4,8 @@ module Budget
       module Presenters
         class IndexPresenter
           include Rails.application.routes.url_helpers
+          include ::Presenters::WebApp::FlashMessagesConcern
+          include ::Presenters::Mixins::ActiveUserAccounts
 
           GroupStruct = Data.define(:label, :categories, :is_selected, :scopes)
 
@@ -11,6 +13,7 @@ module Budget
             @data_model = data_model
             @budget_month =
               ::Presenters::Budget::BudgetMonthPresenter.new(budget_month)
+            @accounts = accounts_for(budget_month.user_group)
             @metadata = metadata
           end
 
@@ -109,6 +112,13 @@ module Budget
             slugs.index(slug).to_i
           end
 
+          def finish_setup_route
+            budget_finish_setup_path(
+              month:,
+              year:
+            )
+          end
+
           def next_index
             (current_index + 1).then do |index|
               [ index, (0 if index == slugs.size) ].compact.min
@@ -119,7 +129,7 @@ module Budget
             current_index - 1
           end
 
-          def current_category_route
+          def current_category_href
             show_path(slug)
           end
 
@@ -131,7 +141,7 @@ module Budget
             )
           end
 
-          attr_reader :data_model, :budget_month, :metadata
+          attr_reader :accounts, :data_model, :budget_month, :metadata
         end
       end
     end

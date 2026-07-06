@@ -21,7 +21,10 @@ module WebApp
           include WebApp::Mixins::HasBudgetInterval
 
           included do
-            before_action -> { redirect_to(budget_path) },
+            before_action lambda {
+              flash[:warning] = "Already setup"
+              redirect_to(budget_path)
+            },
               if: -> { interval.set_up? }
           end
         end
@@ -50,8 +53,8 @@ module WebApp
           extend ActiveSupport::Concern
 
           included do
-            before_action -> { redirect_to budget_setup_form_path },
-              if: -> { budget_category_record.nil? }
+            before_action :handle_budget_category_not_found!,
+              if: :missing_budget_category?
           end
 
           def budget_category_record
@@ -60,6 +63,18 @@ module WebApp
                 current_user_profile,
                 slug: category_slug
               )
+          end
+
+          private
+
+          def missing_budget_category?
+            budget_category_record.nil?
+          end
+
+          def handle_budget_category_not_found!
+            flash[:warning] = "category not found by slug: `#{category_slug}`"
+
+            redirect_to budget_setup_form_path
           end
         end
       end
