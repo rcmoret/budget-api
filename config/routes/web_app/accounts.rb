@@ -1,10 +1,13 @@
 post "/account", to: WebApp::Accounts::CreateController.action(:call)
 
 namespace :accounts do
-  get "/", to: "index#call", as: :index
+  get "/",
+    as: :index,
+    to: WebApp::Accounts::IndexController.action(:call)
   post "/", to: "create#call"
-  # get "/manage", to: "manage#call", as: :manage
-  get "/manage", to: "index#call", as: :manage
+  get "/manage",
+    as: :manage,
+    to: WebApp::Accounts::IndexController.action(:call)
   post "/transfer", to: "transfers/create#call"
 end
 
