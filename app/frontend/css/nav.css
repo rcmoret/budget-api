@@ -3,21 +3,35 @@ nav {
 }
 
 .top-level-link {
-  font-size: var(--text-xl);
-  line-height: var(--tw-leading, var(--text-xl--line-height));
-  padding-top: calc(var(--spacing) * 2);
-  margin-left: calc(var(--spacing) * 4);
-  padding-left: calc(var(--spacing) * 4);
-  padding-bottom: calc(var(--spacing) * 2);
   color: var(--color-primary-content);
+  font-size: var(--text-xl);
   letter-spacing: var(--tracking-wide);
+  line-height: var(--tw-leading, var(--text-xl--line-height));
+  margin-left: calc(var(--spacing) * 4);
+  padding-bottom: calc(var(--spacing) * 2);
+  padding-left: calc(var(--spacing) * 4);
+  padding-top: calc(var(--spacing) * 2);
   position: relative;
 
   &[aria-current="page"] {
     background-color: var(--color-base-100);
+    border-bottom-left-radius: 1.25rem;
+    border-top-left-radius: 1.25rem;
     color: var(--color-primary);
     font-weight: var(--font-weight-bold);
-    border-top-left-radius: 1.25rem;
-    border-bottom-left-radius: 1.25rem;
+  }
+
+  &.dropdown {
+    position: static;
+  }
+
+  & > a {
+    position: relative;
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: calc(var(--spacing) * -2) calc(var(--spacing) * -4);
+    }
   }
 }

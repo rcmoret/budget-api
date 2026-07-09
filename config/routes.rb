@@ -12,7 +12,9 @@ Rails.application.routes.draw do
     draw("web_app/data")
 
     devise_scope :user_profile do
-      get "/sign-out", to: Devise::SessionsController.action(:destroy)
+      get "/sign-out",
+        to: Devise::SessionsController.action(:destroy),
+        as: :user_sign_out
     end
   end
 end

@@ -5,10 +5,18 @@ module WebApp
 
       included do
         nested_attribute :notifications do
-          attributes :alerts,
-            :info,
-            :notices,
-            :warnings
+          attribute :alerts do
+            Array.wrap(params[:flash][:alerts])
+          end
+          attribute :info do
+            Array.wrap(params[:flash][:info])
+          end
+          attribute :notices do
+            Array.wrap(params[:flash][:notices])
+          end
+          attribute :warnings do
+            Array.wrap(params[:flash][:warnings])
+          end
 
           transform_keys :lower_camel
         end

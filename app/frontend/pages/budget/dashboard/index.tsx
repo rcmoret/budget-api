@@ -10,7 +10,6 @@ const DashboardComponent = () => {
   return (
     <PageComponent
       header={<Header />}
-      metadata={{ namespace: "budget", pageName: "page" }}
       mainId="budget-dashboard"
       mainComponentClassNames={["w-full"]}
       rightColumn={<RightColumn />}
@@ -23,11 +22,10 @@ const DashboardComponent = () => {
 const BudgetDashboard = (props: BudgetMonthIndex) => {
   const { items, budgetMonth } = props;
 
-  useInitBudgetDashboardStore({ items, budgetMonth })
-  initBudgetMonthStore({ budgetMonth })
+  useInitBudgetDashboardStore({ items, budgetMonth });
+  initBudgetMonthStore({ budgetMonth });
 
   return <DashboardComponent />;
 };
 
 export default BudgetDashboard;
-

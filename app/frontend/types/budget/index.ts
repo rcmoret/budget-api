@@ -1,8 +1,9 @@
 import { MonetaryAmount } from "@/types/amount";
-import { BudgetItemEvent, BudgetItemCreateEventType } from "./events"
+import { BudgetItemEvent, BudgetItemCreateEventType } from "./events";
 import { IconName } from "@/components/icon";
 import { DiscretionaryDetails } from "@/types/budget/discretionary";
 import { BudgetMonthData } from "./month-data";
+import { PageProps } from "../page_props";
 
 type BudgetItem = {
   amount: MonetaryAmount;
@@ -25,23 +26,23 @@ type BudgetItem = {
   previouslyBudgeted: MonetaryAmount;
   previouslyBudgetedPercentage: number;
   remaining: MonetaryAmount;
-  spent: MonetaryAmount
+  spent: MonetaryAmount;
   transactionDetailTotal: MonetaryAmount;
-}
+};
 
 type BudgetItemCollections = {
   fixedExpenses: Array<BudgetItem>;
   variableExpenses: Array<BudgetItem>;
   fixedRevenues: Array<BudgetItem>;
   variableRevenues: Array<BudgetItem>;
-}
+};
 
-type BudgetMonthIndex = {
+type BudgetMonthIndex = PageProps & {
   budgetMonth: BudgetMonthData;
   discretionary: DiscretionaryDetails;
   items: BudgetItemCollections;
-  createItemEvents: Array<BudgetItemEvent<BudgetItemCreateEventType>>
-}
+  createItemEvents: Array<BudgetItemEvent<BudgetItemCreateEventType>>;
+};
 
 type BudgetCategoryType = {
   key: string;

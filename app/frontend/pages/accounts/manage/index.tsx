@@ -3,10 +3,7 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import {
-  PageComponent,
-  pageHeadingClassName,
-} from "@frontend/layout";
+import { PageComponent, pageHeadingClassName } from "@frontend/layout";
 import { AccountProps } from "@frontend/types/account";
 import { SortableCard } from "./card/sortable-card";
 import {
@@ -19,17 +16,10 @@ import { ToggleSlider } from "@frontend/components/slider";
 import { AccountShowProvider } from "./account-context-provider";
 import { AccountCard } from "./card";
 import { NewForm } from "./form";
+import { PageProps } from "@/types/page_props";
 
-type Metadata = {
-  userKey: string;
-  namespace: string;
-  pageName: string;
-  prevSelectedAccountPath: string;
-};
-
-type AccountManageProps = {
+type AccountManageProps = PageProps & {
   accounts: Array<AccountProps>;
-  metadata: Metadata;
 };
 
 const ArchivedAccountsComponent = () => {
@@ -72,7 +62,7 @@ const ArchivedAccountsComponent = () => {
 const AccountsManager = (props: AccountManageProps) => {
   useInitAccountsManagerStore(props.accounts);
 
-  return <Accounts metadata={props.metadata} />;
+  return <Accounts />;
 };
 
 const ArchievedAccountsList = () => {
@@ -146,7 +136,7 @@ const RightColumn = () => {
   }
 };
 
-const Accounts = (props: { metadata: Metadata }) => {
+const Accounts = () => {
   const activeAccounts = useAccountsManagerStore((s) => s.activeAccounts);
   const handleDragEnd = useAccountsManagerStore((s) => s.handleDragEnd);
   const showArchivedAccounts = useAccountsManagerStore(
@@ -157,7 +147,6 @@ const Accounts = (props: { metadata: Metadata }) => {
   return (
     <PageComponent
       mainId="accounts-manage"
-      metadata={props.metadata}
       header={<Header />}
       rightColumn={<RightColumn />}
     >

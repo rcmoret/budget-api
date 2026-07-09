@@ -3,17 +3,15 @@
 module Presenters
   module Accounts
     class IndexPresenter
-      include Presenters::WebApp::FlashMessagesConcern
-
-      def initialize(user_profile, metadata)
+      def initialize(user_profile)
         @accounts =
           Account
           .belonging_to(user_profile)
-          .by_priority.with_balance
-        @metadata = metadata
+          .by_priority
+          .with_balance
       end
 
-      attr_reader :accounts, :metadata
+      attr_reader :accounts
     end
   end
 end

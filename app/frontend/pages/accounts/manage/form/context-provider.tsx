@@ -5,12 +5,7 @@ import {
   useAccountsManagerStore,
   useShowNewAccountForm,
 } from "@/pages/accounts/manage/store";
-import { redirectQueryParams } from "@/utils/redirect_params";
-
-const accountManageReturnQueryParams = redirectQueryParams([
-  "accounts",
-  "manage",
-]);
+import { getRedirectQueryParams } from "@/layout/app-config-store";
 
 type AccountFormContextType = {
   isDirty: boolean;
@@ -29,6 +24,8 @@ const AccountFormProvider = (props: { children: React.ReactNode }) => {
   const formMethod = showNewAccountForm ? "post" : "put";
 
   const baseUrl = showNewAccountForm ? `/account` : `/account/${account.key}`;
+
+  const accountManageReturnQueryParams = getRedirectQueryParams();
 
   const formUrl = `${baseUrl}?${accountManageReturnQueryParams}`;
 

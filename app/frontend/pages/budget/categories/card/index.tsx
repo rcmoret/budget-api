@@ -4,15 +4,11 @@ import { router } from "@inertiajs/react";
 import { useBudgetCategoryContext } from "@/pages/budget/categories/context-provider";
 import { BudgetCategoryForm } from "@/pages/budget/categories/form";
 import { BudgetCategoryShow } from "./show";
-import { redirectQueryParams } from "@/utils/redirect_params";
-
-const budgetCategoryManageReturnQueryParams = redirectQueryParams([
-  "budget",
-  "categories",
-]);
+import { getRedirectQueryParams } from "@/layout/app-config-store";
 
 const ArchivedBudgetCategoryCard = () => {
   const { category } = useBudgetCategoryContext();
+  const budgetCategoryManageReturnQueryParams = getRedirectQueryParams();
 
   const handleUnarchive = () => {
     router.put(

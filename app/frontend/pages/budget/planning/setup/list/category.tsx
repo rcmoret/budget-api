@@ -7,6 +7,7 @@ import {
   useFeaturedEvents,
   useTrackedEvents,
 } from "../store";
+import { Collapse } from "@/components/collapse";
 
 const FeaturedCategoryComponent = () => {
   const category = useFeaturedCategory();

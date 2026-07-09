@@ -1,10 +1,9 @@
-import { CardRow } from "@/components/card"
-import { useBudgetItemContext } from "./context-provider"
-import { AmountSpan } from "@/components/amount-span"
+import { useBudgetItemContext } from "./context-provider";
+import { AmountSpan } from "@/components/amount-span";
 
 const PreviouslyBudgetedDetails = () => {
-  const { item } = useBudgetItemContext()
-  const { previouslyBudgeted, previouslyBudgetedPercentage } = item
+  const { item } = useBudgetItemContext();
+  const { previouslyBudgeted, previouslyBudgetedPercentage } = item;
 
   return (
     <>

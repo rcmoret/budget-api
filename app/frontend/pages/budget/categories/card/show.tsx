@@ -1,18 +1,14 @@
 import { ArchivedAtRow, ArchiveIcon, CardRow } from "@/components/card";
-import { redirectQueryParams } from "@/utils/redirect_params";
 import { router } from "@inertiajs/react";
 import { KeyIdentifier } from "@/components/key-identifier";
 import { useBudgetCategoryContext } from "@/pages/budget/categories/context-provider";
 import { Pill } from "@/components/pill";
-
-const budgetCategoryManageReturnQueryParams = redirectQueryParams([
-  "budget",
-  "categories",
-]);
+import { getRedirectQueryParams } from "@/layout/app-config-store";
 
 const BudgetCategoryCardBottomRow = () => {
   const { category } = useBudgetCategoryContext();
   const { isArchived } = category;
+  const budgetCategoryManageReturnQueryParams = getRedirectQueryParams();
   const handleArchive = () => {
     router.put(
       `/budget/category/${category.key}?${budgetCategoryManageReturnQueryParams}`,
@@ -60,7 +56,7 @@ const BudgetCategoryShow = () => {
       </CardRow>
       {category.isAccrual && (
         <CardRow>
-          <Pill>Accrual</Pill>
+          <Pill themeOption="accent">Accrual</Pill>
         </CardRow>
       )}
       <CardRow>

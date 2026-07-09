@@ -5,7 +5,6 @@ module Budget
         class IndexPresenter
           include Rails.application.routes.url_helpers
           include ::Presenters::WebApp::FlashMessagesConcern
-          include ::Presenters::Mixins::ActiveUserAccounts
 
           GroupStruct = Data.define(:label, :categories, :is_selected, :scopes)
 
@@ -13,7 +12,6 @@ module Budget
             @data_model = data_model
             @budget_month =
               ::Presenters::Budget::BudgetMonthPresenter.new(budget_month)
-            @accounts = accounts_for(budget_month.user_group)
             @metadata = metadata
           end
 
@@ -141,7 +139,7 @@ module Budget
             )
           end
 
-          attr_reader :accounts, :data_model, :budget_month, :metadata
+          attr_reader :data_model, :budget_month, :metadata
         end
       end
     end

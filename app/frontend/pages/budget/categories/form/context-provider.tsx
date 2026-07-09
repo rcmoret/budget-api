@@ -1,3 +1,4 @@
+import { getRedirectQueryParams } from "@/layout/app-config-store";
 import { useBudgetCategoryContext } from "@/pages/budget/categories/context-provider";
 import {
   useBudgetCategoriesStore,
@@ -5,7 +6,6 @@ import {
 } from "@/pages/budget/categories/store";
 import { SetDataAction, useForm } from "@inertiajs/react";
 import { createContext, useContext } from "react";
-import { redirectQueryParams } from "@/utils/redirect_params";
 
 type BudgetCategoryFormProps = {
   name: string;
@@ -40,7 +40,7 @@ const BudgetCategoryFormProvider = (props: { children: React.ReactNode }) => {
       defaultAmount: category.defaultAmount,
     });
 
-  const queryParams = redirectQueryParams(["budget", "category"]);
+  const queryParams = getRedirectQueryParams();
   const isSubmittable = isDirty;
 
   const value: BudgetCategoryFormContextType = {

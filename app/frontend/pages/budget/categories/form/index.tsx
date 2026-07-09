@@ -8,10 +8,7 @@ import {
 } from "./context-provider";
 import { CardRow } from "@/components/card";
 import { useBudgetCategoryContext } from "@/pages/budget/categories/context-provider";
-import {
-  useBudgetCategoriesStore,
-  useShowNewCategoryForm,
-} from "@/pages/budget/categories/store";
+import { useShowNewCategoryForm } from "@/pages/budget/categories/store";
 
 const inputClassName = ["input", "input-sm"].join(" ");
 

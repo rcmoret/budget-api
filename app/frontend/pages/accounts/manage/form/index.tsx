@@ -9,9 +9,10 @@ import { AccountCard } from "../card";
 import { CardRow } from "@/components/card";
 import { RadioInput } from "@/components/radio";
 
+type NewAccountType = Omit<AccountProps, "href">;
 const NewForm = () => {
   const newAccountKey = useAccountsManagerStore((s) => s.newAccountKey);
-  const account: AccountProps = {
+  const account: NewAccountType = {
     key: newAccountKey,
     objectKey: "",
     name: "",
@@ -23,7 +24,7 @@ const NewForm = () => {
   };
 
   return (
-    <AccountShowProvider account={account}>
+    <AccountShowProvider account={{ ...account, href: "" }}>
       <AccountCard />
     </AccountShowProvider>
   );

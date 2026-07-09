@@ -3,13 +3,7 @@
 module WebApp
   module Budget
     module Dashboard
-      class Serializer
-        include Alba::Resource
-        include Mixins::NotificationsConcern
-        include Accounts::NavigationConcern
-
-        attributes :create_item_events
-
+      class Serializer < PageSerializer
         nested_attribute :items do
           many :fixed_expenses, resource: ItemSerializer
           many :variable_expenses, resource: ItemSerializer
@@ -20,7 +14,11 @@ module WebApp
         end
 
         one :discretionary, resource: DiscretionarySerializer
-        one :budget_month, resource: WebApp::Budget::BudgetMonthSerializer
+        attribute :budget_month do
+          WebApp::Budget::BudgetMonthSerializer.new(
+            params[:budget_month]
+          )
+        end
 
         transform_keys :lower_camel
       end

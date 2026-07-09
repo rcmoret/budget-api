@@ -16,17 +16,11 @@ module WebApp
         if form.save
           redirect_to redirect_path
         else
-          render inertia: error_component, props: page_props
+          render inertia: error_component, props: {}
         end
       end
 
       private
-
-      def props
-        WebApp::Budget::Interval::SetUp::CategoriesSerializer
-          .new(interval)
-          .render.merge(errors: form_errors)
-      end
 
       def set_effective_at!
         change_set.update(effective_at: @effective_timestamp)

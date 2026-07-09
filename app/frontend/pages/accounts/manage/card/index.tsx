@@ -15,16 +15,12 @@ import {
   CloseFormButton,
   EditButton,
 } from "@/components/card";
-import { redirectQueryParams } from "@/utils/redirect_params";
 import { AmountSpan } from "@/components/amount-span";
 import { KeyIdentifier } from "@/components/key-identifier";
-
-const accountManageReturnQueryParams = redirectQueryParams([
-  "accounts",
-  "manage",
-]);
+import { getRedirectQueryParams } from "@/layout/app-config-store";
 
 const AccountCardBottomRow = () => {
+  const accountManageReturnQueryParams = getRedirectQueryParams();
   const { account } = useAccountShowContext();
   const { isArchived } = account;
   const handleArchive = () => {
@@ -77,9 +73,7 @@ const Show = () => {
 
 const LabelLink = () => {
   const { account } = useAccountShowContext();
-  return (
-    <Link href={account.href}>{account.name}</Link>
-  );
+  return <Link href={account.href}>{account.name}</Link>;
 };
 
 const AccountCardLabel = () => {
@@ -143,6 +137,7 @@ const InnerCardComponent = () => {
 
 const ArchivedAccountCard = () => {
   const { account } = useAccountShowContext();
+  const accountManageReturnQueryParams = getRedirectQueryParams();
 
   const onClick = () => {
     router.put(`/account/${account.key}?${accountManageReturnQueryParams}`, {

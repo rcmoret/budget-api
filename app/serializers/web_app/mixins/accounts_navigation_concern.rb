@@ -1,8 +1,25 @@
 # frozen_string_literal: true
 
 module WebApp
-  module Accounts
-    module NavigationConcern
+  module Mixins
+    class AccountLinkSerializer
+      include Alba::Resource
+
+      attributes :name, :balance, :slug
+      attribute :href do |account|
+        Rails
+          .application
+          .routes
+          .url_helpers
+          .transactions_index_path(
+            account,
+            month: params[:month],
+            year: params[:year],
+          )
+      end
+    end
+
+    module AccountsNavigationConcern
       extend ActiveSupport::Concern
 
       included do
@@ -12,7 +29,7 @@ module WebApp
 
         def account_links(*)
           accounts.map do |account|
-            WebApp::Accounts::AccountLinkSerializer.new(account)
+            WebApp::Mixins::AccountLinkSerializer.new(account)
           end
         end
 
@@ -30,23 +47,6 @@ module WebApp
             Account.none
           end
         end
-      end
-    end
-
-    class AccountLinkSerializer
-      include Alba::Resource
-
-      attributes :name, :balance, :slug
-      attribute :href do |account|
-        Rails
-          .application
-          .routes
-          .url_helpers
-          .transactions_index_path(
-            account,
-            month: params[:month],
-            year: params[:year],
-          )
       end
     end
   end

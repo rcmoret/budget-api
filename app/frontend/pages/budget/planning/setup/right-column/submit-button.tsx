@@ -9,7 +9,6 @@ const SubmitButton = () => {
   const { post, processing } = useForm();
 
   const finishSetupRoute = usePlanningSetupStore((s) => s.finishSetupRoute);
-  console.log(finishSetupRoute);
 
   const isDisabled =
     processing ||

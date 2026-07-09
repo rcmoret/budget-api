@@ -17,11 +17,10 @@ type RolloverIndexProps = {
   };
 };
 
-const RolloverIndex = (props: RolloverIndexProps) => {
+const RolloverIndex = (_props: RolloverIndexProps) => {
   return (
     <PageComponent
       header={null}
-      metadata={props.metadata}
       mainId="budget-setup"
       mainComponentClassNames={["budget-planning"]}
       rightColumn={null}

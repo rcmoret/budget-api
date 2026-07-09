@@ -3,7 +3,7 @@
 module WebApp
   module Budget
     module Dashboard
-      class ItemSerializer < ApplicationSerializer
+      class ItemSerializer
         include Alba::Resource
 
         transform_keys :lower_camel

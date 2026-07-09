@@ -1,6 +1,9 @@
+import { usePage } from "@inertiajs/react";
 import { useInitAppConfigStore } from "@/layout/app-config-store";
 import { LeftColumn } from "@/layout/left-column";
 import { Notifications } from "./notifications";
+import { initNavigationLinks } from "./account-navigation-store";
+import { PageProps } from "@/types/page_props";
 
 const pageHeadingClassName = [
   "text-2xl",
@@ -10,10 +13,6 @@ const pageHeadingClassName = [
 ].join(" ");
 
 type LayoutProps = {
-  metadata: {
-    namespace: string;
-    pageName: string;
-  };
   header?: React.ReactNode;
   children: React.ReactNode;
   rightColumn: React.ReactNode;
@@ -22,8 +21,7 @@ type LayoutProps = {
 };
 
 const PageComponent = (props: LayoutProps) => {
-  useInitAppConfigStore(props.metadata.namespace, props.metadata.pageName);
-
+  const { notifications } = usePage<PageProps>().props;
   const { mainComponentClassNames = [] } = props;
 
   const pageHeaderClassName = [
@@ -51,7 +49,7 @@ const PageComponent = (props: LayoutProps) => {
         {props.children}
       </MainComponent>
       <aside className="flex flex-col gap-2 py-4 overflow-y-scroll">
-        <Notifications />
+        <Notifications notifications={notifications} />
         {props.rightColumn}
       </aside>
     </div>
@@ -80,17 +78,20 @@ const MainComponent = (props: {
   );
 };
 
-const PageLayout = (props: {
-  children: React.ReactNode;
-  header: React.ReactNode;
-  metadata: {
-    namespace: "budget" | "accounts";
-  };
-}) => {
+const PageLayout = ({ children }: { children: React.ReactNode }) => {
+  const { props } = usePage<PageProps>();
+
+  useInitAppConfigStore({
+    appRoutes: props.appRoutes,
+    metadata: props.metadata,
+    redirectSegments: props.redirectSegments,
+  });
+  initNavigationLinks(props.accountLinks);
+
   return (
     <div className="flex flex-row items-start">
       <LeftColumn />
-      <div className="flex-1 flex flex-col min-h-screen">{props.children}</div>
+      <div className="flex-1 flex flex-col min-h-screen">{children}</div>
     </div>
   );
 };

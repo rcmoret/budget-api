@@ -1,10 +1,12 @@
-import { usePage } from "@inertiajs/react";
 import { useEffect } from "react";
 import {
   useDispatchNotificationStore,
+  CLOSE_ANIMATION_MS,
   type Notification,
   type NotificationKind,
 } from "./store";
+import { NotificationsCollectionType } from "@/types/page_props";
+import { Collapse } from "@/components/collapse";
 
 type NotificationsProps = {
   alerts: Array<string>;
@@ -17,10 +19,10 @@ type NotificationsProps = {
 // alert: "bg-error/80 outline-error text-error-content",
 
 const kindClassName: Record<NotificationKind, string> = {
-  alert: "bg-error/80 outline-gray-800 text-error-content",
-  info: "bg-info/85 outline-gray-500 text-info-content",
-  notice: "bg-success/85 outline-gray-700 text-success-content",
-  warning: "bg-warning/70 outline-gray-500 text-warning-content",
+  alert: "bg-error/80 border-gray-800 text-error-content",
+  info: "bg-info/85 border-gray-500 text-info-content",
+  notice: "bg-success/85 border-gray-700 text-success-content",
+  warning: "bg-warning/70 border-gray-500 text-warning-content",
 };
 
 const buildNotifications = (
@@ -59,18 +61,11 @@ const NotificationItem = (props: {
 }) => {
   const { item, isClosing, onDismiss } = props;
 
-  const wrapperClassName = [
-    "grid",
-    "transition-all",
-    "duration-1000",
-    "ease-in-out",
+  const innerClassName = [
     kindClassName[item.kind],
     "rounded",
-    "outline-1",
+    "border-1",
     "shadow-md",
-    isClosing
-      ? "grid-rows-[0fr] opacity-0 mb-0"
-      : "grid-rows-[1fr] opacity-100 mb-1",
   ].join(" ");
 
   const itemClassName = [
@@ -84,26 +79,30 @@ const NotificationItem = (props: {
   ].join(" ");
 
   return (
-    <div className={wrapperClassName}>
-      <div className="overflow-hidden min-h-0">
-        <div className={itemClassName}>
-          <span>&bull; {item.message}</span>
-          <button
-            type="button"
-            onClick={onDismiss}
-            className="btn btn-ghost btn-xs btn-circle"
-            title="dismiss notification"
-          >
-            ✕
-          </button>
-        </div>
+    <Collapse
+      open={!isClosing}
+      fade
+      durationMs={CLOSE_ANIMATION_MS}
+      innerClassName={innerClassName}
+    >
+      <div className={itemClassName}>
+        <span>&bull; {item.message}</span>
+        <button
+          type="button"
+          onClick={onDismiss}
+          className="btn btn-ghost btn-xs btn-circle"
+          title="dismiss notification"
+        >
+          ✕
+        </button>
       </div>
-    </div>
+    </Collapse>
   );
 };
 
-const Notifications = () => {
-  const { props } = usePage<{ notifications: NotificationsProps }>();
+const Notifications = (props: {
+  notifications: NotificationsCollectionType;
+}) => {
   const items = useDispatchNotificationStore((s) => s.items);
   const closingIds = useDispatchNotificationStore((s) => s.closingIds);
   const resetItems = useDispatchNotificationStore((s) => s.resetItems);

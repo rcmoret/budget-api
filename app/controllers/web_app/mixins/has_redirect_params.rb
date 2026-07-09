@@ -14,7 +14,7 @@ module WebApp
         in ["budget"]
           budget_index_path
         in ["budget", "categories"]
-          budget_categories_index_path
+          budget_categories_path
         in ["budget", "category", *rest]
           resolve_budget_category_path(*rest)
         in ["budget", month, year, *rest]
@@ -25,7 +25,7 @@ module WebApp
         in ["accounts", "manage"]
           accounts_manage_path
         in ["accounts", *]
-          accounts_index_path
+          accounts_path
         in ["account", *rest]
           resolve_account_path(*rest)
         else
@@ -57,13 +57,13 @@ module WebApp
         in [slug, "transactions", *rest]
           resolve_transactions_path(slug, *rest)
         else
-          accounts_index_path
+          accounts_path
         end
       end
 
       def resolve_transactions_path(slug, *args)
         unless Account.belonging_to(current_user_profile).exists?(slug:)
-          return accounts_index_path
+          return accounts_path
         end
 
         case args
@@ -85,7 +85,7 @@ module WebApp
         in [slug]
           budget_category_show_path(slug)
         else
-          budget_categories_index_path
+          budget_categories_path
         end
       end
 

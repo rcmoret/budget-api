@@ -5,7 +5,7 @@ module WebApp
         class IndexSerializer
           include Alba::Resource
           include Mixins::NotificationsConcern
-          include Presenters::Mixins::ActiveUserAccounts
+          include Accounts::NavigationConcern
 
           # rubocop:disable Metrics/BlockLength
           one :featured_category, source: proc { category } do

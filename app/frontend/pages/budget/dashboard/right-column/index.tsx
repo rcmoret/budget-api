@@ -55,4 +55,4 @@ const RightColumn = () => {
   )
 }
 
-export { RightColumn }
+export { RightColumn };

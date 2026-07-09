@@ -1,3 +1,4 @@
+import { AppRoutesType, Metadata, RouteName } from "@/types/page_props";
 import { useEffect } from "react";
 import { create } from "zustand";
 
@@ -23,26 +24,47 @@ const applyTheme = (theme: Theme) => {
 };
 
 type AppConfigState = {
+  appRoutes: AppRoutesType;
+  budgetEventsRoute: string;
+  budgetMonth: null;
   namespace: string;
   pageName: null | string;
-  setPageName: (p: string) => void;
-  budgetMonth: null;
+  redirectSegments: Array<string>;
+  setBudgetEventsRoute: (r: string) => void;
   setNamespace: (namespace: string) => void;
+  setPageName: (p: string) => void;
+  setAppRoutesStore: (routes: AppRoutesType) => void;
+  setRedirectSegments: (segments: Array<string>) => void;
   showAccruals: boolean;
-  toggleShowAccruals: () => void;
   theme: Theme;
+  toggleShowAccruals: () => void;
   toggleTheme: () => void;
 };
 
 const useAppConfigStore = create<AppConfigState>((set) => ({
   namespace: "",
+  budgetEventsRoute: "",
   budgetMonth: null,
   pageName: null,
+  appRoutes: {
+    accountMenuRoute: "",
+    budgetDashboardRoute: "",
+    createBudgetEventsRoute: "",
+    currentRoute: "",
+    manageAccountsRoute: "",
+    manageBudgetCategoriesRoute: "",
+    userSignOutRoute: "",
+  },
+  redirectSegments: [],
   setNamespace: (namespace) => set({ namespace }),
+  setAppRoutesStore: (appRoutes: AppRoutesType) => set({ appRoutes }),
   showAccruals: false,
   toggleShowAccruals: () => set((s) => ({ showAccruals: !s.showAccruals })),
   theme: getInitialTheme(),
+  setBudgetEventsRoute: (route: string) => set({ budgetEventsRoute: route }),
   setPageName: (pageName: string) => set({ pageName }),
+  setRedirectSegments: (redirectSegments: Array<string>) =>
+    set({ redirectSegments }),
   toggleTheme: () =>
     set((s) => {
       const next: Theme = s.theme === LIGHT_THEME ? DARK_THEME : LIGHT_THEME;
@@ -61,11 +83,36 @@ const useToggleShowAccruals = () =>
 const useTheme = () => useAppConfigStore((s) => s.theme);
 const useToggleTheme = () => useAppConfigStore((s) => s.toggleTheme);
 const useIsDarkTheme = () => useAppConfigStore((s) => s.theme === DARK_THEME);
+const getRedirectQueryParams = () => {
+  const redirectSegments = useAppConfigStore((s) => s.redirectSegments);
 
-const useInitAppConfigStore = (namespace: string, pageName: string) => {
+  return redirectSegments
+    .map((segment) => {
+      return ["redirect[segments][]", segment]
+        .map((str) => encodeURIComponent(str))
+        .join("=");
+    })
+    .join("&");
+};
+
+const getBudgetEventsRoute = () =>
+  useAppConfigStore((s) => s.budgetEventsRoute);
+const useAppRoutes = (routeName: RouteName) =>
+  useAppConfigStore((s) => s.appRoutes[routeName]);
+
+const useInitAppConfigStore = (props: {
+  appRoutes: AppRoutesType;
+  metadata: Metadata;
+  redirectSegments: Array<string>;
+}) => {
   const setNamespace = useAppConfigStore((s) => s.setNamespace);
   const setPageName = useAppConfigStore((s) => s.setPageName);
+  const setRedirectSegments = useAppConfigStore((s) => s.setRedirectSegments);
+  const setBudgetEventsRoute = useAppConfigStore((s) => s.setBudgetEventsRoute);
+  const setAppRoutesStore = useAppConfigStore((s) => s.setAppRoutesStore);
   const theme = useAppConfigStore((s) => s.theme);
+  const { budgetEventsRoute, namespace, pageName } = props.metadata;
+  const { appRoutes } = props;
 
   useEffect(() => {
     setNamespace(namespace);
@@ -78,10 +125,25 @@ const useInitAppConfigStore = (namespace: string, pageName: string) => {
   useEffect(() => {
     applyTheme(theme);
   }, [theme]);
+
+  useEffect(() => {
+    setRedirectSegments(props.redirectSegments);
+  }, [props.redirectSegments, setRedirectSegments]);
+
+  useEffect(() => {
+    setAppRoutesStore(appRoutes);
+  }, [appRoutes, setAppRoutesStore]);
+
+  useEffect(() => {
+    setBudgetEventsRoute(budgetEventsRoute);
+  }, [budgetEventsRoute, setBudgetEventsRoute]);
 };
 
 export {
+  getBudgetEventsRoute,
+  getRedirectQueryParams,
   useAppConfigStore,
+  useAppRoutes,
   useInitAppConfigStore,
   useIsDarkTheme,
   useNamespace,

@@ -2,6 +2,7 @@ module WebApp
   module Transactions
     class DetailSerializer
       include Alba::Resource
+
       attributes :key
       one :amount, resource: MonetaryAmountSerializer
       attribute(:budget_item_key) { |detail| detail.budget_item&.key }

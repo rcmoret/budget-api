@@ -1,43 +1,29 @@
 import { MenuItems } from "./menu-item";
-import { useNamespace } from "@frontend/layout/app-config-store";
+import { useAppRoutes, useNamespace } from "@frontend/layout/app-config-store";
 import { Link } from "@inertiajs/react";
 import { AppConfigItems } from "./config-items";
-import { AccountLinks } from "./account-links";
-
-const accountsIndexUrl = "/accounts";
-const budgetCategoryIndexUrl = "/budget";
+import { AccountMenuComponent } from "./account-menu-item";
 
 const TopMenuItems = () => {
   const namespace = useNamespace();
   const label = namespace === "budget" ? "Budget" : "Accounts";
+  const budgetDashboardUrl = useAppRoutes("budgetDashboardRoute");
+  console.log(budgetDashboardUrl);
 
   return (
     <MenuItems label={label}>
-      <Link href={budgetCategoryIndexUrl}>
-        <div
-          className="top-level-link"
-          aria-current={namespace === "budget" ? "page" : undefined}
-        >
-          Budget
-        </div>
-      </Link>
+      <div
+        className="top-level-link"
+        aria-current={namespace === "budget" ? "page" : undefined}
+      >
+        <Link href={budgetDashboardUrl}>Budget</Link>
+      </div>
 
-      <div className="dropdown">
-        <div
-          className="top-level-link flex items-center"
-          aria-current={namespace === "accounts" ? "page" : undefined}
-        >
-          <Link href={accountsIndexUrl}>Accounts</Link>
-          <button
-            tabIndex={0}
-            aria-label="Toggle accounts menu"
-            aria-haspopup="true"
-            className="px-1"
-          >
-            ▾
-          </button>
-        </div>
-        <AccountLinks />
+      <div
+        className="top-level-link"
+        aria-current={namespace === "accounts" ? "page" : undefined}
+      >
+        <AccountMenuComponent />
       </div>
     </MenuItems>
   );
@@ -55,17 +41,23 @@ const BottomMenuItems = () => {
     "[&::-webkit-details-marker]:hidden",
   ].join(" ");
 
+  const manageBudgetCategoriesRoute = useAppRoutes(
+    "manageBudgetCategoriesRoute",
+  );
+  const manageAccountsRoute = useAppRoutes("manageAccountsRoute");
+  const signOutRoute = useAppRoutes("userSignOutRoute");
+
   return (
     <div className="flex flex-col gap-2 rounded">
       <div className={menuLabelClassName}>
-        <Link href="/accounts/manage">Manage Accounts</Link>
+        <Link href={manageAccountsRoute}>Manage Accounts</Link>
       </div>
       <div className={menuLabelClassName}>
-        <Link href="/budget/categories">Manage Categories</Link>
+        <Link href={manageBudgetCategoriesRoute}>Manage Categories</Link>
       </div>
       <AppConfigItems />
       <div className="text-primary-content text-sm mx-2 pt-4 pb-8 border-t border-neutral">
-        Logout
+        <Link href={signOutRoute}>Logout</Link>
       </div>
     </div>
   );

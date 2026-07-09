@@ -4,40 +4,28 @@ module WebApp
   module Budget
     class IndexController < BaseController
       include Mixins::HasBudgetInterval
+      include Mixins::PageController
 
-      before_action -> { presenter.flash = flash }
-
-      def call
-        render inertia: "budget/dashboard/index", props: serializer.to_h
+      define_route_segment :budget
+      use_template "budget/dashboard"
+      serialize_with WebApp::Budget::Dashboard::Serializer
+      subject do
+        Presenters::Budget::Dashboard::IndexPresenter.new(interval)
       end
 
       private
 
-      def presenter
-        @presenter ||=
-          Presenters::Budget::Dashboard::IndexPresenter
-          .new(interval, metadata)
+      def serializer_context
+        {
+          budget_month:
+            Presenters::Budget::BudgetMonthPresenter.new(interval),
+          month:,
+          year:,
+        }
       end
 
-      def serializer
-        @serializer ||=
-          WebApp::Budget::Dashboard::Serializer
-          .new(
-            presenter,
-            params: {
-              current_user_profile:,
-              namespace: "budget",
-              month:,
-              year:,
-            }
-          )
-      end
-
-      def metadata
-        @metadata ||= Presenters::ControllerMetadata.new(
-          namespace: "budget",
-          prev_selected_account_path:
-        )
+      def route_segments
+        super(month, year)
       end
     end
   end

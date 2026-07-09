@@ -11,17 +11,14 @@ import {
 import { initSetupStore } from "./store";
 import { CategoryGroupList } from "./list";
 import { FeaturedCategoryComponent } from "./featured-category/index";
+import { PageProps } from "@/types/page_props";
 
-type SetupIndexProps = {
+type SetupIndexProps = PageProps & {
   budgetMonth: BudgetMonthData;
   featuredCategory: FeaturedBudgetCategoryType;
   groups: CategoryGroups;
   neighborLinks: SetupData;
   finishSetupRoute: string;
-  metadata: {
-    namespace: string;
-    pageName: string;
-  };
 };
 
 const SetupIndex = (props: SetupIndexProps) => {
@@ -43,7 +40,6 @@ const SetupIndex = (props: SetupIndexProps) => {
   return (
     <PageComponent
       header={<SetupHeader />}
-      metadata={props.metadata}
       mainId="budget-setup"
       mainComponentClassNames={["budget-planning"]}
       rightColumn={<SetupRightColumn />}

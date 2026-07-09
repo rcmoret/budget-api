@@ -13,9 +13,9 @@ import {
   useShowNewCategoryForm,
 } from "@/pages/budget/categories/store";
 import { NewCategoryForm } from "@/pages/budget/categories/manage/new-category-form";
+import { PageProps } from "@/types/page_props";
 
-const CategoryIndex = (props: { metadata: { pageName: string; namespace: string } }) => {
-  const { metadata } = props;
+const CategoryIndex = () => {
   const activeCategories = useActiveBudgetCategories();
   const filteredArchivedCategories = useArchivedBudgetCategories();
   const showArchivedCategories = useBudgetCategoriesStore(
@@ -27,7 +27,6 @@ const CategoryIndex = (props: { metadata: { pageName: string; namespace: string 
     <PageComponent
       mainId="manage-budget-categories"
       header={<Header />}
-      metadata={metadata}
       rightColumn={<RightColumn />}
     >
       <div id="category-list" className="flex flex-col gap-2">
@@ -44,19 +43,15 @@ const CategoryIndex = (props: { metadata: { pageName: string; namespace: string 
   );
 };
 
-type ManageCategoriesProps = {
+type ManageCategoriesProps = PageProps & {
   categories: Array<BudgetCategoryType>;
-  metadata: {
-    namespace: string;
-    pageName: string;
-  };
 };
 
 const Categories = (props: ManageCategoriesProps) => {
-  const { metadata, categories } = props;
+  const { categories } = props;
   useInitBudgetCategoriesStore(categories);
 
-  return <CategoryIndex metadata={metadata} />;
+  return <CategoryIndex />;
 };
 
 export default Categories;

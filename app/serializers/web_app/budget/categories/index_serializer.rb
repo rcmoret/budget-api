@@ -3,12 +3,8 @@
 module WebApp
   module Budget
     module Categories
-      class IndexSerializer
-        include Alba::Resource
-        include Mixins::NotificationsConcern
-
+      class IndexSerializer < PageSerializer
         many :categories, resource: CategoryResource
-        one :metadata, resource: MetadataSerializer
 
         transform_keys :lower_camel
       end

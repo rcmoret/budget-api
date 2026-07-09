@@ -1,9 +1,9 @@
 namespace :budget do
-  get "/", to: "index#call", as: :home
+  get "/", to: "index#call", as: :dashboard
 
   get "/categories",
     to: WebApp::Budget::Categories::IndexController.action(:call),
-    as: :categories_index
+    as: :categories
 
   namespace :category, module: :categories do
     get "/:slug", to: "show#call", as: :show
@@ -11,7 +11,7 @@ namespace :budget do
     post "/", to: "create#call"
   end
 
-  post "/events/(:month)/(:year)", to: "events#call", as: :events
+  post "/events/(:month)/(:year)", to: "events#call", as: :create_events
 
   get "(/:month)(/:year)",
     to: WebApp::Budget::IndexController.action(:call),

@@ -1,10 +1,6 @@
 module WebApp
   module Transactions
-    class IndexSerializer
-      include Alba::Resource
-      include Mixins::NotificationsConcern
-      include Accounts::NavigationConcern
-
+    class IndexSerializer < PageSerializer
       many :budget_items, resource: BudgetItemSerializer
       one :budget_month, resource: BudgetMonthSerializer
       nested_attribute :featured_account do
@@ -16,7 +12,6 @@ module WebApp
 
         transform_keys :lower_camel
       end
-      one :metadata, resource: MetadataSerializer
 
       transform_keys :lower_camel
     end
