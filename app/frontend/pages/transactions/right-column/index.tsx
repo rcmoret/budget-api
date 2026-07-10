@@ -1,12 +1,7 @@
-import { BudgetMonthSummary } from "@/components/budget-month"
-import { RightColumnWrapper } from "@/components/right-column-bordered"
+import { BudgetMonthSummary } from "@/components/budget-month";
 
 const RightColumn = () => {
-  return (
-    <RightColumnWrapper>
-      <BudgetMonthSummary />
-    </RightColumnWrapper>
-  )
-}
+  return <BudgetMonthSummary />;
+};
 
-export { RightColumn }
+export { RightColumn };

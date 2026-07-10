@@ -4,6 +4,7 @@ import { LeftColumn } from "@/layout/left-column";
 import { Notifications } from "./notifications";
 import { initNavigationLinks } from "./account-navigation-store";
 import { PageProps } from "@/types/page_props";
+import { RightColumnWrapper } from "@/components/right-column-bordered";
 
 const pageHeadingClassName = [
   "text-2xl",
@@ -50,7 +51,7 @@ const PageComponent = (props: LayoutProps) => {
       </MainComponent>
       <aside className="flex flex-col gap-2 py-4 overflow-y-scroll">
         <Notifications notifications={notifications} />
-        {props.rightColumn}
+        <RightColumnWrapper>{props.rightColumn}</RightColumnWrapper>
       </aside>
     </div>
   );

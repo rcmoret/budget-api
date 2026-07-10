@@ -43,7 +43,7 @@ const ArchivedAccountsComponent = () => {
 
   return (
     <div>
-      <div className="flex flex-row justify-between items-center mt-4 px-8">
+      <div className="flex flex-row justify-between items-center px-8">
         <label htmlFor="toggle-archived-accounts" className="text-sm">
           {label}
         </label>

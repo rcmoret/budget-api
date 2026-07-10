@@ -1,6 +1,5 @@
 import { Link } from "@inertiajs/react";
 import { getBudgetMonth } from "@/pages/budget/month-store";
-import { RightColumnWrapper } from "@/components/right-column-bordered";
 import {
   getCurrentGroup,
   useToggleReviewedCategoryVisibility,
@@ -32,44 +31,40 @@ const RightColumn = () => {
   ].join(" ");
 
   return (
-    <>
-      <RightColumnWrapper>
-        <BudgetMonthSummary>
-          <SetupBudgetSummary />
-          <div className="flex flex-row justify-between items-center text-sm">
-            <label htmlFor="toggle-cleared-items" className="text-sm">
-              {label}
-            </label>
-            <div className="tooltip tooltip-left" data-tip={buttonTitle}>
-              <ToggleSlider
-                toggleValue={showReviewedCategories}
-                onClick={toggleReviewedCatgoryVisibility}
-                id="toggle-cleared-items"
-              />
-            </div>
-          </div>
-          <div className="w-full flex justify-between text-lg">
-            <CreateEventSelect
-              month={month}
-              year={year}
-              eventContext="setup"
-              scopes={scopes}
-            />
-          </div>
-          <div className="w-full">
-            <Link
-              href={href}
-              method="delete"
-              className={className}
-              preserveState={false}
-            >
-              Reset Categories
-            </Link>
-          </div>
-          <SubmitButton />
-        </BudgetMonthSummary>
-      </RightColumnWrapper>
-    </>
+    <BudgetMonthSummary>
+      <SetupBudgetSummary />
+      <div className="flex flex-row justify-between items-center text-sm">
+        <label htmlFor="toggle-cleared-items" className="text-sm">
+          {label}
+        </label>
+        <div className="tooltip tooltip-left" data-tip={buttonTitle}>
+          <ToggleSlider
+            toggleValue={showReviewedCategories}
+            onClick={toggleReviewedCatgoryVisibility}
+            id="toggle-cleared-items"
+          />
+        </div>
+      </div>
+      <div className="w-full flex justify-between text-lg">
+        <CreateEventSelect
+          month={month}
+          year={year}
+          eventContext="setup"
+          scopes={scopes}
+        />
+      </div>
+      <div className="w-full">
+        <Link
+          href={href}
+          method="delete"
+          className={className}
+          preserveState={false}
+        >
+          Reset Categories
+        </Link>
+      </div>
+      <SubmitButton />
+    </BudgetMonthSummary>
   );
 };
 
