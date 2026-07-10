@@ -7,6 +7,7 @@ import { BudgetItemCard } from "./card";
 import { BudgetItem } from "@/types/budget";
 import { useShowAccruals } from "@/layout/app-config-store";
 import { GroupLabel } from "@/components/group-label";
+import { matchesFilterTerm, useFilterTerm } from "@/utils/hooks/use-filter-term";
 
 const useShowClearedItems = () => {
   return useBudgetDashboardStore((s) => s.clearedItemVisibilityToggle);
@@ -64,22 +65,30 @@ const ItemGroupComponent = (props: { group: ItemGroup }) => {
 
   const showClearedItems = useShowClearedItems();
   const showAccruals = useShowAccruals();
+  const filterTerm = useFilterTerm();
 
-  const items = group.items.filter((item) => {
+  const nameFilteredItems = group.items.filter((item) =>
+    matchesFilterTerm(filterTerm, item),
+  );
+
+  const items = nameFilteredItems.filter((item) => {
     return (
       accrualItemFilter({ item, showAccruals }) &&
       clearedItemFilter({ item, showClearedItems })
     );
   });
 
-  const nonVisibleAccrualItems = group.items.filter((item) => {
-    return (
-      !accrualItemFilter({ item, showAccruals }) ||
-      !clearedItemFilter({ item, showClearedItems })
-    );
-  });
+  const nonVisibleAccrualItems = nameFilteredItems.filter(
+    (item) => !accrualItemFilter({ item, showAccruals }),
+  );
 
-  if (!group.visible || !group.items.length) return null;
+  const nonVisibleClearedItems = nameFilteredItems.filter(
+    (item) =>
+      accrualItemFilter({ item, showAccruals }) &&
+      !clearedItemFilter({ item, showClearedItems }),
+  );
+
+  if (!group.visible || !nameFilteredItems.length) return null;
 
   return (
     <div className="flex flex-col gap-2 border-b border-primary/75 pb-4 py-1">
@@ -88,6 +97,7 @@ const ItemGroupComponent = (props: { group: ItemGroup }) => {
         <div>{fixedOrVariable}</div>
       </GroupLabel>
       <FilteredItemsDetail label="accrual" items={nonVisibleAccrualItems} />
+      <FilteredItemsDetail label="cleared" items={nonVisibleClearedItems} />
       {items.map((item) => (
         <BudgetItemCard key={item.objectKey} item={item} />
       ))}

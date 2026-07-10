@@ -5,6 +5,7 @@ import { BudgetMonthIndex } from "@/types/budget";
 import { useInitBudgetDashboardStore } from "./store";
 import { ItemsContainer } from "./items";
 import { initBudgetMonthStore } from "../month-store";
+import { useInitFilterTermStore } from "@/utils/hooks/use-filter-term";
 
 const DashboardComponent = () => {
   return (
@@ -24,6 +25,7 @@ const BudgetDashboard = (props: BudgetMonthIndex) => {
 
   useInitBudgetDashboardStore({ items, budgetMonth });
   initBudgetMonthStore({ budgetMonth });
+  useInitFilterTermStore(null);
 
   return <DashboardComponent />;
 };

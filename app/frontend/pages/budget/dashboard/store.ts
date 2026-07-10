@@ -16,11 +16,9 @@ type BudgetDashboardState = {
   items: BudgetItemCollections;
   discretionary: DiscretionaryDetails;
   expenseOrRevenueFilter: ExpenseFilterItem;
-  filterTerm: string | null;
   fixedOrVariableFilter: FixedOrVariableFilterType;
   clearedItemVisibilityToggle: boolean;
   setExpenseOrRevenueFilter: (f: ExpenseFilterItem) => void;
-  setFilterTerm: (term: string | null) => void;
   setFixedOrVariableFilter: (f: FixedOrVariableFilterType) => void;
   setItems: (items: BudgetItemCollections) => void;
   setDiscretionary: (discretionary: DiscretionaryDetails) => void;
@@ -42,7 +40,6 @@ const useBudgetDashboardStore = create<BudgetDashboardState>((set) => ({
   },
   clearedItemVisibilityToggle: false,
   expenseOrRevenueFilter: null,
-  filterTerm: null,
   fixedOrVariableFilter: null,
 
   setDiscretionary: (discretionary) => set({ discretionary }),
@@ -51,7 +48,6 @@ const useBudgetDashboardStore = create<BudgetDashboardState>((set) => ({
   setExpenseOrRevenueFilter: (expenseOrRevenueFilter) =>
     set({ expenseOrRevenueFilter }),
 
-  setFilterTerm: (filterTerm) => set({ filterTerm }),
   setFixedOrVariableFilter: (fixedOrVariableFilter) =>
     set({ fixedOrVariableFilter }),
   toggleItemVisibility: (bool) => set({ clearedItemVisibilityToggle: bool }),

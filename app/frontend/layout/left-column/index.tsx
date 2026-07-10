@@ -67,7 +67,7 @@ const LeftColumn = () => {
   const leftColumnClassName = [
     "lg:w-60",
     "md:w-44",
-    "w-32",
+    "min-w-40",
     "h-screen",
     "sticky",
     "top-0",

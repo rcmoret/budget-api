@@ -6,6 +6,7 @@ import { AccrualToggle } from "./accrual-toggle";
 import { ClearedItemsToggle } from "./cleared-items-toggle";
 import { Link } from "@inertiajs/react";
 import { CreateEventForm } from "./create-event-form";
+import { NameFilter } from "./name-filter";
 
 const SetUpLink = () => {
   const { month, year, monthName } = getBudgetMonth();
@@ -35,6 +36,7 @@ const RightColumn = () => {
         <ExpenseFilters />
         <CategoryTypeFilters />
       </div>
+      <NameFilter />
       <CreateEventForm />
       <div className="grid gap-0 px-4 pt-4 border-t border-neutral">
         <AccrualToggle />

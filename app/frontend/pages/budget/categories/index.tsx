@@ -14,6 +14,7 @@ import {
 } from "@/pages/budget/categories/store";
 import { NewCategoryForm } from "@/pages/budget/categories/manage/new-category-form";
 import { PageProps } from "@/types/page_props";
+import { useInitFilterTermStore } from "@/utils/hooks/use-filter-term";
 
 const CategoryIndex = () => {
   const activeCategories = useActiveBudgetCategories();
@@ -50,6 +51,7 @@ type ManageCategoriesProps = PageProps & {
 const Categories = (props: ManageCategoriesProps) => {
   const { categories } = props;
   useInitBudgetCategoriesStore(categories);
+  useInitFilterTermStore(null);
 
   return <CategoryIndex />;
 };

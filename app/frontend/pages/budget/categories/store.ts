@@ -3,13 +3,17 @@ import { create } from "zustand";
 import { BudgetCategoryType } from "@/types/budget";
 import { generateKeyIdentifier } from "@frontend/utils/KeyIdentifier";
 import { byName as sortByName } from "@/utils/sort-functions";
+import {
+  isFilterTermActive,
+  matchesFilterTerm,
+  useFilterTerm,
+} from "@/utils/hooks/use-filter-term";
 
 type ExpenseFilterItem = null | "expense" | "revenue";
 type CategoryTypeFilterItem = null | "fixed" | "variable";
 
 type BudgetCategoriesState = {
   categories: Array<BudgetCategoryType>;
-  filterTerm: string | null;
   expenseOrRevenueFilter: ExpenseFilterItem;
   fixedOrVariableFilter: CategoryTypeFilterItem;
   newCategoryKey: string;
@@ -19,7 +23,6 @@ type BudgetCategoriesState = {
   onDismiss: () => void;
   setCategories: (categories: Array<BudgetCategoryType>) => void;
   setExpenseOrRevenueFilter: (f: ExpenseFilterItem) => void;
-  setFilterTerm: (term: string | null) => void;
   setFixedOrVariableFilter: (f: CategoryTypeFilterItem) => void;
   setShowFormKey: (key: string | null) => void;
   showNewCategoryForm: () => void;
@@ -43,31 +46,16 @@ const useBudgetCategoriesStore = create<BudgetCategoriesState>((set) => ({
   setCategories: (categories) => set({ categories }),
   setExpenseOrRevenueFilter: (expenseOrRevenueFilter) =>
     set({ expenseOrRevenueFilter }),
-  setFilterTerm: (filterTerm) => set({ filterTerm }),
   setFixedOrVariableFilter: (fixedOrVariableFilter) =>
     set({ fixedOrVariableFilter }),
   setShowFormKey: (showFormKey) => set({ showFormKey }),
-  showNewCategoryForm: () =>
-    set((s) => ({ showFormKey: s.newCategoryKey })),
+  showNewCategoryForm: () => set((s) => ({ showFormKey: s.newCategoryKey })),
   toggleArchivedCategories: () =>
     set((s) => ({ showArchivedCategories: !s.showArchivedCategories })),
 }));
 
-const isFilterTermActive = (filterTerm: string | null): filterTerm is string =>
-  typeof filterTerm === "string" && filterTerm.length > 2;
-
-const matchesFilterTerm = (
-  category: BudgetCategoryType,
-  filterTerm: string | null,
-) => {
-  if (!isFilterTermActive(filterTerm)) return true;
-  const expression = new RegExp(filterTerm, "i");
-  return !!category.name.match(expression);
-};
-
 const sortByFilterTerm =
-  (filterTerm: string | null) =>
-  (a: BudgetCategoryType, b: BudgetCategoryType) => {
+  (filterTerm: string) => (a: BudgetCategoryType, b: BudgetCategoryType) => {
     if (!isFilterTermActive(filterTerm)) return sortByName(a, b);
     const expression = new RegExp(`^${filterTerm}`, "i");
     const aStarts = expression.test(a.name);
@@ -96,7 +84,6 @@ const matchesFixedOrVariableFilter = (
 
 const useActiveBudgetCategories = () => {
   const categories = useBudgetCategoriesStore((s) => s.categories);
-  const filterTerm = useBudgetCategoriesStore((s) => s.filterTerm);
   const expenseOrRevenueFilter = useBudgetCategoriesStore(
     (s) => s.expenseOrRevenueFilter,
   );
@@ -104,10 +91,12 @@ const useActiveBudgetCategories = () => {
     (s) => s.fixedOrVariableFilter,
   );
 
+  const filterTerm = useFilterTerm();
+
   return useMemo(
     () =>
       categories
-        .filter((c) => !c.archivedAt && matchesFilterTerm(c, filterTerm))
+        .filter((c) => !c.archivedAt && matchesFilterTerm(filterTerm, c))
         .filter((c) => matchesExpenseOrRevenueFilter(c, expenseOrRevenueFilter))
         .filter((c) => matchesFixedOrVariableFilter(c, fixedOrVariableFilter))
         .sort(sortByFilterTerm(filterTerm)),
@@ -117,7 +106,6 @@ const useActiveBudgetCategories = () => {
 
 const useArchivedBudgetCategories = (props?: { applyFilter: boolean }) => {
   const categories = useBudgetCategoriesStore((s) => s.categories);
-  const filterTerm = useBudgetCategoriesStore((s) => s.filterTerm);
   const expenseOrRevenueFilter = useBudgetCategoriesStore(
     (s) => s.expenseOrRevenueFilter,
   );
@@ -126,22 +114,20 @@ const useArchivedBudgetCategories = (props?: { applyFilter: boolean }) => {
   );
 
   const { applyFilter } = { applyFilter: true, ...props };
+  const filterTerm = useFilterTerm();
   return useMemo(() => {
     const allArchivedCategories = categories.filter((c) => c.isArchived);
     if (!applyFilter) {
       return allArchivedCategories;
     } else {
       return allArchivedCategories
-        .filter((c) => matchesFilterTerm(c, filterTerm))
+        .filter((c) => matchesFilterTerm(filterTerm, c))
         .filter((c) => matchesExpenseOrRevenueFilter(c, expenseOrRevenueFilter))
         .filter((c) => matchesFixedOrVariableFilter(c, fixedOrVariableFilter))
         .sort(sortByFilterTerm(filterTerm));
     }
   }, [categories, filterTerm, expenseOrRevenueFilter, fixedOrVariableFilter]);
 };
-
-const useIsFilterTermActive = () =>
-  useBudgetCategoriesStore((s) => isFilterTermActive(s.filterTerm));
 
 const useHasArchivedBudgetCategories = () =>
   useArchivedBudgetCategories().length > 0;
@@ -174,7 +160,6 @@ export {
   useBudgetCategoriesStore,
   useHasArchivedBudgetCategories,
   useInitBudgetCategoriesStore,
-  useIsFilterTermActive,
   useShowNewCategoryForm,
   type CategoryTypeFilterItem,
   type ExpenseFilterItem,

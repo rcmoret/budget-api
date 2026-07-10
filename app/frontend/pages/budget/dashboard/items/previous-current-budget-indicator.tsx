@@ -13,16 +13,14 @@ const PreviouslyBudgetedDetails = () => {
       <div className="text-right">
         <AmountSpan amount={previouslyBudgeted.cents} absolute={true} />
       </div>
-      <div className="text-right">
-        ({previouslyBudgetedPercentage}%)
-      </div>
+      <div className="text-right">({previouslyBudgetedPercentage}%)</div>
     </>
-  )
-}
+  );
+};
 
 const CurrentlyBudgetedDetails = () => {
-  const { item } = useBudgetItemContext()
-  const { currentlyBudgeted, currentlyBudgetedPercentage } = item
+  const { item } = useBudgetItemContext();
+  const { currentlyBudgeted, currentlyBudgetedPercentage } = item;
 
   return (
     <>
@@ -32,19 +30,19 @@ const CurrentlyBudgetedDetails = () => {
       <div className="text-right">
         <AmountSpan amount={currentlyBudgeted.cents} absolute={true} />
       </div>
-      <div className="text-right">
-        ({currentlyBudgetedPercentage}%)
-      </div>
+      <div className="text-right">({currentlyBudgetedPercentage}%)</div>
     </>
-  )
-}
+  );
+};
 
 const ItemCompositionDetails = () => {
-  const { item } = useBudgetItemContext()
-  const previouslyBudgetedPercentage = `${item.previouslyBudgetedPercentage}%`
-  const currentlyBudgetedPercentage = `${item.currentlyBudgetedPercentage}%`
+  const { item } = useBudgetItemContext();
+  const previouslyBudgetedPercentage = `${item.previouslyBudgetedPercentage}%`;
+  const currentlyBudgetedPercentage = `${item.currentlyBudgetedPercentage}%`;
 
-  if (item.currentlyBudgetedPercentage === 100) { return null }
+  if (item.currentlyBudgetedPercentage === 100) {
+    return null;
+  }
 
   return (
     <>
@@ -54,12 +52,20 @@ const ItemCompositionDetails = () => {
       </div>
       <div className="w-full px-1">
         <div className="h-1.5 w-full overflow-hidden rounded-lg flex flex-row">
-          <div className="h-1.5 bg-accent" style={{ width: previouslyBudgetedPercentage }} title={previouslyBudgetedPercentage}></div>
-          <div className="h-1.5 bg-secondary" style={{ width: currentlyBudgetedPercentage }} title={currentlyBudgetedPercentage}></div>
+          <div
+            className="h-1.5 bg-accent"
+            style={{ width: previouslyBudgetedPercentage }}
+            title={previouslyBudgetedPercentage}
+          ></div>
+          <div
+            className="h-1.5 bg-secondary"
+            style={{ width: currentlyBudgetedPercentage }}
+            title={currentlyBudgetedPercentage}
+          ></div>
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
-export { ItemCompositionDetails }
+export { ItemCompositionDetails };
