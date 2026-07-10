@@ -4,11 +4,14 @@ Rails.application.routes.draw do
   devise_for :user_profiles, class_name: "User::Profile"
 
   scope "/", module: :web_app do
-    get "/dashboard", to: "budget/index#call", as: :dashboard
+    get "/dashboard",
+      to: WebApp::Budget::DashboardController.action(:call),
+      as: :dashboard
 
     draw("web_app/accounts")
     draw("web_app/budget")
-    # this is for json requests that do not return inertia responses
+
+    # these routes return json data; no inertia responses
     draw("web_app/data")
 
     devise_scope :user_profile do

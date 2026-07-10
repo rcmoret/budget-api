@@ -12,7 +12,7 @@ module WebApp
       def redirect_path
         case redirect_params
         in ["budget"]
-          budget_index_path
+          budget_dashboard_path
         in ["budget", "categories"]
           budget_categories_path
         in ["budget", "category", *rest]
@@ -46,10 +46,10 @@ module WebApp
         in ["set-up"]
           budget_setup_form_path(month, year)
         in []
-          budget_index_path(month, year)
+          budget_dashboard_path(month, year)
         end
       rescue InvalidPathError
-        budget_index_path
+        budget_dashboard_path
       end
 
       def resolve_account_path(*args)
@@ -71,12 +71,12 @@ module WebApp
           raise InvalidPathError unless (1..12).cover?(month.to_i)
           raise InvalidPathError unless year =~ /\A\d{4}\z/
 
-          transactions_index_path(slug, month, year)
+          transactions_path(slug, month, year)
         else
-          transactions_index_path(slug)
+          transactions_path(slug)
         end
       rescue InvalidPathError
-        transactions_index_path(slug)
+        transactions_path(slug)
       end
       # rubocop:enable Metrics/MethodLength
 

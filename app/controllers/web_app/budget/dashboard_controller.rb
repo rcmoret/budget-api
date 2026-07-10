@@ -2,7 +2,7 @@
 
 module WebApp
   module Budget
-    class IndexController < BaseController
+    class DashboardController < BaseController
       include Mixins::HasBudgetInterval
       include Mixins::PageController
 

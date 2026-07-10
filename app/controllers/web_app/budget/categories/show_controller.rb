@@ -4,7 +4,7 @@ module WebApp
   module Budget
     module Categories
       class ShowController < BaseController
-        before_action -> { redirect_to budget_index_path },
+        before_action -> { redirect_to budget_dashboard_path },
           if: -> { category.nil? }
 
         def call

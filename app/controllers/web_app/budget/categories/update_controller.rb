@@ -14,7 +14,7 @@ module WebApp
             set_success_message!
             redirect_to redirect_path
           else
-            redirect_to budget_index_path
+            redirect_to budget_dashboard_path
           end
         end
 
@@ -31,11 +31,11 @@ module WebApp
         def category
           @category ||= ::Budget::Category.fetch(
             current_user_profile,
-            key: params.fetch(:key)
+            slug: params.fetch(:slug)
           )
         end
 
-        def redirect_to_budget_index = redirect_to budget_index_path
+        def redirect_to_budget_index = redirect_to budget_dashboard_path
 
         def set_update_intent
           @update_intent = {

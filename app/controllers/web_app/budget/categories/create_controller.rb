@@ -11,7 +11,7 @@ module WebApp
             redirect_to redirect_path,
               notice: "Created category: #{category.name}"
           else
-            redirect_to budget_index_path
+            redirect_to budget_dashboard_path
           end
         end
 

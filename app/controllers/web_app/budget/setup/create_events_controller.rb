@@ -20,7 +20,7 @@ module WebApp
 
         def call
           if form.save
-            redirect_to budget_index_path(month, year)
+            redirect_to budget_dashboard_path(month, year)
           else
             redirect_to budget_setup_form_path(month, year)
           end

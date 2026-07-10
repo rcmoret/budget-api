@@ -36,13 +36,13 @@ module WebApp
 
       def href(account)
         if params[:month].present? && params[:year].present?
-          transactions_index_path(
+          transactions_path(
             account,
             month: params[:month],
             year: params[:year],
           )
         else
-          transactions_index_path(account)
+          transactions_path(account)
         end
       end
 

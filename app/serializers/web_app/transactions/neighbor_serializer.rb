@@ -4,7 +4,7 @@ module WebApp
       include Mixins::NeighborsConcern
 
       def href(budget_month)
-        transactions_index_path(
+        transactions_path(
           params[:featured_account],
           month: budget_month.month,
           year: budget_month.year

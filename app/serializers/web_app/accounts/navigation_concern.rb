@@ -42,7 +42,7 @@ module WebApp
           .application
           .routes
           .url_helpers
-          .transactions_index_path(
+          .transactions_path(
             account,
             month: params[:month],
             year: params[:year],

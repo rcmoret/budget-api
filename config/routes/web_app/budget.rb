@@ -1,26 +1,35 @@
 namespace :budget do
-  get "/", to: "index#call", as: :dashboard
+  get "/",
+    to: WebApp::Budget::DashboardController.action(:call)
+  get "(/:month)(/:year)",
+    to: WebApp::Budget::DashboardController.action(:call),
+    as: :dashboard
 
   get "/categories",
     to: WebApp::Budget::Categories::IndexController.action(:call),
     as: :categories
 
   namespace :category, module: :categories do
-    get "/:slug", to: "show#call", as: :show
-    put "/:key", to: "update#call", as: :update
-    post "/", to: "create#call"
+    get "/:slug",
+      to: WebApp::Budget::Categories::ShowController.action(:call),
+      as: :show
+    put "/:slug",
+      to: WebApp::Budget::Categories::UpdateController.action(:call)
+    post "/",
+      to: WebApp::Budget::Categories::CreateController.action(:call)
   end
 
-  post "/events/(:month)/(:year)", to: "events#call", as: :create_events
-
-  get "(/:month)(/:year)",
-    to: WebApp::Budget::IndexController.action(:call),
-    as: :index
+  post "/events/(:month)/(:year)",
+    to: WebApp::Budget::EventsController.action(:call),
+    as: :create_events
 
   scope "/:month/:year" do
-    put "/", to: "update#call"
-    post "/", to: "edit#call"
-    get "/edit", to: "edit#call"
+    put "/",
+      to: WebApp::Budget::UpdateController.action(:call)
+
+    # edit is future state
+    # post "/", to: "edit#call"
+    # get "/edit", to: "edit#call"
 
 
     scope "/set-up" do
@@ -40,13 +49,14 @@ namespace :budget do
       delete "/",
         to: WebApp::Budget::Setup::CategoryFormResetController.action(:call)
     end
+
     scope "/roll-over" do
       get "(/:slug)",
           to: WebApp::Budget::Rollover::FormController.action(:call),
           as: :rollover_form
     end
 
-    get "/finalize", to: "finalize/form#call", as: :finalize_form
-    post "/finalize", to: "finalize/create_events#call"
+    get "/finalize", to: WebApp::Budget::Finalize::FormController.action(:call), as: :finalize_form
+    post "/finalize", to: WebApp::Budget::Finalize::CreateEventsController.action(:call)
   end
 end

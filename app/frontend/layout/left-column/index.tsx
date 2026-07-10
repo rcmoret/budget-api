@@ -57,7 +57,7 @@ const BottomMenuItems = () => {
       </div>
       <AppConfigItems />
       <div className="text-primary-content text-sm mx-2 pt-4 pb-8 border-t border-neutral">
-        <Link href={signOutRoute}>Logout</Link>
+        <a href={signOutRoute}>Logout</a>
       </div>
     </div>
   );
