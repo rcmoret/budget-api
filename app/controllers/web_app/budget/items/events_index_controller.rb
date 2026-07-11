@@ -8,26 +8,19 @@ module WebApp
           if: -> { budget_item.nil? }
 
         def call
-          render json: serializer.render
+          # TODO: Revisit serializer implementation. The response was built from
+          # the deprecated WebApp::Budget::Items::DetailsSerializer, which is
+          # pending reimplementation with Alba. Rendering empty props until then.
+          render json: {}
         end
 
         private
 
-        def serializer
-          IndividualSerializer.new(
-            key: "budget_item",
-            serializable: budget_item_serializer
-          )
-        end
-
+        # Kept because the before_action guard uses it to 404 on a missing item.
         def budget_item
           @budget_item ||=
             ::Budget::Item
             .fetch(current_user_profile, key: params.fetch(:key))
-        end
-
-        def budget_item_serializer
-          WebApp::Budget::Items::DetailsSerializer.new(budget_item)
         end
       end
     end

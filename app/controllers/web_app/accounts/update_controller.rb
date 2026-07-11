@@ -3,18 +3,22 @@
 module WebApp
   module Accounts
     class UpdateController < BaseController
-      include Mixins::HasRedirectParams
-      before_action -> { redirect_to accounts_manage_path },
+      before_action -> { redirect_to accounts_path },
         if: -> { account.nil? }
       before_action :set_update_intent
       before_action :set_archived_at!
 
       def call
+        set_success_message! if account.update(update_params)
+
+        redirect_to accounts_path
+      end
+
+      def reprioritize
         if account.update(update_params)
-          set_success_message!
-          redirect_to redirect_path
+          head :ok
         else
-          redirect_to accounts_manage_path
+          head :bad_request
         end
       end
 

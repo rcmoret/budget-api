@@ -6,9 +6,10 @@ module WebApp
       include Mixins::PageController
 
       define_route_segment :accounts
-      serialize_with WebApp::Accounts::IndexSerializer
+      serialize_with Serializers::AccountSerializer
       use_template "accounts/manage"
-      subject(:accounts) do
+
+      subject :accounts do
         Account
           .belonging_to(current_user_profile)
           .by_priority

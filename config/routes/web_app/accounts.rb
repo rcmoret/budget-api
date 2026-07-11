@@ -12,21 +12,32 @@ end
 
 put "/account/:key",
   to: WebApp::Accounts::UpdateController.action(:call), as: :account_update
+put "/account/:key/priority",
+  to: WebApp::Accounts::UpdateController.action(:reprioritize), as: :account_reprioritize
 
-scope "account/:slug", module: :transactions, as: :transactions do
-  get "/transactions/(:month)/(:year)",
-    to: WebApp::Transactions::IndexController.action(:call),
-    as: ""
-  post "/transaction",
+scope "account/:slug" do
+  scope "/", as: :account do
+    get "/edit",
+      to: WebApp::Accounts::EditController.action(:call),
+      as: :edit
+  end
+end
+
+get "/account/:slug/transactions/(:month/:year)",
+  to: WebApp::Transactions::IndexController.action(:call),
+  as: :transactions
+
+scope "account/:slug/transaction", as: :transactions do
+  post "/",
     to: WebApp::Transactions::CreateController.action(:call),
     as: :create
-  put "/transaction/:key/(:month)/(:year)",
+  put "/:key/(:month)/(:year)",
     to: WebApp::Transactions::UpdateController.action(:call),
     as: :update
-  delete "/transaction/:key/receipt",
+  delete "/:key/receipt",
     to: WebApp::Transactions::DeleteReceiptController.action(:call),
     as: :delete_receipt
-  delete "/transaction/:key",
+  delete "/:key",
     to: WebApp::Transactions::DeleteController.action(:call),
     as: :show
 end

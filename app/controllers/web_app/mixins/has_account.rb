@@ -6,19 +6,14 @@ module WebApp
       extend ActiveSupport::Concern
 
       included do
-        before_action :store_selected_account_path
-        before_action -> { redirect_to(home_path) }, if: -> { account.nil? }
+        before_action -> { redirect_to(accounts_path) },
+          if: -> { account.nil? }
       end
 
       private
 
       def account
         @account ||= Account.fetch(current_user_profile, slug: params[:slug])
-      end
-
-      def store_selected_account_path
-        session[:selected_account_path] =
-          transactions_path(account, month, year)
       end
     end
   end

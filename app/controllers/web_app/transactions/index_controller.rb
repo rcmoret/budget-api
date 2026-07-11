@@ -10,10 +10,11 @@ module WebApp
       before_action :store_selected_account_path
 
       define_route_segments :account, :transactions
-      serialize_with IndexSerializer
+      serialize_with Serializers::IndexSerializer
       use_template "transactions"
+
       subject do
-        ::Presenters::Transactions::IndexPresenter.new(
+        Presenters::IndexPresenter.new(
           account,
           interval,
         )
@@ -22,11 +23,16 @@ module WebApp
       private
 
       def serializer_context
-        { featured_account: account, month:, year: }
+        { featured_account_slug: account.slug, month:, year: }
       end
 
       def route_segments
         super(account.slug, month, year)
+      end
+
+      def store_selected_account_path
+        session[:selected_account_path] =
+          transactions_path(account, month, year)
       end
     end
   end

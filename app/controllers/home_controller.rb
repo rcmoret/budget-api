@@ -6,7 +6,7 @@ class HomeController < ActionController::Base
     @props = props
     respond_to do |format|
       format.json { render json: @props.to_json }
-      format.all { redirect_to dashboard_path }
+      format.all { redirect_to budget_dashboard_path }
     end
   end
 

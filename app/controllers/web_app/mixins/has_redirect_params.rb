@@ -23,7 +23,7 @@ module WebApp
 
           resolve_budget_path(month, year, *rest)
         in ["accounts", "manage"]
-          accounts_manage_path
+          accounts_path
         in ["accounts", *]
           accounts_path
         in ["account", *rest]

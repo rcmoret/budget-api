@@ -1,7 +1,7 @@
 namespace :budget do
   get "/",
     to: WebApp::Budget::DashboardController.action(:call)
-  get "(/:month)(/:year)",
+  get "(/:month/:year)",
     to: WebApp::Budget::DashboardController.action(:call),
     as: :dashboard
 
@@ -10,9 +10,6 @@ namespace :budget do
     as: :categories
 
   namespace :category, module: :categories do
-    get "/:slug",
-      to: WebApp::Budget::Categories::ShowController.action(:call),
-      as: :show
     put "/:slug",
       to: WebApp::Budget::Categories::UpdateController.action(:call)
     post "/",

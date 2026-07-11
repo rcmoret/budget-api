@@ -40,39 +40,24 @@ module WebApp
     module PageController
       extend ActiveSupport::Concern
 
-      # Base class every page serializer must inherit from; enforced by
-      # `serialize_with`.
-      PAGE_SERIALIZER = PageSerializer
-
-      # Raised when `serialize_with` is given a class that isn't a
-      # `PAGE_SERIALIZER` descendant.
-      PageSerializableError = Class.new(StandardError)
-
       class_methods do
         # Per-controller configuration set by the macros below.
-        attr_accessor :route_segments,
-          :page_name,
-          :page_subject,
-          :serializer,
+        attr_accessor :page_name,
+          :route_segments,
+          :serializable,
+          :serializer_class,
           :subject_key
-
-        # Registers the serializer used to render this page. The class must
-        # descend from `PAGE_SERIALIZER`, otherwise `PageSerializableError` is
-        # raised at load time.
-        def serialize_with(klass)
-          if klass.is_a?(Class) && klass.ancestors.include?(PAGE_SERIALIZER)
-            self.serializer = klass
-          else
-            raise PageSerializableError,
-              "#{klass} must inherit from #{PAGE_SERIALIZER.name}"
-          end
-        end
 
         # Sets the Inertia component path this page renders (e.g.
         # "budget/dashboard").
         # This is also used for the metadata in the payload
         def use_template(name)
           self.page_name = name
+        end
+
+        # Defines the serializer to use for the subject
+        def serialize_with(serializer_class)
+          self.serializer_class = serializer_class
         end
 
         # The static route segments declared for this controller, defaulting
@@ -88,12 +73,11 @@ module WebApp
           self.route_segments += segments.flatten
         end
 
-        # Declares the object to serialize. The block is evaluated on the
-        # controller instance at request time (see the instance `subject`).
-        # When `key` is given, the evaluated value is nested under it.
+        # Define the serializable object. The block will be
+        # evaluated in a per instance context
         def subject(key = nil, &block)
           self.subject_key = key
-          self.page_subject = block
+          self.serializable = block
         end
 
         alias_method :define_route_segment, :define_route_segments
@@ -102,41 +86,31 @@ module WebApp
       # Renders the Inertia response for this page: the `page_name` component
       # receives the serialized props hash. This is the controller's action.
       def call
-        render inertia: page_name,
-          props: serializer.to_h
+        render inertia: page_name, props:
       end
 
       private
 
-      delegate :page_name, :page_subject, :subject_key, to: :class
+      delegate :page_name, :serializer_class, :subject_key, to: :class
 
-      # The serializer class registered via `serialize_with`.
-      def serializer_class
-        self.class.serializer
+      def props
+        if subject_key.present?
+          {
+            subject_key => serializer.to_h,
+            pageData: page_serializer.to_h,
+          }
+        else
+          serializer.to_h.merge(pageData: page_serializer.to_h)
+        end
       end
 
-      # Builds the page's serializer around `subject`, injecting the params
-      # every page serializer relies on (request path, flash, page name, the
-      # previously selected account path, and route segments). The controller's
-      # `serializer_context` is merged in last, so it can override any of these
-      # defaults.
       def serializer
-        serializer_class
-          .new(
-            subject,
-            params: {
-              current_path: request.path,
-              flash:,
-              page_name:,
-              prev_selected_account_path:,
-              redirect_segments: route_segments,
-            }.merge(serializer_context)
-          )
+        serializer_class.new(subject, params: serializer_context)
       end
 
-      # Extra params merged into the serializer params. Override in the
-      # controller to pass request-time data (e.g. the current month/year).
-      def serializer_context = {}
+      def subject
+        instance_eval(&self.class.serializable)
+      end
 
       # Route segments identifying this page, used by the frontend to build a
       # "redirect back here" link after an action elsewhere. Combines the
@@ -154,15 +128,21 @@ module WebApp
         ].compact_blank
       end
 
-      # Resolves the object to serialize by evaluating the `subject` block on
-      # this controller instance. When a `subject_key` was given, the result is
-      # wrapped in a hash under that key.
-      def subject
-        evaluated_subject = instance_eval(&page_subject)
+      def serializer_context = {}
 
-        return evaluated_subject if subject_key.blank?
+      # additional data to be passed to all pages
+      def page_serializer
+        Serializers::PageSerializer.new(page_data, params: serializer_context)
+      end
 
-        { subject_key => evaluated_subject }
+      def page_data
+        Pages::Presenters::ApplicationPresenter.with(
+          current_path: request.path,
+          flash:,
+          page_name:,
+          prev_selected_account_path:,
+          redirect_segments: route_segments,
+        )
       end
     end
   end
