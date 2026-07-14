@@ -4,6 +4,8 @@ module WebApp
   module Transactions
     module Presenters
       class IndexPresenter
+        include Rails.application.routes.url_helpers
+
         def initialize(featured_account, budget_month)
           @featured_account = featured_account
           @budget_month = Budget::Presenters::BudgetMonthPresenter
@@ -33,6 +35,10 @@ module WebApp
                             .detailed_items
                             .available
                             .order(name: :asc)
+        end
+
+        def edit_route
+          account_edit_path(featured_account_slug)
         end
 
         delegate :current?,

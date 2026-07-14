@@ -4,20 +4,16 @@ import { create } from "zustand";
 
 type AccountNavigationState = {
   accounts: Array<AccountLinkType>;
-  setAccounts: (accounts: Array<AccountLinkType>) => void;
 };
 
-const useAccountNavigationStore = create<AccountNavigationState>((set) => ({
+const useAccountNavigationStore = create<AccountNavigationState>(() => ({
   accounts: [],
-  setAccounts: (accounts) => set({ accounts }),
 }));
 
 const initNavigationLinks = (accounts: Array<AccountLinkType>) => {
-  const setAccounts = useAccountNavigationStore((s) => s.setAccounts);
-
   useEffect(() => {
-    setAccounts(accounts);
-  }, [accounts, setAccounts]);
+    useAccountNavigationStore.setState({ accounts });
+  }, [accounts]);
 };
 
 const getAccountLinks = () => {

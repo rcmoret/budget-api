@@ -1,57 +1,16 @@
-import { useEffect } from "react";
 import {
   useDispatchNotificationStore,
   CLOSE_ANIMATION_MS,
   type Notification,
   type NotificationKind,
-} from "./store";
-import { NotificationsCollectionType } from "@/types/page_props";
+} from "@/lib/app-stores/notification-store";
 import { Collapse } from "@/components/collapse";
-
-type NotificationsProps = {
-  alerts: Array<string>;
-  info: Array<string>;
-  notices: Array<string>;
-  warnings: Array<string>;
-};
-// notice: "bg-success/85 outline-success text-success-content",
-// warning: "bg-warning/70 outline-warning text-warning-content",
-// alert: "bg-error/80 outline-error text-error-content",
 
 const kindClassName: Record<NotificationKind, string> = {
   alert: "bg-error/80 border-gray-800 text-error-content",
   info: "bg-info/85 border-gray-500 text-info-content",
   notice: "bg-success/85 border-gray-700 text-success-content",
   warning: "bg-warning/70 border-gray-500 text-warning-content",
-};
-
-const buildNotifications = (
-  notifications: NotificationsProps | undefined,
-): Array<Notification> => {
-  if (!notifications) return [];
-  const { alerts = [], info = [], notices = [], warnings = [] } = notifications;
-  return [
-    ...alerts.map((message, i) => ({
-      id: `page-alert-${i}`,
-      kind: "alert" as const,
-      message,
-    })),
-    ...warnings.map((message, i) => ({
-      id: `page-warning-${i}`,
-      kind: "warning" as const,
-      message,
-    })),
-    ...info.map((message, i) => ({
-      id: `page-info-${i}`,
-      kind: "info" as const,
-      message,
-    })),
-    ...notices.map((message, i) => ({
-      id: `page-notice-${i}`,
-      kind: "notice" as const,
-      message,
-    })),
-  ];
 };
 
 const NotificationItem = (props: {
@@ -100,17 +59,10 @@ const NotificationItem = (props: {
   );
 };
 
-const Notifications = (props: {
-  notifications: NotificationsCollectionType;
-}) => {
+const Notifications = () => {
   const items = useDispatchNotificationStore((s) => s.items);
   const closingIds = useDispatchNotificationStore((s) => s.closingIds);
-  const resetItems = useDispatchNotificationStore((s) => s.resetItems);
   const beginClose = useDispatchNotificationStore((s) => s.beginClose);
-
-  useEffect(() => {
-    resetItems(buildNotifications(props.notifications));
-  }, [props.notifications, resetItems]);
 
   if (!items.length) return null;
 
@@ -128,4 +80,4 @@ const Notifications = (props: {
   );
 };
 
-export { Notifications };
+export { Notifications, kindClassName };

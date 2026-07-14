@@ -19,6 +19,8 @@ class CamelCaseParamsTransformer
   private
 
   def transform_params(params)
+    return params unless params.is_a?(Hash)
+
     params.deep_transform_keys! do |key|
       key.respond_to?(:underscore) ? key.underscore : key
     end

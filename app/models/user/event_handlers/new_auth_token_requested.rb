@@ -9,7 +9,9 @@ module User
         User::EventForm.new(
           actor: payload.fetch(:actor),
           event_type: :user_token_generated,
-          event_data: SuccessData.new(payload).render(camelize: false),
+          # symbolize to preserve the symbol-keyed event_data the previous
+          # (hand-rolled) serializer produced; Alba emits string keys.
+          event_data: SuccessData.new(payload).serializable_hash.symbolize_keys,
         ).call
         :ok
       end
@@ -37,12 +39,13 @@ module User
         end
       end
 
-      SuccessData = Class.new(ApplicationSerializer) do
-        attributes :ip_address, :event_key
-        attribute :auth_token_key
+      SuccessData = Class.new do
+        include Alba::Resource
 
-        def auth_token_key
-          auth_token_context.key
+        attributes :ip_address, :event_key
+
+        attribute :auth_token_key do |payload|
+          payload.auth_token_context.key
         end
       end
       private_constant :SuccessData

@@ -32,7 +32,10 @@ const useInitFilterTermStore = (filterTerm: string | null) => {
 
 const isFilterTermActive = (filterTerm: string) => filterTerm.length > 2;
 
-const matchesFilterTerm = <K extends string = "name", T extends Record<K, string> = Record<K, string>>(
+const matchesFilterTerm = <
+  K extends string = "name",
+  T extends Record<K, string> = Record<K, string>,
+>(
   filterTerm: string,
   item: T,
   key: K = "name" as K,

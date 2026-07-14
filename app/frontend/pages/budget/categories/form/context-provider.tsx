@@ -1,4 +1,4 @@
-import { getRedirectQueryParams } from "@/layout/app-config-store";
+import { getRedirectQueryParams } from "@/lib/app-stores/app-config-store";
 import { useBudgetCategoryContext } from "@/pages/budget/categories/context-provider";
 import {
   useBudgetCategoriesStore,

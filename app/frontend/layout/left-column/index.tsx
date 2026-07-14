@@ -1,5 +1,5 @@
 import { MenuItems } from "./menu-item";
-import { useAppRoutes, useNamespace } from "@frontend/layout/app-config-store";
+import { useAppRoutes, useNamespace } from "@frontend/lib/app-stores/app-config-store";
 import { Link } from "@inertiajs/react";
 import { AppConfigItems } from "./config-items";
 import { AccountMenuComponent } from "./account-menu-item";
@@ -8,7 +8,6 @@ const TopMenuItems = () => {
   const namespace = useNamespace();
   const label = namespace === "budget" ? "Budget" : "Accounts";
   const budgetDashboardUrl = useAppRoutes("budgetDashboardRoute");
-  console.log(budgetDashboardUrl);
 
   return (
     <MenuItems label={label}>

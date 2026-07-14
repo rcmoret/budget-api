@@ -19,6 +19,8 @@ type CreateEvent = {
   budgetCategoryKey: string;
   budgetItemKey: string;
   eventType: BudgetItemCreateEventType;
+  month: string | number;
+  year: string | number;
 };
 
 const fetchCreateEvents = async (props: CreateEventClientProps) => {
@@ -51,8 +53,4 @@ const fetchCreateEvents = async (props: CreateEventClientProps) => {
     });
 };
 
-export {
-  fetchCreateEvents,
-  type CreateEvent,
-  type TCreateEventClientContext,
-};
+export { fetchCreateEvents, type CreateEvent, type TCreateEventClientContext };

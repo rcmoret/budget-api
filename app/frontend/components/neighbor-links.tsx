@@ -28,6 +28,7 @@ const ArrowComponent = (props: { children: React.ReactNode }) => {
 const LinkContainer = (props: {
   children: React.ReactNode;
   href: string;
+  id: string;
   subtype: "next" | "previous";
   title: string;
 }) => {
@@ -52,7 +53,7 @@ const LinkContainer = (props: {
   ].join(" ");
 
   return (
-    <Link href={props.href} title={props.title}>
+    <Link id={props.id} href={props.href} title={props.title}>
       <div className={innerLinkClassName}>{props.children}</div>
     </Link>
   );
@@ -62,7 +63,12 @@ const NextNeighborLink = (props: NeighborLinkProps) => {
   const { children, href, title } = props;
 
   return (
-    <LinkContainer href={href} subtype="next" title={title}>
+    <LinkContainer
+      href={href}
+      subtype="next"
+      title={title}
+      id="neighbor-link-next"
+    >
       <div>{children}</div>
       <ArrowComponent>&#x2192;</ArrowComponent>
     </LinkContainer>
@@ -73,7 +79,12 @@ const PreviousNeighborLink = (props: NeighborLinkProps) => {
   const { children, href, title } = props;
 
   return (
-    <LinkContainer href={href} subtype="previous" title={title}>
+    <LinkContainer
+      href={href}
+      subtype="previous"
+      title={title}
+      id="neighbor-link-prev"
+    >
       <ArrowComponent>&#x2190;</ArrowComponent>
       <div>{children}</div>
     </LinkContainer>

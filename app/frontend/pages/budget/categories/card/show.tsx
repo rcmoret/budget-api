@@ -3,7 +3,7 @@ import { router } from "@inertiajs/react";
 import { KeyIdentifier } from "@/components/key-identifier";
 import { useBudgetCategoryContext } from "@/pages/budget/categories/context-provider";
 import { Pill } from "@/components/pill";
-import { getRedirectQueryParams } from "@/layout/app-config-store";
+import { getRedirectQueryParams } from "@/lib/app-stores/app-config-store";
 
 const BudgetCategoryCardBottomRow = () => {
   const { category } = useBudgetCategoryContext();
@@ -56,7 +56,7 @@ const BudgetCategoryShow = () => {
       </CardRow>
       {category.isAccrual && (
         <CardRow>
-          <Pill themeOption="accent">Accrual</Pill>
+          <Pill themeOption="warning">Accrual</Pill>
         </CardRow>
       )}
       <CardRow>

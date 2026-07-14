@@ -1,5 +1,5 @@
 import { ToggleSlider } from "@/components/slider";
-import { useShowAccruals, useToggleShowAccruals } from "@/layout/app-config-store";
+import { useShowAccruals, useToggleShowAccruals } from "@/lib/app-stores/app-config-store";
 
 const AccrualToggle = () => {
   const showAccruals = useShowAccruals()

@@ -30,6 +30,7 @@ const NewCategoryForm = () => {
     isAccrual: false,
     isArchived: false,
     defaultAmount: null,
+    iconClassName: "bars",
   };
 
   return (

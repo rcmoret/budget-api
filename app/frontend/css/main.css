@@ -74,6 +74,10 @@ html {
   --input-color: var(--color-base-300);
 }
 
+.bg-prev-budgeted {
+  background-color: var(--color-prev-bugeted);
+}
+
 .bg-neutral-600 {
   background-color: var(--color-neutral-600);
 }
@@ -135,6 +139,7 @@ html {
   --border: 1.5px;
   --depth: 1;
   --noise: 0;
+  --color-prev-bugeted: oklch(0.66 0.19 296);
 }
 
 /* --color-primary: oklch(0.72 0.18 206); */

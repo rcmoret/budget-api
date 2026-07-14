@@ -115,7 +115,6 @@ const EventProvider = (props: { children: React.ReactNode; event: TEvent }) => {
     isReviewed,
   };
 
-  // console.log({ event, adjustment });
   const value: EventContextType = {
     event: {
       ...event,

@@ -15,6 +15,8 @@ module Budget
       attribute(:budget_item_key) { KeyGenerator.call }
       attribute(:key) { KeyGenerator.call }
       attribute(:event_type) { params[:event_type] }
+      attribute(:month) { params[:month] }
+      attribute(:year) { params[:year] }
 
       transform_keys :lower_camel
     end
@@ -38,7 +40,7 @@ module Budget
 
     def call
       category_scope.order(name: :asc).map do |category|
-        EventSerializer.new(category, params: { event_type: }).to_h
+        EventSerializer.new(category, params: serializer_context).to_h
       end
     end
 
@@ -47,6 +49,14 @@ module Budget
     attr_reader :interval, :excluded_keys
 
     private
+
+    def serializer_context
+      {
+        event_type:,
+        month: interval.month,
+        year: interval.year,
+      }
+    end
 
     def excluded_category_ids
       scope = user_group.budget_categories

@@ -1,5 +1,5 @@
-import { useAccountShowContext } from "../account-context-provider";
-import { useAccountsManagerStore } from "@/pages/accounts/manage/store";
+import { useAccountShowContext } from "@/pages/accounts/account-context-provider";
+import { useAccountsManagerStore } from "@/pages/accounts/store";
 
 import { Form as AccountForm } from "../form";
 
@@ -17,7 +17,7 @@ import {
 } from "@/components/card";
 import { AmountSpan } from "@/components/amount-span";
 import { KeyIdentifier } from "@/components/key-identifier";
-import { getRedirectQueryParams } from "@/layout/app-config-store";
+import { getRedirectQueryParams } from "@/lib/app-stores/app-config-store";
 
 const AccountCardBottomRow = () => {
   const accountManageReturnQueryParams = getRedirectQueryParams();
@@ -50,6 +50,7 @@ const Show = () => {
 
   return (
     <>
+      <span id={slug}></span>
       <CardRow>
         <div>Balance:</div>
         <div>

@@ -1,7 +1,7 @@
 import { useToggle } from "@/utils/hooks/useToogle";
-import { CategoryListComponent, FeaturedCategoryComponent } from "./category";
+import { CategoryListComponent } from "./category";
 import { useCategoryGroupContext } from "./group-context";
-import { useFeaturedCategory } from "../store";
+import { Collapse } from "@/components/collapse";
 
 const GroupComponent = () => {
   const group = useCategoryGroupContext();
@@ -24,22 +24,13 @@ const GroupComponent = () => {
 
 const CategoryList = (props: { isCategoryListVisible: boolean }) => {
   const group = useCategoryGroupContext();
-  const featuredCategory = useFeaturedCategory();
 
   return (
-    <div
-      className={[
-        "grid grid-cols-subgrid col-span-full",
-        "grid-rows-[0fr] transition-[grid-template-rows] duration-300",
-        props.isCategoryListVisible ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
-      ].join(" ")}
-    >
-      <div className="overflow-hidden grid grid-cols-subgrid col-span-full">
-        {group.categories.map((category) => (
-          <CategoryListComponent key={category.key} category={category} />
-        ))}
-      </div>
-    </div>
+    <Collapse open={props.isCategoryListVisible} subgrid>
+      {group.categories.map((category) => (
+        <CategoryListComponent key={category.key} category={category} />
+      ))}
+    </Collapse>
   );
 };
 

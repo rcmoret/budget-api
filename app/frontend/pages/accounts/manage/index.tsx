@@ -11,9 +11,9 @@ import {
   useHasArchivedAccounts,
   useInitAccountsManagerStore,
   useShowNewAccountForm,
-} from "./store";
+} from "@/pages/accounts/store";
 import { ToggleSlider } from "@frontend/components/slider";
-import { AccountShowProvider } from "./account-context-provider";
+import { AccountShowProvider } from "@/pages/accounts/account-context-provider";
 import { AccountCard } from "./card";
 import { NewForm } from "./form";
 import { PageProps } from "@/types/page_props";

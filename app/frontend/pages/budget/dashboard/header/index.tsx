@@ -1,23 +1,15 @@
 import { pageHeadingClassName } from "@/layout";
 import { getBudgetMonth } from "@/pages/budget/month-store"
+import { getNeighborLinks } from "@/pages/budget/neighbor-links-store"
 import { NeighborLinks } from "@/components/neighbor-links"
 
 const BudgetDashboardNeighborLinks = () => {
-  const budgetMonth = getBudgetMonth()
-
-  const nextMonth = {
-    href: budgetMonth.nextMonth.href,
-    label: budgetMonth.nextMonth.monthName
-  }
-  const previousMonth = {
-    href: budgetMonth.previousMonth.href,
-    label: budgetMonth.previousMonth.monthName
-  }
+  const { previous, next } = getNeighborLinks()
 
   return (
     <NeighborLinks
-      nextMonth={nextMonth}
-      previousMonth={previousMonth}
+      nextMonth={next}
+      previousMonth={previous}
     />
   )
 }

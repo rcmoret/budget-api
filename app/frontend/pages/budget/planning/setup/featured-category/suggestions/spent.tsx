@@ -12,7 +12,6 @@ const SpentSuggestion = () => {
   const label = category.isExpense ? "Spent" : "Deposited";
 
   const onClick = () => setSelectedSuggestion("spent");
-  console.log(event);
 
   return (
     <Suggestion onClick={onClick} isSelected={isSelected}>

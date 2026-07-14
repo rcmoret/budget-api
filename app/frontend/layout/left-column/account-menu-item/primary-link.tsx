@@ -1,11 +1,17 @@
 import { Link } from "@inertiajs/react";
 import { useAccountMenuContext } from ".";
-import { useAppRoutes } from "@/layout/app-config-store";
+import { useAppRoutes } from "@/lib/app-stores/app-config-store";
 
 const AccountLinkToggleButton = () => {
   const { isMenuOpen, toggleMenuOpen } = useAccountMenuContext();
 
-  const className = ["px-1", ...(isMenuOpen ? [] : ["-rotate-90"])].join(" ");
+  const className = [
+    "px-1",
+    "transition-all",
+    "duration-400",
+    "text-sm",
+    ...(isMenuOpen ? ["rotate-90"] : []),
+  ].join(" ");
 
   return (
     <button
@@ -15,7 +21,7 @@ const AccountLinkToggleButton = () => {
       aria-expanded={isMenuOpen}
       onClick={toggleMenuOpen}
     >
-      ▾
+      &#10095;
     </button>
   );
 };

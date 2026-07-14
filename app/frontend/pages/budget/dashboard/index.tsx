@@ -5,9 +5,14 @@ import { BudgetMonthIndex } from "@/types/budget";
 import { useInitBudgetDashboardStore } from "./store";
 import { ItemsContainer } from "./items";
 import { initBudgetMonthStore } from "../month-store";
+import { initNeighborLinksStore } from "../neighbor-links-store";
 import { useInitFilterTermStore } from "@/utils/hooks/use-filter-term";
+import { useInitAdjustmentStore } from "@/lib/adjustment-amount-store";
+import { useNeighborLinksKeyBoardHandlers } from "@/utils/hooks/neighbors-keyboard-nav";
 
 const DashboardComponent = () => {
+  useNeighborLinksKeyBoardHandlers();
+
   return (
     <PageComponent
       header={<Header />}
@@ -25,7 +30,18 @@ const BudgetDashboard = (props: BudgetMonthIndex) => {
 
   useInitBudgetDashboardStore({ items, budgetMonth });
   initBudgetMonthStore({ budgetMonth });
+  initNeighborLinksStore({
+    previous: {
+      href: budgetMonth.previousMonth.href,
+      label: budgetMonth.previousMonth.monthName,
+    },
+    next: {
+      href: budgetMonth.nextMonth.href,
+      label: budgetMonth.nextMonth.monthName,
+    },
+  });
   useInitFilterTermStore(null);
+  useInitAdjustmentStore();
 
   return <DashboardComponent />;
 };

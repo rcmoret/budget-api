@@ -1,7 +1,7 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { AccountProps } from "@frontend/types/account";
-import { AccountShowProvider } from "../account-context-provider";
+import { AccountShowProvider } from "@/pages/accounts/account-context-provider";
 import { AccountCard } from ".";
 
 type SortableCardProps = {

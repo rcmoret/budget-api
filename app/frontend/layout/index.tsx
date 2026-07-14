@@ -1,9 +1,5 @@
-import { usePage } from "@inertiajs/react";
-import { useInitAppConfigStore } from "@/layout/app-config-store";
 import { LeftColumn } from "@/layout/left-column";
 import { Notifications } from "./notifications";
-import { initNavigationLinks } from "./account-navigation-store";
-import { PageProps } from "@/types/page_props";
 import { RightColumnWrapper } from "@/components/right-column-bordered";
 
 const pageHeadingClassName = [
@@ -22,8 +18,22 @@ type LayoutProps = {
 };
 
 const PageComponent = (props: LayoutProps) => {
-  const { notifications } = usePage<PageProps>().props;
-  const { mainComponentClassNames = [] } = props;
+  const {
+    children,
+    header,
+    mainComponentClassNames = [],
+    mainId,
+    rightColumn,
+  } = props;
+  const mainComponentClassName = [
+    "grid",
+    "gap-2",
+    "pt-4",
+    "overflow-y-scroll",
+    "scrollbar-gutter-stable",
+    "with-scroll-fixes",
+    ...mainComponentClassNames,
+  ].join(" ");
 
   const pageHeaderClassName = [
     "grid-page-header",
@@ -42,59 +52,22 @@ const PageComponent = (props: LayoutProps) => {
   ].join(" ");
 
   return (
-    <div className="grid-page-split">
-      {props.header && (
-        <header className={pageHeaderClassName}>{props.header}</header>
-      )}
-      <MainComponent classNames={mainComponentClassNames} id={props.mainId}>
-        {props.children}
-      </MainComponent>
-      <aside className="flex flex-col gap-2 py-4 overflow-y-scroll">
-        <Notifications notifications={notifications} />
-        <RightColumnWrapper>{props.rightColumn}</RightColumnWrapper>
-      </aside>
-    </div>
-  );
-};
-
-const MainComponent = (props: {
-  id: string;
-  classNames: Array<string>;
-  children: React.ReactNode;
-}) => {
-  const mainComponentClassName = [
-    "grid",
-    "gap-2",
-    "pt-4",
-    "overflow-y-scroll",
-    "scrollbar-gutter-stable",
-    "with-scroll-fixes",
-    ...props.classNames,
-  ].join(" ");
-
-  return (
-    <main className={mainComponentClassName} id={props.id}>
-      {props.children}
-    </main>
-  );
-};
-
-const PageLayout = ({ children }: { children: React.ReactNode }) => {
-  const { props } = usePage<PageProps>();
-
-  useInitAppConfigStore({
-    appRoutes: props.appRoutes,
-    metadata: props.metadata,
-    redirectSegments: props.redirectSegments,
-  });
-  initNavigationLinks(props.accountLinks);
-
-  return (
     <div className="flex flex-row items-start">
       <LeftColumn />
-      <div className="flex-1 flex flex-col min-h-screen">{children}</div>
+      <div className="flex-1 flex flex-col min-h-screen">
+        <div className="grid-page-split">
+          {header && <header className={pageHeaderClassName}>{header}</header>}
+          <main className={mainComponentClassName} id={mainId}>
+            {children}
+          </main>
+          <aside className="flex flex-col gap-2 py-4 overflow-y-scroll">
+            <Notifications />
+            <RightColumnWrapper>{rightColumn}</RightColumnWrapper>
+          </aside>
+        </div>
+      </div>
     </div>
   );
 };
 
-export { PageLayout, PageComponent, pageHeadingClassName };
+export { PageComponent, pageHeadingClassName };

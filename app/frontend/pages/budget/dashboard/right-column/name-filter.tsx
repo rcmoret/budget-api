@@ -1,18 +1,17 @@
 import {
   useFilterTerm,
-  useIsFilterTermActive,
+  isFilterTermActive,
   useSetFilterTerm,
 } from "@/utils/hooks/use-filter-term";
 
 const NameFilter = () => {
   const filterTerm = useFilterTerm();
   const setFilterTerm = useSetFilterTerm();
-  const isFilterTermActive = useIsFilterTermActive();
 
   const className = [
     "input",
     "input-sm",
-    isFilterTermActive ? "input-secondary" : "input-info",
+    isFilterTermActive(filterTerm) ? "input-secondary" : "input-info",
   ].join(" ");
 
   return (

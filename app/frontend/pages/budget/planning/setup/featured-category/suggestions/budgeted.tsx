@@ -15,8 +15,6 @@ const BudgetedSuggestion = () => {
 
   const label = eqPrevSpent ? "Budgeted / Spent" : "Budgeted";
 
-  console.log(event);
-
   const setBudgeted = () => {
     setSelectedSuggestion("budgeted");
     setAmount(event.previouslyBudgeted.display);

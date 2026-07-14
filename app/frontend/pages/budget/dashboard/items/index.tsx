@@ -5,9 +5,12 @@ import {
 } from "@/pages/budget/dashboard/store";
 import { BudgetItemCard } from "./card";
 import { BudgetItem } from "@/types/budget";
-import { useShowAccruals } from "@/layout/app-config-store";
+import { useShowAccruals } from "@/lib/app-stores/app-config-store";
 import { GroupLabel } from "@/components/group-label";
-import { matchesFilterTerm, useFilterTerm } from "@/utils/hooks/use-filter-term";
+import {
+  matchesFilterTerm,
+  useFilterTerm,
+} from "@/utils/hooks/use-filter-term";
 
 const useShowClearedItems = () => {
   return useBudgetDashboardStore((s) => s.clearedItemVisibilityToggle);

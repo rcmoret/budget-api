@@ -1,9 +1,11 @@
 import {
-  useIsDarkTheme,
   useShowAccruals,
   useToggleShowAccruals,
+} from "@frontend/lib/app-stores/app-config-store";
+import {
+  useIsDarkTheme,
   useToggleTheme,
-} from "@frontend/layout/app-config-store";
+} from "@frontend/lib/app-stores/theme-store";
 import { ToggleSlider } from "@frontend/components/slider";
 
 const menuLabelClassName = [

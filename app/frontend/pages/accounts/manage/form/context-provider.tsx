@@ -1,11 +1,11 @@
 import { Form } from "@inertiajs/react";
 import { useContext, createContext } from "react";
-import { useAccountShowContext } from "../account-context-provider";
+import { useAccountShowContext } from "@/pages/accounts/account-context-provider";
 import {
   useAccountsManagerStore,
   useShowNewAccountForm,
-} from "@/pages/accounts/manage/store";
-import { getRedirectQueryParams } from "@/layout/app-config-store";
+} from "@/pages/accounts/store";
+import { getRedirectQueryParams } from "@/lib/app-stores/app-config-store";
 
 type AccountFormContextType = {
   isDirty: boolean;

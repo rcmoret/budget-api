@@ -17,16 +17,9 @@ RSpec.describe WebApp::Budget::Planning::Rollover::IndexSerializer do
   let(:data_model) do
     change_set.reload.data_model.with(slug: change_set.data_model.slugs.first)
   end
-  let(:metadata) do
-    Presenters::ControllerMetadata.new(
-      namespace: "budget",
-      page_name: "budget_planning_rollover",
-      prev_selected_account_path: ""
-    )
-  end
   let(:presenter) do
     Budget::Changes::Rollover::Presenters::IndexPresenter.new(
-      data_model, base_interval, metadata
+      data_model, base_interval
     )
   end
 
@@ -40,7 +33,7 @@ RSpec.describe WebApp::Budget::Planning::Rollover::IndexSerializer do
 
   it "serializes the rollover form props the page expects" do
     expect(result.keys).to include(
-      "featuredCategory", "budgetMonth", "neighborLinks", "groups", "metadata"
+      "featuredCategory", "budgetMonth", "neighborLinks", "groups"
     )
   end
 

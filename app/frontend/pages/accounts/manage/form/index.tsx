@@ -2,9 +2,12 @@ import { AccountProps } from "@frontend/types/account";
 import {
   AccountShowProvider,
   useAccountShowContext,
-} from "../account-context-provider";
+} from "@/pages/accounts/account-context-provider";
 import { AccountFormProvider, useAccountFormContext } from "./context-provider";
-import { useAccountsManagerStore, useShowNewAccountForm } from "../store";
+import {
+  useAccountsManagerStore,
+  useShowNewAccountForm,
+} from "@/pages/accounts/store";
 import { AccountCard } from "../card";
 import { CardRow } from "@/components/card";
 import { RadioInput } from "@/components/radio";

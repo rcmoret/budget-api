@@ -1,3 +1,5 @@
+import { NotificationsCollectionType } from "@/types/page_props";
+import { useEffect } from "react";
 import { create } from "zustand";
 
 type NotificationKind = "alert" | "info" | "notice" | "warning";
@@ -25,6 +27,35 @@ type DispatchNotificationState = {
 
 const DISMISS_AFTER_MS = 3000;
 const CLOSE_ANIMATION_MS = 1000;
+
+const buildNotifications = (
+  notifications: NotificationsCollectionType | undefined,
+): Array<Notification> => {
+  if (!notifications) return [];
+  const { alerts = [], info = [], notices = [], warnings = [] } = notifications;
+  return [
+    ...alerts.map((message, i) => ({
+      id: `page-alert-${i}`,
+      kind: "alert" as const,
+      message,
+    })),
+    ...warnings.map((message, i) => ({
+      id: `page-warning-${i}`,
+      kind: "warning" as const,
+      message,
+    })),
+    ...info.map((message, i) => ({
+      id: `page-info-${i}`,
+      kind: "info" as const,
+      message,
+    })),
+    ...notices.map((message, i) => ({
+      id: `page-notice-${i}`,
+      kind: "notice" as const,
+      message,
+    })),
+  ];
+};
 
 const generateId = () =>
   typeof crypto !== "undefined" && "randomUUID" in crypto
@@ -76,8 +107,21 @@ const useDispatchNotificationStore = create<DispatchNotificationState>(
   }),
 );
 
+// Reset the toast list from the page's flash notifications on each navigation;
+// resetItems also schedules auto-dismiss for the fresh items.
+const useInitNotificationStore = (
+  notifications: NotificationsCollectionType,
+) => {
+  useEffect(() => {
+    useDispatchNotificationStore
+      .getState()
+      .resetItems(buildNotifications(notifications));
+  }, [notifications]);
+};
+
 export {
   useDispatchNotificationStore,
+  useInitNotificationStore,
   CLOSE_ANIMATION_MS,
   DISMISS_AFTER_MS,
   type Notification,

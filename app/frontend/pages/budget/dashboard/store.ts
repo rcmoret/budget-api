@@ -25,7 +25,8 @@ type BudgetDashboardState = {
   toggleItemVisibility: (b: boolean) => void;
 };
 
-const useBudgetDashboardStore = create<BudgetDashboardState>((set) => ({
+const useBudgetDashboardStore = create<BudgetDashboardState>((set, get) => ({
+  itemFormKey: null,
   items: {
     fixedExpenses: [],
     variableExpenses: [],
@@ -50,7 +51,8 @@ const useBudgetDashboardStore = create<BudgetDashboardState>((set) => ({
 
   setFixedOrVariableFilter: (fixedOrVariableFilter) =>
     set({ fixedOrVariableFilter }),
-  toggleItemVisibility: (bool) => set({ clearedItemVisibilityToggle: bool }),
+  toggleItemVisibility: () =>
+    set({ clearedItemVisibilityToggle: !get().clearedItemVisibilityToggle }),
 }));
 
 type ItemGroup = {
@@ -103,10 +105,6 @@ const useBudgetItemGroups = (props: FilterKeys): ItemGroup => {
   }
 };
 
-const useVisibleBudgetItems = () => {
-  return useBudgetDashboardStore((s) => s.items);
-};
-
 const useInitBudgetDashboardStore = (props: {
   items: BudgetItemCollections;
   budgetMonth: BudgetMonthData;
@@ -131,7 +129,6 @@ export {
   useBudgetDashboardStore,
   useBudgetItemGroups,
   useInitBudgetDashboardStore,
-  useVisibleBudgetItems,
   useClearedItemsVisibilityToggle,
   type ExpenseFilterItem,
   type FixedOrVariableFilterType,

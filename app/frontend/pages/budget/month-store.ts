@@ -16,35 +16,35 @@ const emptyBudgetMonth: BudgetMonthData = {
     month: 0,
     year: 0,
     monthName: "",
-    href: ""
+    href: "",
   },
   nextMonth: {
     month: 0,
     year: 0,
     monthName: "",
-    href: ""
-  }
-}
+    href: "",
+  },
+};
 
 type BudgetMonthStore = {
   budgetMonth: BudgetMonthData;
-  setBudgetMonth: (budgetMonth: BudgetMonthData) => void;
-}
+};
 
-const useBudgetMonthStore = create<BudgetMonthStore>((set) => ({
+const useBudgetMonthStore = create<BudgetMonthStore>(() => ({
   budgetMonth: emptyBudgetMonth,
-  setBudgetMonth: (budgetMonth) => set({ budgetMonth }),
-}))
+}));
 
 const initBudgetMonthStore = (props: { budgetMonth: BudgetMonthData }) => {
-  const { budgetMonth } = props
-  const setBudgetMonth = useBudgetMonthStore((s) => s.setBudgetMonth)
+  const { budgetMonth } = props;
 
   useEffect(() => {
-    setBudgetMonth(budgetMonth)
-  }, [budgetMonth, setBudgetMonth])
-}
+    useBudgetMonthStore.setState({ budgetMonth });
+  }, [budgetMonth]);
+};
 
-const getBudgetMonth = () => useBudgetMonthStore((s) => s.budgetMonth)
+const getBudgetMonth = () =>
+  useBudgetMonthStore((s) => {
+    return s.budgetMonth;
+  });
 
-export { useBudgetMonthStore, initBudgetMonthStore, getBudgetMonth }
+export { useBudgetMonthStore, initBudgetMonthStore, getBudgetMonth };
