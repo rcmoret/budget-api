@@ -44,6 +44,7 @@ const BottomMenuItems = () => {
     "manageBudgetCategoriesRoute",
   );
   const manageAccountsRoute = useAppRoutes("manageAccountsRoute");
+  const userProfileRoute = useAppRoutes("userProfileRoute");
   const signOutRoute = useAppRoutes("userSignOutRoute");
 
   return (
@@ -53,6 +54,9 @@ const BottomMenuItems = () => {
       </div>
       <div className={menuLabelClassName}>
         <Link href={manageBudgetCategoriesRoute}>Manage Categories</Link>
+      </div>
+      <div className={menuLabelClassName}>
+        <Link href={userProfileRoute}>Profile</Link>
       </div>
       <AppConfigItems />
       <div className="text-primary-content text-sm mx-2 pt-4 pb-8 border-t border-neutral">

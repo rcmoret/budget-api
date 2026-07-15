@@ -3,12 +3,12 @@
     <div class="flex flex-col gap-4">
       <div class="field">
         <%= f.label :email %><br />
-        <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+        <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "input input-sm input-secondary w-full" %>
       </div>
 
       <div class="field">
         <%= f.label :password %><br />
-        <%= f.password_field :password, autocomplete: "current-password" %>
+        <%= f.password_field :password, autocomplete: "current-password", class: "input input-sm input-secondary w-full" %>
       </div>
 
       <% if devise_mapping.rememberable? %>
@@ -18,8 +18,8 @@
         </div>
       <% end %>
 
-      <div class="actions font-semibold text-chartreuse-100 bg-green-600 hover:bg-green-700 rounded px-3 py-2 text-white w-32">
-        <%= f.submit "Log in" %>
+      <div class="actions w-full hover:bg-green-700 rounded px-3 py-2 text-white w-32">
+        <%= f.submit "Log in", class: "btn btn-success text-success-content w-full" %>
       </div>
       <hr />
     </div>
