@@ -16,25 +16,16 @@ RSpec.describe Budget::UpcomingMaturityIntervalQuery do
       interval: upcoming_interval.next)
   end
 
-  it "returns the budget category id and a date string" do
-    expect(subject).to eq(
-      [
-        described_class::UpcomingMaturityIntervalSerializer.new(
-          "budget_category_id" => category.id,
-          "upcoming_date" => Date.new(
-            upcoming_interval.year,
-            upcoming_interval.month,
-            1
-          ).strftime("%F"),
-        ),
-      ]
-    )
-    expect(subject.find(category.id).render).to eq(
+  it "returns the budget category id, month, and year for an upcoming maturity" do
+    expect(subject.find(category.id).serializable_hash).to eq(
       "budgetCategoryId" => category.id,
       "month" => upcoming_interval.month,
       "year" => upcoming_interval.year,
     )
-    expect(subject.find(random_category_id).render).to eq(
+  end
+
+  it "returns nil month and year when the category has no upcoming maturity" do
+    expect(subject.find(random_category_id).serializable_hash).to eq(
       "budgetCategoryId" => random_category_id,
       "month" => nil,
       "year" => nil,

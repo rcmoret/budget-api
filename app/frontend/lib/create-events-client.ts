@@ -1,7 +1,7 @@
 import { TCategoryScope } from "@/types/budget/planning";
 import { BudgetItemCreateEventType } from "@/types/budget/events";
 
-type TCreateEventClientContext = "setup";
+type TCreateEventClientContext = "current" | "setup";
 
 type CreateEventClientProps = {
   excludedKeys?: Array<string>;

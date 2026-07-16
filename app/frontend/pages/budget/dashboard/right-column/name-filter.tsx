@@ -15,7 +15,7 @@ const NameFilter = () => {
   ].join(" ");
 
   return (
-    <search className="grid gap-2 pt-4 border-t border-neutral">
+    <search className="grid gap-2">
       <label htmlFor="budget-item-filter" className="label">
         Filter Items
       </label>

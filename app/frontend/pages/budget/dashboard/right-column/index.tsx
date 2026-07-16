@@ -7,6 +7,7 @@ import { ClearedItemsToggle } from "./cleared-items-toggle";
 import { Link } from "@inertiajs/react";
 import { CreateEventForm } from "./create-event-form";
 import { NameFilter } from "./name-filter";
+import { SortOptions } from "./sort-options";
 
 const SetUpLink = () => {
   const { month, year, monthName } = getBudgetMonth();
@@ -27,7 +28,7 @@ const RightColumn = () => {
   const { isSetUp } = getBudgetMonth();
 
   return (
-    <div className="grid gap-8">
+    <div className="grid gap-4">
       <BudgetMonthSummary>{!isSetUp && <SetUpLink />}</BudgetMonthSummary>
       <div className="pt-4 border-t border-neutral">
         <Discretionary />
@@ -36,11 +37,18 @@ const RightColumn = () => {
         <ExpenseFilters />
         <CategoryTypeFilters />
       </div>
-      <NameFilter />
-      <CreateEventForm />
-      <div className="grid gap-0 px-4 pt-4 border-t border-neutral">
+      <div className="pt-4 border-t border-neutral">
+        <NameFilter />
+      </div>
+      <div className="pt-4 border-t border-neutral">
+        <SortOptions />
+      </div>
+      <div className="pt-4 border-t border-neutral">
         <AccrualToggle />
         <ClearedItemsToggle />
+      </div>
+      <div className="grid gap-0 pt-4 border-t border-neutral">
+        <CreateEventForm />
       </div>
     </div>
   );

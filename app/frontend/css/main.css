@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css?family=Questrial");
 @import "tailwindcss";
 @import "./app.scss";
+@import "./ctas.css";
 @import "./headings.css";
 @import "./grids.css";
 @import "./nav.css";

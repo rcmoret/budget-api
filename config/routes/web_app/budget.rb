@@ -17,7 +17,7 @@ namespace :budget do
   end
 
   post "/events/(:month)/(:year)",
-    to: WebApp::Budget::EventsController.action(:call),
+    to: WebApp::Budget::Changes::CreateController.action(:call),
     as: :create_events
 
   scope "/:month/:year" do

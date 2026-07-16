@@ -163,13 +163,17 @@ const ArchivedItemCard = (props: {
   );
 };
 
-const CardRow = (props: { children: React.ReactNode }) => {
-  const rowClassName = [
+const CardRow = (props: { children: React.ReactNode; minHeight?: "lg" }) => {
+  const minHeightClass = props.minHeight === "lg" ? "min-h-8" : null;
+  const rowClasses = [
     "flex",
     "flex-row",
+    "items-center",
     "[&>*:last-child]:ml-auto",
     "justify-end",
-  ].join(" ");
+    minHeightClass,
+  ];
+  const rowClassName = rowClasses.filter(Boolean).join(" ");
 
   return <div className={rowClassName}>{props.children}</div>;
 };

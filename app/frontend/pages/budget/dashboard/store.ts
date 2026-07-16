@@ -12,17 +12,64 @@ type FilterKeys = {
   type: Exclude<ExpenseFilterItem, null>;
 };
 
+// "name" is the default ordering the server sends; sorting by it locally
+// restores that ordering without a trip to the backend.
+type SortField = "name" | "amount" | "remaining" | "difference" | "spent";
+type SortDirection = "asc" | "desc";
+
+const compareBudgetItems = (
+  a: BudgetItem,
+  b: BudgetItem,
+  field: SortField,
+  direction: SortDirection,
+): number => {
+  const modifier = direction === "asc" ? 1 : -1;
+
+  if (field === "name") {
+    // Mirror the server's `by_name` scope (`order("LOWER(name) asc")`) so the
+    // local name sort matches what the backend sends.
+    return (
+      a.name.toLowerCase().localeCompare(b.name.toLowerCase()) * modifier
+    );
+  }
+
+  // Items are grouped by expenses (negative) and revenues (positive), so
+  // compare on magnitude to keep the ordering consistent across groups.
+  const aValue = Math.abs(a[field].cents);
+  const bValue = Math.abs(b[field].cents);
+  return (aValue - bValue) * modifier;
+};
+
+const sortBudgetItemCollections = (
+  items: BudgetItemCollections,
+  field: SortField,
+  direction: SortDirection,
+): BudgetItemCollections => {
+  const comparator = (a: BudgetItem, b: BudgetItem) =>
+    compareBudgetItems(a, b, field, direction);
+
+  return {
+    fixedExpenses: [...items.fixedExpenses].sort(comparator),
+    variableExpenses: [...items.variableExpenses].sort(comparator),
+    fixedRevenues: [...items.fixedRevenues].sort(comparator),
+    variableRevenues: [...items.variableRevenues].sort(comparator),
+  };
+};
+
 type BudgetDashboardState = {
   items: BudgetItemCollections;
   discretionary: DiscretionaryDetails;
   expenseOrRevenueFilter: ExpenseFilterItem;
   fixedOrVariableFilter: FixedOrVariableFilterType;
   clearedItemVisibilityToggle: boolean;
+  sortField: SortField;
+  sortDirection: SortDirection;
   setExpenseOrRevenueFilter: (f: ExpenseFilterItem) => void;
   setFixedOrVariableFilter: (f: FixedOrVariableFilterType) => void;
   setItems: (items: BudgetItemCollections) => void;
   setDiscretionary: (discretionary: DiscretionaryDetails) => void;
   toggleItemVisibility: (b: boolean) => void;
+  sortItems: (field: SortField, direction: SortDirection) => void;
 };
 
 const useBudgetDashboardStore = create<BudgetDashboardState>((set, get) => ({
@@ -42,9 +89,21 @@ const useBudgetDashboardStore = create<BudgetDashboardState>((set, get) => ({
   clearedItemVisibilityToggle: false,
   expenseOrRevenueFilter: null,
   fixedOrVariableFilter: null,
+  sortField: "name",
+  sortDirection: "asc",
 
   setDiscretionary: (discretionary) => set({ discretionary }),
-  setItems: (items) => set({ items }),
+
+  // Keep incoming items in the currently active ordering so a data refresh
+  // doesn't reset the user's chosen sort.
+  setItems: (items) =>
+    set((state) => ({
+      items: sortBudgetItemCollections(
+        items,
+        state.sortField,
+        state.sortDirection,
+      ),
+    })),
 
   setExpenseOrRevenueFilter: (expenseOrRevenueFilter) =>
     set({ expenseOrRevenueFilter }),
@@ -53,6 +112,13 @@ const useBudgetDashboardStore = create<BudgetDashboardState>((set, get) => ({
     set({ fixedOrVariableFilter }),
   toggleItemVisibility: () =>
     set({ clearedItemVisibilityToggle: !get().clearedItemVisibilityToggle }),
+
+  sortItems: (sortField, sortDirection) =>
+    set((state) => ({
+      sortField,
+      sortDirection,
+      items: sortBudgetItemCollections(state.items, sortField, sortDirection),
+    })),
 }));
 
 type ItemGroup = {
@@ -133,4 +199,6 @@ export {
   type ExpenseFilterItem,
   type FixedOrVariableFilterType,
   type ItemGroup,
+  type SortField,
+  type SortDirection,
 };

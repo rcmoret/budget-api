@@ -6,33 +6,9 @@ import {
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { AdjustItemForm, CreateItemForm } from ".";
 import { MonetaryAmount } from "@/types/amount";
-import { decimalToInt, moneyFormatter } from "@/lib/money-formatter";
+import { inputAmount } from "@/lib/adjustment-amount-store";
 import { useTrackedEvents } from "@/pages/budget/planning/setup/store";
 import { useSetupClient } from "@/pages/budget/planning/setup/client";
-
-type InputAmountProps = {
-  decimal?: string | number;
-  cents?: number;
-  display?: string;
-};
-
-const inputAmount = (props: InputAmountProps): MonetaryAmount => {
-  const { cents, display } = props;
-
-  if (display === "" || !!display) {
-    return {
-      cents: decimalToInt(display),
-      display: display,
-    };
-  } else {
-    const amount = cents || 0;
-
-    return {
-      cents: amount,
-      display: moneyFormatter(amount),
-    };
-  }
-};
 
 type TEvent = BudgetPlanningEvent<SetupEvents, BudgetCategoryEventFlagsType>;
 type TSuggestionName =

@@ -49,4 +49,15 @@ const decimalToInt = (amount: string): number => {
   }
 };
 
-export { moneyFormatter, decimalToInt };
+const amountStringValidator = (amount: string | null) => {
+  if (!amount) return false;
+
+  const decimalPart = /\.\d{1,2}/.source;
+  const floatPart = /\d+(\.\d{0,2}?)?/.source;
+
+  const moneyRegExp = new RegExp(`^-?(?:${floatPart}|${decimalPart})$`);
+
+  return !!amount.replace(/\s/g, "").match(moneyRegExp);
+};
+
+export { amountStringValidator, moneyFormatter, decimalToInt };

@@ -1,0 +1,26 @@
+button.round-cta {
+  width: calc(var(--spacing) * 6);
+  height: calc(var(--spacing) * 6);
+  border-radius: calc(infinity * 1px);
+  font-size: var(--text-xs);
+  line-height: var(--tw-leading, var(--text-xs--line-height));
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+
+  &[type="submit"] {
+    background-color: var(--color-success);
+    color: var(--color-success-content);
+  }
+
+  &:disabled {
+    cursor: default;
+    background-color: var(--color-neutral);
+    color: var(--color-neutral-content);
+  }
+
+  &.cancel {
+    background-color: var(--color-error);
+    color: var(--color-error-content);
+  }
+}

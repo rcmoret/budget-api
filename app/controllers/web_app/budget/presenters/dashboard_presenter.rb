@@ -11,7 +11,7 @@ module WebApp
         end
 
         def items
-          @items ||= interval.detailed_items.active.order(name: :asc).to_a
+          @items ||= interval.detailed_items.active.by_name.to_a
         end
 
         def fixed_expenses

@@ -2,6 +2,8 @@ const IconDictionary = {
   "angle-double-left": "fas fa-angle-double-left",
   "angle-double-right": "fas fa-angle-double-right",
   "arrow-right": "fas fa-arrow-right",
+  "arrow-up": "fas fa-arrow-up",
+  "arrow-down": "fas fa-arrow-down",
   bars: "fas fa-bars",
   calendar: "fas fa-calendar",
   "caret-down": "fas fa-caret-down",

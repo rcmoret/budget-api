@@ -21,6 +21,7 @@ module Budget
       scope :available, lambda {
         variable.or(fixed.where(transaction_detail_count: 0))
       }
+      scope :by_name, -> { order("LOWER(name) asc") }
 
       belongs_to :interval,
         class_name: "Interval",

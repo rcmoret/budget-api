@@ -3,66 +3,88 @@ import { ItemContextProvider, useBudgetItemContext } from "./context-provider";
 import { BudgetItem } from "@/types/budget";
 import { AmountSpan } from "@/components/amount-span";
 import { Icon } from "@/components/icon";
-import { FixedItemCard } from "./fixed-item-card";
 import { VariableItemCard } from "./variable-item-card";
 import { ItemCompositionDetails } from "./previous-current-budget-indicator";
-import { AccrualPill } from "./accrual-pill";
-import { KeyIdentifier } from "@/components/key-identifier";
+import { AccrualPill, ClearedItemPill } from "./pills";
+import { BottomRow } from "./bottom-row";
+import {
+  useAdjustmentInputsContext,
+  AdjustmentInputsProvider,
+} from "@/components/adjustment-input/context-provider";
+import { TotalInput } from "@/components/adjustment-input";
 
-const LabelMain = (props: { item: BudgetItem }) => {
-  const { item } = props
+const LabelMain = () => {
+  const { item } = useBudgetItemContext();
 
   return (
     <div className="flex flex-row gap-2 items-center">
-      <div>
-        {item.name}
-      </div>
+      <div>{item.name}</div>
       <div>
         <Icon name={item.iconClassName} />
       </div>
-    </div >
-  )
-}
+    </div>
+  );
+};
 
-const BudgetItemCardLabel = (props: { item: BudgetItem }) => {
-  const { item } = props
+const BudgetItemCardLabel = () => {
+  const { item } = useBudgetItemContext();
 
   return (
-    <CardLabel label={<LabelMain item={item} />}>
-      <AmountSpan amount={item.remaining.cents} colorize="none" absolute={true} />
-    </CardLabel >
-  )
-}
+    <CardLabel label={<LabelMain />}>
+      <AmountSpan
+        amount={item.remaining.cents}
+        colorize="none"
+        absolute={true}
+      />
+    </CardLabel>
+  );
+};
+
+const FixedItemCard = () => {
+  const { editingTotal, totalInputId } = useAdjustmentInputsContext();
+
+  if (!editingTotal) return null;
+
+  return (
+    <CardRow minHeight="lg">
+      <label htmlFor={totalInputId}>Budgeted</label>
+      <div>
+        <TotalInput />
+      </div>
+    </CardRow>
+  );
+};
 
 const InnerCard = () => {
-  const { item } = useBudgetItemContext()
+  const { item } = useBudgetItemContext();
 
   if (item.isVariable) {
-    return <VariableItemCard />
+    return <VariableItemCard />;
   } else {
-    return <FixedItemCard />
+    return <FixedItemCard />;
   }
-}
+};
 
 const BudgetItemCard = (props: { item: BudgetItem }) => {
-  const { item } = props
+  const { item } = props;
 
   return (
-    <ItemContextProvider item={item} >
-      <ActiveItemCard
-        key={item.objectKey}
-        id={item.objectKey}
-        label={<BudgetItemCardLabel item={item} />}
-      >
-        <InnerCard />
-        <AccrualPill />
-        <CardRow>
-          <KeyIdentifier identifier={item.key} className="text-base-content/66" />
-        </CardRow>
-        <ItemCompositionDetails />
-      </ActiveItemCard>
-    </ItemContextProvider>
-  )
-}
+    <AdjustmentInputsProvider objectKey={item.objectKey}>
+      <ItemContextProvider item={item}>
+        <ActiveItemCard
+          key={item.objectKey}
+          id={item.objectKey}
+          label={<BudgetItemCardLabel />}
+        >
+          <InnerCard />
+          <ClearedItemPill />
+          <AccrualPill />
+          <ItemCompositionDetails />
+          <BottomRow />
+        </ActiveItemCard>
+      </ItemContextProvider>
+    </AdjustmentInputsProvider>
+  );
+};
 
-export { BudgetItemCard }
+export { BudgetItemCard };
