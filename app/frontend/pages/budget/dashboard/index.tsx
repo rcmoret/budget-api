@@ -1,4 +1,4 @@
-import { PageComponent } from "@frontend/layout";
+import { HeaderComponent, PageComponent } from "@frontend/layout";
 import { Header } from "./header";
 import { RightColumn } from "./right-column";
 import { BudgetMonthIndex } from "@/types/budget";
@@ -9,6 +9,25 @@ import { initNeighborLinksStore } from "../neighbor-links-store";
 import { useInitFilterTermStore } from "@/utils/hooks/use-filter-term";
 import { useInitAdjustmentStore } from "@/lib/adjustment-amount-store";
 import { useNeighborLinksKeyBoardHandlers } from "@/utils/hooks/neighbors-keyboard-nav";
+import { getBudgetMonth } from "@/pages/budget/month-store";
+import { getNeighborLinks } from "@/pages/budget/neighbor-links-store";
+import { NeighborLinks } from "@/components/neighbor-links";
+
+const BudgetDashboardNeighborLinks = () => {
+  const { previous, next } = getNeighborLinks();
+
+  return <NeighborLinks nextMonth={next} previousMonth={previous} />;
+};
+
+const Header = () => {
+  const budgetMonth = getBudgetMonth();
+
+  return (
+    <HeaderComponent rightColumnComponent={<BudgetDashboardNeighborLinks />}>
+      {budgetMonth.monthName} {budgetMonth.year} Budget
+    </HeaderComponent>
+  );
+};
 
 const DashboardComponent = () => {
   useNeighborLinksKeyBoardHandlers();

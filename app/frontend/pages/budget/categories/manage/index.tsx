@@ -4,12 +4,12 @@ import { BudgetCategoryCard } from "@/pages/budget/categories/card";
 import { useArchivedBudgetCategories } from "@/pages/budget/categories/store";
 import { NewFormButton } from "@/pages/budget/categories/manage/new-category-form";
 import { ArchivedCategoriesComponent } from "./archived-category-container";
-import { pageHeadingClassName } from "@/layout";
 import { FilterTermTextField } from "@/pages/budget/categories/manage/filter-field";
 import {
   CategoryTypeFilters,
   ExpenseFilters,
 } from "@/pages/budget/categories/manage/filter-buttons";
+import { HeaderComponent } from "@/layout";
 
 const CategoryList = (props: { categories: Array<BudgetCategoryType> }) => {
   return (
@@ -25,10 +25,10 @@ const CategoryList = (props: { categories: Array<BudgetCategoryType> }) => {
 
 const Header = () => {
   return (
-    <>
-      <h1 className={pageHeadingClassName}>Manage Budget Categories</h1>
-      <NewFormButton />
-    </>
+    <HeaderComponent
+      title="Manage Budget Categories"
+      rightColumnComponent={<NewFormButton />}
+    />
   );
 };
 

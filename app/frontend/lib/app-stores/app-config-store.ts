@@ -23,6 +23,7 @@ const useAppConfigStore = create<AppConfigState>((set) => ({
     currentRoute: "",
     manageAccountsRoute: "",
     manageBudgetCategoriesRoute: "",
+    userProfileRoute: "",
     userSignOutRoute: "",
   },
   redirectSegments: [],

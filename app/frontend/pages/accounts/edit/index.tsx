@@ -6,7 +6,7 @@ import { AccountCard } from "@/pages/accounts/manage/card";
 import { AccountProps } from "@/types/account";
 import { PageProps } from "@/types/page_props";
 import { useInitAccountsManagerStore } from "../store";
-import { PageComponent, pageHeadingClassName } from "@/layout";
+import { HeaderComponent, PageComponent } from "@/layout";
 
 type AccountEditProps = PageProps & {
   account: AccountProps;
@@ -25,11 +25,7 @@ const AccountEdit = (props: AccountEditProps) => {
 const Header = () => {
   const { account } = useAccountShowContext();
 
-  return (
-    <>
-      <h1 className={pageHeadingClassName}>Edit {account.name}</h1>
-    </>
-  );
+  return <HeaderComponent title={`Edit ${account.name}`} />;
 };
 
 const AccountEditComponent = () => {

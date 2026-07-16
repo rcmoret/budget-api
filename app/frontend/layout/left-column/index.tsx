@@ -1,8 +1,17 @@
 import { MenuItems } from "./menu-item";
-import { useAppRoutes, useNamespace } from "@frontend/lib/app-stores/app-config-store";
+import {
+  useAppRoutes,
+  useNamespace,
+} from "@frontend/lib/app-stores/app-config-store";
 import { Link } from "@inertiajs/react";
 import { AppConfigItems } from "./config-items";
 import { AccountMenuComponent } from "./account-menu-item";
+
+const ProfileTopLevelLink = () => (
+  <div className="top-level-link" aria-current="page">
+    Profile
+  </div>
+);
 
 const TopMenuItems = () => {
   const namespace = useNamespace();
@@ -24,6 +33,7 @@ const TopMenuItems = () => {
       >
         <AccountMenuComponent />
       </div>
+      {namespace === "profile" && <ProfileTopLevelLink />}
     </MenuItems>
   );
 };
@@ -56,7 +66,7 @@ const BottomMenuItems = () => {
         <Link href={manageBudgetCategoriesRoute}>Manage Categories</Link>
       </div>
       <div className={menuLabelClassName}>
-        <Link href={userProfileRoute}>Profile</Link>
+        <Link href={userProfileRoute}>Manage Profile</Link>
       </div>
       <AppConfigItems />
       <div className="text-primary-content text-sm mx-2 pt-4 pb-8 border-t border-neutral">

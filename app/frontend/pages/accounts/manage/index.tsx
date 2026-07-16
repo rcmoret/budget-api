@@ -3,7 +3,7 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { PageComponent, pageHeadingClassName } from "@frontend/layout";
+import { HeaderComponent, PageComponent } from "@frontend/layout";
 import { AccountProps } from "@frontend/types/account";
 import { SortableCard } from "./card/sortable-card";
 import {
@@ -119,10 +119,10 @@ const NewFormButton = () => {
 
 const Header = () => {
   return (
-    <>
-      <h1 className={pageHeadingClassName}>Manage Accounts</h1>
-      <NewFormButton />
-    </>
+    <HeaderComponent
+      title="Manage Accounts"
+      rightColumnComponent={<NewFormButton />}
+    />
   );
 };
 

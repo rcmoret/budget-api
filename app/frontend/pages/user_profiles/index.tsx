@@ -1,5 +1,5 @@
 import { Form } from "@inertiajs/react";
-import { PageComponent, pageHeadingClassName } from "@/layout";
+import { HeaderComponent, PageComponent } from "@/layout";
 import { PageProps } from "@/types/page_props";
 
 type TimezoneOption = {
@@ -95,13 +95,15 @@ const ProfileForm = ({ profile }: { profile: UserProfile }) => (
   </Form>
 );
 
-const Header = () => <h1 className={pageHeadingClassName}>Profile</h1>;
-
 const UserProfileShow = (props: UserProfileShowProps) => {
   const profile = props.user_profile;
 
   return (
-    <PageComponent mainId="user-profile" header={<Header />} rightColumn={null}>
+    <PageComponent
+      mainId="user-profile"
+      header={<HeaderComponent title="Profile" />}
+      rightColumn={null}
+    >
       <div className="grid gap-4 pb-8 max-w-md">
         <div className="text-sm text-base-content/70">{profile.email}</div>
         <ProfileForm profile={profile} />

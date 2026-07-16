@@ -2,19 +2,26 @@ import { LeftColumn } from "@/layout/left-column";
 import { Notifications } from "./notifications";
 import { RightColumnWrapper } from "@/components/right-column-bordered";
 
-const pageHeadingClassName = [
-  "text-2xl",
-  "text-content",
-  "font-medium",
-  "tracking-wide",
-].join(" ");
-
 type LayoutProps = {
   header?: React.ReactNode;
   children: React.ReactNode;
   rightColumn: React.ReactNode;
   mainComponentClassNames?: Array<string>;
   mainId: string;
+};
+
+const HeaderComponent = (props: {
+  children?: React.ReactNode;
+  rightColumnComponent?: React.ReactNode;
+  title?: string;
+}) => {
+  const title = props.children ?? props.title ?? "Budget Application";
+  return (
+    <>
+      <h1>{title}</h1>
+      {props.rightColumnComponent}
+    </>
+  );
 };
 
 const PageComponent = (props: LayoutProps) => {
@@ -70,4 +77,4 @@ const PageComponent = (props: LayoutProps) => {
   );
 };
 
-export { PageComponent, pageHeadingClassName };
+export { PageComponent, HeaderComponent };

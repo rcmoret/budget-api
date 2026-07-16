@@ -5,6 +5,7 @@ type AppRoutesType = {
   currentRoute: string;
   manageAccountsRoute: string;
   manageBudgetCategoriesRoute: string;
+  userProfileRoute: string;
   userSignOutRoute: string;
 };
 

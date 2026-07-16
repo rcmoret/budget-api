@@ -19,5 +19,13 @@ Rails.application.routes.draw do
         to: Devise::SessionsController.action(:destroy),
         as: :user_sign_out
     end
+
+    scope "/profile" do
+      get "/",
+        to: WebApp::UserProfiles::ShowController.action(:call),
+        as: :profile
+      put "/",
+        to: WebApp::UserProfiles::UpdateController.action(:call)
+    end
   end
 end

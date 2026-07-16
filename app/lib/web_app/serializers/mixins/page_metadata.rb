@@ -14,6 +14,8 @@ module WebApp
                 :budget
               elsif current_path.starts_with?("/account")
                 :accounts
+              elsif current_path.starts_with?("/profile")
+                "profile"
               else
                 ""
               end

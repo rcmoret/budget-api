@@ -1,12 +1,12 @@
-import { PageComponent, pageHeadingClassName } from "@frontend/layout";
-
-const Header = () => {
-  return <h1 className={pageHeadingClassName}>Budget App</h1>;
-};
+import { HeaderComponent, PageComponent } from "@frontend/layout";
 
 const Home = () => {
   return (
-    <PageComponent mainId="home" header={<Header />} rightColumn={null}>
+    <PageComponent
+      mainId="home"
+      header={<HeaderComponent title="Budget App" />}
+      rightColumn={null}
+    >
       <div className="p-8"></div>
     </PageComponent>
   );

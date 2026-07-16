@@ -4,6 +4,7 @@ import { createContext, useContext } from "react";
 import { PrimaryAccountLink } from "./primary-link";
 import { getAccountLinks } from "@/layout/account-navigation-store";
 import { Collapse } from "@/components/collapse";
+import { useNamespace } from "@/lib/app-stores/app-config-store";
 
 type AccountMenuContextType = {
   isMenuOpen: boolean;
@@ -44,8 +45,14 @@ const useAccountMenuContext = () => {
 
 const DropdownAccountLinks = () => {
   const { isMenuOpen, renderDropdown } = useAccountMenuContext();
+  const namespace = useNamespace();
 
   if (!renderDropdown) return null;
+
+  const className = [
+    "mx-2 z-1",
+    ...(namespace === "profile" ? ["mt-2"] : ["mt-3", "absolute"]),
+  ].join(" ");
 
   return (
     <Collapse
@@ -53,7 +60,7 @@ const DropdownAccountLinks = () => {
       fade
       durationMs={1000}
       tabIndex={-1}
-      className="absolute mt-3 mx-2 left-0 z-1"
+      className={className}
       innerClassName="rounded text-secondary-content bg-secondary text-sm"
     >
       <IndividualAccountLinks />

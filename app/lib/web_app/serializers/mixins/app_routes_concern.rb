@@ -13,6 +13,7 @@ module WebApp
             :current_route,
             :manage_accounts_route,
             :manage_budget_categories_route,
+            :user_profile_route,
             :user_sign_out_route
         end
 
