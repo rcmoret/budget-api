@@ -10,7 +10,7 @@ const NoChangeSuggestion = () => {
     useEventContext();
   const { eqPrevBudgeted } = useEventFlagsContext();
   const onClick = () => {
-    setAmount("0.00");
+    setAmount({ adjustment: "0.00" });
     setSelectedSuggestion("unchanged");
   };
   const isSelected = selectedSuggestion === "unchanged" && eqPrevBudgeted;

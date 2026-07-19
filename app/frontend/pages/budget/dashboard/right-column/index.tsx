@@ -10,14 +10,14 @@ import { NameFilter } from "./name-filter";
 import { SortOptions } from "./sort-options";
 
 const SetUpLink = () => {
-  const { month, year, monthName } = getBudgetMonth();
+  const { year, monthName, setupRoute } = getBudgetMonth();
 
   const className = ["text-primary", "underline"].join(" ");
 
   return (
     <div>
       <span className="text-primary">&bull; </span>
-      <Link href={`/budget/${month}/${year}/set-up`} className={className}>
+      <Link href={setupRoute} className={className}>
         Set up {monthName} {year}
       </Link>
     </div>
@@ -25,11 +25,11 @@ const SetUpLink = () => {
 };
 
 const RightColumn = () => {
-  const { isSetUp } = getBudgetMonth();
+  const { setupRoute } = getBudgetMonth();
 
   return (
     <div className="grid gap-4">
-      <BudgetMonthSummary>{!isSetUp && <SetUpLink />}</BudgetMonthSummary>
+      <BudgetMonthSummary>{!!setupRoute && <SetUpLink />}</BudgetMonthSummary>
       <div className="pt-4 border-t border-neutral">
         <Discretionary />
       </div>

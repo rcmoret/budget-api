@@ -84,7 +84,7 @@ class Account < ApplicationRecord
   def set_priority!
     return if priority.present?
 
-    self.priority = (self.class.belonging_to(user_group).maximum(:priority).to_i + 1)
+    self.priority = (cotenants.maximum(:priority).to_i + 1)
   end
 
   def nullify_priority!

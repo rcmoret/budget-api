@@ -4,6 +4,7 @@ import {
   GenericGroup,
 } from "./index";
 import { BudgetCategoryType } from "../index";
+import { MonetaryAmount } from "@/types/amount";
 
 // "upcomingMaturityIntervals": null,
 
@@ -30,6 +31,8 @@ type FeaturedBudgetCategoryType = Pick<
   BudgetCategorySlice
 > & {
   events: Array<BudgetPlanningEvent<SetupEvents, BudgetCategoryEventFlagsType>>;
+  defaultAmount: MonetaryAmount;
+  objectKey: string;
 };
 
 type BudgetCategoryEventFlagsType = {
@@ -50,9 +53,14 @@ type CategoryGroups = GenericGroupCollection<CategoryGroup>;
 type SetupData = {
   currentCategoryHref: string;
   nextUnreviewedCategoryHref: string;
+  nextUnreviewedCategoryName: string;
   nextCategoryHref: string;
+  nextCategoryName: string;
   previousCategoryHref: string;
+  previousCategoryName: string;
   previousUnreviewedCategoryHref: string;
+  previousUnreviewedCategoryName: string;
+  previousUnreviewedCategorySlug: string;
 };
 
 export type {

@@ -37,7 +37,16 @@
 .budget-planning {
   display: grid;
   padding-bottom: 1.5rem;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 1fr 2fr;
+  height: 100%; /* or a fixed viewport-relative height like calc(100vh - Xrem) */
+  overflow: hidden; /* main itself no longer scrolls */
+
+  & > div {
+    align-content: flex-start;
+    display: grid;
+    min-width: 0;
+    overflow-y: scroll;
+  }
 }
 
 /* main.with-scroll-fixes { */

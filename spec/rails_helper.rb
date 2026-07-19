@@ -9,6 +9,7 @@ if Rails.env.production?
   abort("The Rails environment is running in production mode!")
 end
 require "rspec/rails"
+require "inertia_rails/rspec"
 
 Rails.root.glob("spec/helpers/**/*.rb").each { |f| require f }
 Rails.root.glob("spec/requests/shared/**/*.rb").each { |f| require f }
@@ -28,6 +29,7 @@ RSpec.configure do |config|
   config.include(Helpers::CustomMatchers)
   config.include(FactoryBot::Syntax::Methods)
   config.include(JSONResponseHelper)
+  config.include(Devise::Test::IntegrationHelpers, type: :request)
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false

@@ -5,8 +5,8 @@ module WebApp
     module Setup
       class CreateEventsController < BaseController
         # From WebApp::Budget::Setup::Mixins
-        include Mixins::HasBudgetInterval
-        include Mixins::HasChangeSet
+        include PlanningMixins::HasBudgetInterval
+        include PlanningMixins::HasChangeSet
 
         before_action -> { @effective_at = Time.current }
 

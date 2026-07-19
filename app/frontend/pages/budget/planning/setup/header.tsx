@@ -1,13 +1,21 @@
-import { getBudgetMonth } from "../../month-store"
-import { pageHeadingClassName } from "@/layout";
+import { HeaderComponent } from "@/layout";
+import { getBudgetMonth } from "../../month-store";
+import { getNeighborLinks } from "@/pages/budget/neighbor-links-store";
+import { NeighborLinks } from "@/components/neighbor-links";
+
+const BudgetDashboardNeighborLinks = () => {
+  const { previous, next } = getNeighborLinks();
+
+  return <NeighborLinks nextMonth={next} previousMonth={previous} />;
+};
 
 const SetupHeader = () => {
-  const budgetMonth = getBudgetMonth()
+  const budgetMonth = getBudgetMonth();
   return (
-    <h1 className={pageHeadingClassName}>
+    <HeaderComponent rightColumnComponent={<BudgetDashboardNeighborLinks />}>
       Planning: Setup {budgetMonth.monthName} {budgetMonth.year}
-    </h1>
-  )
-}
+    </HeaderComponent>
+  );
+};
 
-export { SetupHeader }
+export { SetupHeader };

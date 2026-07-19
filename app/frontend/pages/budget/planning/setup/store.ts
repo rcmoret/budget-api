@@ -44,12 +44,14 @@ const emptyGroups: CategoryGroups = {
 
 const emptyFeaturedCategory: FeaturedBudgetCategoryType = {
   key: "__initial__",
+  objectKey: "",
   name: "",
   slug: "",
   archivedAt: null,
   isExpense: false,
   isMonthly: false,
   isAccrual: false,
+  defaultAmount: { display: "", cents: 0 },
   iconClassName: "bars",
   events: [],
 };
@@ -58,8 +60,13 @@ const emptySetupData: SetupData = {
   currentCategoryHref: "",
   nextUnreviewedCategoryHref: "",
   nextCategoryHref: "",
+  nextCategoryName: "",
+  nextUnreviewedCategoryName: "",
   previousCategoryHref: "",
+  previousCategoryName: "",
   previousUnreviewedCategoryHref: "",
+  previousUnreviewedCategoryName: "",
+  previousUnreviewedCategorySlug: "",
 };
 
 type SetupStoreType = {

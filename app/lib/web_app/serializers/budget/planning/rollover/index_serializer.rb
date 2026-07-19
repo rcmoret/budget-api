@@ -54,8 +54,8 @@ module WebApp
             # rubocop:enable Metrics/BlockLength
 
             attribute :is_submittable, &:submittable?
-            one :budget_month,
-              resource: WebApp::Budget::BudgetMonthSerializer
+            # one :budget_month,
+            #   resource: WebApp::Budget::BudgetMonthSerializer
 
             nested_attribute :neighbor_links do
               attributes :next_unreviewed_category_href,
@@ -71,9 +71,9 @@ module WebApp
               transform_keys :lower_camel
             end
 
-            attribute :metadata,
-              resource: ::WebApp::MetadataSerializer,
-              &:metadata
+            # attribute :metadata,
+            #   resource: ::WebApp::MetadataSerializer,
+            #   &:metadata
 
             nested_attribute :groups do
               many :revenues,

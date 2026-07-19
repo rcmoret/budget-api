@@ -15,7 +15,10 @@ module Budget
                                   numeric_string_to_cents(@adjustment).to_i
             end
 
-            attr_reader :item, :adjustment, :adjustment_cents, :budget_item_key
+            attr_reader :adjustment,
+              :adjustment_cents,
+              :budget_item_key,
+              :item
 
             def updated_amount
               return amount unless valid?
@@ -26,11 +29,11 @@ module Budget
             def flags
               {
                 eq_prev_budgeted: eq_prev_budgeted?,
-                eq_prev_spent: previously_budgeted == spent,
-                show_default_suggestion: show_default_suggestion?,
-                unreviewed: unreviewed?,
+                eq_prev_spent: eq_prev_spent?,
                 has_delete_intent: will_delete?,
                 is_valid: valid?,
+                show_default_suggestion: show_default_suggestion?,
+                unreviewed: unreviewed?,
               }
             end
 
@@ -52,11 +55,16 @@ module Budget
               adjustment_cents == previously_budgeted
             end
 
+            def eq_prev_spent?
+              previously_budgeted == spent
+            end
+
             def show_default_suggestion?
               return false unless monthly? || category.accrual?
               return false if adjust?
+              return false if category.default_amount.abs.zero?
 
-              category.default_amount.abs.positive? || eq_prev_budgeted?
+              eq_prev_spent? || category.accrual?
             end
 
             def spent = 0
@@ -80,9 +88,10 @@ module Budget
             end
 
             delegate :category,
-              :monthly?,
-              :revenue?,
               :expense?,
+              :monthly?,
+              :object_key,
+              :revenue?,
               :spent,
               to: :item
           end

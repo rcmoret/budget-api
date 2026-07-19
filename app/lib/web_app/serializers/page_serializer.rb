@@ -9,7 +9,8 @@ module WebApp
       include Mixins::AppRoutesConcern
       include Mixins::NotificationsConcern
       include Mixins::PageMetadata
-      include Mixins::RedirectSegments
+
+      attributes :redirect_segments
     end
   end
 end

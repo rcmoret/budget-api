@@ -5,10 +5,10 @@ module WebApp
     module Setup
       class AddEventController < BaseController
         # From WebApp::Budget::Setup::Mixins
-        include Mixins::HasBudgetInterval
-        include Mixins::HasChangeSet
-        include Mixins::HasBudgetCategoryRecord
-        include Mixins::HasSlugParams
+        include PlanningMixins::HasBudgetInterval
+        include PlanningMixins::HasChangeSet
+        include PlanningMixins::HasBudgetCategoryRecord
+        include PlanningMixins::HasSlugParams
 
         def call
           change_set.add_item_event(budget_category_record)

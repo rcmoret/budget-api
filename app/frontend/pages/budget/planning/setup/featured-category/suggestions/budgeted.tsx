@@ -11,13 +11,14 @@ const BudgetedSuggestion = () => {
   const { eqPrevBudgeted, eqPrevSpent } = useEventFlagsContext();
 
   const { previouslyBudgeted } = event;
-  const isSelected = "default" !== selectedSuggestion && eqPrevBudgeted;
+  const isSelected =
+    (selectedSuggestion ?? "budgeted") === "budgeted" && eqPrevBudgeted;
 
   const label = eqPrevSpent ? "Budgeted / Spent" : "Budgeted";
 
   const setBudgeted = () => {
     setSelectedSuggestion("budgeted");
-    setAmount(event.previouslyBudgeted.display);
+    setAmount({ total: event.previouslyBudgeted.display });
   };
 
   return (

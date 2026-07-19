@@ -3,18 +3,17 @@ import {
   BudgetCategoryEventFlagsType,
   SetupEvents,
 } from "@/types/budget/planning/setup";
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { createContext, useContext, useRef, useState } from "react";
 import { AdjustItemForm, CreateItemForm } from ".";
-import { MonetaryAmount } from "@/types/amount";
-import { inputAmount } from "@/lib/adjustment-amount-store";
-import { useTrackedEvents } from "@/pages/budget/planning/setup/store";
+import { adjustmentFromTotal } from "@/lib/adjustment-amount-store";
 import { useSetupClient } from "@/pages/budget/planning/setup/client";
+import { useAdjustmentInputsContext } from "@/components/adjustment-input/context-provider";
 
 type TEvent = BudgetPlanningEvent<SetupEvents, BudgetCategoryEventFlagsType>;
 type TSuggestionName =
+  | "baseline"
   | "budgeted"
   | "spent"
-  | "default"
   | "delete"
   | "unchanged"
   | null;
@@ -22,9 +21,8 @@ type TSuggestionName =
 type EventContextType = {
   event: TEvent;
   selectedSuggestion: TSuggestionName;
-  setAmount: (amt: string) => void;
+  setAmount: (p: { adjustment?: string; total?: string }) => void;
   setSelectedSuggestion: (s: TSuggestionName) => void;
-  setUpdatedAmount: (amt: string) => void;
 };
 
 const EventContext = createContext<null | EventContextType>(null);
@@ -33,26 +31,11 @@ const EventProvider = (props: { children: React.ReactNode; event: TEvent }) => {
   const [selectedSuggestion, setSelectedSuggestion] =
     useState<TSuggestionName>(null);
   const { event } = props;
-  const { getEvent, updateEvents } = useTrackedEvents();
   const { updateEvents: putEvents } = useSetupClient();
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const currentAdjustmentAmount =
-    getEvent({
-      itemKey: event.budgetItemKey,
-    }) ?? event.adjustment.display;
-  const currentAdjustmentTuple = inputAmount({
-    display: currentAdjustmentAmount,
-  });
-  const [adjustment, setAdjustment] = useState<MonetaryAmount>(
-    currentAdjustmentTuple,
-  );
-  const setAmount = (amount: string) => {
-    const newadjustment = inputAmount({ display: amount });
-    // Update local + tracked state immediately so flags/validation react now.
-    setAdjustment(newadjustment);
-    updateEvents([{ key: event.budgetItemKey, amount }]);
-
-    // Debounce the server PUT until typing settles.
+  const { adjustment, updateItemByAdjustment, updateItemByTotal } =
+    useAdjustmentInputsContext();
+  const queueChange = (amount: string) => {
     if (debounceRef.current) {
       clearTimeout(debounceRef.current);
     }
@@ -60,33 +43,37 @@ const EventProvider = (props: { children: React.ReactNode; event: TEvent }) => {
       putEvents([{ key: event.budgetItemKey, amount }]);
     }, 500);
   };
+  const setAmount = (amountProps: { adjustment?: string; total?: string }) => {
+    if (!amountProps.adjustment && !amountProps.total) {
+      console.log("no-op: no amount provided");
+      return;
+    }
 
-  // Total is derived: currently budgeted (item amount) + adjustment. Deriving
-  // it instead of holding separate state keeps it in sync with the adjustment.
-  const updatedAmount = inputAmount({
-    cents: event.amount.cents + adjustment.cents,
-  });
+    if (amountProps.adjustment) {
+      const amount = amountProps.adjustment;
+      updateItemByAdjustment(amount);
+      queueChange(amount);
+    }
 
-  // Editing the total changes the delta: adjustment = total - currently budgeted.
-  const setUpdatedAmount = (total: string) => {
-    const totalCents = inputAmount({ display: total }).cents;
-    const adjustmentCents = totalCents - event.amount.cents;
-    setAmount(inputAmount({ cents: adjustmentCents }).display);
+    if (amountProps.total) {
+      const total = amountProps.total;
+      updateItemByTotal(total);
+      // Derive the adjustment ourselves instead of reading it back off
+      // `adjustment`, which is still the pre-update value in this closure.
+      const { adjustmentAmount } = adjustmentFromTotal({
+        total,
+        initialAmount: adjustment.initialAmount,
+      });
+      queueChange(adjustmentAmount.display);
+    }
   };
 
-  useEffect(() => {
-    return () => {
-      if (debounceRef.current) {
-        clearTimeout(debounceRef.current);
-      }
-    };
-  }, []);
-
-  const isReviewed = !!adjustment.display;
+  const isReviewed = !!adjustment.adjustmentAmount.display;
 
   const flags = {
     ...event.flags,
-    eqPrevBudgeted: adjustment.cents === event.previouslyBudgeted.cents,
+    eqPrevBudgeted:
+      adjustment.adjustmentAmount.cents === event.previouslyBudgeted.cents,
     unreviewed: !isReviewed,
     isReviewed,
   };
@@ -94,14 +81,19 @@ const EventProvider = (props: { children: React.ReactNode; event: TEvent }) => {
   const value: EventContextType = {
     event: {
       ...event,
-      adjustment,
+      amount: {
+        cents: adjustment.adjustmentAmount.cents,
+        display: adjustment.adjustmentAmount.display,
+      },
       flags,
-      updatedAmount,
+      updatedAmount: {
+        cents: adjustment.newTotal.cents,
+        display: adjustment.newTotal.display,
+      },
     },
     selectedSuggestion,
     setAmount,
     setSelectedSuggestion,
-    setUpdatedAmount,
   };
 
   return (
@@ -144,10 +136,4 @@ const useEventFlagsContext = () => {
 };
 
 export type { TEvent };
-export {
-  inputAmount,
-  EventForm,
-  EventProvider,
-  useEventContext,
-  useEventFlagsContext,
-};
+export { EventForm, EventProvider, useEventContext, useEventFlagsContext };

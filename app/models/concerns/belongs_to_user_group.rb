@@ -3,8 +3,15 @@
 module BelongsToUserGroup
   extend ActiveSupport::Concern
 
+  module Cotenants
+    def cotenants
+      self.class.belonging_to(user_group)
+    end
+  end
+
   included do
     belongs_to :user_group, class_name: "User::Group"
+    include Cotenants
 
     scope :belonging_to, lambda { |user_or_group|
       case user_or_group
@@ -39,6 +46,8 @@ module BelongsToUserGroup
           extend ActiveSupport::Concern
 
           included do
+            include Cotenants
+
             scope :belonging_to, lambda { |user_or_group|
               joins(:#{association}).merge(#{class_name}.belonging_to(user_or_group))
             }

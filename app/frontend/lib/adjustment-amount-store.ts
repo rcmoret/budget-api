@@ -34,8 +34,24 @@ type AdjustmentAmountItem = {
   newTotal: MonetaryAmount;
 };
 
+const adjustmentFromTotal = (props: {
+  total: string;
+  initialAmount: number;
+}): { adjustmentAmount: MonetaryAmount; newTotal: MonetaryAmount } => {
+  const newTotal = inputAmount({ display: props.total });
+  const adjustmentAmount = inputAmount({
+    cents: newTotal.cents - props.initialAmount,
+  });
+
+  return { adjustmentAmount, newTotal };
+};
+
 type AdjustmentStoreState = {
-  addItem: (i: { objectKey: string; amount: string }) => void;
+  addItem: (i: {
+    objectKey: string;
+    amount: string;
+    adjustment?: string;
+  }) => void;
   adjustments: Array<AdjustmentAmountItem>;
   removeItem: (objectKey: string) => void;
   resetItems: () => void;
@@ -47,25 +63,34 @@ type AdjustmentStoreState = {
 const buildNewItem = (item: {
   objectKey: string;
   amount: string;
+  adjustment?: string;
 }): AdjustmentAmountItem => {
   const initialAmount = decimalToInt(item.amount);
+  // Seed the adjustment from any already-saved value so a page refresh
+  // restores the input instead of clearing it back to empty.
+  const adjustmentAmount = inputAmount({ display: item.adjustment ?? "" });
+  const newTotalCents = initialAmount + adjustmentAmount.cents;
   const newTotal = {
-    cents: initialAmount,
+    cents: newTotalCents,
     display:
-      initialAmount === 0 ? "" : inputAmount({ cents: initialAmount }).display,
+      newTotalCents === 0 ? "" : inputAmount({ cents: newTotalCents }).display,
   };
 
   return {
     objectKey: item.objectKey,
     initialAmount,
-    adjustmentAmount: { cents: 0, display: "" },
+    adjustmentAmount,
     newTotal,
   };
 };
 
 const useAdjustmentStore = create<AdjustmentStoreState>((set, get) => ({
   adjustments: [],
-  addItem: (item: { objectKey: string; amount: string }) => {
+  addItem: (item: {
+    objectKey: string;
+    amount: string;
+    adjustment?: string;
+  }) => {
     const newItem = buildNewItem(item);
     const existingItems = get().adjustments.filter(
       ({ objectKey }) => objectKey !== newItem.objectKey,
@@ -105,11 +130,13 @@ const useAdjustmentStore = create<AdjustmentStoreState>((set, get) => ({
 
     const updatedItems = items.map((item) => {
       if (item.objectKey === props.objectKey) {
-        const newTotal = inputAmount({ display: props.amount });
-        const amount = newTotal.cents - item.initialAmount;
+        const { adjustmentAmount, newTotal } = adjustmentFromTotal({
+          total: props.amount,
+          initialAmount: item.initialAmount,
+        });
         const updatedItem = {
           ...item,
-          adjustmentAmount: inputAmount({ cents: amount }),
+          adjustmentAmount,
           newTotal,
         };
         return updatedItem;
@@ -121,96 +148,6 @@ const useAdjustmentStore = create<AdjustmentStoreState>((set, get) => ({
   },
 }));
 
-const useAdjustments = () => {
-  const sumItemsAdjustments = () => {
-    const { adjustments } = useAdjustmentStore.getState();
-
-    return adjustments.reduce((sum, item) => {
-      return sum + item.adjustmentAmount.cents;
-    }, 0);
-  };
-  const sumTotals = () => {
-    const { adjustments } = useAdjustmentStore.getState();
-
-    return adjustments.reduce((sum, item) => {
-      return sum + item.newTotal.cents;
-    }, 0);
-  };
-
-  const removeItem = (objectKey: string) => {
-    const { adjustments: originalItems, setAdjustments } =
-      useAdjustmentStore.getState();
-    const filteredItems = originalItems.filter(
-      (item) => item.objectKey !== objectKey,
-    );
-
-    setAdjustments(filteredItems);
-  };
-
-  const updateItemByAdjustment = (props: {
-    objectKey: string;
-    amount: string;
-  }) => {
-    const { adjustments: items, setAdjustments } =
-      useAdjustmentStore.getState();
-
-    const updatedItems = items.map((item) => {
-      if (item.objectKey === props.objectKey) {
-        const amount = inputAmount({ display: props.amount });
-        const newTotalCents = item.initialAmount + amount.cents;
-        const updatedItem = {
-          ...item,
-          adjustmentAmount: amount,
-          newTotal: inputAmount({ cents: newTotalCents }),
-        };
-        return updatedItem;
-      } else {
-        return item;
-      }
-    });
-
-    setAdjustments(updatedItems);
-  };
-
-  const updateItemByTotal = (props: { objectKey: string; amount: string }) => {
-    const { adjustments: items, setAdjustments } =
-      useAdjustmentStore.getState();
-
-    const updatedItems = items.map((item) => {
-      if (item.objectKey === props.objectKey) {
-        const newTotal = inputAmount({ display: props.amount });
-        const amount = newTotal.cents - item.initialAmount;
-        const updatedItem = {
-          ...item,
-          adjustmentAmount: inputAmount({ cents: amount }),
-          newTotal,
-        };
-        return updatedItem;
-      } else {
-        return item;
-      }
-    });
-
-    setAdjustments(updatedItems);
-  };
-
-  const getItems = () => {
-    const { adjustments: items } = useAdjustmentStore.getState();
-
-    return items;
-  };
-
-  return {
-    getItems,
-    removeItem,
-    resetItems,
-    sumItemsAdjustments,
-    sumTotals,
-    updateItemByAdjustment,
-    updateItemByTotal,
-  };
-};
-
 const useInitAdjustmentStore = () => {
   useEffect(() => {
     const { resetItems } = useAdjustmentStore.getState();
@@ -218,10 +155,33 @@ const useInitAdjustmentStore = () => {
   }, []);
 };
 
+type AdjustmentSetProps = Array<{
+  objectKey: string;
+  amount: string;
+  adjustment?: string;
+}>;
+
+const useAdjustementSet = (adjustments: AdjustmentSetProps) => {
+  const addItem = useAdjustmentStore((s) => s.addItem);
+  const resetItems = useAdjustmentStore((s) => s.resetItems);
+  const keys = adjustments
+    .map(({ objectKey }) => objectKey)
+    .sort()
+    .join(",");
+
+  useEffect(() => {
+    resetItems();
+    adjustments.forEach((adjustment) => addItem(adjustment));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [keys]);
+};
+
 export {
   type AdjustmentAmountItem,
+  type AdjustmentSetProps,
+  adjustmentFromTotal,
   inputAmount,
-  useAdjustments,
+  useAdjustementSet,
   useAdjustmentStore,
   useInitAdjustmentStore,
 };

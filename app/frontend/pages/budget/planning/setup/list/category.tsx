@@ -66,25 +66,7 @@ const CategoryComponent = (props: { category: CategoryType }) => {
   );
   const isVisible = needsReview || showReviewedCategories;
 
-  const className = [
-    "grid",
-    "grid-cols-subgrid",
-    "col-span-full",
-    "transition-[grid-template-rows,opacity]",
-    "duration-300",
-    "ease-in-out",
-    isVisible
-      ? "grid-rows-[minmax(0,1fr)]"
-      : "grid-rows-[minmax(0,0fr)] opacity-0",
-  ]
-    .filter(Boolean)
-    .join(" ");
-
   const innerClassName = [
-    "overflow-hidden",
-    "grid",
-    "grid-cols-subgrid",
-    "col-span-full",
     "items-center",
     "py-1",
     "pl-4",
@@ -96,16 +78,14 @@ const CategoryComponent = (props: { category: CategoryType }) => {
   ].join(" ");
 
   return (
-    <div className={className}>
-      <div className={innerClassName}>
-        <NameComponent category={category} />
-        <div className="flex justify-end gap-2">
-          {category.events.map((event, index) => (
-            <CompletionStatusIcon key={index} event={event} />
-          ))}
-        </div>
+    <Collapse open={isVisible} fade subgrid innerClassName={innerClassName}>
+      <NameComponent category={category} />
+      <div className="flex justify-end gap-2">
+        {category.events.map((event, index) => (
+          <CompletionStatusIcon key={index} event={event} />
+        ))}
       </div>
-    </div>
+    </Collapse>
   );
 };
 

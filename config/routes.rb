@@ -23,7 +23,7 @@ Rails.application.routes.draw do
     scope "/profile" do
       get "/",
         to: WebApp::UserProfiles::ShowController.action(:call),
-        as: :profile
+        as: :manage_profile
       put "/",
         to: WebApp::UserProfiles::UpdateController.action(:call)
     end

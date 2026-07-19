@@ -16,7 +16,7 @@ RSpec.describe Budget::UpcomingMaturityIntervalQuery do
       interval: upcoming_interval.next)
   end
 
-  it "returns the budget category id, month, and year for an upcoming maturity" do
+  it "returns the budget category id, month, year for an upcoming maturity" do
     expect(subject.find(category.id).serializable_hash).to eq(
       "budgetCategoryId" => category.id,
       "month" => upcoming_interval.month,

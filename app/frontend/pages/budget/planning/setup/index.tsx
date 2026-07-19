@@ -12,6 +12,12 @@ import { initSetupStore } from "./store";
 import { CategoryGroupList } from "./list";
 import { FeaturedCategoryComponent } from "./featured-category/index";
 import { PageProps } from "@/types/page_props";
+import {
+  AdjustmentSetProps,
+  useAdjustementSet,
+} from "@/lib/adjustment-amount-store";
+import { initNeighborLinksStore } from "@/pages/budget/neighbor-links-store";
+import { useNeighborLinksKeyBoardHandlers } from "@/utils/hooks/neighbors-keyboard-nav";
 
 type SetupIndexProps = PageProps & {
   budgetMonth: BudgetMonthData;
@@ -37,6 +43,29 @@ const SetupIndex = (props: SetupIndexProps) => {
     setupData: neighborLinks,
   });
 
+  const adjustments: AdjustmentSetProps = featuredCategory.events.map(
+    (event) => {
+      return {
+        objectKey: event.objectKey,
+        amount: event.amount.display,
+        adjustment: event.adjustment.display,
+      };
+    },
+  );
+  useAdjustementSet(adjustments);
+  console.log({ neighborLinks });
+  initNeighborLinksStore({
+    next: {
+      label: neighborLinks.nextCategoryName ?? "",
+      href: neighborLinks.nextCategoryHref,
+    },
+    previous: {
+      label: neighborLinks.previousCategoryName ?? "",
+      href: neighborLinks.previousCategoryHref,
+    },
+  });
+  useNeighborLinksKeyBoardHandlers();
+
   return (
     <PageComponent
       header={<SetupHeader />}
@@ -44,8 +73,8 @@ const SetupIndex = (props: SetupIndexProps) => {
       mainComponentClassNames={["budget-planning"]}
       rightColumn={<SetupRightColumn />}
     >
-      <FeaturedCategoryComponent />
       <CategoryGroupList />
+      <FeaturedCategoryComponent />
     </PageComponent>
   );
 };

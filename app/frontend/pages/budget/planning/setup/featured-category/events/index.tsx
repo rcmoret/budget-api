@@ -1,46 +1,67 @@
 import { AmountSpan } from "@/components/amount-span";
-import {
-  AdjustEventAmountInput,
-  ItemTotalAmountInput,
-} from "./event-amount-input";
+import { EventAmountInput, ItemTotalAmountInput } from "./event-amount-input";
 import { useEventContext, useEventFlagsContext } from "./event-context";
-import { BudgetedSuggestion } from "../suggestions/budgeted";
-import { SpentSuggestion } from "../suggestions/spent";
-import { NoChangeSuggestion } from "../suggestions/no-change";
+import { BudgetedSuggestion } from "@/pages/budget/planning/setup/featured-category/suggestions/budgeted";
+import { SpentSuggestion } from "@/pages/budget/planning/setup/featured-category/suggestions/spent";
+import { NoChangeSuggestion } from "@/pages/budget/planning/setup/featured-category/suggestions/no-change";
+import { useSetupClient } from "@/pages/budget/planning/setup/client";
+import { CloseButton } from "@/components/close-button";
+import { useAdjustmentInputsContext } from "@/components/adjustment-input/context-provider";
+import { BaselineAmountSuggestion } from "../suggestions/baseline_amount";
+
+const DeleteButton = () => {
+  const { deleteEvent } = useSetupClient();
+  const { event } = useEventContext();
+
+  const onClick = () => deleteEvent(event.budgetItemKey);
+
+  return (
+    <CloseButton
+      onClick={onClick}
+      tabIndex={-1}
+      title="Remove Event"
+      ariaLabel="Remove Event"
+    />
+  );
+};
 
 const CreateItemForm = () => {
   const { eqPrevSpent } = useEventFlagsContext();
+  const { event } = useEventContext();
 
   return (
     <EventForm>
-      <div className="col-span-full">Create Item</div>
+      <div className="col-span-2">Create Item</div>
+      <div className="-col-start-1 -col-end-1 flex justify-end">
+        <DeleteButton />
+      </div>
       <BudgetedSuggestion />
-      {eqPrevSpent && <SpentSuggestion />}
+      {!eqPrevSpent && !!event.transactionsTotal.cents && <SpentSuggestion />}
+      <BaselineAmountSuggestion />
       <ItemTotalAmountInput />
     </EventForm>
   );
 };
 
 const AdjustItemForm = () => {
-  const { event } = useEventContext();
+  const { adjustment } = useAdjustmentInputsContext();
   return (
     <EventForm>
       <div className="col-span-full">Adjust Item</div>
       <div className="col-span-full grid grid-cols-subgrid">
         <div className="col-span-2">currently budgeted</div>
         <div className="text-end -col-start-2 -col-end-1">
-          <AmountSpan amount={event.amount.cents} />
+          <AmountSpan amount={adjustment.initialAmount} />
         </div>
       </div>
       <NoChangeSuggestion />
-      <AdjustEventAmountInput />
+      <BaselineAmountSuggestion />
+      <EventAmountInput />
     </EventForm>
   );
 };
 
 const EventForm = (props: { children: React.ReactNode }) => {
-  const { unreviewed } = useEventFlagsContext();
-
   const className = [
     "text-sm",
     "font-semi",

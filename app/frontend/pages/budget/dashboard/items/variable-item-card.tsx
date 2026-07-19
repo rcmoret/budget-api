@@ -1,11 +1,8 @@
 import { CardRow } from "@/components/card";
 import { AmountSpan } from "@/components/amount-span";
 import { useBudgetItemContext } from "./context-provider";
-import {
-  AdjustmentInput,
-  TotalInput,
-  useAdjustmentInputsContext,
-} from "@/components/adjustment-input";
+import { AdjustmentInput, TotalInput } from "@/components/adjustment-input";
+import { useAdjustmentInputsContext } from "@/components/adjustment-input/context-provider";
 
 const inputClasses = ["bg-base-100/40"];
 

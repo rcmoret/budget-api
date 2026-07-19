@@ -1,6 +1,6 @@
 import { BudgetSummaryComponent } from "@/components/budget-summary";
 import { useSetupGroups } from "@/pages/budget/planning/setup/store";
-import { inputAmount } from "@/pages/budget/planning/setup/featured-category/events/event-context";
+import { inputAmount } from "@/lib/adjustment-amount-store";
 
 const SetupBudgetSummary = () => {
   const { revenues, fixedExpenses, variableExpenses } = useSetupGroups();

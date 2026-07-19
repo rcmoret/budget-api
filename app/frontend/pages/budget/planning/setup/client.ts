@@ -12,6 +12,11 @@ const useSetupClient = () => {
   const featuredCategory = useFeaturedCategory();
   const currentCategoryRoute = useCurrentFeaturedCategoryRoute();
 
+  const deleteEvent = (budgetItemKey: string) => {
+    const route = [setupData.currentCategoryHref, budgetItemKey].join("/");
+    router.delete(route);
+  };
+
   const updateEvents = (events: Array<{ key: string; amount: string }>) => {
     const route = setupData.currentCategoryHref;
     const body = {
@@ -46,6 +51,7 @@ const useSetupClient = () => {
   };
 
   return {
+    deleteEvent,
     updateCategory,
     updateEvents,
   };

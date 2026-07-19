@@ -12,14 +12,15 @@ module WebApp
         class DraftSerializer
           def initialize(*)
             raise NotImplementedError,
-              "#{self.class} is deprecated and pending reimplementation with Alba"
+              "#{self.class} is deprecated and pending reimplementation"
           end
 
           # attribute :discretionary, on_render: :render
           # attribute :items, on_render: :render
           #
           # def initialize(interval, changes:)
-          #   @changes = changes.map { |change| ::Budget::DraftItem.new(change) }
+          #   @changes = changes
+          #   .map { |change| ::Budget::DraftItem.new(change) }
           #   super(interval)
           # end
           #
@@ -43,7 +44,8 @@ module WebApp
           #
           # def all_items
           #   interval.items.map do |item|
-          #     changes.find { |change| change.key == item.key } || item.decorated
+          #     changes.find { |change| change.key == item.key } ||
+          #     item.decorated
           #   end
           # end
           #

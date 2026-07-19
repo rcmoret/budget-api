@@ -6,7 +6,7 @@ const CategoryGroupList = () => {
   const { revenues, fixedExpenses, variableExpenses } = useSetupGroups();
 
   return (
-    <div className="grid grid-cols-[1fr_auto] px-1 gap-6 content-start">
+    <div className="grid-cols-[1fr_auto] px-1 pt-2 gap-6">
       <CategoryGroupProvider key={revenues.key} group={revenues}>
         <GroupComponent key={revenues.key} />
       </CategoryGroupProvider>

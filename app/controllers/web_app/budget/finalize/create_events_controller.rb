@@ -4,7 +4,7 @@ module WebApp
   module Budget
     module Finalize
       class CreateEventsController < BaseController
-        include Mixins::UsesBudgetEventsForm
+        # include Mixins::UsesBudgetEventsForm
         include Mixins::HasBudgetInterval
 
         before_action -> { @effective_timestamp = Time.current }

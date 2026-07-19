@@ -4,11 +4,12 @@ module WebApp
   module Budget
     module Setup
       class CategoryFormController < BaseController
-        # From WebApp::Budget::Setup::Mixins
-        include Mixins::HasBudgetInterval
-        include Mixins::HasSlugParams
-        include Mixins::UserChangesScope
-        include Mixins::HasBudgetCategoryRecord
+        # From WebApp::Budget::Setup::PlanningMixins
+        include PlanningMixins::HasBudgetInterval
+        include PlanningMixins::HasSlugParams
+        include PlanningMixins::UserChangesScope
+        include PlanningMixins::HasBudgetCategoryRecord
+        include Mixins::PageController
 
         before_action lambda {
           if change_set_scope.exists?
@@ -18,14 +19,16 @@ module WebApp
             @change_set = change_set_scope.start!
           end
         }
-        before_action -> { presenter.flash = flash }
 
-        def call
-          render(
-            inertia: "budget/planning/setup/index",
-            props: serializer.to_h
+        define_route_segments :budget
+        serialize_with Serializers::IndexSerializer
+        subject do
+          Presenters::IndexPresenter.new(
+            data_model.with(slug: category_slug || data_model.slugs.first),
+            interval,
           )
         end
+        use_template "budget/planning/setup"
 
         private
 
@@ -37,33 +40,14 @@ module WebApp
           super && category_slug.present?
         end
 
-        def serializer
-          @serializer ||=
-            WebApp::Budget::Planning::Setup::IndexSerializer.new(
-              presenter,
-              params: { month:, year: }
-            )
-        end
-
-        def presenter
-          @presenter ||=
-            ::Budget::Changes::Setup::Presenters::IndexPresenter.new(
-              data_model.with(slug: category_slug || data_model.slugs.first),
-              interval,
-              metadata
-            )
-        end
-
-        def metadata
-          Presenters::ControllerMetadata.new(
-            namespace: "budget",
-            page_name: "budget_planning_setup",
-            prev_selected_account_path: ""
-          )
-        end
+        def serializer_context = { month:, year: }
 
         def refresh_category!
           change_set.refresh_category!(budget_category_record)
+        end
+
+        def route_segments
+          super(month, year, "set-up", category_slug)
         end
       end
     end

@@ -3,7 +3,7 @@ import { CardRow } from "@/components/card";
 import { useBudgetItemContext } from "./context-provider";
 import { TrashIcon } from "@/components/icons/trash";
 import { Pencil } from "@/components/icons/pencil";
-import { useAdjustmentInputsContext } from "@/components/adjustment-input";
+import { useAdjustmentInputsContext } from "@/components/adjustment-input/context-provider";
 import { CloseButton, CheckMarkButton, IconButton } from "@/components/cta";
 import { useForm } from "@inertiajs/react";
 import {

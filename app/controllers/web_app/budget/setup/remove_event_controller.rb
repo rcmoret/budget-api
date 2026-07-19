@@ -5,9 +5,9 @@ module WebApp
     module Setup
       class RemoveEventController < BaseController
         # From WebApp::Budget::Setup::Mixins
-        include Mixins::HasBudgetInterval
-        include Mixins::HasChangeSet
-        include Mixins::HasSlugParams
+        include PlanningMixins::HasBudgetInterval
+        include PlanningMixins::HasChangeSet
+        include PlanningMixins::CategorySlugRequired
 
         before_action :set_next_category_slug!
         before_action :remove_category!
@@ -22,11 +22,21 @@ module WebApp
 
         private
 
+        def data_model
+          change_set
+            .data_model
+            .with(slug: category_slug)
+        end
+
         def set_next_category_slug!
-          @next_category_slug = change_set
-                                .data_model
-                                .with(slug: category_slug)
-                                .next_category_slug
+          @next_category_slug = presenter.next_category_slug
+        end
+
+        def presenter
+          Presenters::IndexPresenter.new(
+            data_model.with(slug: category_slug || data_model.slugs.first),
+            interval,
+          )
         end
 
         def remove_category!

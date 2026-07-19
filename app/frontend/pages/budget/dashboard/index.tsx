@@ -1,5 +1,4 @@
 import { HeaderComponent, PageComponent } from "@frontend/layout";
-import { Header } from "./header";
 import { RightColumn } from "./right-column";
 import { BudgetMonthIndex } from "@/types/budget";
 import { useInitBudgetDashboardStore } from "./store";

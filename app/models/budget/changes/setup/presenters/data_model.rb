@@ -24,6 +24,7 @@ module Budget
             amount
             budget_item_key
             updated_amount
+            object_key
             previously_budgeted
             spent
             adjustment

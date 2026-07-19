@@ -10,7 +10,7 @@ module WebApp
         def call
           # TODO: Revisit serializer implementation. The response was built from
           # the deprecated WebApp::Budget::Items::DetailsSerializer, which is
-          # pending reimplementation with Alba. Rendering empty props until then.
+          # pending reimplementation with Alba.
           render json: {}
         end
 

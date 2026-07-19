@@ -1,18 +1,19 @@
-module Budget
-  module Changes
-    class Setup
+# frozen_string_literal: true
+
+module WebApp
+  module Budget
+    module Setup
       module Presenters
         class IndexPresenter
           include Rails.application.routes.url_helpers
-          include ::Presenters::WebApp::FlashMessagesConcern
 
           GroupStruct = Data.define(:label, :categories, :is_selected, :scopes)
 
-          def initialize(data_model, budget_month, metadata)
+          def initialize(data_model, budget_month)
             @data_model = data_model
             @budget_month =
-              ::Presenters::Budget::BudgetMonthPresenter.new(budget_month)
-            @metadata = metadata
+              ::WebApp::Budget::Presenters::BudgetMonthPresenter
+              .new(budget_month)
           end
 
           delegate :categories,
@@ -68,6 +69,10 @@ module Budget
             show_path(next_category_slug)
           end
 
+          def next_category_name
+            categories.at(next_index)&.name
+          end
+
           def next_category_slug
             slugs.rotate(next_index).first
           end
@@ -76,30 +81,37 @@ module Budget
             show_path(next_unreviewed_category_slug)
           end
 
-          def next_unreviewed_category_slug
-            categories.rotate(next_index).reduce("") do |memo, category_data|
-              next memo if category_data.reviewed?
-
-              memo.presence || category_data.slug
-            end
+          def next_unreviewed_category
+            categories.rotate(next_index).reject(&:reviewed?).first || category
           end
+
+          delegate :name,
+            :slug,
+            to: :next_unreviewed_category,
+            prefix: true
+          delegate :name,
+            :slug,
+            to: :previous_unreviewed_category,
+            prefix: true
 
           def previous_unreviewed_category_href
             show_path(previous_unreviewed_category_slug)
           end
 
-          def previous_unreviewed_category_slug
+          def previous_unreviewed_category
             categories
               .rotate(previous_index)
-              .reduce("") do |memo, category_data|
-                next memo if category_data.reviewed?
-
-                memo.presence || category_data.slug
-              end
+              .reject(&:reviewed?)
+              .reverse
+              .first || category
           end
 
           def previous_category_slug
             slugs.rotate(previous_index).first
+          end
+
+          def previous_category_name
+            categories.at(previous_index)&.name
           end
 
           def previous_category_href
@@ -139,7 +151,7 @@ module Budget
             )
           end
 
-          attr_reader :data_model, :budget_month, :metadata
+          attr_reader :data_model, :budget_month
         end
       end
     end

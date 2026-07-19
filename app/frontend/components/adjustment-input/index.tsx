@@ -1,3 +1,4 @@
+import React from "react";
 import { useAdjustmentInputsContext } from "./context-provider";
 
 // Explicit input prop list: (non-exhaustive)
@@ -27,10 +28,11 @@ import { useAdjustmentInputsContext } from "./context-provider";
 //   'aria-required'?: boolean | 'true' | 'false';
 // };
 
-type AdjustmentInputProps = Omit<
+type GenericAmountInputProps = Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
-  "id" | "type" | "className"
+  "type" | "className"
 > & {
+  id: string;
   classes?: Array<string>;
 };
 
@@ -41,41 +43,51 @@ const amountInputClasses = [
   "input-secondary",
 ];
 
-const AdjustmentInput = (props: AdjustmentInputProps) => {
+const GenericAmountInput = (props: GenericAmountInputProps) => {
+  const { classes = [], ...rest } = props;
+  const className = [...classes, ...amountInputClasses].join(" ");
+
+  return (
+    <input
+      className={className}
+      placeholder={rest.placeholder || "0.00"}
+      type="text"
+      {...rest}
+    />
+  );
+};
+
+const AdjustmentInput = (props: { name?: string }) => {
   const { adjustment, adjustmentInputId, updateItemByAdjustment } =
     useAdjustmentInputsContext();
-  const { classes = [], ...rest } = props;
-  const className = [...classes, ...amountInputClasses].join(" ");
+
+  const updateAdjustment = (ev: React.ChangeEvent<HTMLInputElement>) => {
+    updateItemByAdjustment(ev.target.value);
+  };
 
   return (
-    <input
-      type="text"
+    <GenericAmountInput
       id={adjustmentInputId}
-      onChange={(ev) => updateItemByAdjustment(ev.target.value)}
+      onChange={updateAdjustment}
+      name={props.name}
       value={adjustment.adjustmentAmount.display}
-      className={className}
-      placeholder={"0"}
-      {...rest}
     />
   );
 };
 
-const TotalInput = (props: AdjustmentInputProps) => {
+const TotalInput = () => {
   const { adjustment, updateItemByTotal, totalInputId } =
     useAdjustmentInputsContext();
-  const { classes = [], ...rest } = props;
-  const className = [...classes, ...amountInputClasses].join(" ");
+  const updateTotal = (ev: React.ChangeEvent<HTMLInputElement>) =>
+    updateItemByTotal(ev.target.value);
 
   return (
-    <input
-      type="text"
+    <GenericAmountInput
       id={totalInputId}
-      onChange={(ev) => updateItemByTotal(ev.target.value)}
+      onChange={updateTotal}
       value={adjustment.newTotal.display}
-      className={className}
-      {...rest}
     />
   );
 };
 
-export { useAdjustmentInputsContext, AdjustmentInput, TotalInput };
+export { AdjustmentInput, GenericAmountInput, TotalInput };

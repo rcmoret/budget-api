@@ -1,41 +1,28 @@
-import { useState } from "react";
 import { useEventContext } from "./event-context";
 import { AmountSpan } from "@/components/amount-span";
+import { useAdjustmentInputsContext } from "@/components/adjustment-input/context-provider";
+import { GenericAmountInput } from "@/components/adjustment-input";
 
-type GenericAmountInputProps = {
-  onChange: (ev: React.ChangeEvent<HTMLInputElement>) => void;
-  value: string;
-  name: string;
-};
-
-const GenericAmountInput = (props: GenericAmountInputProps) => {
-  const { name, onChange, value } = props;
-
-  return (
-    <input
-      value={value}
-      onChange={onChange}
-      className="input input-xs text-right"
-      type="text"
-      name={name}
-    />
-  );
-};
-
-const EventAmountInput = (props?: { label?: string }) => {
-  const { event, setAmount } = useEventContext();
-  const onChange = (ev: React.ChangeEvent<HTMLInputElement>) =>
-    setAmount(ev.target.value);
-  const label = props?.label ?? null;
+const AdjustmentEventAmountInput = () => {
+  const { adjustment, adjustmentInputId, updateItemByAdjustment } =
+    useAdjustmentInputsContext();
+  const { setAmount } = useEventContext();
+  const onChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
+    updateItemByAdjustment(ev.target.value);
+    setAmount({ adjustment: ev.target.value });
+  };
 
   return (
     <div className="grid grid-cols-subgrid col-span-full">
-      <div className="col-span-2">{label}</div>
+      <label htmlFor={adjustmentInputId} className="col-span-2">
+        adjustment
+      </label>
       <div className="text-end">
         <GenericAmountInput
+          id={adjustmentInputId}
+          name="adjustment-amount"
           onChange={onChange}
-          value={event.adjustment.display}
-          name="adjust-amount"
+          value={adjustment.adjustmentAmount.display}
         />
       </div>
     </div>
@@ -43,19 +30,22 @@ const EventAmountInput = (props?: { label?: string }) => {
 };
 
 const ItemTotalAmountInput = () => {
-  const { event, setUpdatedAmount } = useEventContext();
+  const { setAmount } = useEventContext();
+  const { adjustment, updateItemByTotal, totalInputId } =
+    useAdjustmentInputsContext();
   const onChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
-    setUpdatedAmount(ev.target.value);
+    updateItemByTotal(ev.target.value);
+    setAmount({ total: ev.target.value });
   };
 
   return (
     <div className="grid grid-cols-subgrid col-span-full items-end">
-      <div>total</div>
+      <label htmlFor={totalInputId}>total</label>
       <div className="text-end -col-start-2 -col-end-1">
         <GenericAmountInput
-          value={event.updatedAmount.display}
+          id={totalInputId}
           onChange={onChange}
-          name="item-total"
+          value={adjustment.newTotal.display}
         />
       </div>
     </div>
@@ -80,28 +70,30 @@ const AmountSpanToggle = (props: {
   );
 };
 
-const AdjustEventAmountInput = () => {
+const EventAmountInput = () => {
   const { event } = useEventContext();
-  const [selectedInputName, setSelectedInputName] = useState<
-    "adjustment" | "total"
-  >("adjustment");
+  const {
+    adjustment,
+    editingAdjustment,
+    editingTotal,
+    showAdjustmentInput: selectAdjustmentInput,
+    showTotalInput: selectTotalInput,
+  } = useAdjustmentInputsContext();
 
   const total = event.updatedAmount.cents;
-  const selectAdjustmentInput = () => setSelectedInputName("adjustment");
-  const selectTotalInput = () => setSelectedInputName("total");
 
   return (
     <>
-      {selectedInputName === "adjustment" ? (
-        <EventAmountInput label={selectedInputName} />
+      {editingAdjustment ? (
+        <AdjustmentEventAmountInput />
       ) : (
         <AmountSpanToggle
           onClick={selectAdjustmentInput}
-          amount={event.adjustment.cents}
+          amount={adjustment.adjustmentAmount.cents}
           label="adjustment"
         />
       )}
-      {selectedInputName === "total" ? (
+      {editingTotal ? (
         <ItemTotalAmountInput />
       ) : (
         <AmountSpanToggle
@@ -114,4 +106,4 @@ const AdjustEventAmountInput = () => {
   );
 };
 
-export { AdjustEventAmountInput, EventAmountInput, ItemTotalAmountInput };
+export { EventAmountInput, ItemTotalAmountInput };

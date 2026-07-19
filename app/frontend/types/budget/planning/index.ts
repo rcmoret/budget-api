@@ -25,6 +25,7 @@ type BudgetPlanningEvent<GenericEventNames, GenericFlag> = {
   eventType: GenericEventNames;
   amount: MonetaryAmount;
   budgetItemKey: string;
+  objectKey: string;
   updatedAmount: MonetaryAmount;
   previouslyBudgeted: MonetaryAmount;
   transactionsTotal: MonetaryAmount;

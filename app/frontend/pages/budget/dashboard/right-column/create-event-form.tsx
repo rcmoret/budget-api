@@ -149,4 +149,4 @@ const AmountInput = () => {
   );
 };
 
-export { CreateEventForm };
+export { CreateEventForm, FormComponent };

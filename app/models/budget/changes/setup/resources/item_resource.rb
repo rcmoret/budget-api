@@ -8,10 +8,14 @@ module Budget
           attributes :amount,
             :budget_item_key,
             :event_type,
-            :flags,
-            :previously_budgeted,
+            :object_key,
             :spent,
-            :updated_amount
+            :updated_amount,
+            :flags
+
+          attribute :previously_budgeted,
+            resource: WebApp::MonetaryAmountSerializer,
+            &:previously_budgeted
 
           nested_attribute :adjustment do
             attribute :display, &:adjustment

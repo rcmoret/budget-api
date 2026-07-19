@@ -5,8 +5,8 @@ module WebApp
     module Setup
       class CategoryFormResetController < BaseController
         # From WebApp::Budget::Setup::Mixins
-        include Mixins::HasBudgetInterval
-        include Mixins::UserChangesScope
+        include PlanningMixins::HasBudgetInterval
+        include PlanningMixins::UserChangesScope
 
         def call
           change_set_scope.sole.reset_data!

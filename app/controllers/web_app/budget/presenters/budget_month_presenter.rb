@@ -26,6 +26,19 @@ module WebApp
         def previous_month
           @previous_month ||= self.class.new(__getobj__.prev)
         end
+
+        def setup_route(month:, year:)
+          return "" if set_up?
+          return "" if month.blank? || year.blank?
+
+          Rails
+            .application
+            .routes.url_helpers
+            .budget_setup_form_path(
+              month:,
+              year:,
+            )
+        end
       end
     end
   end

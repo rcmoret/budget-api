@@ -37,7 +37,7 @@ module WebApp
 
         def user_sign_out_route = user_sign_out_path
 
-        def user_profile_route = profile_path
+        def user_profile_route = manage_profile_path
 
         attr_reader :params
       end

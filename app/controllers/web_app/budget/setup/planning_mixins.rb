@@ -3,7 +3,7 @@
 module WebApp
   module Budget
     module Setup
-      module Mixins
+      module PlanningMixins
         module UserChangesScope
           def change_set_scope
             ::Budget::Changes::Setup
@@ -46,6 +46,34 @@ module WebApp
         module HasSlugParams
           def category_slug
             params.permit(:month, :year, :slug)[:slug].presence
+          end
+        end
+
+        module CategorySlugRequired
+          extend ActiveSupport::Concern
+
+          included do
+            include HasSlugParams
+
+            before_action :handle_budget_category_slug_blank!,
+              if: -> { category_slug.blank? }
+            before_action :handle_budget_category_not_found!,
+              unless: -> { change_set.slugs.include?(category_slug) }
+          end
+
+          private
+
+          def handle_budget_category_slug_blank!
+            flash[:warning] = "no category slug provided"
+
+            redirect_to budget_setup_form_path
+          end
+
+          def handle_budget_category_not_found!
+            flash[:warning] =
+              "category not found by slug: `#{category_slug}`"
+
+            redirect_to budget_setup_form_path
           end
         end
 
