@@ -101,6 +101,46 @@ RSpec.describe Transaction::Entry do
     end
   end
 
+  describe "notes" do
+    let(:transaction_entry) { create(:transaction_entry, notes:) }
+
+    context "when notes contains text" do
+      let(:notes) do
+        {
+          "type" => "doc",
+          "content" => [
+            {
+              "type" => "paragraph",
+              "content" => [ { "type" => "text", "text" => "hello" } ],
+            },
+          ],
+        }
+      end
+
+      it "persists the notes doc" do
+        expect(transaction_entry.reload.notes).to eq(notes)
+      end
+    end
+
+    context "when notes has no text content" do
+      let(:notes) do
+        { "type" => "doc", "content" => [ { "type" => "paragraph" } ] }
+      end
+
+      it "nullifies notes on save" do
+        expect(transaction_entry.reload.notes).to be_nil
+      end
+    end
+
+    context "when notes is nil" do
+      let(:notes) { nil }
+
+      it "leaves notes as nil" do
+        expect(transaction_entry.reload.notes).to be_nil
+      end
+    end
+  end
+
   describe "validation around transfers" do
     context "when there no detail is provided" do
       let(:transaction) do

@@ -51,6 +51,7 @@ module WebApp
           :featured_account
 
         delegate :key,
+          :is_cash_flow,
           :name,
           :slug,
           to: :featured_account,

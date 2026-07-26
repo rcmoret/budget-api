@@ -34,6 +34,9 @@ type AdjustmentAmountItem = {
   newTotal: MonetaryAmount;
 };
 
+// Derive the adjustment (total - initialAmount) and normalized total from a
+// typed-in total. Shared by the store and callers that need the resulting
+// adjustment before the store update has propagated.
 const adjustmentFromTotal = (props: {
   total: string;
   initialAmount: number;
@@ -53,6 +56,7 @@ type AdjustmentStoreState = {
     adjustment?: string;
   }) => void;
   adjustments: Array<AdjustmentAmountItem>;
+  getItem: (objectKey: string) => AdjustmentAmountItem;
   removeItem: (objectKey: string) => void;
   resetItems: () => void;
   setAdjustments: (adjustments: Array<AdjustmentAmountItem>) => void;
@@ -96,6 +100,12 @@ const useAdjustmentStore = create<AdjustmentStoreState>((set, get) => ({
       ({ objectKey }) => objectKey !== newItem.objectKey,
     );
     set({ adjustments: [...existingItems, newItem] });
+  },
+  getItem: (key: string) => {
+    return (
+      get().adjustments.find(({ objectKey }) => objectKey === key) ??
+      buildNewItem({ objectKey: key, amount: "" })
+    );
   },
   resetItems: () => set({ adjustments: [] }),
   removeItem: (objectKey: string) => {
@@ -148,6 +158,19 @@ const useAdjustmentStore = create<AdjustmentStoreState>((set, get) => ({
   },
 }));
 
+const useAdjustmentsTotals = () => {
+  const adjustments = useAdjustmentStore((s) => s.adjustments);
+
+  const newTotal = adjustments.reduce((sum, adjustment) => {
+    return sum + adjustment.newTotal.cents;
+  }, 0);
+  const totalAdjustment = adjustments.reduce((sum, adjustment) => {
+    return sum + adjustment.adjustmentAmount.cents;
+  }, 0);
+
+  return { newTotal, totalAdjustment };
+};
+
 const useInitAdjustmentStore = () => {
   useEffect(() => {
     const { resetItems } = useAdjustmentStore.getState();
@@ -164,6 +187,10 @@ type AdjustmentSetProps = Array<{
 const useAdjustementSet = (adjustments: AdjustmentSetProps) => {
   const addItem = useAdjustmentStore((s) => s.addItem);
   const resetItems = useAdjustmentStore((s) => s.resetItems);
+  // Re-seed only when the set of items actually changes (e.g. switching
+  // categories). Joining into a string keeps the dep stable across prop
+  // refreshes (like a PUT response) so in-progress edits held in the store
+  // aren't wiped back to empty by resetItems.
   const keys = adjustments
     .map(({ objectKey }) => objectKey)
     .sort()
@@ -171,7 +198,9 @@ const useAdjustementSet = (adjustments: AdjustmentSetProps) => {
 
   useEffect(() => {
     resetItems();
-    adjustments.forEach((adjustment) => addItem(adjustment));
+    adjustments.forEach((adjustment) => {
+      addItem(adjustment);
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [keys]);
 };
@@ -180,8 +209,10 @@ export {
   type AdjustmentAmountItem,
   type AdjustmentSetProps,
   adjustmentFromTotal,
+  buildNewItem,
   inputAmount,
   useAdjustementSet,
   useAdjustmentStore,
+  useAdjustmentsTotals,
   useInitAdjustmentStore,
 };

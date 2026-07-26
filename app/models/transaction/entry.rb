@@ -28,6 +28,8 @@ module Transaction
     validate :amount_static!, if: :transfer?, on: :update
     alias_attribute :is_budget_exclusion, :budget_exclusion
 
+    before_save :nullify_blank_notes!
+
     has_one_attached :receipt
 
     # rubocop:disable Rails/I18nLocaleTexts
@@ -82,6 +84,10 @@ module Transaction
     end
 
     private
+
+    def nullify_blank_notes!
+      self.notes = nil if notes.present? && Tiptap.blank?(notes)
+    end
 
     def single_detail!
       return if details.size == 1

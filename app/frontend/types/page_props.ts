@@ -12,6 +12,7 @@ type AppRoutesType = {
 type RouteName = keyof AppRoutesType;
 
 type AccountLinkType = {
+  key: string;
   name: string;
   slug: string;
   href: string;

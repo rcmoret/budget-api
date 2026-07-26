@@ -16,7 +16,7 @@ type AccountProps = {
 
 type FeaturedAccountType = Pick<
   AccountProps,
-  "key" | "name" | "slug" | "editRoute"
+  "key" | "name" | "slug" | "editRoute" | "isCashFlow"
 > & {
   balancePriorTo: MonetaryAmount;
   transactions: Array<AccountTransaction>;

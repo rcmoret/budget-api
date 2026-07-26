@@ -8,6 +8,7 @@ module WebApp
         one :budget_month, resource: BudgetMonthSerializer
         nested_attribute :featured_account do
           attribute(:key, &:featured_account_key)
+          attribute(:is_cash_flow, &:featured_account_is_cash_flow)
           attribute(:name, &:featured_account_name)
           attribute(:slug, &:featured_account_slug)
           attributes(:edit_route)

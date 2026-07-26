@@ -15,10 +15,20 @@ export default defineConfig(({ mode }) => {
       tailwindcss(),
     ],
     resolve: {
-      alias: {
-        '@frontend': path.resolve(__dirname, './app/frontend'),
-        '@': path.resolve(__dirname, './app/frontend'),
-      },
+      alias: [
+        { find: '@frontend', replacement: path.resolve(__dirname, './app/frontend') },
+        { find: '@', replacement: path.resolve(__dirname, './app/frontend') },
+        // react-datepicker's default `browser` field is a UMD bundle that Vite's
+        // optimizer exposes as a namespace object, so `import DatePicker from
+        // "react-datepicker"` yields `{ default, ... }` and rendering throws
+        // "element type is invalid ... got: object". Pin the bare specifier to
+        // the ESM build. Exact-match regex so CSS subpath imports
+        // ("react-datepicker/dist/react-datepicker.css") still resolve normally.
+        {
+          find: /^react-datepicker$/,
+          replacement: path.resolve(__dirname, 'node_modules/react-datepicker/dist/es/index.js'),
+        },
+      ],
     },
     server: {
       host: '0.0.0.0',

@@ -44,7 +44,6 @@ type TransactionsIndexProps = PageProps & {
 
 const TransactionsIndexComponent = () => {
   const transactions = getTransactions();
-
   useNeighborLinksKeyBoardHandlers();
 
   return (

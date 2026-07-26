@@ -9,14 +9,14 @@ module WebApp
       include Mixins::HasBudgetInterval
       include Mixins::HasAccount
 
-      BASE_TRANSACTION_ENTRY_PERMITTED_PARAMS = %i[
-        key
-        is_budget_exclusion
-        check_number
-        clearance_date
-        description
-        notes
-        receipt
+      BASE_TRANSACTION_ENTRY_PERMITTED_PARAMS = [
+        :key,
+        :is_budget_exclusion,
+        :check_number,
+        :clearance_date,
+        :description,
+        { notes: {} },
+        :receipt,
       ].freeze
 
       BASE_TRANSACTION_DETAIL_PARAMS = %i[

@@ -45,20 +45,35 @@ const iconButtonClassName = [
   "w-8",
 ].join(" ");
 
+// Same footprint as the resting button, just pinned rather than hover-only —
+// for toggle-style controls (a Tiptap toolbar's bold/italic/underline) that
+// need to show "currently on" without a hover.
+const activeIconButtonClassName = [
+  "bg-white",
+  "font-medium",
+  "text-base-content",
+].join(" ");
+
 const IconButton = (props: {
+  active?: boolean;
   children: React.ReactNode;
   onClick?: () => void;
   title: string;
   type?: "button" | "submit";
 }) => {
   const type = props.type ?? "button";
+  const className = props.active
+    ? `${iconButtonClassName} ${activeIconButtonClassName}`
+    : iconButtonClassName;
+
   return (
     <button
-      className={iconButtonClassName}
+      className={className}
       type={type}
       onClick={props.onClick}
       title={props.title}
       aria-label={props.title}
+      aria-pressed={props.active}
     >
       {props.children}
     </button>

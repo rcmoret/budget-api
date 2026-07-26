@@ -107,7 +107,13 @@ html {
   --color-base-300: oklch(0.92 0.024 237);
   --color-base-content: oklch(0.2 0 0);
   --color-primary: oklch(0.2629 0.2559 206);
+  --color-primary-light: color-mix(
+    in oklch,
+    var(--color-primary) 100%,
+    #888 40%
+  );
   --color-primary-content: oklch(1 0 0);
+  --color-primary-light-content: oklch(1 0 0);
   --color-secondary: oklch(0.715 0.089 155);
   --color-secondary-content: oklch(0.98 0.003 247.858);
   /* purp */

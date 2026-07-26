@@ -40,3 +40,6 @@ node_modules
 
 /dist/tsconfig.tsbuildinfo
 /.claude
+
+/queries/*
+/docs/*

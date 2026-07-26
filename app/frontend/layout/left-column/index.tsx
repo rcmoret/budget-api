@@ -14,6 +14,7 @@ const ProfileTopLevelLink = () => (
 );
 
 const TopMenuItems = () => {
+  // TODO update the label
   const namespace = useNamespace();
   const label = namespace === "budget" ? "Budget" : "Accounts";
   const budgetDashboardUrl = useAppRoutes("budgetDashboardRoute");

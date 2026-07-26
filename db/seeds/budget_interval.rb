@@ -49,7 +49,7 @@ def create_budget(user, interval, description: :base)
           category.key,
           **{ budget_item_key: item_attrs["key"] }.compact
         )
-        form.save.then { |result| binding.pry if result != true }
+        form.save # .then { |result| binding . pry if result != true }
       end
     end
   end

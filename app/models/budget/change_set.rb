@@ -26,6 +26,8 @@ module Budget
     after_initialize -> { assign_attributes(key: KeyGenerator.call) },
       if: -> { key.blank? }
 
+    before_save :nullify_blank_notes!
+
     has_many :events,
       dependent: :destroy,
       foreign_key: :budget_change_set_id,
@@ -53,5 +55,11 @@ module Budget
     end
 
     delegate :month, :year, to: :interval
+
+    private
+
+    def nullify_blank_notes!
+      self.notes = nil if notes.present? && Tiptap.blank?(notes)
+    end
   end
 end

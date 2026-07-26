@@ -1,13 +1,9 @@
-import { useTransactionContext } from "../context-provider"
+import { useTransactionContext } from "../context-provider";
 
 const ClearanceDate = () => {
-  const { transaction } = useTransactionContext()
+  const { transaction } = useTransactionContext();
 
-  return (
-    <div>
-      {transaction.clearanceDate}
-    </div>
-  )
-}
+  return <div>{transaction.clearanceDate}</div>;
+};
 
-export { ClearanceDate }
+export { ClearanceDate };

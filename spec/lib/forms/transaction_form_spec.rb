@@ -54,6 +54,37 @@ RSpec.describe Forms::TransactionForm do
           end
         end
 
+        context "when passing a notes doc" do
+          let(:notes) do
+            {
+              "type" => "doc",
+              "content" => [
+                {
+                  "type" => "paragraph",
+                  "content" => [ { "type" => "text", "text" => "hello" } ],
+                },
+              ],
+            }
+          end
+          let(:params) do
+            {
+              budget_exclusion:,
+              check_number: nil,
+              clearance_date: Time.current.to_date,
+              key: KeyGenerator.call,
+              notes:,
+              receipt: nil,
+              details_attributes:,
+            }
+          end
+
+          it "persists the notes doc" do
+            described_class.new(user, transaction_entry, params).save
+
+            expect(transaction_entry.reload.notes).to eq(notes)
+          end
+        end
+
         context "when creating multiple details" do
           let(:category) { create(:category, user_group: user.user_group) }
           let(:additional_budget_item) do

@@ -15,7 +15,7 @@ const CloseButton = (props: CloseButtonProps) => {
       {...buttonProps}
       aria-label={ariaLabel}
       disabled={disabled}
-      className="round-cta cancel"
+      className="round-cta cancel-cta"
     >
       <div className="shadow-lg">&#x2718;</div>
     </button>

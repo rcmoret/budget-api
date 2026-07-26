@@ -11,12 +11,18 @@ module WebApp
           :account_slug,
           :check_number,
           :description,
-          :notes
+          :notes,
+          :object_key
         one :amount, resource: WebApp::Serializers::MonetaryAmountSerializer
         attribute(:is_budget_exclusion, &:budget_exclusion?)
         one :running_balance,
           resource: WebApp::Serializers::MonetaryAmountSerializer
         many :details, resource: DetailSerializer
+        attribute :iso_clearance_date do |entry|
+          if entry.clearance_date.present?
+            entry.clearance_date.strftime("%FT%T")
+          end
+        end
         attribute :clearance_date do |entry|
           if entry.clearance_date.blank?
             :pending
@@ -32,6 +38,7 @@ module WebApp
 
         attributes :receipt_url,
           :receipt_attached,
+          :receipt_content_type,
           :receipt_filename,
           if: proc { |entry| entry.receipt_attached? }
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2026_07_29_234658) do
+ActiveRecord::Schema[7.0].define(version: 2026_08_03_120500) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -104,6 +104,7 @@ ActiveRecord::Schema[7.0].define(version: 2026_07_29_234658) do
     t.virtual "type", type: :string, as: "\nCASE\n    WHEN (type_key = 10) THEN 'Budget::Changes::Adjust'::text\n    WHEN (type_key = '-10'::integer) THEN 'Budget::Changes::PreSetup'::text\n    WHEN (type_key = 20) THEN 'Budget::Changes::Rollover'::text\n    WHEN (type_key = 0) THEN 'Budget::Changes::Setup'::text\n    ELSE 'Undetermined'::text\nEND", stored: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.json "notes"
     t.index ["budget_interval_id"], name: "index_budget_change_sets_on_budget_interval_id"
     t.index ["key"], name: "index_budget_change_sets_on_key", unique: true
   end
@@ -186,11 +187,11 @@ ActiveRecord::Schema[7.0].define(version: 2026_07_29_234658) do
     t.string "check_number", limit: 12
     t.date "clearance_date"
     t.bigint "account_id", null: false
-    t.text "notes"
     t.boolean "budget_exclusion", default: false, null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.string "key", limit: 12
+    t.json "notes"
     t.index ["account_id"], name: "index_transaction_entries_on_account_id"
   end
 
@@ -300,12 +301,12 @@ ActiveRecord::Schema[7.0].define(version: 2026_07_29_234658) do
       intervals.year,
       sum(
           CASE
-              WHEN ((event_types.name)::text = ANY ((ARRAY['rollover_extra_target_create'::character varying, 'rollover_item_create'::character varying, 'rollover_item_adjust'::character varying])::text[])) THEN events.amount
+              WHEN ((event_types.name)::text = ANY (ARRAY[('rollover_extra_target_create'::character varying)::text, ('rollover_item_create'::character varying)::text, ('rollover_item_adjust'::character varying)::text])) THEN events.amount
               ELSE 0
           END) AS previously_budgeted,
       sum(
           CASE
-              WHEN ((event_types.name)::text <> ALL ((ARRAY['rollover_extra_target_create'::character varying, 'rollover_item_create'::character varying, 'rollover_item_adjust'::character varying])::text[])) THEN events.amount
+              WHEN ((event_types.name)::text <> ALL (ARRAY[('rollover_extra_target_create'::character varying)::text, ('rollover_item_create'::character varying)::text, ('rollover_item_adjust'::character varying)::text])) THEN events.amount
               ELSE 0
           END) AS currently_budgeted,
       COALESCE(( SELECT sum(td.amount) AS sum
@@ -323,7 +324,7 @@ ActiveRecord::Schema[7.0].define(version: 2026_07_29_234658) do
   create_view "budget_details", sql_definition: <<-SQL
       WITH event_type_ids AS (
            SELECT budget_item_event_types.id,
-              ((budget_item_event_types.name)::text = ANY ((ARRAY['rollover_extra_target_create'::character varying, 'rollover_item_create'::character varying, 'rollover_item_adjust'::character varying])::text[])) AS is_previous
+              ((budget_item_event_types.name)::text = ANY (ARRAY[('rollover_extra_target_create'::character varying)::text, ('rollover_item_create'::character varying)::text, ('rollover_item_adjust'::character varying)::text])) AS is_previous
              FROM budget_item_event_types
           ), transaction_totals AS (
            SELECT transaction_details.budget_item_id,

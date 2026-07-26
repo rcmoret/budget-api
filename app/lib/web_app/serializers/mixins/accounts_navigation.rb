@@ -6,7 +6,13 @@ module WebApp
       module AccountsNavigation
         extend ActiveSupport::Concern
 
-        AccountLinkStruct = Data.define(:name, :balance, :slug, :params) do
+        AccountLinkStruct = Data.define(
+          :key,
+          :balance,
+          :name,
+          :params,
+          :slug
+        ) do
           include Rails.application.routes.url_helpers
 
           def href
@@ -27,6 +33,7 @@ module WebApp
             accounts.map do |account|
               AccountLinkSerializer.new(
                 AccountLinkStruct.new(
+                  key: account.key,
                   name: account.name,
                   balance: account.balance,
                   slug: account.slug,
@@ -53,8 +60,11 @@ module WebApp
         end
       end
 
+      # `key` serves more than the nav links: it's what the transaction form's
+      # account select submits, since an `account_key` param resolves through
+      # `Account.fetch(key:)`.
       AccountLinkSerializer = Class.new(GenericSerializer) do
-        attributes :name, :balance, :slug, :href
+        attributes :key, :name, :balance, :slug, :href
       end
     end
   end
