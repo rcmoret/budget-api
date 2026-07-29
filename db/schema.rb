@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2026_07_06_185029) do
+ActiveRecord::Schema[7.0].define(version: 2026_07_29_234658) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -131,15 +131,15 @@ ActiveRecord::Schema[7.0].define(version: 2026_07_06_185029) do
   end
 
   create_table "budget_item_events", force: :cascade do |t|
-    t.bigint "budget_item_id", null: false
-    t.bigint "budget_item_event_type_id", null: false
+    t.integer "budget_item_id", null: false
+    t.integer "budget_item_event_type_id", null: false
     t.integer "amount", null: false
     t.json "data"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "key", limit: 12
     t.integer "user_id", null: false
-    t.bigint "budget_change_set_id"
+    t.bigint "budget_change_set_id", null: false
     t.index ["budget_change_set_id"], name: "index_budget_item_events_on_budget_change_set_id"
     t.index ["budget_item_event_type_id"], name: "index_budget_item_events_on_budget_item_event_type_id"
     t.index ["budget_item_id"], name: "index_budget_item_events_on_budget_item_id"
