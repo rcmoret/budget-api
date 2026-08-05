@@ -1,0 +1,21 @@
+{
+  "//": "Declaration-only emit for /design-sync. The repo has no build step, so",
+  "//2": "the converter would otherwise have no .d.ts tree to derive prop",
+  "//3": "contracts from — and those contracts are the API the design agent codes",
+  "//4": "against. Emits app/frontend/**/*.d.ts into dist/types/ (gitignored).",
+  "//5": "The strictness flags below are relaxed only so a lint-level error can't",
+  "//6": "interrupt emit; type resolution itself is unchanged.",
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "incremental": false,
+    "rootDir": "../app/frontend",
+    "outDir": "../dist/types",
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noEmitOnError": false,
+    "skipLibCheck": true
+  },
+  "include": ["../app/frontend/**/*"]
+}

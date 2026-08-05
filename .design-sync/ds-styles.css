@@ -1,0 +1,42 @@
+/* Tailwind entry for the /design-sync build.
+ *
+ * Wraps the app's real stylesheet (app/frontend/css/main.css — Tailwind v4 +
+ * daisyUI 5 + the merrimack / merrimack-dark themes) and adds the two things
+ * the design-system bundle needs that the app gets elsewhere:
+ *
+ *   1. @source for .design-sync/previews, so utility classes used only in
+ *      preview compositions are actually generated.
+ *   2. FontAwesome icon rules. The app loads FA from a CDN kit <script> in
+ *      app/views/layouts/application.html.erb, which never reaches the
+ *      bundle. The @font-face rules live separately in
+ *      vendor/fontawesome/css/fa-fonts.css and are wired via cfg.extraFonts
+ *      (the converter copies the woff2 files into fonts/ and rewrites their
+ *      url()); only the icon/style rules belong here.
+ *
+ * Compile with the command in cfg.buildCmd. Output is gitignored.
+ */
+@import "../app/frontend/css/main.css";
+@import "./vendor/fontawesome/css/fa-icons.css";
+
+@source "./previews";
+
+/* Safelist the semantic vocabulary.
+ *
+ * Tailwind v4 only emits classes it finds in the scanned sources. The app
+ * happens to use `text-error` but not `text-accent`, so an unsafelisted build
+ * ships a stylesheet where half the theme is unreachable. That matters here in
+ * a way it doesn't for the app: the design agent writes NEW markup against this
+ * frozen stylesheet, and any class it names that wasn't scanned silently does
+ * nothing. Safelisting makes the documented vocabulary in conventions.md true.
+ */
+@source inline("{bg,text,border,outline,from,to}-{primary,primary-content,secondary,secondary-content,accent,accent-content,neutral,neutral-content,info,info-content,success,success-content,warning,warning-content,error,error-content}");
+@source inline("{bg,text,border,outline}-{base-100,base-200,base-300,base-content}");
+@source inline("btn btn-{primary,secondary,accent,neutral,info,success,warning,error,ghost,link,outline,soft,active,disabled,circle,square,wide,block}");
+@source inline("btn-{xs,sm,md,lg,xl}");
+@source inline("input input-{primary,secondary,accent,neutral,info,success,warning,error,ghost}");
+@source inline("input-{xs,sm,md,lg,xl}");
+@source inline("{radio,checkbox,toggle,select,range,badge,progress}");
+@source inline("{radio,checkbox,toggle,select,range,badge,progress}-{xs,sm,md,lg,xl}");
+@source inline("{radio,checkbox,toggle,badge,progress}-{primary,secondary,accent,neutral,info,success,warning,error}");
+@source inline("{card,card-body,card-title,card-actions,divider,alert,menu,navbar,drawer,modal,tabs,table,join,stat}");
+@source inline("alert-{info,success,warning,error}");

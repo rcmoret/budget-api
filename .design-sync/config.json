@@ -1,0 +1,87 @@
+{
+  "projectId": "ae3ceb02-2c1e-460d-8de2-29b7f745afbc",
+  "shape": "package",
+  "pkg": "@budget/design-system",
+  "globalName": "BudgetDS",
+  "srcDir": "app/frontend",
+  "tsconfig": "tsconfig.json",
+  "cssEntry": ".design-sync/.cache/compiled.css",
+  "extraFonts": [
+    ".design-sync/vendor/fontawesome/css/fa-fonts.css",
+    ".design-sync/vendor/questrial/questrial.css"
+  ],
+  "guidelinesGlob": [],
+  "buildCmd": "./.design-sync/prepare.sh",
+  "componentSrcMap": {
+    "AmountSpan": "app/frontend/components/amount-span.tsx",
+    "BudgetSummaryComponent": "app/frontend/components/budget-summary.tsx",
+    "BudgetMonthSummary": "app/frontend/components/budget-month.tsx",
+    "GroupLabel": "app/frontend/components/group-label.tsx",
+    "KeyIdentifier": "app/frontend/components/key-identifier.tsx",
+    "Pill": "app/frontend/components/pill.tsx",
+    "Collapse": "app/frontend/components/collapse.tsx",
+    "RightColumnWrapper": "app/frontend/components/right-column-bordered.tsx",
+    "CloseButton": "app/frontend/components/close-button.tsx",
+    "CheckMarkButton": "app/frontend/components/cta/index.tsx",
+    "IconButton": "app/frontend/components/cta/index.tsx",
+    "CtaCloseButton": "app/frontend/components/cta/index.tsx",
+    "FormRadioInput": "app/frontend/components/radio.tsx",
+    "RadioInput": "app/frontend/components/selectable.tsx",
+    "SelectableGroup": "app/frontend/components/selectable.tsx",
+    "SelectableInput": "app/frontend/components/selectable.tsx",
+    "ToggleSlider": "app/frontend/components/slider.tsx",
+    "ThemedSelect": "app/frontend/components/themed-select.tsx",
+    "AdjustmentInput": "app/frontend/components/adjustment-input/index.tsx",
+    "GenericAmountInput": "app/frontend/components/adjustment-input/index.tsx",
+    "TotalInput": "app/frontend/components/adjustment-input/index.tsx",
+    "AdjustmentInputsProvider": "app/frontend/components/adjustment-input/context-provider.tsx",
+    "ActiveItemCard": "app/frontend/components/card/index.tsx",
+    "ArchivedItemCard": "app/frontend/components/card/index.tsx",
+    "ArchivedAtRow": "app/frontend/components/card/index.tsx",
+    "ArchiveIcon": "app/frontend/components/card/index.tsx",
+    "UnarchiveIcon": "app/frontend/components/card/index.tsx",
+    "CardLabel": "app/frontend/components/card/index.tsx",
+    "CardRow": "app/frontend/components/card/index.tsx",
+    "CloseFormButton": "app/frontend/components/card/index.tsx",
+    "EditButton": "app/frontend/components/card/index.tsx",
+    "Icon": "app/frontend/components/icon.tsx",
+    "GreenCheck": "app/frontend/components/icon.tsx",
+    "Pencil": "app/frontend/components/icons/pencil.tsx",
+    "TrashIcon": "app/frontend/components/icons/trash.tsx",
+    "NeighborLinks": "app/frontend/components/neighbor-links.tsx",
+    "PageComponent": "app/frontend/layout/index.tsx",
+    "HeaderComponent": "app/frontend/layout/index.tsx",
+    "PublicShell": "app/frontend/layout/public-shell.tsx",
+    "LeftColumn": "app/frontend/layout/left-column/index.tsx",
+    "AppConfigItems": "app/frontend/layout/left-column/config-items.tsx",
+    "MenuItems": "app/frontend/layout/left-column/menu-item.tsx",
+    "AccountMenuComponent": "app/frontend/layout/left-column/account-menu-item/index.tsx",
+    "IndividualAccountLinks": "app/frontend/layout/left-column/account-menu-item/dropdown-account-links.tsx",
+    "PrimaryAccountLink": "app/frontend/layout/left-column/account-menu-item/primary-link.tsx",
+    "Notifications": "app/frontend/layout/notifications/index.tsx",
+    "CreateEventSelectComponent": "app/frontend/components/create-event-form.tsx",
+    "CreateEventSelectProvider": "app/frontend/components/create-event-form.tsx"
+  },
+  "docsDir": ".design-sync/docs",
+  "libOverrides": {
+    "source-kit.mjs": "group comes from .design-sync/docs frontmatter; component dirs here are implementation folders, not categories"
+  },
+  "overrides": {
+    "ActiveItemCard": {
+      "cardMode": "column"
+    },
+    "KeyIdentifier": {
+      "cardMode": "column"
+    },
+    "HeaderComponent": {
+      "cardMode": "column"
+    },
+    "ArchiveIcon": {
+      "cardMode": "column"
+    }
+  },
+  "readmeHeader": ".design-sync/conventions.md",
+  "extraEntries": [
+    "./.design-sync/preview-support.ts"
+  ]
+}

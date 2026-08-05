@@ -1,0 +1,18 @@
+{
+  "//": "Editor-only config for the preview files. cfg.pkg is a virtual",
+  "//2": "specifier the converter rewrites to the compiled bundle at preview",
+  "//3": "build time, so it never exists in node_modules — map it at the",
+  "//4": "declaration tree prepare.sh emits so editors resolve it and preview",
+  "//5": "props get type-checked. Not used by the converter.",
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "@budget/design-system": ["../dist/types/index.d.ts"],
+      "@/*": ["../app/frontend/*"],
+      "@frontend/*": ["../app/frontend/*"]
+    }
+  },
+  "include": ["previews/**/*", "ds-entry.ts"]
+}

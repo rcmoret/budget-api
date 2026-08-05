@@ -43,3 +43,13 @@ node_modules
 
 /queries/*
 /docs/*
+
+# /design-sync — regenerated build output and machine state.
+# The durable inputs (.design-sync/config.json, NOTES.md, conventions.md,
+# ds-entry.ts, ds-styles.css, previews/, overrides/, vendor/) ARE committed.
+/.ds-sync/
+/ds-bundle/
+/.design-sync/.cache/
+/.design-sync/learnings/
+/.design-sync/node_modules
+/dist/types/
