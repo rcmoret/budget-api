@@ -245,11 +245,15 @@ const ReceiptUpload = () => {
 // occupies — which is what `grid-rows-subgrid` was stacking them into.
 const SupplementalFormDetails = () => {
   const { isCashFlow } = getFeaturedAccount();
+  // A new transaction is a nested resource under the account page it's
+  // created from — its account is implied, not a choice, so there's nothing
+  // to select.
+  const { isNew } = useTransactionContext();
 
   return (
     <>
       <div className="grid grid-rows-subgrid grid-cols-subgrid col-span-2 items-start">
-        <AccountSelect />
+        {isNew ? null : <AccountSelect />}
         <Notes />
       </div>
       <div className="grid grid-rows-subgrid grid-cols-subgrid col-span-2 items-start">

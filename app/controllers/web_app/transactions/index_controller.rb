@@ -9,7 +9,7 @@ module WebApp
 
       before_action :store_selected_account_path
 
-      define_route_segments :account, :transactions
+      define_route_segments :account
       serialize_with Serializers::IndexSerializer
       use_template "transactions"
 
@@ -26,8 +26,11 @@ module WebApp
         { featured_account_slug: account.slug, month:, year: }
       end
 
+      # `HasRedirectParams#resolve_account_path` matches these segments as
+      # `[slug, "transactions", month, year]` (after the leading "account"),
+      # so the literal has to come after the slug, not before it.
       def route_segments
-        super(account.slug, month, year)
+        super(account.slug, :transactions, month, year)
       end
 
       def store_selected_account_path

@@ -7,6 +7,8 @@ import { useForm } from "@inertiajs/react";
 import { DetailAttribute, useTransactionFormDetails } from "./details-context";
 import { useAdjustmentStore } from "@/lib/adjustment-amount-store";
 import { detailsToAdjustments } from "../detail-adjustments";
+import { getRedirectQueryParams } from "@/lib/app-stores/app-config-store";
+import { generateKeyIdentifier } from "@/utils/KeyIdentifier";
 
 type TransactionFormContextType = {
   accountKey: string;
@@ -55,7 +57,7 @@ const TransactionFormContext = createContext<null | TransactionFormContextType>(
 );
 
 const TransactionFormProvider = (props: { children: React.ReactNode }) => {
-  const { transaction, toggleForm } = useTransactionContext();
+  const { transaction, toggleForm, isNew } = useTransactionContext();
   const {
     addDetail,
     details: detailsAttributes,
@@ -81,7 +83,11 @@ const TransactionFormProvider = (props: { children: React.ReactNode }) => {
   const [budgetExclusion, toggleBudgetExclusion] = useToggle(
     transaction.isBudgetExclusion,
   );
-  const { transform, put, processing } = useForm({});
+  // Unlike an update, a create has no server-assigned key to key off of yet —
+  // the backend expects the client to hand it one, same as it does for each
+  // new line item's `key` (see `addDetail`).
+  const [newTransactionKey] = useState<string>(() => generateKeyIdentifier());
+  const { transform, post, put, processing } = useForm({});
   const setAdjustments = useAdjustmentStore((s) => s.setAdjustments);
 
   // Re-seed only when the *set* of details changes. Joining the keys keeps the
@@ -96,6 +102,14 @@ const TransactionFormProvider = (props: { children: React.ReactNode }) => {
     setAdjustments(detailsToAdjustments(transaction.details));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [detailKeys]);
+
+  // A brand-new transaction starts with zero details, but `LineItems` only
+  // ever renders an "add" button on the last row — with no row there'd be
+  // nothing to click. Seed one blank line item so there's always a last row.
+  useEffect(() => {
+    if (isNew) addDetail();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Clearing a line item only blanks it on screen — a detail that was already
   // saved still exists server-side, and Rails ignores nested records that are
@@ -134,6 +148,7 @@ const TransactionFormProvider = (props: { children: React.ReactNode }) => {
   transform(() => {
     return {
       transaction: {
+        ...(isNew ? { key: newTransactionKey } : {}),
         accountKey,
         checkNumber,
         clearanceDate: clearanceDate ? toDateParam(clearanceDate) : null,
@@ -146,10 +161,15 @@ const TransactionFormProvider = (props: { children: React.ReactNode }) => {
     };
   });
 
+  const createUrl = `/account/${transaction.accountSlug}/transaction`;
   const updateUrl =
     `/account/${transaction.accountSlug}/transaction/${transaction.key}`;
+  const redirectParams = getRedirectQueryParams();
 
-  const submit = () => put(updateUrl, { onSuccess: toggleForm });
+  const submit = () =>
+    isNew
+      ? post(`${createUrl}?${redirectParams}`, { onSuccess: toggleForm })
+      : put(updateUrl, { onSuccess: toggleForm });
 
   const value: TransactionFormContextType = {
     accountKey,

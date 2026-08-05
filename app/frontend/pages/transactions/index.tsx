@@ -7,6 +7,7 @@ import { initNeighborLinksStore } from "../budget/neighbor-links-store";
 import { getTransactions, initTransactionIndexStore } from "./store";
 import { RightColumn } from "./right-column";
 import { AccountTransactionCard, InitialBlance } from "./layout/card";
+import { NewTransactionCard } from "./layout/new-transaction-card";
 import { PageProps } from "@/types/page_props";
 import { useNeighborLinksKeyBoardHandlers } from "@/utils/hooks/neighbors-keyboard-nav";
 import { NeighborLinks } from "@/components/neighbor-links";
@@ -53,6 +54,7 @@ const TransactionsIndexComponent = () => {
       header={<TransactionIndexHeader />}
     >
       <>
+        <NewTransactionCard />
         {transactions.map((transaction) => (
           <AccountTransactionCard
             key={transaction.key}

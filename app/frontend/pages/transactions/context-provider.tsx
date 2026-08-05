@@ -5,6 +5,10 @@ import { useAdjustmentStore } from "@/lib/adjustment-amount-store";
 
 type TransactionContextValue = {
   isFormShown: boolean;
+  // True only for the blank transaction backing the "Add Transaction" card —
+  // lets shared form pieces (account select, key display) tell it apart from
+  // an existing transaction being edited.
+  isNew: boolean;
   objectKey: string;
   transaction: AccountTransaction;
   toggleForm: () => void;
@@ -33,6 +37,7 @@ const TransactionProvider = (props: {
   };
   const value: TransactionContextValue = {
     isFormShown,
+    isNew: false,
     objectKey,
     transaction,
     toggleForm,
@@ -56,4 +61,4 @@ const useTransactionContext = (): TransactionContextValue => {
   return context;
 };
 
-export { TransactionProvider, useTransactionContext };
+export { TransactionContext, TransactionProvider, useTransactionContext };

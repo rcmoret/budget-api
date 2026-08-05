@@ -14,8 +14,11 @@ type TransactionsIndexState = {
   accounts: Array<AccountProps>;
   budgetItems: Array<TransactionDetailBudgetItem>;
   showFormKey: null | string;
+  showNewTransactionForm: boolean;
   featuredAccount: FeaturedAccount;
   transactions: Array<AccountTransaction>;
+  closeNewTransactionForm: () => void;
+  openNewTransactionForm: () => void;
   resetShowFormKey: () => void;
   setAccounts: (a: Array<AccountProps>) => void;
   setBudgetItems: (i: Array<TransactionDetailBudgetItem>) => void;
@@ -38,9 +41,16 @@ const useTransactionsIndexStore = create<TransactionsIndexState>((set) => ({
   budgetItems: [],
   featuredAccount: emptyFeaturedAccount,
   showFormKey: null,
+  showNewTransactionForm: false,
   transactions: [],
+  closeNewTransactionForm: () => set({ showNewTransactionForm: false }),
+  // Opening the "Add Transaction" card and opening a row's edit form share the
+  // same adjustment store, so only one can be open at a time — each closes
+  // the other.
+  openNewTransactionForm: () =>
+    set({ showFormKey: null, showNewTransactionForm: true }),
   resetShowFormKey: () => set({ showFormKey: null }),
-  setShowFormKey: (key) => set({ showFormKey: key }),
+  setShowFormKey: (key) => set({ showFormKey: key, showNewTransactionForm: false }),
   setAccounts: (accounts) => set({ accounts }),
   setBudgetItems: (budgetItems) => set({ budgetItems }),
   setFeaturedAccount: (featuredAccount) => set({ featuredAccount }),
@@ -111,11 +121,36 @@ const useShowFormKey = () => {
   };
 };
 
+const useNewTransactionForm = () => {
+  const showNewTransactionForm = useTransactionsIndexStore(
+    (s) => s.showNewTransactionForm,
+  );
+  const openNewTransactionForm = useTransactionsIndexStore(
+    (s) => s.openNewTransactionForm,
+  );
+  const closeNewTransactionForm = useTransactionsIndexStore(
+    (s) => s.closeNewTransactionForm,
+  );
+  const resetItems = useAdjustmentStore((s) => s.resetItems);
+
+  const toggle = () => {
+    resetItems();
+    if (showNewTransactionForm) {
+      closeNewTransactionForm();
+    } else {
+      openNewTransactionForm();
+    }
+  };
+
+  return { showNewTransactionForm, toggle };
+};
+
 export {
   initTransactionIndexStore,
   getBudgetItems,
   getFeaturedAccount,
   getTransactions,
+  useNewTransactionForm,
   useShowFormKey,
   useSetShowFormKey,
 };

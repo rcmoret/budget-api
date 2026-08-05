@@ -101,7 +101,7 @@ const InitialBlance = () => {
 
   return (
     <TransactionProvider transaction={balanceInfo}>
-      <div className={cardClassNames}>
+      <div className={["card", ...cardClassNames].join(" ")}>
         <ClearanceDate />
         <TransactionDetails />
         <TransactionAmounts />
