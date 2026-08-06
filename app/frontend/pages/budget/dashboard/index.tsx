@@ -44,9 +44,9 @@ const DashboardComponent = () => {
 };
 
 const BudgetDashboard = (props: BudgetMonthIndex) => {
-  const { items, budgetMonth } = props;
+  const { items, budgetMonth, discretionary } = props;
 
-  useInitBudgetDashboardStore({ items, budgetMonth });
+  useInitBudgetDashboardStore({ items, budgetMonth, discretionary });
   initBudgetMonthStore({ budgetMonth });
   initNeighborLinksStore({
     previous: {

@@ -174,14 +174,20 @@ const useBudgetItemGroups = (props: FilterKeys): ItemGroup => {
 const useInitBudgetDashboardStore = (props: {
   items: BudgetItemCollections;
   budgetMonth: BudgetMonthData;
+  discretionary: DiscretionaryDetails;
 }) => {
-  const { items } = props;
+  const { items, discretionary } = props;
 
   const setItems = useBudgetDashboardStore((s) => s.setItems);
+  const setDiscretionary = useBudgetDashboardStore((s) => s.setDiscretionary);
 
   useEffect(() => {
     setItems(items);
   }, [items, setItems]);
+
+  useEffect(() => {
+    setDiscretionary(discretionary);
+  }, [discretionary, setDiscretionary]);
 };
 
 const useClearedItemsVisibilityToggle = () => {
