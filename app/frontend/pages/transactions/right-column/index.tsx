@@ -1,6 +1,7 @@
 import { BudgetMonthSummary } from "@/components/budget-month";
 import { getFeaturedAccount } from "../store";
 import { Link } from "@inertiajs/react";
+import { TransferForm } from "./transfer-form";
 
 const RightColumn = () => {
   const featuredAccount = getFeaturedAccount();
@@ -14,6 +15,9 @@ const RightColumn = () => {
         >
           Edit {featuredAccount.name}
         </Link>
+      </div>
+      <div className="pt-4 border-t border-neutral">
+        <TransferForm />
       </div>
     </BudgetMonthSummary>
   );

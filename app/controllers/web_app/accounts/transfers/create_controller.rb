@@ -9,28 +9,20 @@ module WebApp
         def call
           case form.call
           in [:ok, *]
+            redirect_to redirect_path, notice: "Transfer completed."
+          in [:error, *]
+            flash[:warning] = form.errors.full_messages.to_sentence
             redirect_to redirect_path
-          in [:errors, error_hash]
-            @errors = error_hash
-            render inertia: "accounts/show", props: page_props
           end
         end
 
         private
 
-        attr_accessor :errors
-
         def form
-          Forms::TransferForm.new(
+          @form ||= Forms::TransferForm.new(
             user: current_user_profile,
             params: form_params
           )
-        end
-
-        def props = {}
-
-        def namespace
-          "accounts"
         end
 
         def form_params
