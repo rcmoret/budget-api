@@ -2,6 +2,7 @@ import { BudgetMonthSummary } from "@/components/budget-month";
 import { getFeaturedAccount } from "../store";
 import { Link } from "@inertiajs/react";
 import { TransferForm } from "./transfer-form";
+import { SortToggle } from "./sort-toggle";
 
 const RightColumn = () => {
   const featuredAccount = getFeaturedAccount();
@@ -15,6 +16,9 @@ const RightColumn = () => {
         >
           Edit {featuredAccount.name}
         </Link>
+      </div>
+      <div className="pt-4 border-t border-neutral">
+        <SortToggle />
       </div>
       <div className="pt-4 border-t border-neutral">
         <TransferForm />

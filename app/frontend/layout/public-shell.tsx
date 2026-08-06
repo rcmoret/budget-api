@@ -11,7 +11,9 @@ type PublicShellProps = {
 // initializes stores that don't depend on logged-in data: theme reconciliation
 // and flash notifications.
 const PublicShell = ({ notifications }: PublicShellProps) => {
-  useInitTheme();
+  // No logged-in profile here (Devise pages), so there's no saved preference
+  // to read — "system" is the only sensible default pre-login.
+  useInitTheme("system");
   useInitNotificationStore(notifications);
 
   return <Notifications />;

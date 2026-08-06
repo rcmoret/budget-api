@@ -7,6 +7,7 @@ module WebApp
         attributes :key, :email
 
         attribute(:timezone) { |profile| profile.configuration(:timezone) }
+        attribute(:theme_preference) { |profile| profile.configuration(:theme_preference) }
 
         # Native <select> options for the timezone picker. Values are the
         # tzinfo identifiers accepted by User::Configuration's validation.

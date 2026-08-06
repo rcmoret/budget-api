@@ -10,7 +10,7 @@ module WebApp
       include Mixins::NotificationsConcern
       include Mixins::PageMetadata
 
-      attributes :redirect_segments
+      attributes :redirect_segments, :theme_preference
     end
   end
 end

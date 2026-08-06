@@ -9,7 +9,8 @@ module WebApp
           :flash,
           :page_name,
           :prev_selected_account_path,
-          :redirect_segments
+          :redirect_segments,
+          :theme_preference
         )
 
         EMPTY_PAGE = PageData.new(
@@ -17,7 +18,8 @@ module WebApp
           flash: {},
           page_name: "",
           prev_selected_account_path: nil,
-          redirect_segments: []
+          redirect_segments: [],
+          theme_preference: "system"
         )
 
         def self.with(
@@ -25,14 +27,16 @@ module WebApp
           flash: {},
           page_name: "",
           prev_selected_account_path: nil,
-          redirect_segments: []
+          redirect_segments: [],
+          theme_preference: "system"
         )
           data = PageData.new(
             current_path:,
             flash:,
             page_name:,
             prev_selected_account_path:,
-            redirect_segments:
+            redirect_segments:,
+            theme_preference:
           )
           new(data)
         end
@@ -63,6 +67,7 @@ module WebApp
           :page_name,
           :prev_selected_account_path,
           :redirect_segments,
+          :theme_preference,
           to: :page_data
       end
     end

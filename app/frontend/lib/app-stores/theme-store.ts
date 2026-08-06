@@ -6,14 +6,37 @@ const DARK_THEME = "merrimack-dark";
 const THEME_STORAGE_KEY = "app-theme";
 
 type Theme = typeof LIGHT_THEME | typeof DARK_THEME;
+type ThemePreference = "system" | "light" | "dark";
+
+const systemTheme = (): Theme =>
+  typeof window !== "undefined" &&
+  window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? DARK_THEME
+    : LIGHT_THEME;
+
+const resolvePreference = (preference: ThemePreference): Theme => {
+  if (preference === "light") return LIGHT_THEME;
+  if (preference === "dark") return DARK_THEME;
+  return systemTheme();
+};
+
+// sessionStorage, not localStorage: an override set by toggleTheme should
+// only live for the tab/window it was set in. A new tab/window has none, so
+// it falls back to the user's saved theme preference (see useInitTheme) —
+// that's what makes the preference a "new session" default rather than
+// something that fights the in-session toggle.
+const storedTheme = (): null | Theme => {
+  if (typeof window === "undefined") return null;
+  const stored = window.sessionStorage.getItem(THEME_STORAGE_KEY);
+  return stored === LIGHT_THEME || stored === DARK_THEME ? stored : null;
+};
 
 const getInitialTheme = (): Theme => {
   if (typeof window === "undefined") return LIGHT_THEME;
-  const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
-  if (stored === LIGHT_THEME || stored === DARK_THEME) return stored;
-  return window.matchMedia("(prefers-color-scheme: dark)").matches
-    ? DARK_THEME
-    : LIGHT_THEME;
+  // The saved preference isn't available yet at module load — it arrives
+  // with page props once Inertia mounts. This is just the best guess to
+  // paint with in the meantime; useInitTheme reconciles it below.
+  return storedTheme() ?? systemTheme();
 };
 
 const applyTheme = (theme: Theme) => {
@@ -34,7 +57,7 @@ const useThemeStore = create<ThemeState>((set) => ({
       const next: Theme = s.theme === LIGHT_THEME ? DARK_THEME : LIGHT_THEME;
       applyTheme(next);
       if (typeof window !== "undefined") {
-        window.localStorage.setItem(THEME_STORAGE_KEY, next);
+        window.sessionStorage.setItem(THEME_STORAGE_KEY, next);
       }
       return { theme: next };
     }),
@@ -44,12 +67,17 @@ const useTheme = () => useThemeStore((s) => s.theme);
 const useToggleTheme = () => useThemeStore((s) => s.toggleTheme);
 const useIsDarkTheme = () => useThemeStore((s) => s.theme === DARK_THEME);
 
-// Reconcile the DOM with the stored/preferred theme on mount; the server
-// renders a fixed data-theme, and toggleTheme handles subsequent changes.
-const useInitTheme = () => {
+// Reconciles the DOM (and store) once the user's saved theme preference is
+// available from page props. A per-tab override already set this session by
+// toggleTheme always wins; a brand new session (new tab/window) has none, so
+// it falls back to the saved preference (system/light/dark).
+const useInitTheme = (themePreference: ThemePreference) => {
   useEffect(() => {
-    applyTheme(useThemeStore.getState().theme);
-  }, []);
+    const theme = storedTheme() ?? resolvePreference(themePreference);
+    applyTheme(theme);
+    useThemeStore.setState({ theme });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [themePreference]);
 };
 
 export {
@@ -58,4 +86,5 @@ export {
   useTheme,
   useThemeStore,
   useToggleTheme,
+  type ThemePreference,
 };

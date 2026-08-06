@@ -1,3 +1,5 @@
+import type { ThemePreference } from "@/lib/app-stores/theme-store";
+
 type AppRoutesType = {
   accountMenuRoute: string;
   budgetDashboardRoute: string;
@@ -41,6 +43,7 @@ type PageProps = {
   metadata: Metadata;
   notifications: NotificationsCollectionType;
   redirectSegments: RedirectSegmentsType;
+  themePreference: ThemePreference;
 };
 
 export type {

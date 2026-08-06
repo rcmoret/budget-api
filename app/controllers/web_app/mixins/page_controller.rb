@@ -142,6 +142,7 @@ module WebApp
           page_name:,
           prev_selected_account_path:,
           redirect_segments: route_segments,
+          theme_preference: current_user_profile.configuration(:theme_preference),
         )
       end
     end

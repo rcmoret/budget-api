@@ -13,15 +13,21 @@ import { useInitNotificationStore } from "@/lib/app-stores/notification-store";
 const ApplicationLayout = ({ children }: { children: React.ReactNode }) => {
   const { props } = usePage<{ pageData: PageProps }>();
   const { pageData } = props;
-  const { accountLinks, appRoutes, metadata, notifications, redirectSegments } =
-    pageData;
+  const {
+    accountLinks,
+    appRoutes,
+    metadata,
+    notifications,
+    redirectSegments,
+    themePreference,
+  } = pageData;
 
   useInitAppConfigStore({
     appRoutes,
     metadata,
     redirectSegments,
   });
-  useInitTheme();
+  useInitTheme(themePreference);
   initNavigationLinks(accountLinks);
   useInitNotificationStore(notifications);
 

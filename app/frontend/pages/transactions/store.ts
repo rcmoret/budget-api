@@ -10,11 +10,14 @@ import { create } from "zustand";
 
 type FeaturedAccount = Omit<FeaturedAccountType, "transactions">;
 
+type SortDirection = "asc" | "desc";
+
 type TransactionsIndexState = {
   accounts: Array<AccountProps>;
   budgetItems: Array<TransactionDetailBudgetItem>;
   showFormKey: null | string;
   showNewTransactionForm: boolean;
+  sortDirection: SortDirection;
   featuredAccount: FeaturedAccount;
   transactions: Array<AccountTransaction>;
   closeNewTransactionForm: () => void;
@@ -25,6 +28,7 @@ type TransactionsIndexState = {
   setFeaturedAccount: (ft: FeaturedAccount) => void;
   setShowFormKey: (key: string) => void;
   setTransactions: (txn: Array<AccountTransaction>) => void;
+  toggleSortDirection: () => void;
 };
 
 const emptyFeaturedAccount: FeaturedAccount = {
@@ -42,6 +46,10 @@ const useTransactionsIndexStore = create<TransactionsIndexState>((set) => ({
   featuredAccount: emptyFeaturedAccount,
   showFormKey: null,
   showNewTransactionForm: false,
+  // Transactions arrive from the server oldest-first (ascending clearance
+  // date, matching how running balances accrue) — "desc" reverses that for
+  // display so newest lands on top, which is the default view.
+  sortDirection: "desc",
   transactions: [],
   closeNewTransactionForm: () => set({ showNewTransactionForm: false }),
   // Opening the "Add Transaction" card and opening a row's edit form share the
@@ -55,6 +63,8 @@ const useTransactionsIndexStore = create<TransactionsIndexState>((set) => ({
   setBudgetItems: (budgetItems) => set({ budgetItems }),
   setFeaturedAccount: (featuredAccount) => set({ featuredAccount }),
   setTransactions: (transactions) => set({ transactions }),
+  toggleSortDirection: () =>
+    set((s) => ({ sortDirection: s.sortDirection === "asc" ? "desc" : "asc" })),
 }));
 
 const useSetShowFormKey = () => {
@@ -108,7 +118,14 @@ const initTransactionIndexStore = (
 const getBudgetItems = () => useTransactionsIndexStore((s) => s.budgetItems);
 const getFeaturedAccount = () =>
   useTransactionsIndexStore((s) => s.featuredAccount);
-const getTransactions = () => useTransactionsIndexStore((s) => s.transactions);
+// Stored ascending (server order); "desc" reverses for display without
+// mutating the stored order itself.
+const getTransactions = () => {
+  const transactions = useTransactionsIndexStore((s) => s.transactions);
+  const sortDirection = useTransactionsIndexStore((s) => s.sortDirection);
+
+  return sortDirection === "desc" ? [...transactions].reverse() : transactions;
+};
 const useShowFormKey = () => {
   const showFormKey = useTransactionsIndexStore((s) => s.showFormKey);
   const setShowFormKey = useTransactionsIndexStore((s) => s.setShowFormKey);
@@ -145,6 +162,15 @@ const useNewTransactionForm = () => {
   return { showNewTransactionForm, toggle };
 };
 
+const useTransactionSort = () => {
+  const sortDirection = useTransactionsIndexStore((s) => s.sortDirection);
+  const toggleSortDirection = useTransactionsIndexStore(
+    (s) => s.toggleSortDirection,
+  );
+
+  return { sortDirection, toggleSortDirection };
+};
+
 export {
   initTransactionIndexStore,
   getBudgetItems,
@@ -153,4 +179,6 @@ export {
   useNewTransactionForm,
   useShowFormKey,
   useSetShowFormKey,
+  useTransactionSort,
+  type SortDirection,
 };

@@ -4,7 +4,11 @@ import { AccountProps, FeaturedAccountType } from "@/types/account";
 import { BudgetMonthData } from "@/types/budget/month-data";
 import { initBudgetMonthStore } from "../budget/month-store";
 import { initNeighborLinksStore } from "../budget/neighbor-links-store";
-import { getTransactions, initTransactionIndexStore } from "./store";
+import {
+  getTransactions,
+  initTransactionIndexStore,
+  useTransactionSort,
+} from "./store";
 import { RightColumn } from "./right-column";
 import { AccountTransactionCard, InitialBlance } from "./layout/card";
 import { NewTransactionCard } from "./layout/new-transaction-card";
@@ -45,7 +49,13 @@ type TransactionsIndexProps = PageProps & {
 
 const TransactionsIndexComponent = () => {
   const transactions = getTransactions();
+  const { sortDirection } = useTransactionSort();
   useNeighborLinksKeyBoardHandlers();
+
+  // Chronologically, the initial balance precedes every transaction — so it
+  // leads the list sorted oldest-first and trails the list sorted
+  // newest-first.
+  const initialBalance = <InitialBlance />;
 
   return (
     <PageComponent
@@ -55,13 +65,14 @@ const TransactionsIndexComponent = () => {
     >
       <>
         <NewTransactionCard />
+        {sortDirection === "asc" && initialBalance}
         {transactions.map((transaction) => (
           <AccountTransactionCard
             key={transaction.key}
             transaction={transaction}
           />
         ))}
-        <InitialBlance />
+        {sortDirection === "desc" && initialBalance}
       </>
     </PageComponent>
   );
@@ -75,7 +86,7 @@ const IndexComponent = (props: TransactionsIndexProps) => {
     accounts,
     budgetItems,
     featuredAccount,
-    transactions: [...transactions].reverse(),
+    transactions,
   });
   initBudgetMonthStore({ budgetMonth });
   initNeighborLinksStore({
