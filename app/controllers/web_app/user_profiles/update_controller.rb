@@ -56,6 +56,9 @@ module WebApp
         end
       end
 
+      # This only changes what a *new* session (a new tab/window) starts out
+      # as — the frontend's own dark-mode toggle keeps working unchanged for
+      # the current session, tracked client-side rather than here.
       def update_theme_preference!
         return if theme_preference_param.blank?
         return if theme_preference_param == current_theme_preference

@@ -21,10 +21,6 @@ type TransactionFormContextType = {
   notes: JSONContent | null;
   nullifyDetailBudgetItemKey: (key: string) => void;
   processing: boolean;
-  // The file picked in this editing session, and nothing else. What's already
-  // attached to the transaction lives on the transaction itself
-  // (`receiptUrl`/`receiptFilename`/`receiptContentType`) — read it from
-  // `useTransactionContext`.
   receipt: null | File;
   removeDetail: (key: string) => void;
   setAccountKey: (val: string) => void;
@@ -42,9 +38,6 @@ type TransactionFormContextType = {
   toggleBudgetExclusion: () => void;
 };
 
-// `clearanceDate` is a calendar date, not an instant — formatting it through
-// `toISOString` would shift it by the local UTC offset. Reading the parts
-// straight off the `Date` keeps the day the user picked.
 const toDateParam = (date: Date): string => {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -83,16 +76,10 @@ const TransactionFormProvider = (props: { children: React.ReactNode }) => {
   const [budgetExclusion, toggleBudgetExclusion] = useToggle(
     transaction.isBudgetExclusion,
   );
-  // Unlike an update, a create has no server-assigned key to key off of yet —
-  // the backend expects the client to hand it one, same as it does for each
-  // new line item's `key` (see `addDetail`).
   const [newTransactionKey] = useState<string>(() => generateKeyIdentifier());
   const { transform, post, put, processing } = useForm({});
   const setAdjustments = useAdjustmentStore((s) => s.setAdjustments);
 
-  // Re-seed only when the *set* of details changes. Joining the keys keeps the
-  // dep stable across prop refreshes (e.g. a PUT response) so in-progress edits
-  // held in the store aren't wiped back to their saved values.
   const detailKeys = transaction.details
     .map(({ objectKey }) => objectKey)
     .sort()
@@ -103,32 +90,15 @@ const TransactionFormProvider = (props: { children: React.ReactNode }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [detailKeys]);
 
-  // A brand-new transaction starts with zero details, but `LineItems` only
-  // ever renders an "add" button on the last row — with no row there'd be
-  // nothing to click. Seed one blank line item so there's always a last row.
   useEffect(() => {
     if (isNew) addDetail();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Clearing a line item only blanks it on screen — a detail that was already
-  // saved still exists server-side, and Rails ignores nested records that are
-  // simply absent from the payload. So a blank *persisted* detail is submitted
-  // with `_destroy: true`, which `accepts_nested_attributes_for :details,
-  // allow_destroy: true` and the controller's permitted `_destroy` expect.
-  //
-  // Blank means no budget item *and* a zero amount. Requiring both matters:
-  // budget-exclusion transactions legitimately carry details with no budget
-  // item, and those have a non-zero amount, so they're never destroyed here.
   const persistedKeys = transaction.details.map(({ objectKey }) => objectKey);
   const isBlank = (detail: DetailAttribute) =>
     !detail.budgetItemKey && detail.amount.cents === 0;
 
-  // The backend identifies a detail by `key` (looked up via
-  // `transaction.details.by_key` to resolve its `id`) and stores `amount` as a
-  // plain integer column — neither `objectKey` nor a `{ cents, display }`
-  // object means anything to it, and `budgetCategoryName` is display-only, so
-  // it's dropped rather than sent as an unpermitted param.
   const detailPayload = (detail: DetailAttribute) => {
     const base = {
       key: detail.key,
@@ -141,10 +111,6 @@ const TransactionFormProvider = (props: { children: React.ReactNode }) => {
       : base;
   };
 
-  // `receipt` is included only when a file was actually picked. Sending it empty
-  // would reach `assign_attributes` as nil, and nil on a `has_one_attached`
-  // purges the attachment — so an untouched picker would wipe the receipt that's
-  // already there. Purging is the DELETE .../receipt route's job.
   transform(() => {
     return {
       transaction: {
@@ -169,7 +135,7 @@ const TransactionFormProvider = (props: { children: React.ReactNode }) => {
   const submit = () =>
     isNew
       ? post(`${createUrl}?${redirectParams}`, { onSuccess: toggleForm })
-      : put(updateUrl, { onSuccess: toggleForm });
+      : put(`${updateUrl}?${redirectParams}`, { onSuccess: toggleForm });
 
   const value: TransactionFormContextType = {
     accountKey,
