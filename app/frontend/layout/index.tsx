@@ -1,6 +1,9 @@
 import { LeftColumn } from "@/layout/left-column";
 import { Notifications } from "./notifications";
 import { RightColumnWrapper } from "@/components/right-column-bordered";
+import { Collapse } from "@/components/collapse";
+import { Icon } from "@/components/icon";
+import { useToggle } from "@/utils/hooks/useToogle";
 
 type LayoutProps = {
   header?: React.ReactNode;
@@ -8,6 +11,39 @@ type LayoutProps = {
   rightColumn: React.ReactNode;
   mainComponentClassNames?: Array<string>;
   mainId: string;
+  secondaryPanelLabel?: string;
+};
+
+const SecondaryPanel = (props: {
+  label: string;
+  rightColumn: React.ReactNode;
+}) => {
+  const [isOpen, toggleOpen] = useToggle(false);
+
+  if (!props.rightColumn) return null;
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={toggleOpen}
+        className="md:hidden flex items-center justify-between px-3 py-3 bg-base-200 rounded-field font-semibold text-sm"
+      >
+        <span>{props.label}</span>
+        <span
+          className={[
+            "inline-block transition-transform",
+            isOpen ? "rotate-180" : "rotate-0",
+          ].join(" ")}
+        >
+          <Icon name="caret-down" />
+        </span>
+      </button>
+      <Collapse open={isOpen} className="md:grid-rows-[minmax(0,1fr)]">
+        <RightColumnWrapper>{props.rightColumn}</RightColumnWrapper>
+      </Collapse>
+    </>
+  );
 };
 
 const HeaderComponent = (props: {
@@ -31,6 +67,7 @@ const PageComponent = (props: LayoutProps) => {
     mainComponentClassNames = [],
     mainId,
     rightColumn,
+    secondaryPanelLabel = "Details & filters",
   } = props;
   const mainComponentClassName = [
     "grid",
@@ -45,11 +82,12 @@ const PageComponent = (props: LayoutProps) => {
   const pageHeaderClassName = [
     "grid-page-header",
     "grid",
+    "grid-cols-[1fr_auto]",
+    "md:grid-cols-subgrid",
     "sticky",
     "top-0",
     "z-10",
     "bg-base-100",
-    "grid-cols-subgrid",
     "shadow-lg",
     "col-span-full",
     "items-center",
@@ -69,7 +107,7 @@ const PageComponent = (props: LayoutProps) => {
           </main>
           <aside className="flex flex-col gap-2 py-4 overflow-y-scroll">
             <Notifications />
-            <RightColumnWrapper>{rightColumn}</RightColumnWrapper>
+            <SecondaryPanel label={secondaryPanelLabel} rightColumn={rightColumn} />
           </aside>
         </div>
       </div>

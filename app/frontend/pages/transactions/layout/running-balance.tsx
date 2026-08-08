@@ -5,7 +5,7 @@ const RunningBalance = () => {
   const { transaction } = useTransactionContext()
 
   return (
-    <div className="text-right">
+    <div className="text-right col-span-2 md:col-span-1">
       <AmountSpan
         amount={transaction.runningBalance.cents}
         only="negative"

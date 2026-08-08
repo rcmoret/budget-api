@@ -13,7 +13,7 @@ const TransactionAmounts = () => {
         ));
 
   return (
-    <Stack textAlign="right" items={items}>
+    <Stack textAlign="right" items={items} className="min-w-0">
       <AmountSpan amount={amount.cents} colorize="normal" />
     </Stack>
   );

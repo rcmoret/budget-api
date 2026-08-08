@@ -9,7 +9,7 @@ const TransactionDetails = () => {
   const description = transaction.description ?? "-"
 
   return (
-    <Stack items={details}>
+    <Stack items={details} className="min-w-0">
       {description}
     </Stack>
   )

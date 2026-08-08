@@ -252,11 +252,11 @@ const SupplementalFormDetails = () => {
 
   return (
     <>
-      <div className="grid grid-rows-subgrid grid-cols-subgrid col-span-2 items-start">
+      <div className="grid grid-cols-1 gap-2 col-span-full md:col-span-2 md:grid-rows-subgrid md:grid-cols-subgrid md:gap-0 items-start">
         {isNew ? null : <AccountSelect />}
         <Notes />
       </div>
-      <div className="grid grid-rows-subgrid grid-cols-subgrid col-span-2 items-start">
+      <div className="grid grid-cols-1 gap-2 col-span-full md:col-span-2 md:grid-rows-subgrid md:grid-cols-subgrid md:gap-0 items-start">
         <ReceiptUpload />
         {isCashFlow ? <CheckNumber /> : <BudgetExclusion />}
       </div>

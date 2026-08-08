@@ -1,4 +1,5 @@
 import { Link } from "@inertiajs/react";
+import { Icon } from "@/components/icon";
 
 type NeighborLinkProps = {
   children: React.ReactNode;
@@ -91,23 +92,57 @@ const PreviousNeighborLink = (props: NeighborLinkProps) => {
   );
 };
 
+const CompactNeighborLink = (props: {
+  href: string;
+  title: string;
+  iconName: "chevron-left" | "chevron-right";
+  id: string;
+}) => {
+  return (
+    <Link
+      id={props.id}
+      href={props.href}
+      title={props.title}
+      className="w-[30px] h-[30px] rounded-full bg-base-200 text-info grid place-items-center shrink-0 text-sm"
+    >
+      <Icon name={props.iconName} />
+    </Link>
+  );
+};
+
 const NeighborLinks = (props: NeighborLinksProps) => {
   return (
-    <div className="grid grid-cols-[4fr_2fr_4fr] px-2">
-      <PreviousNeighborLink
-        href={props.previousMonth.href}
-        title={props.previousMonth.label}
-      >
-        {props.previousMonth.label}
-      </PreviousNeighborLink>
-      <div></div>
-      <NextNeighborLink
-        href={props.nextMonth.href}
-        title={props.nextMonth.label}
-      >
-        {props.nextMonth.label}
-      </NextNeighborLink>
-    </div>
+    <>
+      <div className="hidden md:grid grid-cols-[4fr_2fr_4fr] px-2">
+        <PreviousNeighborLink
+          href={props.previousMonth.href}
+          title={props.previousMonth.label}
+        >
+          {props.previousMonth.label}
+        </PreviousNeighborLink>
+        <div></div>
+        <NextNeighborLink
+          href={props.nextMonth.href}
+          title={props.nextMonth.label}
+        >
+          {props.nextMonth.label}
+        </NextNeighborLink>
+      </div>
+      <div className="flex md:hidden items-center gap-1">
+        <CompactNeighborLink
+          id="neighbor-link-prev"
+          href={props.previousMonth.href}
+          title={props.previousMonth.label}
+          iconName="chevron-left"
+        />
+        <CompactNeighborLink
+          id="neighbor-link-next"
+          href={props.nextMonth.href}
+          title={props.nextMonth.label}
+          iconName="chevron-right"
+        />
+      </div>
+    </>
   );
 };
 

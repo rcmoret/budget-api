@@ -5,10 +5,13 @@ const Stack = (props: {
   children: React.ReactNode;
   items: Array<React.ReactNode>;
   textAlign?: "left" | "right";
+  className?: string;
 }) => {
-  const { textAlign = "left" } = props;
+  const { textAlign = "left", className: extraClassName } = props;
 
-  const className = `text-${textAlign} flex flex-col`;
+  const className = [`text-${textAlign}`, "flex", "flex-col", extraClassName]
+    .filter(Boolean)
+    .join(" ");
 
   return (
     <div className={className}>

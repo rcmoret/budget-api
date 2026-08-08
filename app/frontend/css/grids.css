@@ -4,13 +4,18 @@
 
 @utility grid-page-split {
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
+  padding-inline: var(--page-split-col-spacing);
+
+  & > .grid-page-header {
+    margin-inline: calc(-1 * var(--page-split-col-spacing));
+    padding-inline: var(--page-split-col-spacing);
+  }
 
   @media (width >= theme(--breakpoint-md)) {
     display: grid;
     grid-template-columns: 3fr 2fr;
     grid-column-gap: var(--page-split-col-spacing);
-    padding-inline: var(--page-split-col-spacing);
     align-content: start;
     height: 100vh;
     min-height: 0;
@@ -20,8 +25,6 @@
     }
     & > .grid-page-header {
       grid-column: 1 / -1;
-      margin-inline: calc(-1 * var(--page-split-col-spacing));
-      padding-inline: var(--page-split-col-spacing);
     }
   }
 }
@@ -44,31 +47,56 @@
   }
 
   & > .card {
-    grid-template-columns: 18ch 1fr auto auto;
-    gap: calc(var(--spacing) * 4);
-    column-gap: calc(var(--spacing) * 6);
+    grid-template-columns: 1fr 1fr;
+    gap: calc(var(--spacing) * 2);
+    column-gap: calc(var(--spacing) * 4);
+
+    @media (width >= theme(--breakpoint-md)) {
+      grid-template-columns: 18ch 1fr auto auto;
+      gap: calc(var(--spacing) * 4);
+      column-gap: calc(var(--spacing) * 6);
+    }
   }
   & > .form-card {
     gap: calc(var(--spacing) * 2);
-    grid-template-columns: 1fr 1fr minmax(2ch, auto);
-    grid-column-gap: var(--page-split-col-spacing);
+    grid-template-columns: 1fr;
+
+    @media (width >= theme(--breakpoint-md)) {
+      grid-template-columns: 1fr 1fr minmax(2ch, auto);
+      grid-column-gap: var(--page-split-col-spacing);
+    }
 
     & * > .description {
-      grid-template-columns: 18ch 1fr;
-      grid-column-gap: var(--page-split-col-spacing);
+      grid-template-columns: 1fr;
+      row-gap: 0.5rem;
+
+      @media (width >= theme(--breakpoint-md)) {
+        grid-template-columns: 18ch 1fr;
+        grid-column-gap: var(--page-split-col-spacing);
+        row-gap: 0;
+      }
     }
 
     & * > .line-items {
       display: grid;
       grid-column: 1 / -1;
-      grid-template-columns: subgrid;
+
+      @media (width >= theme(--breakpoint-md)) {
+        grid-template-columns: subgrid;
+      }
     }
 
     & * > .fields {
       display: grid;
-      grid-column: 1 / -2;
-      grid-template-columns: 3fr 2fr;
-      grid-column-gap: var(--page-split-col-spacing);
+      grid-template-columns: 1fr;
+      row-gap: 0.25rem;
+
+      @media (width >= theme(--breakpoint-md)) {
+        grid-column: 1 / -2;
+        grid-template-columns: 3fr 2fr;
+        grid-column-gap: var(--page-split-col-spacing);
+        row-gap: 0;
+      }
     }
   }
 }

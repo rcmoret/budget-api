@@ -29,6 +29,7 @@ const CategoryIndex = () => {
       mainId="manage-budget-categories"
       header={<Header />}
       rightColumn={<RightColumn />}
+      secondaryPanelLabel="Filters & archived"
     >
       <div id="category-list" className="flex flex-col gap-2">
         {showNewCategoryForm && <NewCategoryForm />}

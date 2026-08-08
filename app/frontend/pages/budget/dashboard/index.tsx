@@ -37,6 +37,7 @@ const DashboardComponent = () => {
       mainId="budget-dashboard"
       mainComponentClassNames={["w-full"]}
       rightColumn={<RightColumn />}
+      secondaryPanelLabel="Month details & filters"
     >
       <ItemsContainer />
     </PageComponent>

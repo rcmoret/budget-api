@@ -62,6 +62,7 @@ const TransactionsIndexComponent = () => {
       mainId="account-transaction-container"
       rightColumn={<RightColumn />}
       header={<TransactionIndexHeader />}
+      secondaryPanelLabel="Sort & filters"
     >
       <>
         <NewTransactionCard />
