@@ -44,5 +44,18 @@ module Transaction
     def budget_item_key=(itemkey)
       self.budget_item_id = Budget::Item.by_key(itemkey)&.id
     end
+
+    def <=>(other)
+      sort_key <=> other.sort_key
+    end
+
+    protected
+
+    def sort_key
+      [
+        amount.postive? ? -1 : 1,
+        Math.abs(amount)
+      ]
+    end
   end
 end

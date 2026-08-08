@@ -17,7 +17,7 @@ module WebApp
         attribute(:is_budget_exclusion, &:budget_exclusion?)
         one :running_balance,
           resource: WebApp::Serializers::MonetaryAmountSerializer
-        many :details, resource: DetailSerializer
+        many :details, source: { details.to_a.sort }, resource: DetailSerializer
         attribute :iso_clearance_date do |entry|
           if entry.clearance_date.present?
             entry.clearance_date.strftime("%FT%T")

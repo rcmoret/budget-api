@@ -19,7 +19,13 @@
 
   @media (width >= theme(--breakpoint-md)) {
     display: grid;
-    grid-template-columns: 3fr 2fr;
+    /* minmax(0, Nfr), not a bare Nfr: a bare fr track still respects its
+       content's min-content width, so a wide aside (filter buttons, the
+       sort row) refuses to shrink and steals space from main instead of
+       splitting 3:2. minmax(0, ...) lets the ratio hold regardless of
+       content — the min-width: 0 below then handles overflow *within*
+       each track once it's sized. */
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
     grid-column-gap: var(--page-split-col-spacing);
     align-content: start;
     height: 100vh;

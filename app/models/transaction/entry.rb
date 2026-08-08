@@ -83,7 +83,32 @@ module Transaction
       debit_transfer.present?
     end
 
+    def pending? = clearance_date.nil?
+    def cleared? = !pending?
+
+    def <=>(other)
+      if (cleared? && other.cleared?) || (pending? && other.pending?)
+        other.sort_matrix.values_at(:clearance_date, :updated_at) <=>
+          sort_matrix.values_at(:clearance_date, :updated_at)
+      elsif cleared? # other is pending
+        other.sort_matrix[:future]
+      else
+        sort_matrix[:future]
+      end
+    end
+
+    protected
+
+    def sort_matrix
+      {
+        clearance_date:,
+        updated_at:,
+        future: clearance_date&.future? ? -1 : 1
+      }
+    end
+
     private
+
 
     def nullify_blank_notes!
       self.notes = nil if notes.present? && Tiptap.blank?(notes)
