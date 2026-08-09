@@ -14,8 +14,6 @@ module API
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.0
 
-    config.middleware.use ActionDispatch::Cookies
-    config.middleware.use ActionDispatch::Session::CookieStore
     config.middleware.use JSONParamsTransformer
     config.middleware.use CamelCaseParamsTransformer
     # Configuration for the application, engines, and railties goes here.
