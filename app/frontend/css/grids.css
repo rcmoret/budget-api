@@ -12,6 +12,11 @@
     padding-inline: var(--page-split-col-spacing);
   }
 
+  & > * {
+    min-width: 0; /* prevents flex/grid items from overflowing their track */
+    overflow-x: hidden;
+  }
+
   @media (width >= theme(--breakpoint-md)) {
     display: grid;
     grid-template-columns: 3fr 2fr;
@@ -19,10 +24,6 @@
     align-content: start;
     height: 100vh;
     min-height: 0;
-    & > * {
-      min-width: 0; /* prevents grid items from overflowing their track */
-      overflow-x: hidden;
-    }
     & > .grid-page-header {
       grid-column: 1 / -1;
     }

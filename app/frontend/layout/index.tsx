@@ -27,7 +27,7 @@ const SecondaryPanel = (props: {
       <button
         type="button"
         onClick={toggleOpen}
-        className="md:hidden flex items-center justify-between px-3 py-3 bg-base-200 rounded-field font-semibold text-sm"
+        className="md:hidden sticky bottom-0 z-10 flex items-center justify-between px-3 py-3 bg-base-200 rounded-field font-semibold text-sm"
       >
         <span>{props.label}</span>
         <span
@@ -99,13 +99,13 @@ const PageComponent = (props: LayoutProps) => {
   return (
     <div className="flex flex-row items-start">
       <LeftColumn />
-      <div className="flex-1 flex flex-col min-h-screen">
+      <div className="flex-1 flex flex-col min-h-screen min-w-0">
         <div className="grid-page-split">
           {header && <header className={pageHeaderClassName}>{header}</header>}
           <main className={mainComponentClassName} id={mainId}>
             {children}
           </main>
-          <aside className="flex flex-col gap-2 py-4 overflow-y-scroll">
+          <aside className="flex flex-col gap-2 py-4 md:overflow-y-scroll">
             <Notifications />
             <SecondaryPanel label={secondaryPanelLabel} rightColumn={rightColumn} />
           </aside>
