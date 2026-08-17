@@ -38,7 +38,11 @@ module WebApp
         end
 
         def set_effective_at!
-          change_set.update(effective_at: @effective_timestamp)
+          change_set.update(effective_at: @effective_timestamp, notes: notes_param)
+        end
+
+        def notes_param
+          params.permit(notes: {})[:notes]
         end
 
         def inertia_errors

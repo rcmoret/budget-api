@@ -1,3 +1,4 @@
+import { Link } from "@inertiajs/react";
 import { HeaderComponent, PageComponent } from "@frontend/layout";
 import { RightColumn } from "./right-column";
 import { BudgetMonthIndex } from "@/types/budget";
@@ -11,6 +12,7 @@ import { useNeighborLinksKeyBoardHandlers } from "@/utils/hooks/neighbors-keyboa
 import { getBudgetMonth } from "@/pages/budget/month-store";
 import { getNeighborLinks } from "@/pages/budget/neighbor-links-store";
 import { NeighborLinks } from "@/components/neighbor-links";
+import { Pencil } from "@/components/icons/pencil";
 
 const BudgetDashboardNeighborLinks = () => {
   const { previous, next } = getNeighborLinks();
@@ -18,12 +20,36 @@ const BudgetDashboardNeighborLinks = () => {
   return <NeighborLinks nextMonth={next} previousMonth={previous} />;
 };
 
+const EditMonthLink = () => {
+  const { editRoute, monthName, year } = getBudgetMonth();
+
+  if (!editRoute) return null;
+
+  return (
+    <Link
+      href={editRoute}
+      title={`Edit ${monthName} ${year}`}
+      aria-label={`Edit ${monthName} ${year}`}
+      className="grid place-items-center h-8 w-8 rounded-full bg-base-200 text-base-content hover:bg-base-300"
+    >
+      <Pencil />
+    </Link>
+  );
+};
+
 const Header = () => {
   const budgetMonth = getBudgetMonth();
 
   return (
-    <HeaderComponent rightColumnComponent={<BudgetDashboardNeighborLinks />}>
-      {budgetMonth.monthName} {budgetMonth.year} Budget
+    <HeaderComponent
+      rightColumnComponent={
+        <BudgetDashboardNeighborLinks />
+      }
+    >
+      <div className="flex justify-between">
+        {budgetMonth.monthName} {budgetMonth.year} Budget
+        <EditMonthLink />
+      </div>
     </HeaderComponent>
   );
 };

@@ -21,7 +21,25 @@ const put = async (url: string, requestProps: putProps) => {
   });
 };
 
+type postProps = {
+  body: any;
+};
+
+const post = async (url: string, requestProps: postProps) => {
+  const csrfToken = getCSRFToken();
+
+  return await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...(csrfToken ? { "X-CSRF-Token": csrfToken } : {}),
+    },
+    body: JSON.stringify(requestProps.body),
+  });
+};
+
 const appClient = {
+  post,
   put,
 };
 

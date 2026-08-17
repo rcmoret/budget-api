@@ -9,6 +9,7 @@ type BudgetMonthData = {
   isCurrent: boolean;
   isSetUp: boolean;
   setupRoute: string;
+  editRoute: string;
   nextMonth: {
     month: number;
     monthName: string;

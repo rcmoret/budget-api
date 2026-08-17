@@ -136,6 +136,7 @@ RSpec.describe "WebApp::Budget::DashboardController", :inertia do
         isCurrent: true,
         isSetUp: true,
         setupRoute: "",
+        editRoute: "",
         nextMonth: {
           monthName: "August 2026",
           month: 8,
@@ -146,6 +147,14 @@ RSpec.describe "WebApp::Budget::DashboardController", :inertia do
           monthName: "June 2026", month: 6, year: 2026, href: "/budget/6/2026",
         }
       )
+    end
+
+    context "when requested for a specific month/year" do
+      let(:path) { "/budget/#{interval.month}/#{interval.year}" }
+
+      it "includes the edit route for that month" do
+        expect(budget_month[:editRoute]).to eq "/budget/7/2026/edit"
+      end
     end
   end
 
