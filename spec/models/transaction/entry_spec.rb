@@ -5,7 +5,7 @@ RSpec.describe Transaction::Entry do
   it { is_expected.to have_many(:details) }
   it { is_expected.to accept_nested_attributes_for(:details) }
 
-  fdescribe "#<=>" do
+  describe "#<=>" do
     context "when both entries are cleared, but on different days" do
       let(:yesterday) { 1.day.ago.to_date }
 

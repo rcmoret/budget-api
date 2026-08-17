@@ -15,7 +15,7 @@ module WebApp
         def transactions
           running_balance = balance_prior_to
 
-          transactions_scope.map do |entry|
+          transactions_scope.sort.reverse.map do |entry|
             entry_presenter = EntryPresenter.new(entry, running_balance)
             running_balance = entry_presenter.running_balance
             entry_presenter

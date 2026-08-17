@@ -53,8 +53,8 @@ module Transaction
 
     def sort_key
       [
-        amount.postive? ? -1 : 1,
-        Math.abs(amount)
+        amount.positive? ? -1 : 1,
+        amount.abs
       ]
     end
   end
