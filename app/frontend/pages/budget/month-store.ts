@@ -12,6 +12,8 @@ const emptyBudgetMonth: BudgetMonthData = {
   firstDate: "",
   lastDate: "",
   isSetUp: true,
+  setupRoute: "",
+  editRoute: "",
   previousMonth: {
     month: 0,
     year: 0,

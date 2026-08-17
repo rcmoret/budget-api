@@ -23,6 +23,10 @@ module WebApp
           month, year = params.values_at(:month, :year)
           budget_month.setup_route(month:, year:)
         end
+        attribute(:edit_route) do |budget_month|
+          month, year = params.values_at(:month, :year)
+          budget_month.edit_route(month:, year:)
+        end
 
         one :next_month,
           resource: WebApp::Serializers::Budget::NeighborSerializer

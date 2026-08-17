@@ -39,6 +39,18 @@ module WebApp
               year:,
             )
         end
+
+        def edit_route(month:, year:)
+          return "" if closed_out?
+
+          Rails
+            .application
+            .routes.url_helpers
+            .budget_edit_path(
+              month:,
+              year:,
+            )
+        end
       end
     end
   end
