@@ -2,7 +2,6 @@
 import { JSONContent } from "@tiptap/react";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useTransactionContext } from "../context-provider";
-import { useToggle } from "@/utils/hooks/useToogle";
 import { useForm } from "@inertiajs/react";
 import { DetailAttribute, useTransactionFormDetails } from "./details-context";
 import { useAdjustmentStore } from "@/lib/adjustment-amount-store";
@@ -56,6 +55,7 @@ const TransactionFormProvider = (props: { children: React.ReactNode }) => {
     details: detailsAttributes,
     nullifyDetailBudgetItemKey,
     removeDetail,
+    resetDetails,
     setDetailBudgetItemKey,
   } = useTransactionFormDetails();
   const initialClearanceDate = transaction.isoClearanceDate
@@ -73,10 +73,13 @@ const TransactionFormProvider = (props: { children: React.ReactNode }) => {
   );
   const [receipt, setReceipt] = useState<null | File>(null);
   const [accountKey, setAccountKey] = useState<string>(transaction.accountKey);
-  const [budgetExclusion, toggleBudgetExclusion] = useToggle(
+  const [budgetExclusion, setBudgetExclusion] = useState<boolean>(
     transaction.isBudgetExclusion,
   );
-  const [newTransactionKey] = useState<string>(() => generateKeyIdentifier());
+  const toggleBudgetExclusion = () => setBudgetExclusion((prev) => !prev);
+  const [newTransactionKey, setNewTransactionKey] = useState<string>(() =>
+    generateKeyIdentifier(),
+  );
   const { transform, post, put, processing } = useForm({});
   const setAdjustments = useAdjustmentStore((s) => s.setAdjustments);
 
@@ -132,9 +135,24 @@ const TransactionFormProvider = (props: { children: React.ReactNode }) => {
     `/account/${transaction.accountSlug}/transaction/${transaction.key}`;
   const redirectParams = getRedirectQueryParams();
 
+  // Transactions tend to get entered in batches, so a successful create
+  // clears the form for the next one instead of collapsing it — only an
+  // edit (or manually closing) collapses the card.
+  const resetForm = () => {
+    setDescription("");
+    setCheckNumber("");
+    setNotes(null);
+    setClearanceDate(null);
+    setReceipt(null);
+    setBudgetExclusion(false);
+    setNewTransactionKey(generateKeyIdentifier());
+    resetDetails();
+    addDetail();
+  };
+
   const submit = () =>
     isNew
-      ? post(`${createUrl}?${redirectParams}`, { onSuccess: toggleForm })
+      ? post(`${createUrl}?${redirectParams}`, { onSuccess: resetForm })
       : put(`${updateUrl}?${redirectParams}`, { onSuccess: toggleForm });
 
   const value: TransactionFormContextType = {

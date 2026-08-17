@@ -33,6 +33,7 @@ const useTransactionFormDetails = () => {
   const adjustments = useAdjustmentStore((s) => s.adjustments);
   const addItem = useAdjustmentStore((s) => s.addItem);
   const removeItem = useAdjustmentStore((s) => s.removeItem);
+  const resetItems = useAdjustmentStore((s) => s.resetItems);
 
   const [details, setDetails] = useState<DetailTuple[]>(
     transaction.details.map(toDetailTuple),
@@ -50,6 +51,10 @@ const useTransactionFormDetails = () => {
   const removeDetail = useCallback((key: string) => {
     removeItem(key);
     setDetails((prev) => prev.filter(({ objectKey }) => objectKey !== key));
+  }, []);
+  const resetDetails = useCallback(() => {
+    resetItems();
+    setDetails([]);
   }, []);
   const nullifyDetailBudgetItemKey = useCallback((key: string) => {
     setDetails((prev) => {
@@ -96,6 +101,7 @@ const useTransactionFormDetails = () => {
     details: detailsWithAmounts,
     nullifyDetailBudgetItemKey,
     removeDetail,
+    resetDetails,
     setDetailBudgetItemKey,
   };
 };
