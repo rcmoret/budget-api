@@ -4,31 +4,35 @@ module WebApp
   module Budget
     class EditController < BaseController
       include Mixins::HasBudgetInterval
+      include Mixins::PageController
 
-      def call
-        # TODO: Revisit serializer implementation. props were built from the
-        # deprecated WebApp::Budget::Interval::DraftSerializer, which is pending
-        # reimplementation with Alba. Rendering empty props until then.
-        render inertia: "budget/dashboard/index", props: {}
+      before_action lambda {
+        redirect_to budget_dashboard_path,
+          alert: "Cannot edit a finalized budget month"
+      },
+        if: -> { interval.closed_out? }
+
+      define_route_segment :budget
+      use_template "budget/edit"
+      serialize_with Serializers::DashboardSerializer
+
+      subject do
+        Presenters::DashboardPresenter.new(interval)
       end
 
       private
 
-      # Empty for now — the draft serializer that populated this is deprecated
-      # (see #call). Kept because HasBudgetInterval#redirect_if_blank! renders
-      # error_component with page_props, which reads props.
-      def props = {}
-
-      def metadata
+      def serializer_context
         {
-          namespace: "budget",
-          page: {
-            name: "budget/dashboard/index",
-          },
+          budget_month: Presenters::BudgetMonthPresenter.new(interval),
+          month:,
+          year:,
         }
       end
 
-      def error_component = "budget/dashboard/index"
+      def route_segments
+        super(month, year)
+      end
     end
   end
 end

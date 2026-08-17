@@ -12,6 +12,7 @@ const emptyBudgetMonth: BudgetMonthData = {
   firstDate: "",
   lastDate: "",
   isSetUp: true,
+  editRoute: "",
   rolloverRoute: "",
   setupRoute: "",
   previousMonth: {

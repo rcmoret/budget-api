@@ -10,6 +10,7 @@ type BudgetMonthData = {
   isSetUp: boolean;
   rolloverRoute: string;
   setupRoute: string;
+  editRoute: string;
   nextMonth: {
     month: number;
     monthName: string;

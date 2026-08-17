@@ -1,7 +1,10 @@
+ROUTES_MONTH_YEAR_PARAM = "/:month/:year"
+ROUTES_MONTH_YEAR_OPTIONAL_PARAM = "(#{ROUTES_MONTH_YEAR_PARAM})"
+
 namespace :budget do
   get "/",
     to: WebApp::Budget::DashboardController.action(:call)
-  get "(/:month/:year)",
+  get ROUTES_MONTH_YEAR_OPTIONAL_PARAM,
     to: WebApp::Budget::DashboardController.action(:call),
     as: :dashboard
 
@@ -16,22 +19,26 @@ namespace :budget do
       to: WebApp::Budget::Categories::CreateController.action(:call)
   end
 
-  post "/events/(:month)/(:year)",
+  post "/events#{ROUTES_MONTH_YEAR_OPTIONAL_PARAM}",
     to: WebApp::Budget::Changes::CreateController.action(:call),
     as: :create_events
 
-  scope "/:month/:year" do
+  scope "/edit/#{ROUTES_MONTH_YEAR_OPTIONAL_PARAM}" do
+    get "/",
+      to: WebApp::Budget::EditController.action(:call),
+      as: :edit
+    post "/preview",
+      to: WebApp::Budget::Edit::PreviewController.action(:call),
+      as: :edit_preview
+  end
+
+  scope ROUTES_MONTH_YEAR_PARAM do
     put "/",
       to: WebApp::Budget::UpdateController.action(:call)
-
-    # edit is future state
-    # post "/", to: "edit#call"
-    # get "/edit", to: "edit#call"
 
     get "/items/:category_slug",
       to: WebApp::Budget::Items::IndexController.action(:call),
       as: :items
-
 
     scope "/set-up" do
       get "(/:slug)",
