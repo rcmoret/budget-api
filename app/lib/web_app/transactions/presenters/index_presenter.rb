@@ -15,7 +15,10 @@ module WebApp
         def transactions
           running_balance = balance_prior_to
 
-          transactions_scope.map do |entry|
+          # Entry#<=> orders newest-first; reverse it here so the running
+          # balance accrues oldest-to-newest, matching how the frontend
+          # expects transactions to arrive (see store.ts).
+          transactions_scope.sort.reverse.map do |entry|
             entry_presenter = EntryPresenter.new(entry, running_balance)
             running_balance = entry_presenter.running_balance
             entry_presenter

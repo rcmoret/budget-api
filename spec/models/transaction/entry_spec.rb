@@ -5,6 +5,174 @@ RSpec.describe Transaction::Entry do
   it { is_expected.to have_many(:details) }
   it { is_expected.to accept_nested_attributes_for(:details) }
 
+  describe "#<=>" do
+    context "when both entries are cleared, but on different days" do
+      let(:yesterday) { 1.day.ago.to_date }
+
+      let(:yesterday_transaction) do
+        build(
+          :transaction_entry,
+          key: "aaabbbcccddd",
+          clearance_date: yesterday
+        )
+      end
+      let(:last_week_transaction) do
+        build(
+          :transaction_entry,
+          key: "111222333444",
+          clearance_date: 7.days.ago
+        )
+      end
+
+      it "sorts on clearance date: most recent first" do
+        sorted = [ last_week_transaction, yesterday_transaction ].sort
+        expect(sorted).to eq [ yesterday_transaction, last_week_transaction ]
+      end
+    end
+
+    context "when both entries are cleared on the same day" do
+      let(:yesterday) { 1.day.ago.to_date }
+
+      let(:transaction_1) do
+        build(
+          :transaction_entry,
+          key: "aaabbbcccddd",
+          updated_at: Time.current,
+          clearance_date: yesterday
+        )
+      end
+      let(:transaction_2) do
+        build(
+          :transaction_entry,
+          key: "111222333444",
+          updated_at: 1.hour.ago,
+          clearance_date: yesterday
+        )
+      end
+
+      it "sorts by updated_at: most recent first" do
+        sorted = [ transaction_2, transaction_1 ].sort
+        expect(sorted).to eq [ transaction_1, transaction_2 ]
+      end
+    end
+
+    context "when both are pending" do
+      let(:transaction_1) do
+        build(
+          :transaction_entry,
+          key: "aaabbbcccddd",
+          updated_at: Time.current,
+          clearance_date: nil
+        )
+      end
+      let(:transaction_2) do
+        build(
+          :transaction_entry,
+          key: "111222333444",
+          updated_at: 1.hour.ago,
+          clearance_date: nil
+        )
+      end
+
+      it "sorts by updated_at: most recent first" do
+        sorted = [ transaction_2, transaction_1 ].sort
+        expect(sorted).to eq [ transaction_1, transaction_2 ]
+      end
+    end
+
+    context "when the first is cleared and the other is pending" do
+      context "when the cleared transaction is in the future" do
+        let(:transaction_1) do
+          build(
+            :transaction_entry,
+            key: "aaabbbcccddd",
+            clearance_date: 1.day.from_now
+          )
+        end
+        let(:transaction_2) do
+          build(
+            :transaction_entry,
+            key: "111222333444",
+            clearance_date: nil
+          )
+        end
+
+        it "sorts future clearance_date before pending" do
+          sorted = [ transaction_2, transaction_1 ].sort
+          expect(sorted).to eq [ transaction_1, transaction_2 ]
+        end
+      end
+
+      context "when the cleared transaction is in the past" do
+        let(:transaction_1) do
+          build(
+            :transaction_entry,
+            key: "aaabbbcccddd",
+            clearance_date: 1.month.ago
+          )
+        end
+        let(:transaction_2) do
+          build(
+            :transaction_entry,
+            key: "111222333444",
+            clearance_date: nil
+          )
+        end
+
+        it "sorts pending before past" do
+          sorted = [ transaction_1, transaction_2 ].sort
+          expect(sorted).to eq [ transaction_2, transaction_1 ]
+        end
+      end
+    end
+
+    context "when the first is pending and the other is cleared" do
+      context "when the cleared transaction is in the future" do
+        let(:transaction_1) do
+          build(
+            :transaction_entry,
+            key: "aaabbbcccddd",
+            clearance_date: nil
+          )
+        end
+        let(:transaction_2) do
+          build(
+            :transaction_entry,
+            key: "111222333444",
+            clearance_date: 1.day.from_now
+          )
+        end
+
+        it "sorts future clearance_date before pending" do
+          sorted = [ transaction_1, transaction_2 ].sort
+          expect(sorted).to eq [ transaction_2, transaction_1 ]
+        end
+      end
+
+      context "when the cleared transaction is in the past" do
+        let(:transaction_1) do
+          build(
+            :transaction_entry,
+            key: "aaabbbcccddd",
+            clearance_date: nil
+          )
+        end
+        let(:transaction_2) do
+          build(
+            :transaction_entry,
+            key: "111222333444",
+            clearance_date: 1.month.ago
+          )
+        end
+
+        it "sorts pending before past" do
+          sorted = [ transaction_1, transaction_2 ].sort
+          expect(sorted).to eq [ transaction_2, transaction_1 ]
+        end
+      end
+    end
+  end
+
   describe ".between" do
     before do
       travel_to(Date.new(2016, 3, 14)) do

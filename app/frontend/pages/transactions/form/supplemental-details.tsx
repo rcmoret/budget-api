@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { Collapse } from "@/components/collapse";
 import { Icon } from "@/components/icon";
 import { IconButton } from "@/components/cta";
 import { RichTextEditor } from "@/components/rich-text-editor";
 import { ThemedSelect } from "@/components/themed-select";
 import { getAccountLinks } from "@/layout/account-navigation-store";
+import { useToggle } from "@/utils/hooks/useToogle";
 import { useTransactionContext } from "../context-provider";
 import { getFeaturedAccount } from "../store";
 import { useTransactionFormContent } from "./context-provider";
@@ -243,23 +245,45 @@ const ReceiptUpload = () => {
 // so they have to stay direct children of the <form> for its row gap to space
 // them apart. Boxing them up puts both of them in the *one* row the wrapper
 // occupies — which is what `grid-rows-subgrid` was stacking them into.
+const SupplementalDetailsToggle = (props: {
+  expanded: boolean;
+  toggle: () => void;
+}) => {
+  const { expanded, toggle } = props;
+
+  return (
+    <button
+      type="button"
+      onClick={toggle}
+      className="col-span-full flex items-center gap-1 text-xs text-secondary justify-self-start"
+    >
+      <Icon name={expanded ? "caret-down" : "caret-right"} />
+      {expanded ? "Hide details" : "More details"}
+    </button>
+  );
+};
+
 const SupplementalFormDetails = () => {
   const { isCashFlow } = getFeaturedAccount();
   // A new transaction is a nested resource under the account page it's
   // created from — its account is implied, not a choice, so there's nothing
   // to select.
   const { isNew } = useTransactionContext();
+  const [expanded, toggleExpanded] = useToggle(false);
 
   return (
     <>
-      <div className="grid grid-cols-1 gap-2 col-span-full md:col-span-2 md:grid-rows-subgrid md:grid-cols-subgrid md:gap-0 items-start">
-        {isNew ? null : <AccountSelect />}
-        <Notes />
-      </div>
-      <div className="grid grid-cols-1 gap-2 col-span-full md:col-span-2 md:grid-rows-subgrid md:grid-cols-subgrid md:gap-0 items-start">
-        <ReceiptUpload />
-        {isCashFlow ? <CheckNumber /> : <BudgetExclusion />}
-      </div>
+      <SupplementalDetailsToggle expanded={expanded} toggle={toggleExpanded} />
+      <Collapse open={expanded} subgrid fade innerClassName="gap-y-4">
+        <div className="grid grid-cols-1 gap-2 col-span-full md:col-span-2 md:grid-rows-subgrid md:grid-cols-subgrid md:gap-0 items-start">
+          {isNew ? null : <AccountSelect />}
+          <Notes />
+        </div>
+        <div className="grid grid-cols-1 gap-2 col-span-full md:col-span-2 md:grid-rows-subgrid md:grid-cols-subgrid md:gap-0 items-start">
+          <ReceiptUpload />
+          {isCashFlow ? <CheckNumber /> : <BudgetExclusion />}
+        </div>
+      </Collapse>
     </>
   );
 };

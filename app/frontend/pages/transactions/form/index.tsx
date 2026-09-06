@@ -79,9 +79,11 @@ const FormComponent = () => {
 
 const TransactionTotal = () => {
   const { newTotal } = useAdjustmentsTotals();
-  const { transaction } = useTransactionContext();
+  const { transaction, isNew } = useTransactionContext();
 
-  if (transaction.amount.cents === newTotal) {
+  // A new transaction has no prior amount to diff against — the strikethrough
+  // comparison only makes sense once editing an existing one.
+  if (isNew || transaction.amount.cents === newTotal) {
     return (
       <div>
         <AmountSpan amount={newTotal} />
