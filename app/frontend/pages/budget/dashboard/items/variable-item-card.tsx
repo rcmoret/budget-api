@@ -4,8 +4,6 @@ import { useBudgetItemContext } from "./context-provider";
 import { AdjustmentInput, TotalInput } from "@/components/adjustment-input";
 import { useAdjustmentInputsContext } from "@/components/adjustment-input/context-provider";
 
-const inputClasses = ["bg-base-100/40"];
-
 const AmountSpanButton = (props: { amount: number; onClick: () => void }) => {
   return (
     <div>
@@ -52,7 +50,7 @@ const TotalBudgeted = () => {
       <CardRow minHeight="lg">
         <label htmlFor={totalInputId}>{label}</label>
         <div>
-          <TotalInput classes={inputClasses} />
+          <TotalInput />
         </div>
       </CardRow>
     );
@@ -70,16 +68,16 @@ const AdjustmentAmountInput = () => {
 
   if (editingAdjustment) {
     return (
-      <CardRow className={FORM_ROW_HEIGHT}>
+      <CardRow>
         <label htmlFor={adjustmentInputId}>{label}</label>
         <div>
-          <AdjustmentInput classes={inputClasses} />
+          <AdjustmentInput />
         </div>
       </CardRow>
     );
   } else {
     return (
-      <CardRow className={FORM_ROW_HEIGHT}>
+      <CardRow>
         <div>{label}</div>
         <div>
           <AmountSpanButton
