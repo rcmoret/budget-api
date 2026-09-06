@@ -5,9 +5,14 @@ module WebApp
     module UsesTransactionEntryForm
       extend ActiveSupport::Concern
 
-      include Mixins::HasRedirectParams
-      include Mixins::HasBudgetInterval
-      include Mixins::HasAccount
+      included do
+        include Mixins::HasRedirectParams
+        include Mixins::HasBudgetInterval
+        include Mixins::HasAccount
+
+        after_action :update_budget_items_maturity!,
+          if: -> { transaction.valid? && non_mature_details.any? }
+      end
 
       BASE_TRANSACTION_ENTRY_PERMITTED_PARAMS = [
         :key,
@@ -103,6 +108,17 @@ module WebApp
         return if budget_item_key.nil?
 
         ::Budget::Item.fetch(current_user_profile, key: budget_item_key)
+      end
+
+      def non_mature_details
+        transaction
+          .reload
+          .budget_details
+          .select { |item| item.accrual? && !item.mature? }
+      end
+
+      def update_budget_items_maturity!
+        non_mature_details.each(&:maturing!)
       end
     end
   end

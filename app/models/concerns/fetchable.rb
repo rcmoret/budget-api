@@ -6,6 +6,8 @@ module Fetchable
   class_methods do
     def fetch(user_or_group, **find_by)
       case find_by
+      in { keys: }
+        belonging_to(user_or_group).by_keys(keys)
       in { key: }
         belonging_to(user_or_group).by_key(key)
       in { slug: }

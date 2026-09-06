@@ -97,18 +97,32 @@ module Transaction
       end
     end
 
+    def budget_details
+      budget_detail_scope =
+        ::Budget::Details::Base
+        .fetch(
+          user_group,
+          keys: budget_items.pluck(:key)
+        )
+
+      if block_given?
+        budget_detail_scope.find_each { yield(_1) }
+      else
+        budget_detail_scope
+      end
+    end
+
     protected
 
     def sort_matrix
       {
         clearance_date:,
         updated_at:,
-        future: clearance_date&.future? ? -1 : 1
+        future: clearance_date&.future? ? -1 : 1,
       }
     end
 
     private
-
 
     def nullify_blank_notes!
       self.notes = nil if notes.present? && Tiptap.blank?(notes)

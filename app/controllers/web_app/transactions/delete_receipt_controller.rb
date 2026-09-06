@@ -7,7 +7,7 @@ module WebApp
       include Mixins::HasAccount
       include Mixins::HasRedirectParams
 
-      before_action -> { redirect_to(home_path) }, if: -> { transaction.nil? }
+      before_action -> { redirect_to(root_path) }, if: -> { transaction.nil? }
 
       def call
         transaction.receipt.purge if transaction.receipt.attached?

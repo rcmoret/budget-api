@@ -3,8 +3,7 @@
 module Budget
   module Details
     class Base < ApplicationRecord
-      include HasKeyIdentifier
-      include BelongsToUserGroup
+      include ItemConcern
 
       self.table_name = :budget_details
       self.primary_key = :id
@@ -12,27 +11,6 @@ module Budget
       def object_prefix
         super("Budget::Item")
       end
-
-      scope :variable, -> { active.where(monthly: false) }
-      scope :fixed, -> { active.where(monthly: true) }
-      scope :revenues, -> { active.where(expense: false) }
-      scope :expenses, -> { active.where(expense: true) }
-      scope :active, -> { where(deleted_at: nil) }
-      scope :available, lambda {
-        variable.or(fixed.where(transaction_detail_count: 0))
-      }
-      scope :by_name, -> { order("LOWER(name) asc") }
-
-      belongs_to :interval,
-        class_name: "Interval",
-        foreign_key: :budget_interval_id,
-        inverse_of: :items
-      has_many :events,
-        class_name: "ItemEvent",
-        foreign_key: :budget_item_id,
-        inverse_of: :detail,
-        primary_key: :id,
-        dependent: nil
 
       def remaining
         raise NotImplementedError
@@ -78,6 +56,13 @@ module Budget
         return false unless accrual?
 
         [ maturity_month, maturity_year ] == [ month, year ]
+      end
+
+      def maturing!
+        Budget::CategoryMaturityInterval.create(
+          category:,
+          interval:
+        )
       end
 
       def upcoming_maturity_date

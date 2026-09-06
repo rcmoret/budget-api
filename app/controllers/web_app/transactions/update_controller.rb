@@ -4,7 +4,9 @@ module WebApp
   module Transactions
     class UpdateController < BaseController
       include Mixins::UsesTransactionEntryForm
-      before_action -> { redirect_to(home_path) }, if: -> { transaction.nil? }
+      before_action -> { redirect_to(root_path) }, if: lambda {
+        transaction.nil?
+      }
 
       private
 
