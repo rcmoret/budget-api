@@ -36,7 +36,7 @@ module WebApp
         def budget_items
           @budget_items ||= budget_month
                             .detailed_items
-                            .available
+                            .active
                             .order(name: :asc)
         end
 

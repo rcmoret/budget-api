@@ -7,6 +7,7 @@ module WebApp
         one :remaining, resource: MonetaryAmountSerializer
 
         attribute(:is_accrual, &:accrual?)
+        attribute(:is_fixed, &:monthly?)
         attribute(:is_mature, &:mature?)
       end
     end

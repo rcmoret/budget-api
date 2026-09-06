@@ -15,6 +15,7 @@ import { getBudgetItems } from "../store";
 import { AmountSpan } from "@/components/amount-span";
 import { TransactionDetailBudgetItem } from "@/types/transaction";
 import { FormRow } from "./row";
+import { moneyFormatter } from "@/lib/money-formatter";
 
 const ClearDetailButton = (props: { objectKey: string }) => {
   const { nullifyDetailBudgetItemKey } = useTransactionFormContent();
@@ -56,16 +57,18 @@ type BudgetItemOption = {
   label: string;
   value: string;
   remaining: null | number;
+  isFixed: boolean;
 };
 
 const budgetItemOption = (
   item: TransactionDetailBudgetItem,
 ): BudgetItemOption => {
-  const { key, name, remaining } = item;
+  const { key, name, remaining, isFixed } = item;
   return {
     label: name,
     value: key,
     remaining: remaining.cents,
+    isFixed,
   };
 };
 
@@ -122,6 +125,7 @@ const carriedOverOption = (
     label: budgetCategoryName ?? "-",
     value: budgetItemKey,
     remaining: null,
+    isFixed: false,
   };
 };
 
@@ -170,10 +174,18 @@ const LineItem = (props: { detail: DetailAttribute; isLast: boolean }) => {
   const { nullifyDetailBudgetItemKey, setDetailBudgetItemKey } =
     useTransactionFormContent();
   const budgetItemOptions = useAvailableBudgetItems(detail);
+  const { adjustment, updateItemByTotal } = useAdjustmentInputsContext();
 
   const onChange = (option: BudgetItemOption | null) => {
     if (option) {
       setDetailBudgetItemKey(detail.objectKey, option.value, option.label);
+      if (
+        option.isFixed &&
+        option.remaining &&
+        adjustment.newTotal.cents === 0
+      ) {
+        updateItemByTotal(moneyFormatter(option.remaining));
+      }
     } else {
       nullifyDetailBudgetItemKey(detail.objectKey);
     }
