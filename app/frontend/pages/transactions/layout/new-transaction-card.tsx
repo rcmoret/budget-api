@@ -30,15 +30,28 @@ const blankTransaction = (
 
 const ToggleButton = () => {
   const { toggle } = useNewTransactionForm();
+  const cardClassNames = [
+    "shadow-md",
+    "last:mb-12",
+    "self-start",
+    "odd:bg-base-300",
+    "even:bg-base-300/50",
+    "form-card",
+    "self-start"
+  ];
 
+  // className="col-span-full self-start shadow-md rounded text-center font-medium py-3 bg-base-300/70 hover:bg-base-300 transition-colors"
   return (
-    <button
-      type="button"
-      onClick={toggle}
-      className="col-span-full self-start shadow-md rounded text-center font-medium py-3 bg-base-300/70 hover:bg-base-300 transition-colors"
+    <div
+      className={cardClassNames.join(" ")}
     >
-      + Add Transaction
-    </button>
+      <button
+        type="button"
+        onClick={toggle}
+      >
+        + Add Transaction
+      </button>
+    </div>
   );
 };
 

@@ -131,6 +131,7 @@ const themedStyles = <
     }),
     noOptionsMessage: (base) => ({ ...base, color: mutedContent(60) }),
     loadingMessage: (base) => ({ ...base, color: mutedContent(60) }),
+    menuPortal: (base) => ({ ...base, zIndex: 50 }),
   };
 };
 
@@ -150,11 +151,18 @@ const ThemedSelect = <
 >(
   props: ThemedSelectProps<Option, IsMulti, Group>,
 ) => {
-  const { size = "xs", variant = "secondary", styles, ...selectProps } = props;
+  const {
+    size = "xs",
+    variant = "secondary",
+    styles,
+    menuPortalTarget = document.body,
+    ...selectProps
+  } = props;
 
   return (
     <Select
       {...selectProps}
+      menuPortalTarget={menuPortalTarget}
       // react-select's own merge chains per slot, so a caller's `menu` receives
       // the themed object as its base rather than replacing it outright.
       styles={mergeStyles(

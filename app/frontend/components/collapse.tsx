@@ -36,7 +36,6 @@ const Collapse = (props: CollapseProps) => {
     .join(" ");
 
   const wrapperClassName = [
-    "overflow-hidden",
     "min-h-0",
     ...(subgrid ? ["grid", "grid-cols-subgrid", "col-span-full"] : []),
     innerClassName,

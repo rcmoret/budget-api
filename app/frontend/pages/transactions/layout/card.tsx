@@ -11,7 +11,6 @@ import { ReceiptComponent } from "./receipt-component";
 import { SupplementalInfo } from "./supplemental-info";
 import { getFeaturedAccount } from "../store";
 import { getBudgetMonth } from "@/pages/budget/month-store";
-import React from "react";
 import { FormComponent } from "../form";
 import { TransactionFormProvider } from "../form/context-provider";
 

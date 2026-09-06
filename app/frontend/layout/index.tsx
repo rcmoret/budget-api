@@ -105,7 +105,7 @@ const PageComponent = (props: LayoutProps) => {
           <main className={mainComponentClassName} id={mainId}>
             {children}
           </main>
-          <aside className="flex flex-col gap-2 py-4 md:overflow-y-scroll">
+          <aside className="flex flex-col gap-2 py-4">
             <Notifications />
             <SecondaryPanel label={secondaryPanelLabel} rightColumn={rightColumn} />
           </aside>
