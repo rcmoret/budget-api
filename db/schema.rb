@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2026_08_06_120000) do
+ActiveRecord::Schema[7.0].define(version: 2026_09_06_223231) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -132,8 +132,8 @@ ActiveRecord::Schema[7.0].define(version: 2026_08_06_120000) do
   end
 
   create_table "budget_item_events", force: :cascade do |t|
-    t.integer "budget_item_id", null: false
-    t.integer "budget_item_event_type_id", null: false
+    t.bigint "budget_item_id", null: false
+    t.bigint "budget_item_event_type_id", null: false
     t.integer "amount", null: false
     t.json "data"
     t.datetime "created_at", null: false
@@ -301,12 +301,12 @@ ActiveRecord::Schema[7.0].define(version: 2026_08_06_120000) do
       intervals.year,
       sum(
           CASE
-              WHEN ((event_types.name)::text = ANY (ARRAY[('rollover_extra_target_create'::character varying)::text, ('rollover_item_create'::character varying)::text, ('rollover_item_adjust'::character varying)::text])) THEN events.amount
+              WHEN ((event_types.name)::text = ANY ((ARRAY['rollover_extra_target_create'::character varying, 'rollover_item_create'::character varying, 'rollover_item_adjust'::character varying])::text[])) THEN events.amount
               ELSE 0
           END) AS previously_budgeted,
       sum(
           CASE
-              WHEN ((event_types.name)::text <> ALL (ARRAY[('rollover_extra_target_create'::character varying)::text, ('rollover_item_create'::character varying)::text, ('rollover_item_adjust'::character varying)::text])) THEN events.amount
+              WHEN ((event_types.name)::text <> ALL ((ARRAY['rollover_extra_target_create'::character varying, 'rollover_item_create'::character varying, 'rollover_item_adjust'::character varying])::text[])) THEN events.amount
               ELSE 0
           END) AS currently_budgeted,
       COALESCE(( SELECT sum(td.amount) AS sum
@@ -324,7 +324,7 @@ ActiveRecord::Schema[7.0].define(version: 2026_08_06_120000) do
   create_view "budget_details", sql_definition: <<-SQL
       WITH event_type_ids AS (
            SELECT budget_item_event_types.id,
-              ((budget_item_event_types.name)::text = ANY (ARRAY[('rollover_extra_target_create'::character varying)::text, ('rollover_item_create'::character varying)::text, ('rollover_item_adjust'::character varying)::text])) AS is_previous
+              ((budget_item_event_types.name)::text = ANY ((ARRAY['rollover_extra_target_create'::character varying, 'rollover_item_create'::character varying, 'rollover_item_adjust'::character varying])::text[])) AS is_previous
              FROM budget_item_event_types
           ), transaction_totals AS (
            SELECT transaction_details.budget_item_id,
@@ -350,6 +350,7 @@ ActiveRecord::Schema[7.0].define(version: 2026_08_06_120000) do
       bi.month,
       bi.year,
       c.key AS budget_category_key,
+      c.slug AS budget_category_slug,
       c.name,
       c.expense,
       c.monthly,

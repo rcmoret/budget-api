@@ -1,6 +1,7 @@
 import { CardRow } from "@/components/card";
 import { useBudgetItemContext } from "./context-provider";
 import { Pill } from "@/components/pill";
+import { MatureAccrualPill, NonMatureAccrualPill } from "@/components/accrual-pill";
 
 const ClearedItemPill = () => {
   const { item } = useBudgetItemContext();
@@ -25,12 +26,9 @@ const AccrualPill = () => {
 
   const isMature = item.isMature;
 
-  const themeOption = isMature ? "notice" : "warning";
-  const description = isMature ? "Mature Accrual" : "Accrual";
-
   return (
     <CardRow>
-      <Pill themeOption={themeOption}>{description}</Pill>
+      {isMature ? <MatureAccrualPill /> : <NonMatureAccrualPill month={item.month} year={item.year} slug={item.budgetCategorySlug} />}
     </CardRow>
   );
 };

@@ -8,6 +8,26 @@ import { useSetupClient } from "@/pages/budget/planning/setup/client";
 import { CloseButton } from "@/components/close-button";
 import { useAdjustmentInputsContext } from "@/components/adjustment-input/context-provider";
 import { BaselineAmountSuggestion } from "../suggestions/baseline_amount";
+import { useFeaturedCategory } from "../../store";
+import { NonMatureAccrualPill } from "@/components/accrual-pill";
+import { getBudgetMonth } from "@/pages/budget/month-store";
+
+const AccrualPill = () => {
+  const category = useFeaturedCategory();
+  const { month, year } = getBudgetMonth()
+
+  if (!category.isAccrual) {
+    return null;
+  }
+
+  return (
+    <NonMatureAccrualPill
+      slug={category.slug}
+      month={month}
+      year={year}
+    />
+  );
+};
 
 const DeleteButton = () => {
   const { deleteEvent } = useSetupClient();
@@ -35,6 +55,7 @@ const CreateItemForm = () => {
       <div className="-col-start-1 -col-end-1 flex justify-end">
         <DeleteButton />
       </div>
+      <AccrualPill />
       <BudgetedSuggestion />
       {!eqPrevSpent && !!event.transactionsTotal.cents && <SpentSuggestion />}
       <BaselineAmountSuggestion />

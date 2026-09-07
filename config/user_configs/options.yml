@@ -1,3 +1,5 @@
 user_configuration_options:
   - description: timezone
     default: America/New_York
+  - description: theme_preference
+    default: system

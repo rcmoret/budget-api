@@ -6,6 +6,7 @@ module WebApp
       class ItemSerializer < GenericSerializer
         attributes :key,
           :budget_category_key,
+          :budget_category_slug,
           :currently_budgeted_percentage,
           :icon_class_name,
           :maturity_month,

@@ -8,6 +8,7 @@ import { PageProps } from "../page_props";
 type BudgetItem = {
   amount: MonetaryAmount;
   budgetCategoryKey: string;
+  budgetCategorySlug: string;
   currentlyBudgeted: MonetaryAmount;
   currentlyBudgetedPercentage: number;
   difference: MonetaryAmount;
@@ -21,6 +22,7 @@ type BudgetItem = {
   isPending: boolean;
   isPerDiemEnabled: boolean;
   key: string;
+  month: string | number;
   name: string;
   objectKey: string;
   previouslyBudgeted: MonetaryAmount;
@@ -28,6 +30,7 @@ type BudgetItem = {
   remaining: MonetaryAmount;
   spent: MonetaryAmount;
   transactionDetailTotal: MonetaryAmount;
+  year: string | number;
 };
 
 type BudgetItemCollections = {

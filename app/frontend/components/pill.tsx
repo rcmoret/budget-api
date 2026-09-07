@@ -1,8 +1,6 @@
 import { kindClassName } from "@/layout/notifications";
 import { NotificationKind } from "@/lib/app-stores/notification-store";
 
-type ThemeOption = "warning" | "success"; // | "tertiary"
-
 const pillClassName = (themeOption: NotificationKind) =>
   [
     kindClassName[themeOption],
@@ -22,4 +20,4 @@ const Pill = (props: {
   );
 };
 
-export { Pill };
+export { Pill, pillClassName };
