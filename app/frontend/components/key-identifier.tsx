@@ -29,7 +29,7 @@ const KeyIdentifier = (props: {
   const tip = copied ? "Copied!" : props.identifier;
 
   return (
-    <div className="tooltip" data-tip={tip}>
+    <div className="tooltip tooltip-right" data-tip={tip}>
       <button
         type="button"
         onClick={handleClick}

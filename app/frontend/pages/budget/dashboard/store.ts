@@ -26,8 +26,6 @@ const compareBudgetItems = (
   const modifier = direction === "asc" ? 1 : -1;
 
   if (field === "name") {
-    // Mirror the server's `by_name` scope (`order("LOWER(name) asc")`) so the
-    // local name sort matches what the backend sends.
     return (
       a.name.toLowerCase().localeCompare(b.name.toLowerCase()) * modifier
     );
