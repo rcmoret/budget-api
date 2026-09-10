@@ -91,9 +91,9 @@ module Transaction
         other.sort_matrix.values_at(:clearance_date, :updated_at) <=>
           sort_matrix.values_at(:clearance_date, :updated_at)
       elsif cleared? # other is pending
-        other.sort_matrix[:future]
-      else
         sort_matrix[:future]
+      else # self is pending, other is cleared
+        -other.sort_matrix[:future]
       end
     end
 
@@ -110,6 +110,10 @@ module Transaction
       else
         budget_detail_scope
       end
+    end
+
+    def receipt_attached?
+      receipt.present?
     end
 
     protected

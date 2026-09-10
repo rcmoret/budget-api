@@ -167,7 +167,7 @@ RSpec.describe Transaction::Entry do
 
         it "sorts pending before past" do
           sorted = [ transaction_1, transaction_2 ].sort
-          expect(sorted).to eq [ transaction_2, transaction_1 ]
+          expect(sorted).to eq [ transaction_1, transaction_2 ]
         end
       end
     end

@@ -15,6 +15,8 @@ module WebApp
 
         def amount = total
 
+        def receipt_attached = receipt_attached?
+
         attr_reader :previous_balance
 
         def receipt_url
