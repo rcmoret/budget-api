@@ -46,7 +46,7 @@ module Budget
       end
 
       def currently_budgeted_percentage
-        return 0 if currently_budgeted.zero?
+        return 0 if currently_budgeted.zero? || amount.zero?
         return 100 if previously_budgeted.zero?
 
         ((100 * currently_budgeted) / amount).clamp(1, 99)
