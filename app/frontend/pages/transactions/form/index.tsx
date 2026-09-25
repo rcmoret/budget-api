@@ -2,22 +2,36 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 // import { useTransactionContext } from "../context-provider";
 import { AmountSpan } from "@/components/amount-span";
-import { CheckMarkButton } from "@/components/cta";
 import { useTransactionFormContent } from "./context-provider";
 import { LineItems } from "./line-items";
 import { useAdjustmentsTotals } from "@/lib/adjustment-amount-store";
 import { useTransactionContext } from "../context-provider";
 import { SupplementalFormDetails } from "./supplemental-details";
 
-const SubmitButton = () => {
+const SubmitButtonRow = () => {
   const { processing } = useTransactionFormContent();
+  const { toggleForm } = useTransactionContext();
 
   return (
-    <CheckMarkButton
-      type="submit"
-      ariaLabel="Save transaction"
-      disabled={processing}
-    />
+    <div className="grid grid-cols-[3fr_1fr] gap-4 col-span-full md:flex md:justify-end md:gap-2">
+      <button
+        type="submit"
+        className="btn btn-success"
+        aria-label="Save transaction"
+        disabled={processing}
+      >
+        <span className="hidden md:inline">Save Transaction</span>
+        <span className="md:hidden">Save</span>
+      </button>
+      <button
+        type="button"
+        className="btn btn-error"
+        aria-label="Close transaction form"
+        onClick={toggleForm}
+      >
+        <div className="shadow-lg">&#x2718;</div>
+      </button>
+    </div>
   );
 };
 
@@ -43,36 +57,32 @@ const FormComponent = () => {
       onSubmit={onSubmit}
       className="grid grid-cols-subgrid col-span-full text-left gap-y-4"
     >
-      <div className="grid description">
-        <div className="grid gap-1 content-start">
-          <label htmlFor="clearance-date">Clearance Date</label>
-          <DatePicker
-            id="clearance-date"
-            name="clearance-date"
-            selected={clearanceDate}
-            onChange={setClearanceDate}
-            className="input input-xs input-secondary w-full"
-          />
-        </div>
-        <div className="grid gap-1 content-start">
-          <label htmlFor="transaction-description">Description</label>
-          <input
-            id="transaction-description"
-            type="text"
-            value={description}
-            onChange={(ev) => setDescription(ev.target.value)}
-            className="input input-xs input-secondary"
-          />
-        </div>
-      </div>
-      <div className="flex justify-end gap-2 text-right self-end">
+      <div className="col-span-full flex justify-end gap-2 text-right self-end">
         <TransactionTotal />
       </div>
       <LineItems />
-      <SupplementalFormDetails />
-      <div className="flex justify-end col-span-full">
-        <SubmitButton />
+      <div className="col-span-full grid form-field-row">
+        <label htmlFor="transaction-description">Description</label>
+        <input
+          id="transaction-description"
+          type="text"
+          value={description}
+          onChange={(ev) => setDescription(ev.target.value)}
+          className="input input-xs input-secondary"
+        />
       </div>
+      <div className="col-span-full grid form-field-row">
+        <label htmlFor="clearance-date">Clearance Date</label>
+        <DatePicker
+          id="clearance-date"
+          name="clearance-date"
+          selected={clearanceDate}
+          onChange={setClearanceDate}
+          className="input input-xs input-secondary w-full"
+        />
+      </div>
+      <SupplementalFormDetails />
+      <SubmitButtonRow />
     </form>
   );
 };
@@ -86,17 +96,17 @@ const TransactionTotal = () => {
   if (isNew || transaction.amount.cents === newTotal) {
     return (
       <div>
-        <AmountSpan amount={newTotal} />
+        <AmountSpan amount={newTotal} classes={["text-2xl"]} />
       </div>
     );
   } else {
     return (
       <>
-        <div className="line-through">
+        <div className="line-through opacity-60">
           <AmountSpan amount={transaction.amount.cents} />
         </div>
         <div>
-          <AmountSpan amount={newTotal} />
+          <AmountSpan amount={newTotal} classes={["text-2xl"]} />
         </div>
       </>
     );

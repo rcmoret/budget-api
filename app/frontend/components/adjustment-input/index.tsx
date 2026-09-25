@@ -1,4 +1,5 @@
 import React from "react";
+import { Icon } from "@/components/icon";
 import { useAdjustmentInputsContext } from "./context-provider";
 
 // Explicit input prop list: (non-exhaustive)
@@ -43,17 +44,56 @@ const amountInputClasses = [
   "input-secondary",
 ];
 
+// iOS's decimal pad has no minus key, so a typed "-" is unreachable there.
+// Keep inputMode="decimal" for the numeric keypad and let this button toggle
+// the sign instead.
+const toggleAmountSign = (value: string): string => {
+  const trimmed = value.trim();
+
+  if (trimmed.startsWith("-")) return trimmed.slice(1);
+  if (trimmed === "") return "-";
+
+  return `-${trimmed}`;
+};
+
 const GenericAmountInput = (props: GenericAmountInputProps) => {
-  const { classes = [], ...rest } = props;
+  const { classes = [], value, onChange, ...rest } = props;
   const className = [...classes, ...amountInputClasses].join(" ");
 
+  const toggleSign = () => {
+    if (!onChange) return;
+
+    const newValue = toggleAmountSign(typeof value === "string" ? value : "");
+    onChange({
+      target: { value: newValue },
+    } as React.ChangeEvent<HTMLInputElement>);
+  };
+
   return (
-    <input
-      className={className}
-      placeholder={rest.placeholder || "0.00"}
-      type="text"
-      {...rest}
-    />
+    <div className="grid col-span-full grid-cols-[auto_1fr]">
+      <div>
+        <button
+          type="button"
+          className="btn btn-ghost btn-xs btn-square"
+          onClick={toggleSign}
+          aria-label="Toggle positive or negative"
+        >
+          &#8722;
+        </button>
+      </div>
+      <div>
+        <input
+          className={className}
+          placeholder="-0.00"
+          type="text"
+          inputMode="decimal"
+          pattern="[0-9.,-]*"
+          value={value}
+          onChange={onChange}
+          {...rest}
+        />
+      </div>
+    </div>
   );
 };
 
@@ -85,6 +125,7 @@ const TotalInput = () => {
     <GenericAmountInput
       id={totalInputId}
       onChange={updateTotal}
+      classes={["w-full"]}
       value={adjustment.newTotal.display}
     />
   );

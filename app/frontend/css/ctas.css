@@ -2,7 +2,6 @@ button.round-cta {
   width: calc(var(--spacing) * 6);
   height: calc(var(--spacing) * 6);
   border-radius: calc(infinity * 1px);
-  font-size: var(--text-xs);
   line-height: var(--tw-leading, var(--text-xs--line-height));
   display: grid;
   place-items: center;

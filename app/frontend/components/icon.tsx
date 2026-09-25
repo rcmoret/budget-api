@@ -17,6 +17,7 @@ const IconDictionary = {
   "external-arrow": "fas fa-external-link-alt",
   coins: "fas fa-coins",
   "plus-circle": "fas fa-plus-circle",
+  "plus-minus": "fas fa-plus-minus",
   plus: "fa fa-plus",
   edit: "fa  fa-edit",
   "folder-open": "far fa-folder-open",

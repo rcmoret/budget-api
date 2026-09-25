@@ -30,7 +30,7 @@ const ClearDetailButton = (props: { objectKey: string }) => {
     <button
       type="button"
       aria-label="clear line item"
-      className="round-cta cta-sm bg-accent text-accent-content"
+      className="round-cta bg-accent text-accent-content text-base"
       onClick={onClick}
     >
       &#x2718;
@@ -45,7 +45,7 @@ const AddDetailButton = () => {
     <button
       type="button"
       aria-label="add line item"
-      className="round-cta cta-sm bg-success text-success-content"
+      className="round-cta bg-success text-success-content text-xl"
       onClick={() => addDetail()}
     >
       &#x2b;
@@ -194,22 +194,24 @@ const LineItem = (props: { detail: DetailAttribute; isLast: boolean }) => {
   return (
     <div className="grid col-span-full grid-cols-subgrid items-center">
       <div className="fields">
-        <ThemedSelect
-          options={budgetItemOptions}
-          value={findOption(budgetItemOptions, detail.budgetItemKey)}
-          onChange={onChange}
-          formatOptionLabel={formatBudgetItemOption}
-        />
         <div className="text-right">
           <TotalInput />
         </div>
-      </div>
-      <div>
-        {props.isLast ? (
-          <AddDetailButton />
-        ) : (
-          <ClearDetailButton objectKey={detail.objectKey} />
-        )}
+        <div>
+          <ThemedSelect
+            options={budgetItemOptions}
+            value={findOption(budgetItemOptions, detail.budgetItemKey)}
+            onChange={onChange}
+            formatOptionLabel={formatBudgetItemOption}
+          />
+        </div>
+        <div>
+          {props.isLast ? (
+            <AddDetailButton />
+          ) : (
+            <ClearDetailButton objectKey={detail.objectKey} />
+          )}
+        </div>
       </div>
     </div>
   );

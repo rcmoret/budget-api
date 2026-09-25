@@ -77,7 +77,7 @@
       grid-column-gap: var(--page-split-col-spacing);
     }
 
-    & * > .description {
+    & * > .form-field-row {
       grid-template-columns: 1fr;
       row-gap: 0.5rem;
 
@@ -103,8 +103,8 @@
       row-gap: 0.25rem;
 
       @media (width >= theme(--breakpoint-md)) {
-        grid-column: 1 / -2;
-        grid-template-columns: 3fr 2fr;
+        grid-column: 1 / -1;
+        grid-template-columns: 3fr 2fr 4ch;
         grid-column-gap: var(--page-split-col-spacing);
         row-gap: 0;
       }
