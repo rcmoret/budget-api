@@ -14,7 +14,7 @@ import {
 import { getBudgetItems } from "../store";
 import { AmountSpan } from "@/components/amount-span";
 import { TransactionDetailBudgetItem } from "@/types/transaction";
-import { FormRow } from "./row";
+import { Section } from "./section";
 import { moneyFormatter } from "@/lib/money-formatter";
 
 const ClearDetailButton = (props: { objectKey: string }) => {
@@ -176,7 +176,9 @@ const LineItem = (props: { detail: DetailAttribute; isLast: boolean }) => {
   const { nullifyDetailBudgetItemKey, setDetailBudgetItemKey } =
     useTransactionFormContent();
   const budgetItemOptions = useAvailableBudgetItems(detail);
-  const { adjustment, updateItemByTotal } = useAdjustmentInputsContext();
+  const { adjustment, totalInputId, updateItemByTotal } =
+    useAdjustmentInputsContext();
+  const budgetItemSelectId = `budget-item-${detail.objectKey}`;
 
   const onChange = (option: BudgetItemOption | null) => {
     if (option) {
@@ -194,61 +196,61 @@ const LineItem = (props: { detail: DetailAttribute; isLast: boolean }) => {
   };
 
   return (
-    <div className="grid col-span-full grid-cols-subgrid items-center">
-      <div className="fields">
-        <div className="text-right">
+    <div className="line-item-fields">
+      <div className="line-item-inputs">
+        <div className="grid form-field-row">
+          <label htmlFor={totalInputId}>Amount</label>
           <TotalInput />
         </div>
-        <div>
-          <ThemedSelect
-            options={budgetItemOptions}
-            value={findOption(budgetItemOptions, detail.budgetItemKey)}
-            onChange={onChange}
-            isClearable
-            formatOptionLabel={formatBudgetItemOption}
-          />
+        <div className="grid form-field-row">
+          <label htmlFor={budgetItemSelectId}>Budget Category</label>
+          <div className="line-item-category-select">
+            <ThemedSelect
+              inputId={budgetItemSelectId}
+              options={budgetItemOptions}
+              value={findOption(budgetItemOptions, detail.budgetItemKey)}
+              onChange={onChange}
+              formatOptionLabel={formatBudgetItemOption}
+            />
+          </div>
         </div>
-        <div>
-          {props.isLast ? (
-            <AddDetailButton />
-          ) : (
-            <ClearDetailButton objectKey={detail.objectKey} />
-          )}
-        </div>
+      </div>
+      <div className="line-item-action">
+        {props.isLast ? (
+          <AddDetailButton />
+        ) : (
+          <ClearDetailButton objectKey={detail.objectKey} />
+        )}
       </div>
     </div>
   );
 };
 
+const LineItemSection = (props: {
+  detail: DetailAttribute;
+  isLast: boolean;
+}) => (
+  <Section sectionKey={props.detail.objectKey}>
+    <LineItem detail={props.detail} isLast={props.isLast} />
+  </Section>
+);
+
 const LineItems = () => {
   const { details } = useTransactionFormContent();
   return (
-    <FormRow>
-      <div className="line-items">
-        <div className="fields">
-          <div>
-            <label htmlFor="category-col-label">Amount</label>
-          </div>
-          <div>
-            <label htmlFor="amount-col-label">Budget Category</label>
-          </div>
-        </div>
-      </div>
+    <>
       {details.map((detail, index) => (
         <AdjustmentInputsProvider
           key={detail.objectKey}
           objectKey={detail.objectKey}
         >
-          <FormRow>
-            <LineItem
-              key={detail.objectKey}
-              detail={detail}
-              isLast={index + 1 === details.length}
-            />
-          </FormRow>
+          <LineItemSection
+            detail={detail}
+            isLast={index + 1 === details.length}
+          />
         </AdjustmentInputsProvider>
       ))}
-    </FormRow>
+    </>
   );
 };
 

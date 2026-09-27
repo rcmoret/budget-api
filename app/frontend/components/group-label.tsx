@@ -1,9 +1,10 @@
 const GroupLabel = (props: { children: React.ReactNode }) => {
   const groupLabelClassName = [
     "from-accent/70",
-    "dark:from-accent/90",
     "to-accent/40",
-    "dark:to-accent/66",
+    "dark:from-accent/46",
+    "dark:to-accent/72",
+    "dark:text-base-content",
     "shadow-md",
     "text-base-content",
     "dark:text-accent-content",

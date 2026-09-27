@@ -86,6 +86,15 @@ const themedStyles = <
       margin: 0,
       padding: 0,
       color: "var(--color-base-content)",
+      // iOS Safari auto-zooms the page when a focused input's font size is
+      // under 16px — daisyUI's own `.input` sizes itself the same way and
+      // works around it with this exact bump, but react-select renders its
+      // own `<input>` outside daisyUI's CSS, so it needs the same fix here.
+      "@media (pointer: coarse)": {
+        "@supports (-webkit-touch-callout: none)": {
+          fontSize: "16px",
+        },
+      },
     }),
     singleValue: (base) => ({ ...base, color: "var(--color-base-content)" }),
     placeholder: (base) => ({ ...base, color: mutedContent(50) }),
@@ -131,7 +140,11 @@ const themedStyles = <
     }),
     noOptionsMessage: (base) => ({ ...base, color: mutedContent(60) }),
     loadingMessage: (base) => ({ ...base, color: mutedContent(60) }),
-    menuPortal: (base) => ({ ...base, zIndex: 50 }),
+    // Portaled to document.body, so it stacks against page-level overlays —
+    // notably daisyUI's `.modal`, which sits at z-index 999. Below that, the
+    // modal's opaque background paints over the menu instead of the other
+    // way around, and it looks like the select has no options at all.
+    menuPortal: (base) => ({ ...base, zIndex: 1000 }),
   };
 };
 

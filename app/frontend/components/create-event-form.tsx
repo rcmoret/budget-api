@@ -5,7 +5,7 @@ import {
   fetchCreateEvents,
   TCreateEventClientContext,
 } from "@/lib/create-events-client";
-import Select from "react-select";
+import { ThemedSelect } from "@/components/themed-select";
 import { useForm } from "@inertiajs/react";
 import type { InertiaFormProps } from "@inertiajs/react";
 import { getBudgetMonth } from "@/pages/budget/month-store";
@@ -101,7 +101,8 @@ const CreateEventSelectComponent = (props: { "aria-label": string }) => {
     options.find(({ value }) => value === selectedKey) ?? null;
 
   return (
-    <Select
+    <ThemedSelect
+      variant="default"
       aria-label={props["aria-label"]}
       placeholder={<Placeholder />}
       onChange={onChange}

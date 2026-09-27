@@ -44,6 +44,19 @@ const toDateParam = (date: Date): string => {
   return `${year}-${month}-${day}`;
 };
 
+// The inverse of toDateParam, for reading a native `<input type="date">`'s
+// value back into state. `new Date("YYYY-MM-DD")` is NOT the inverse of this —
+// a bare date string parses as UTC midnight per the JS spec, which rolls back
+// a day once re-read through local getters (toDateParam's, or the date
+// picker's own) in any timezone behind UTC. Splitting it ourselves and
+// building the Date from local parts keeps the round trip timezone-safe.
+const parseDateParam = (value: string): null | Date => {
+  if (!value) return null;
+
+  const [year, month, day] = value.split("-").map(Number);
+  return new Date(year, month - 1, day);
+};
+
 const TransactionFormContext = createContext<null | TransactionFormContextType>(
   null,
 );
@@ -199,4 +212,9 @@ const useTransactionFormContent = () => {
   return context;
 };
 
-export { useTransactionFormContent, TransactionFormProvider };
+export {
+  useTransactionFormContent,
+  TransactionFormProvider,
+  parseDateParam,
+  toDateParam,
+};

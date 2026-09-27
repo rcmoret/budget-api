@@ -14,17 +14,17 @@ module WebApp
 
       define_route_segment :budget
       use_template "budget/edit"
-      serialize_with Serializers::DashboardSerializer
+      serialize_with DashboardSerializer
 
       subject do
-        Presenters::DashboardPresenter.new(interval)
+        DashboardPresenter.new(interval)
       end
 
       private
 
       def serializer_context
         {
-          budget_month: Presenters::BudgetMonthPresenter.new(interval),
+          budget_month: BudgetMonthPresenter.new(interval),
           month:,
           year:,
         }

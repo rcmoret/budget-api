@@ -7,11 +7,13 @@ import { initNeighborLinksStore } from "../budget/neighbor-links-store";
 import {
   getTransactions,
   initTransactionIndexStore,
+  useFormDeepLink,
   useTransactionSort,
 } from "./store";
 import { RightColumn } from "./right-column";
 import { AccountTransactionCard, InitialBlance } from "./layout/card";
 import { NewTransactionCard } from "./layout/new-transaction-card";
+import { TransactionFormModal } from "./layout/transaction-form-modal";
 import { PageProps } from "@/types/page_props";
 import { useNeighborLinksKeyBoardHandlers } from "@/utils/hooks/neighbors-keyboard-nav";
 import { NeighborLinks } from "@/components/neighbor-links";
@@ -75,6 +77,7 @@ const TransactionsIndexComponent = () => {
         ))}
         {sortDirection === "desc" && initialBalance}
       </>
+      <TransactionFormModal />
     </PageComponent>
   );
 };
@@ -89,6 +92,7 @@ const IndexComponent = (props: TransactionsIndexProps) => {
     featuredAccount,
     transactions,
   });
+  useFormDeepLink(transactions);
   initBudgetMonthStore({ budgetMonth });
   initNeighborLinksStore({
     previous: {

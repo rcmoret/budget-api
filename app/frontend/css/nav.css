@@ -19,6 +19,10 @@ nav {
     border-top-left-radius: 1.25rem;
     color: var(--color-primary);
     font-weight: var(--font-weight-bold);
+
+    [data-theme="merrimack-dark"] & {
+      color: var(--color-primary-content);
+    }
   }
 
   &.dropdown {

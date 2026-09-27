@@ -108,7 +108,10 @@ const DeleteButton = () => {
 const BottomRow = () => {
   const { item } = useBudgetItemContext();
   const { hasAdjustment } = useAdjustmentInputsContext();
-  const showEdit = () => item.toggleForm();
+  const showEdit = () => {
+    debugger;
+    item.toggleForm();
+  };
 
   const showBorder =
     item.isVariable ||

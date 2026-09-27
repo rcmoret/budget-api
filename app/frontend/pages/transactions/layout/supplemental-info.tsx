@@ -1,11 +1,9 @@
 import { KeyIdentifier } from "@/components/key-identifier";
 import { useTransactionContext } from "../context-provider";
 import { Pill } from "@/components/pill";
-import { ReactNode } from "react";
-import { Link } from "@inertiajs/react";
-import { Icon } from "@/components/icon";
-
+import { ReactNode, useCallback, useState } from "react";
 import { NotificationKind } from "@/lib/app-stores/notification-store";
+import { ReceiptDrawer } from "./receipt-drawer";
 
 const LocalPill = (props: {
   themeOption: NotificationKind;
@@ -20,43 +18,50 @@ const LocalPill = (props: {
 
 const TransferPill = () => <LocalPill themeOption="info">Transfer</LocalPill>;
 const BudgetExcluionPill = () => (
-  <LocalPill themeOption="warning">Budget Exclusion</LocalPill>
+  <LocalPill themeOption="notice">Budget Exclusion</LocalPill>
 );
 
-// One link per budget item; split details on the same item share a link
-const BudgetItemLinks = () => {
-  const { transaction } = useTransactionContext();
-
-  const links = transaction.details.flatMap((detail) =>
-    detail.budgetItemHref
-      ? [{ href: detail.budgetItemHref, label: detail.budgetCategoryName }]
-      : [],
-  );
-  const uniqueLinks = links.filter(
-    (link, index) => links.findIndex((l) => l.href === link.href) === index,
-  );
-
-  if (!uniqueLinks.length) return null;
+// Only on transactions with an attached receipt; opens it in a bottom sheet.
+const ReceiptPill = (props: {
+  contentType: null | string;
+  filename: null | string;
+  url: string;
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const close = useCallback(() => setIsOpen(false), []);
 
   return (
-    <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm">
-      {uniqueLinks.map(({ href, label }) => (
-        <Link
-          key={href}
-          href={href}
-          className="flex items-center gap-1 text-primary underline"
-        >
-          {label}
-          <Icon name="arrow-right" />
-        </Link>
-      ))}
-    </div>
+    <>
+      <button
+        type="button"
+        className="max-w-42 text-center cursor-pointer"
+        aria-label="View receipt"
+        onClick={() => setIsOpen(true)}
+      >
+        <Pill themeOption="alert">Receipt</Pill>
+      </button>
+      {isOpen && (
+        <ReceiptDrawer
+          contentType={props.contentType}
+          filename={props.filename}
+          onClose={close}
+          url={props.url}
+        />
+      )}
+    </>
   );
 };
 
 const SupplementalInfo = () => {
   const { transaction, isNew } = useTransactionContext();
-  const { key, isBudgetExclusion, transferKey } = transaction;
+  const {
+    key,
+    isBudgetExclusion,
+    receiptContentType,
+    receiptFilename,
+    receiptUrl,
+    transferKey,
+  } = transaction;
 
   // A new transaction has no key yet, and the form's own Save/Close row
   // already covers collapsing it back down.
@@ -66,7 +71,13 @@ const SupplementalInfo = () => {
     <div className="col-span-full grid gap-1">
       {!!isBudgetExclusion && <BudgetExcluionPill />}
       {!!transferKey && <TransferPill />}
-      <BudgetItemLinks />
+      {!!receiptUrl && (
+        <ReceiptPill
+          contentType={receiptContentType ?? null}
+          filename={receiptFilename ?? null}
+          url={receiptUrl}
+        />
+      )}
       <KeyIdentifier identifier={key} />
     </div>
   );
