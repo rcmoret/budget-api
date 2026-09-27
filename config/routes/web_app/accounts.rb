@@ -27,6 +27,11 @@ get "/account/:slug/transactions/(:month/:year)",
   to: WebApp::Transactions::IndexController.action(:call),
   as: :transactions
 
+# Same page, with the "Add Transaction" form open on load.
+get "/account/:slug/transactions(/:month/:year)/new",
+  to: WebApp::Transactions::IndexController.action(:call),
+  as: :new_transaction
+
 scope "account/:slug/transaction", as: :transactions do
   post "/",
     to: WebApp::Transactions::CreateController.action(:call),

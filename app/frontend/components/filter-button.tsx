@@ -3,6 +3,7 @@ import { selectableItemBaseClasses } from "./selectable";
 
 const filterButtonClassName = [
   ...selectableItemBaseClasses,
+  "dark:bg-transparent",
   "outline-secondary/70",
   "hover:outline-secondary",
   // pressed classes

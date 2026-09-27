@@ -1,12 +1,39 @@
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 // import { useTransactionContext } from "../context-provider";
 import { AmountSpan } from "@/components/amount-span";
-import { useTransactionFormContent } from "./context-provider";
+import {
+  parseDateParam,
+  toDateParam,
+  useTransactionFormContent,
+} from "./context-provider";
 import { LineItems } from "./line-items";
 import { useAdjustmentsTotals } from "@/lib/adjustment-amount-store";
 import { useTransactionContext } from "../context-provider";
 import { SupplementalFormDetails } from "./supplemental-details";
+import { ReceiptUpload } from "./receipt-upload";
+import { Section } from "./section";
+import { getFeaturedAccount } from "../store";
+import { LineItemSummary, useActiveSectionKey } from "./line-item-summary";
+import { useRef } from "react";
+
+const TRANSACTION_FORM_ID = "transaction-form";
+
+const BudgetExclusion = () => {
+  const { budgetExclusion, toggleBudgetExclusion } =
+    useTransactionFormContent();
+
+  return (
+    <div className="grid form-field-row">
+      <label htmlFor="budget-exclusion">Budget Exclusion?</label>
+      <input
+        id="budget-exclusion"
+        type="checkbox"
+        checked={budgetExclusion}
+        onChange={toggleBudgetExclusion}
+        className="checkbox checkbox-xs checkbox-secondary justify-self-start"
+      />
+    </div>
+  );
+};
 
 const SubmitButtonRow = () => {
   const { processing } = useTransactionFormContent();
@@ -16,6 +43,7 @@ const SubmitButtonRow = () => {
     <div className="grid grid-cols-[3fr_1fr] gap-4 col-span-full md:flex md:justify-end md:gap-2">
       <button
         type="submit"
+        form={TRANSACTION_FORM_ID}
         className="btn btn-success"
         aria-label="Save transaction"
         disabled={processing}
@@ -35,33 +63,14 @@ const SubmitButtonRow = () => {
   );
 };
 
-const FormComponent = () => {
-  const {
-    clearanceDate,
-    description,
-    processing,
-    setClearanceDate,
-    setDescription,
-    submit,
-  } = useTransactionFormContent();
-
-  const onSubmit = (ev: React.FormEvent<HTMLFormElement>) => {
-    ev.preventDefault();
-    if (processing) return;
-
-    submit();
-  };
+const DetailsSection = () => {
+  const { clearanceDate, description, setClearanceDate, setDescription } =
+    useTransactionFormContent();
+  const { isCashFlow } = getFeaturedAccount();
 
   return (
-    <form
-      onSubmit={onSubmit}
-      className="grid grid-cols-subgrid col-span-full text-left gap-y-4"
-    >
-      <div className="col-span-full flex justify-end gap-2 text-right self-end">
-        <TransactionTotal />
-      </div>
-      <LineItems />
-      <div className="col-span-full grid form-field-row">
+    <Section sectionKey="details">
+      <div className="grid form-field-row">
         <label htmlFor="transaction-description">Description</label>
         <input
           id="transaction-description"
@@ -71,19 +80,64 @@ const FormComponent = () => {
           className="input input-xs input-secondary"
         />
       </div>
-      <div className="col-span-full grid form-field-row">
+      <div className="grid form-field-row">
         <label htmlFor="clearance-date">Clearance Date</label>
-        <DatePicker
+        <input
           id="clearance-date"
           name="clearance-date"
-          selected={clearanceDate}
-          onChange={setClearanceDate}
+          type="date"
+          value={clearanceDate ? toDateParam(clearanceDate) : ""}
+          onChange={(ev) => setClearanceDate(parseDateParam(ev.target.value))}
           className="input input-xs input-secondary w-full"
         />
       </div>
-      <SupplementalFormDetails />
-      <SubmitButtonRow />
-    </form>
+      {/* Receipt is always pinned to the right column, whether or not budget
+          exclusion (non-cash-flow accounts only) fills the left one. */}
+      <div className="grid grid-cols-2 gap-4 items-start">
+        {!isCashFlow && <BudgetExclusion />}
+        <div className="col-start-2 justify-self-end">
+          <ReceiptUpload />
+        </div>
+      </div>
+    </Section>
+  );
+};
+
+const FormComponent = () => {
+  const { processing, submit } = useTransactionFormContent();
+  const scrollRef = useRef<HTMLFormElement>(null);
+  const { activeSectionKey, scrollToSection } = useActiveSectionKey(scrollRef);
+
+  const onSubmit = (ev: React.FormEvent<HTMLFormElement>) => {
+    ev.preventDefault();
+    if (processing) return;
+
+    submit();
+  };
+
+  return (
+    <>
+      <div className="transaction-form-modal-header flex justify-end gap-2 text-right">
+        <TransactionTotal />
+      </div>
+      <form
+        ref={scrollRef}
+        id={TRANSACTION_FORM_ID}
+        onSubmit={onSubmit}
+        className="transaction-form-modal-scroll text-left"
+      >
+        <LineItems />
+        <DetailsSection />
+        <SupplementalFormDetails />
+      </form>
+      <LineItemSummary
+        activeSectionKey={activeSectionKey}
+        onSelect={scrollToSection}
+      />
+      <div className="transaction-form-modal-footer">
+        <SubmitButtonRow />
+      </div>
+    </>
   );
 };
 

@@ -1,8 +1,5 @@
 import { AccountTransaction } from "@/types/transaction";
-import {
-  TransactionProvider,
-  useTransactionContext,
-} from "../context-provider";
+import { TransactionProvider, useTransactionContext } from "../context-provider";
 import { ClearanceDate } from "./clearance-date";
 import { TransactionDetails } from "./transaction-details";
 import { TransactionAmounts } from "./transaction-amount";
@@ -11,8 +8,6 @@ import { ReceiptComponent } from "./receipt-component";
 import { SupplementalInfo } from "./supplemental-info";
 import { getFeaturedAccount } from "../store";
 import { getBudgetMonth } from "@/pages/budget/month-store";
-import { FormComponent } from "../form";
-import { TransactionFormProvider } from "../form/context-provider";
 
 const cardClassNames = [
   "shadow-md",
@@ -22,19 +17,6 @@ const cardClassNames = [
   "even:bg-base-300/50",
 ];
 
-const MainComponent = () => {
-  const { isFormShown } = useTransactionContext();
-
-  if (isFormShown) {
-    return (
-      <TransactionFormProvider>
-        <FormComponent />
-      </TransactionFormProvider>
-    );
-  } else {
-    return <ShowComponent />;
-  }
-};
 const ShowComponent = () => {
   const { objectKey, toggleForm } = useTransactionContext();
   return (
@@ -54,12 +36,11 @@ const ShowComponent = () => {
 };
 
 const InnerCard = () => {
-  const { isFormShown, transaction } = useTransactionContext();
-  const baseClassName = isFormShown ? "form-card" : "card";
-  const cardClassName = [baseClassName, ...cardClassNames].join(" ");
+  const { transaction } = useTransactionContext();
+  const cardClassName = ["card", ...cardClassNames].join(" ");
   return (
     <div id={transaction.objectKey} className={cardClassName}>
-      <MainComponent />
+      <ShowComponent />
       <SupplementalInfo />
     </div>
   );

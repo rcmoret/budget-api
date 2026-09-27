@@ -32,8 +32,10 @@ const CheckMarkButton = (props: CheckMarkButtonProps) => {
 
 const iconButtonClassName = [
   "bg-white/60",
+  "dark:bg-base-content/12",
   "cursor-pointer",
   "hover:bg-white",
+  "dark:hover:bg-base-content/35",
   "hover:font-medium",
   "hover:text-base-content",
   "leading-none",
@@ -50,6 +52,7 @@ const iconButtonClassName = [
 // need to show "currently on" without a hover.
 const activeIconButtonClassName = [
   "bg-white",
+  "dark:bg-base-content/35",
   "font-medium",
   "text-base-content",
 ].join(" ");

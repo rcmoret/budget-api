@@ -70,8 +70,8 @@ const GenericAmountInput = (props: GenericAmountInputProps) => {
   };
 
   return (
-    <div className="grid col-span-full grid-cols-[auto_1fr]">
-      <div>
+    <div className="grid col-span-full grid-cols-[auto_1fr] md:grid-cols-1">
+      <div className="md:hidden">
         <button
           type="button"
           className="btn btn-ghost btn-xs btn-square"

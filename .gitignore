@@ -53,3 +53,5 @@ node_modules
 /.design-sync/learnings/
 /.design-sync/node_modules
 /dist/types/
+
+plans*
