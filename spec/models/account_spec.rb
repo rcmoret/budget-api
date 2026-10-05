@@ -7,13 +7,6 @@ RSpec.describe Account do
     subject { build(:account) }
 
     it { is_expected.to validate_presence_of(:name) }
-    it { is_expected.to validate_presence_of(:priority) }
-
-    it do
-      expect(subject)
-        .to validate_uniqueness_of(:priority)
-        .scoped_to(:user_group_id)
-    end
 
     it {
       expect(subject).to validate_uniqueness_of(:name).scoped_to(:user_group_id)
@@ -22,6 +15,27 @@ RSpec.describe Account do
     it {
       expect(subject).to validate_uniqueness_of(:slug).scoped_to(:user_group_id)
     }
+  end
+
+  describe "priority" do
+    let(:existing) { create(:account) }
+
+    context "when an active account has no priority" do
+      it "assigns the next priority in its user group" do
+        account = build(:account, user_group: existing.user_group,
+          priority: nil)
+        account.valid?
+        expect(account.priority).to eq existing.priority + 1
+      end
+    end
+
+    context "when the account is archived" do
+      it "clears the priority" do
+        account = build(:account, :archived, user_group: existing.user_group)
+        account.valid?
+        expect(account.priority).to be_nil
+      end
+    end
   end
 
   describe "slug format validation" do

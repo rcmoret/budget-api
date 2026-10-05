@@ -2,7 +2,7 @@
 
 module WebApp
   module Serializers
-    class PageSerializer < GenericSerializer
+    class PageSerializer < ::Serializers::GenericSerializer
       transform_keys :lower_camel
 
       include Mixins::AccountsNavigation

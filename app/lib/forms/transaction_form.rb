@@ -23,7 +23,7 @@ module Forms
         raise ActiveRecord::Rollback unless valid?
       end
 
-      transaction_entry.reload
+      transaction_entry.reload if transaction_entry.persisted?
 
       errors.none?
     end

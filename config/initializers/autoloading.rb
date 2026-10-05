@@ -10,3 +10,14 @@ Rails.autoloaders.main.push_dir(
   Rails.root.join("app/serializers"),
   namespace: Serializers
 )
+
+module WebApp; end
+
+ActiveSupport::Dependencies
+  .autoload_paths
+  .delete(Rails.root.join("app/web_app").to_s)
+
+Rails.autoloaders.main.push_dir(
+  Rails.root.join("app/web_app"),
+  namespace: WebApp
+)

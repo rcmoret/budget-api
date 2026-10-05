@@ -4,7 +4,7 @@ module WebApp
   module Budget
     module Rollover
       module Serializers
-        class IndexSerializer < SubjectSerializer
+        class IndexSerializer < ::Serializers::SubjectSerializer
           class CategoryResource
             include Alba::Resource
 

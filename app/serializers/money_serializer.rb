@@ -19,7 +19,7 @@ module Serializers
 
     attributes :cents
     attribute :display do |monetary_amount|
-      monetary_amount.format(symbol: false)
+      monetary_amount.format(symbol: false, thousands_separator: "")
     end
   end
 end

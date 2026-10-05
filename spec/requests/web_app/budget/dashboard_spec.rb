@@ -73,8 +73,9 @@ RSpec.describe "WebApp::Budget::DashboardController", :inertia do
       expect(items[:fixedExpenses].first).to eq(
         key: fixed_expense_item.key,
         budgetCategoryKey: fixed_expense_item.category.key,
+        budgetCategorySlug: fixed_expense_item.category.slug,
         currentlyBudgetedPercentage: 100,
-        iconClassName: "",
+        iconClassName: nil,
         maturityMonth: nil,
         maturityYear: nil,
         month: 7,

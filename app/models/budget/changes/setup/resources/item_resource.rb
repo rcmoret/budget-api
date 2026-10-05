@@ -13,9 +13,7 @@ module Budget
             :updated_amount,
             :flags
 
-          attribute :previously_budgeted,
-            resource: WebApp::MonetaryAmountSerializer,
-            &:previously_budgeted
+          attribute :previously_budgeted, &:previously_budgeted
 
           nested_attribute :adjustment do
             attribute :display, &:adjustment

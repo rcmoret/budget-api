@@ -30,11 +30,25 @@ RSpec.describe Presenters::Budget::MonthlyItemPresenter do
   describe "#reviewable?" do
     subject { described_class.new(item_double) }
 
-    context "when the item is deletable" do
-      let(:item_double) { instance_double(Budget::Item, deletable?: true) }
+    context "when the item is deletable and has an amount remaining" do
+      let(:item_double) do
+        instance_double(Budget::Item, deletable?: true,
+          transaction_detail_count: 0, amount: rand(-100_00..-100))
+      end
 
       it "returns true" do
         expect(subject.reviewable?).to be true
+      end
+    end
+
+    context "when the item is deletable and has nothing remaining" do
+      let(:item_double) do
+        instance_double(Budget::Item, deletable?: true,
+          transaction_detail_count: 1, amount: rand(-100_00..-100))
+      end
+
+      it "returns false" do
+        expect(subject.reviewable?).to be false
       end
     end
 

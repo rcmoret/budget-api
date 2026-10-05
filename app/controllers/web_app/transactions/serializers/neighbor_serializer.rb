@@ -3,7 +3,7 @@
 module WebApp
   module Transactions
     module Serializers
-      class NeighborSerializer < GenericSerializer
+      class NeighborSerializer < ::Serializers::GenericSerializer
         include WebApp::Serializers::Mixins::NeighborsConcern
 
         def href(budget_month)

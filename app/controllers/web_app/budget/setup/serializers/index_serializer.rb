@@ -4,7 +4,7 @@ module WebApp
   module Budget
     module Setup
       module Serializers
-        class IndexSerializer < SubjectSerializer
+        class IndexSerializer < ::Serializers::SubjectSerializer
           # rubocop:disable Metrics/BlockLength
           one :featured_category, source: proc { category } do
             attributes :key,
@@ -17,7 +17,7 @@ module WebApp
               :icon_key,
               :icon_class_name,
               :archived_at
-            one :default_amount, resource: MonetaryAmountSerializer
+            attributes default_amount: :money
 
             attribute :upcoming_maturity_intervals do |category|
               Array.wrap(category.upcoming_maturity_intervals)
@@ -29,13 +29,10 @@ module WebApp
                 :budget_item_key,
                 :object_key
 
-              one :amount, resource: MonetaryAmountSerializer
-              one :updated_amount, resource: MonetaryAmountSerializer
-              one :previously_budgeted, resource: MonetaryAmountSerializer
-              one :transactions_total,
-                resource: MonetaryAmountSerializer,
-                source: proc { spent },
-                &:spent
+              attributes amount: :money,
+                updated_amount: :money,
+                previously_budgeted: :money,
+                transactions_total: :money
               one :flags, source: proc { flags } do
                 attributes :eq_prev_budgeted,
                   :eq_prev_spent,
@@ -48,6 +45,8 @@ module WebApp
               end
 
               transform_keys :lower_camel
+
+              def transactions_total(event) = event.spent
             end
             transform_keys :lower_camel
           end

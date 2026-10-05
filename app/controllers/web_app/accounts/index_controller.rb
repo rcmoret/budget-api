@@ -6,7 +6,7 @@ module WebApp
       include Mixins::PageController
 
       define_route_segment :accounts
-      serialize_with Serializers::AccountSerializer
+      serialize_with IndexSerializer
       use_template "accounts/manage"
 
       subject :accounts do

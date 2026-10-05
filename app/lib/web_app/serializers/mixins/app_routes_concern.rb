@@ -6,7 +6,7 @@ module WebApp
       module AppRoutesConcern
         extend ActiveSupport::Concern
 
-        AppRoutesResource = Class.new(GenericSerializer) do
+        AppRoutesResource = Class.new(::Serializers::GenericSerializer) do
           attributes :account_menu_route,
             :budget_dashboard_route,
             :create_budget_events_route,

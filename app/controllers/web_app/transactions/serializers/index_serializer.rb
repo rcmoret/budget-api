@@ -3,7 +3,7 @@
 module WebApp
   module Transactions
     module Serializers
-      class IndexSerializer < SubjectSerializer
+      class IndexSerializer < ::Serializers::SubjectSerializer
         many :budget_items, resource: BudgetItemSerializer
         one :budget_month, resource: BudgetMonthSerializer
         nested_attribute :featured_account do
@@ -12,7 +12,7 @@ module WebApp
           attribute(:name, &:featured_account_name)
           attribute(:slug, &:featured_account_slug)
           attributes(:edit_route)
-          one :balance_prior_to, resource: MonetaryAmountSerializer
+          attributes balance_prior_to: :money
           many :transactions, resource: EntrySerializer
         end
       end

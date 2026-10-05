@@ -1,7 +1,7 @@
 module WebApp
   module Budget
     module Serializers
-      class BudgetMonthSerializer < GenericSerializer
+      class BudgetMonthSerializer < ::Serializers::GenericSerializer
         attributes :month,
           :year,
           :days_remaining,

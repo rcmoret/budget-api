@@ -126,7 +126,7 @@ RSpec.describe Forms::TransactionForm do
 
           it "creates the transation entry" do
             expect { described_class.new(user, transaction_entry, params).save }
-              .to change { Transaction::Entry.budget_exclusions.count }
+              .to change { Transaction::Entry.where(budget_exclusion: true).count }
               .by(+1)
           end
         end
@@ -145,7 +145,7 @@ RSpec.describe Forms::TransactionForm do
 
           it "does not create a transaction entry" do
             expect { described_class.new(user, transaction_entry, params).save }
-              .not_to(change { Transaction::Entry.budget_exclusions.count })
+              .not_to(change { Transaction::Entry.where(budget_exclusion: true).count })
           end
 
           it "includes an error" do
@@ -186,7 +186,7 @@ RSpec.describe Forms::TransactionForm do
 
           it "does not create a transaction entry" do
             expect { described_class.new(user, transaction_entry, params).save }
-              .not_to(change { Transaction::Entry.budget_exclusions.count })
+              .not_to(change { Transaction::Entry.where(budget_exclusion: true).count })
           end
 
           it "includes an error" do
@@ -218,7 +218,7 @@ RSpec.describe Forms::TransactionForm do
 
           it "does not create a transation entry" do
             expect { described_class.new(user, transaction_entry, params).save }
-              .not_to(change { Transaction::Entry.budget_exclusions.count })
+              .not_to(change { Transaction::Entry.where(budget_exclusion: true).count })
           end
 
           it "includes an error" do
@@ -621,7 +621,7 @@ RSpec.describe Forms::TransactionForm do
             from_transaction:)
         end
 
-        context "when adding a detail" do
+        context "when adding a detail that changes the total" do
           it "does not create a detail" do
             params = { details_attributes: [ { key: KeyGenerator.call,
                                                amount: 55_82, } ] }
@@ -637,8 +637,8 @@ RSpec.describe Forms::TransactionForm do
             subject = described_class.new(user, to_transaction,
               params).tap(&:save)
 
-            expect(subject.errors[:transfer])
-              .to eq([ "Cannot have multiple details for transfer" ])
+            expect(subject.errors[:total])
+              .to eq([ "Cannot be changed for a transfer" ])
           end
         end
 
@@ -646,7 +646,7 @@ RSpec.describe Forms::TransactionForm do
           let(:category) { create(:category, user_group: user.group) }
           let(:budget_item) { create(:budget_item, category:) }
 
-          it "does not change the detail" do
+          it "assigns the budget item to the detail" do
             detail = to_transaction.details.first
             params = {
               details_attributes: [
@@ -658,25 +658,8 @@ RSpec.describe Forms::TransactionForm do
             }
 
             expect { described_class.new(user, to_transaction, params).save }
-              .not_to(change { detail.reload })
-          end
-
-          it "includes an error" do
-            detail = to_transaction.details.first
-            params = {
-              details_attributes: [
-                {
-                  id: detail.id,
-                  budget_item_id: budget_item.id,
-                },
-              ],
-            }
-
-            subject = described_class.new(user, to_transaction,
-              params).tap(&:save)
-
-            expect(subject.errors[:transfer])
-              .to eq([ "Transfer cannot be associated with a budget item" ])
+              .to change { detail.reload.budget_item_id }
+              .to(budget_item.id)
           end
         end
       end

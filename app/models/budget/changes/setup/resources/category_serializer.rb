@@ -15,7 +15,7 @@ module Budget
             :is_monthly,
             :route
 
-          one :default_amount, resource: WebApp::MonetaryAmountSerializer
+          attributes default_amount: :money
 
           many :events, source: proc { events.map(&:flags) } do
             attributes :eq_prev_budgeted,

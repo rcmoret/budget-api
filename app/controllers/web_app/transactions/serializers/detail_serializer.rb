@@ -3,9 +3,9 @@
 module WebApp
   module Transactions
     module Serializers
-      class DetailSerializer < GenericSerializer
+      class DetailSerializer < ::Serializers::GenericSerializer
         attributes :key, :object_key
-        one :amount, resource: MonetaryAmountSerializer
+        attributes amount: :money
         attribute(:budget_item_key) { |detail| detail.budget_item&.key }
         attribute(:budget_category_name) do |detail|
           detail.budget_item&.name.presence || "-"

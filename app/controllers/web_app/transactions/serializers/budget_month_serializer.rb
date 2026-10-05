@@ -3,7 +3,7 @@
 module WebApp
   module Transactions
     module Serializers
-      class BudgetMonthSerializer < GenericSerializer
+      class BudgetMonthSerializer < ::Serializers::GenericSerializer
         FORMAT = "%B %-d, %Y"
 
         attributes :month,

@@ -19,9 +19,7 @@ module Budget
           # end
 
           nested_attribute(:metadata) do
-            one :sum,
-              resource: WebApp::MonetaryAmountSerializer,
-              source: proc { categories.sum(&:sum) }
+            attributes sum: :money
             attribute(:count) { |object| object.categories.count }
             attribute(:unreviewed) do |object|
               object.categories.count(&:unreviewed?)
@@ -33,6 +31,8 @@ module Budget
             attributes :is_selected
 
             transform_keys :lower_camel
+
+            def sum(object) = object.categories.sum(&:sum)
           end
 
           transform_keys :lower_camel

@@ -1,10 +1,10 @@
 module WebApp
   module Transactions
     module Serializers
-      class BudgetItemSerializer < GenericSerializer
+      class BudgetItemSerializer < ::Serializers::GenericSerializer
         attributes :name,
           :key
-        one :remaining, resource: MonetaryAmountSerializer
+        attributes remaining: :money
 
         attribute(:is_accrual, &:accrual?)
         attribute(:is_fixed, &:monthly?)

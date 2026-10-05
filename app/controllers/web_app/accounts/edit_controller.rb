@@ -7,7 +7,7 @@ module WebApp
       include Mixins::PageController
 
       define_route_segments :accounts, :edit
-      serialize_with Serializers::AccountSerializer
+      serialize_with IndexSerializer
       use_template "accounts/edit"
 
       subject(:account) { account }

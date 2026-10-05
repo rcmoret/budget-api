@@ -3,7 +3,7 @@
 module WebApp
   module UserProfiles
     module Serializers
-      class UserProfileSerializer < SubjectSerializer
+      class UserProfileSerializer < ::Serializers::SubjectSerializer
         attributes :key, :email
 
         attribute(:timezone) { |profile| profile.configuration(:timezone) }

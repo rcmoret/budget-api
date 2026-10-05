@@ -3,7 +3,7 @@
 module WebApp
   module Budget
     module Serializers
-      class DashboardSerializer < SubjectSerializer
+      class DashboardSerializer < ::Serializers::SubjectSerializer
         nested_attribute :items do
           many :fixed_expenses, resource: ItemSerializer
           many :variable_expenses, resource: ItemSerializer

@@ -3,7 +3,7 @@
 module WebApp
   module Serializers
     module Budget
-      class NeighborSerializer < GenericSerializer
+      class NeighborSerializer < ::Serializers::GenericSerializer
         include Mixins::NeighborsConcern
 
         def href(budget_month)

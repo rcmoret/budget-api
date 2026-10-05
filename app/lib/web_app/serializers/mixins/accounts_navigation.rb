@@ -63,7 +63,7 @@ module WebApp
       # `key` serves more than the nav links: it's what the transaction form's
       # account select submits, since an `account_key` param resolves through
       # `Account.fetch(key:)`.
-      AccountLinkSerializer = Class.new(GenericSerializer) do
+      AccountLinkSerializer = Class.new(::Serializers::GenericSerializer) do
         attributes :key, :name, :balance, :slug, :href
       end
     end

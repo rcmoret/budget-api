@@ -44,7 +44,7 @@ module WebApp
         case redirect_params
         in ["budget", *rest]
           BudgetRoutingMatcher.call(*rest)
-        in ["accounts", "manage"]
+        in ["accounts", *]
           accounts_path
         in ["account", *rest]
           resolve_account_path(*rest)

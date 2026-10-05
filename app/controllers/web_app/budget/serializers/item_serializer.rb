@@ -3,7 +3,7 @@
 module WebApp
   module Budget
     module Serializers
-      class ItemSerializer < GenericSerializer
+      class ItemSerializer < ::Serializers::GenericSerializer
         attributes :key,
           :budget_category_key,
           :budget_category_slug,
@@ -17,8 +17,7 @@ module WebApp
           :previously_budgeted_percentage,
           :year
 
-        one :amount, resource: MonetaryAmountSerializer
-        one :currently_budgeted, resource: MonetaryAmountSerializer
+        attributes amount: :money, currently_budgeted: :money
         attribute(:is_accrual, &:accrual?)
         attribute(:is_deleted, &:deleted?)
         attribute(:is_cleared, &:cleared?)
@@ -27,9 +26,9 @@ module WebApp
         attribute(:is_fixed, &:monthly?)
         attribute(:is_mature, &:mature?)
         attribute(:is_pending) { |item| !item.cleared? }
-        one :previously_budgeted, resource: MonetaryAmountSerializer
-        one :remaining, resource: MonetaryAmountSerializer
-        one :transaction_detail_total, resource: MonetaryAmountSerializer
+        attributes previously_budgeted: :money,
+          remaining: :money,
+          transaction_detail_total: :money
         attribute(:transaction_details) { [] }
         attribute(:upcoming_maturity_month) do |item|
           item.upcoming_maturity_date&.strftime("%b %Y")

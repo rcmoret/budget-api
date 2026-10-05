@@ -101,7 +101,7 @@ RSpec.describe WebApp::Mixins::HasRedirectParams do
     let(:year) { Time.current.year.to_s }
 
     it "returns the budget index path with no params" do
-      expect(subject.redirect_path).to eq dashboard_path
+      expect(subject.redirect_path).to eq "/budget"
     end
   end
 

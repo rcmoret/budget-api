@@ -32,7 +32,7 @@ module Serializers
               key: item.key,
               event_key: item.event_key,
               adjustment: item.adjustment,
-              remaining: item.
+              remaining: item.remaining
             }
           end
         end

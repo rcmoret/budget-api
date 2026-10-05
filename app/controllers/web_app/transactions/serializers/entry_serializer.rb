@@ -3,7 +3,7 @@
 module WebApp
   module Transactions
     module Serializers
-      class EntrySerializer < WebApp::Serializers::GenericSerializer
+      class EntrySerializer < ::Serializers::GenericSerializer
         FORMAT = "%B %-d, %Y"
 
         attributes :key,
@@ -13,10 +13,8 @@ module WebApp
           :description,
           :notes,
           :object_key
-        one :amount, resource: WebApp::Serializers::MonetaryAmountSerializer
+        attributes amount: :money, running_balance: :money
         attribute(:is_budget_exclusion, &:budget_exclusion?)
-        one :running_balance,
-          resource: WebApp::Serializers::MonetaryAmountSerializer
         many :details,
           source: proc { details.to_a.sort },
           resource: DetailSerializer

@@ -42,8 +42,8 @@ RSpec.describe Forms::Budget::Events::CreateItemForm do
         params = params_for(category:, interval:)
         form = described_class.new(user, change_set, params)
         expect(form.save).to be false
-        expect(form.errors[:budget_category_id])
-          .to include "has already been taken"
+        expect(form.errors[:budget_item])
+          .to include "already exists"
       end
     end
   end
@@ -77,7 +77,7 @@ RSpec.describe Forms::Budget::Events::CreateItemForm do
         form = described_class.new(user, change_set, params)
         expect(form).not_to be_valid
         expect(form.errors["amount"])
-          .to include "expense items must be less than or equal to 0"
+          .to include Budget::Messages::EXPENSE_AMOUNT_VALIDATION_MESSAGE
       end
     end
 
@@ -92,7 +92,7 @@ RSpec.describe Forms::Budget::Events::CreateItemForm do
         form = described_class.new(user, change_set, params)
         expect(form.save).to be false
         expect(form.errors["amount"])
-          .to include "revenue items must be greater than or equal to 0"
+          .to include Budget::Messages::REVENUE_AMOUNT_VALIDATION_MESSAGE
       end
     end
   end
@@ -195,8 +195,8 @@ RSpec.describe Forms::Budget::Events::CreateItemForm do
         params = params_for(category:, interval:)
         form = described_class.new(user, change_set, params)
         expect(form.save).to be false
-        expect(form.errors["budget_category_id"])
-          .to include "has already been taken"
+        expect(form.errors[:budget_item])
+          .to include "already exists"
       end
     end
 

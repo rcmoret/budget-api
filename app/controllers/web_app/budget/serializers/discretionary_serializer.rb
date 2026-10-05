@@ -3,15 +3,11 @@
 module WebApp
   module Budget
     module Serializers
-      class DiscretionarySerializer < GenericSerializer
-        one :initial_amount,
-          resource: MonetaryAmountSerializer
-        one :over_under_budget,
-          resource: MonetaryAmountSerializer
-        one :remaining,
-          resource: MonetaryAmountSerializer
-        one :transactions_total,
-          resource: MonetaryAmountSerializer
+      class DiscretionarySerializer < ::Serializers::GenericSerializer
+        attributes initial_amount: :money,
+          over_under_budget: :money,
+          remaining: :money,
+          transactions_total: :money
       end
     end
   end
