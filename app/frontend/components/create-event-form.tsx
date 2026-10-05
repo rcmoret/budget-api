@@ -23,8 +23,8 @@ type CreateEventSelectProps = {
   eventContext: TCreateEventClientContext;
   children: React.ReactNode;
   selectedKey?: null | string;
-  month: string | number;
-  year: string | number;
+  month?: string | number;
+  year?: string | number;
 };
 
 // The options `post` accepts, derived from the react adapter's public form
@@ -126,7 +126,11 @@ const initialFormBody: CreateEventFormBody = {
 
 const CreateEventSelectProvider = (props: CreateEventSelectProps) => {
   const createBudgetEventsRoute = useAppRoutes("createBudgetEventsRoute");
-  const { month, year } = getBudgetMonth();
+  // The month to create events in, which can differ from the page's budget
+  // month (e.g. the rollover page targets the upcoming month).
+  const budgetMonth = getBudgetMonth();
+  const month = props.month ?? budgetMonth.month;
+  const year = props.year ?? budgetMonth.year;
   const [componentState, setComponentState] =
     useState<TComponentState>("initialized");
   const { data, errors, post, processing, setData, transform } =

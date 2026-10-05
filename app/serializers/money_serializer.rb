@@ -3,7 +3,7 @@ module Serializers
     include Alba::Resource
 
     def initialize(*args)
-      case args.compact_blank
+      case MoneyConcern.normalize_args(args).compact_blank
       in [ Money => money ]
         money
       in [ Integer => number ]

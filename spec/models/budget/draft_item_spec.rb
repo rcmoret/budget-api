@@ -49,7 +49,7 @@ RSpec.describe Budget::DraftItem do
       let(:change) do
         Forms::Budget::DraftChangeForm.new(
           interval,
-          budget_item_key: KeyError.call,
+          budget_item_key: KeyGenerator.call,
           budget_category_key: category.key,
           amount: -32_00,
         )

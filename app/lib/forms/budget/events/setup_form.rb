@@ -6,9 +6,10 @@ module Forms
 
         validate :interval_needs_setup!
 
-        def initialize(user:, interval:, **options)
+        def initialize(user:, interval:, change_set:, **options)
           @events_form = Forms::Budget::EventsForm.new(
             user,
+            change_set,
             events: options.delete(:events)
           )
           @interval = interval

@@ -2,6 +2,8 @@
 
 module WebApp
   class MonetaryAmountSerializer < GenericSerializer
+    include Comparable
+
     attribute(:display) do |amount|
       if amount.blank?
         ""
@@ -11,5 +13,11 @@ module WebApp
     end
 
     attribute(:cents, &:itself)
+
+    protected
+
+    def <=>(other)
+      cents <=> other.cents
+    end
   end
 end

@@ -51,9 +51,18 @@ namespace :budget do
       get "(/:slug)",
           to: WebApp::Budget::Rollover::FormController.action(:call),
           as: :rollover_form
+      put "/:slug",
+          to: WebApp::Budget::Rollover::UpdateItemController.action(:call)
+      delete "/",
+        to: WebApp::Budget::Rollover::ResetController.action(:call)
+      put "/",
+        to: WebApp::Budget::Rollover::UpdateUnappliedTargetController.action(:call)
+      post "/",
+        to: WebApp::Budget::Rollover::FinalizeController.action(:call),
+        as: :finalize_rollover
     end
 
-    get "/finalize", to: WebApp::Budget::Finalize::FormController.action(:call), as: :finalize_form
+    # get "/finalize", to: WebApp::Budget::Rollover::FormController.action(:call), as: :finalize_form
     post "/finalize", to: WebApp::Budget::Finalize::CreateEventsController.action(:call)
   end
 end

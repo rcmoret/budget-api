@@ -3,6 +3,8 @@ module Budget
     class Setup
       module Presenters
         class DataModel
+          include DataModelConcern
+
           CATEGORY_ATTRIBUTES = %i[
             key
             name
@@ -93,29 +95,6 @@ module Budget
               change.events_data.fetch("categories").map do |category_data|
                 category_struct(category_data)
               end.sort!
-          end
-
-          attr_reader :change, :categories
-
-          attr_accessor :slug
-
-          def with(slug:)
-            @slug = slug
-            self
-          end
-
-          delegate :find, to: :categories
-
-          def category
-            if slug.blank?
-              categories.first
-            else
-              find { |category| category.slug == slug } || categories.first
-            end
-          end
-
-          def slugs
-            categories.map(&:slug)
           end
 
           private

@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.describe Forms::Budget::Events::SetupForm do
+  let(:change_set) { create(:budget_change_set, :adjust) }
+
   let(:user) { create(:user) }
 
   describe "interval not setup validation" do
@@ -15,7 +17,7 @@ RSpec.describe Forms::Budget::Events::SetupForm do
 
     it "records an error" do
       events_params = [ { event_type: valid_create_event } ]
-      form = described_class.new(user:, interval:,
+      form = described_class.new(user:, interval:, change_set:,
         events: events_params)
 
       expect(form.save).to be false
@@ -25,7 +27,7 @@ RSpec.describe Forms::Budget::Events::SetupForm do
 
   describe "events form validation" do
     subject do
-      described_class.new(user:, interval:, events: events_params)
+      described_class.new(user:, interval:, change_set:, events: events_params)
     end
 
     before do
@@ -63,7 +65,7 @@ RSpec.describe Forms::Budget::Events::SetupForm do
 
   context "when the form does not save correctly" do
     subject do
-      described_class.new(user:, interval:, events: events_params)
+      described_class.new(user:, interval:, change_set:, events: events_params)
     end
 
     before do
@@ -99,7 +101,7 @@ RSpec.describe Forms::Budget::Events::SetupForm do
 
   describe "updates to the interval" do
     subject do
-      described_class.new(user:, interval:, events: events_params)
+      described_class.new(user:, interval:, change_set:, events: events_params)
     end
 
     before do
@@ -165,6 +167,7 @@ RSpec.describe Forms::Budget::Events::SetupForm do
         described_class.new(
           user: interval.user_group.users.first,
           interval:,
+          change_set:,
           events: events_params,
           start_date:,
           end_date:,
@@ -193,7 +196,7 @@ RSpec.describe Forms::Budget::Events::SetupForm do
 
   describe "initializing and saving the events form" do
     subject do
-      described_class.new(user:, interval:, events: events_params)
+      described_class.new(user:, interval:, change_set:, events: events_params)
     end
 
     before do
@@ -211,7 +214,7 @@ RSpec.describe Forms::Budget::Events::SetupForm do
     it "initializes the events form" do
       expect(Forms::Budget::EventsForm)
         .to receive(:new)
-        .with(user, events: events_params)
+        .with(user, change_set, events: events_params)
       subject.save
     end
 
@@ -229,7 +232,7 @@ RSpec.describe Forms::Budget::Events::SetupForm do
   end
 
   describe ".save" do
-    subject { described_class.new(user:, interval:, events: []) }
+    subject { described_class.new(user:, interval:, change_set:, events: []) }
 
     before do
       allow(Forms::Budget::EventsForm)

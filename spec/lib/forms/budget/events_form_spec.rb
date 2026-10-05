@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.describe Forms::Budget::EventsForm do
+  let(:change_set) { create(:budget_change_set, :adjust) }
+
   let(:user) { create(:user) }
 
   describe "validations" do
@@ -13,7 +15,7 @@ RSpec.describe Forms::Budget::EventsForm do
             },
           ],
         }
-        form = described_class.new(user, params)
+        form = described_class.new(user, change_set, params)
         expect(form).to be_valid
       end
     end
@@ -21,7 +23,7 @@ RSpec.describe Forms::Budget::EventsForm do
     context "when providing a single item array that is invalid" do
       it "returns not valid" do
         params = { events: [ { event_type: unregistered_event } ] }
-        form = described_class.new(user, params)
+        form = described_class.new(user, change_set, params)
         expect(form).not_to be_valid
       end
     end
@@ -36,7 +38,7 @@ RSpec.describe Forms::Budget::EventsForm do
       before do
         allow(Forms::Budget::Events::CreateItemForm)
           .to receive(:new)
-          .with(user, params[:events].first.symbolize_keys)
+          .with(user, change_set, params[:events].first.symbolize_keys)
           .and_return(instance_double(Forms::Budget::Events::CreateItemForm,
             save: true))
       end
@@ -44,8 +46,8 @@ RSpec.describe Forms::Budget::EventsForm do
       it "initializes a create item event form object" do
         expect(Forms::Budget::Events::CreateItemForm)
           .to receive(:new)
-          .with(user, params[:events].first.symbolize_keys)
-        described_class.new(user, params).save
+          .with(user, change_set, params[:events].first.symbolize_keys)
+        described_class.new(user, change_set, params).save
       end
     end
   end
@@ -60,7 +62,7 @@ RSpec.describe Forms::Budget::EventsForm do
             },
           ],
         }
-        form = described_class.new(user, params)
+        form = described_class.new(user, change_set, params)
         expect(form.save).to be false
       end
     end
@@ -76,17 +78,17 @@ RSpec.describe Forms::Budget::EventsForm do
       before do
         allow(Forms::Budget::Events::CreateItemForm)
           .to receive(:new)
-          .with(user, params[:events].first.symbolize_keys)
+          .with(user, change_set, params[:events].first.symbolize_keys)
           .and_return(form_double)
       end
 
       it "returns true" do
-        form = described_class.new(user, params)
+        form = described_class.new(user, change_set, params)
         expect(form.save).to be true
       end
 
       it "calls save on the form objects" do
-        form = described_class.new(user, params)
+        form = described_class.new(user, change_set, params)
         expect(form_double).to receive(:save)
         form.save
       end
@@ -96,7 +98,7 @@ RSpec.describe Forms::Budget::EventsForm do
       before do
         allow(Forms::Budget::Events::CreateItemForm)
           .to receive(:new)
-          .with(user, params[:events].first.symbolize_keys)
+          .with(user, change_set, params[:events].first.symbolize_keys)
           .and_call_original
       end
 
@@ -113,12 +115,12 @@ RSpec.describe Forms::Budget::EventsForm do
       end
 
       it "returns false" do
-        form = described_class.new(user, params)
+        form = described_class.new(user, change_set, params)
         expect(form.save).to be false
       end
 
       it "calls surfaces the form object errors" do
-        form = described_class.new(user, params)
+        form = described_class.new(user, change_set, params)
         form.save
         expect(form.errors[event_key])
           .to include(category: [ "can't be blank" ])

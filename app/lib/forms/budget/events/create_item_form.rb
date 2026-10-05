@@ -111,7 +111,7 @@ module Forms
         end
 
         def new_item
-          return if category.monthly?
+          return if category.nil? || category.monthly?
           return unless ::Budget::Item.exists?(interval:, category:)
 
           errors.add(:budget_item, "already exists")

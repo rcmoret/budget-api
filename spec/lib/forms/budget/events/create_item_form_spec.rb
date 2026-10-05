@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.describe Forms::Budget::Events::CreateItemForm do
+  let!(:change_set) { create(:budget_change_set, :adjust) }
+
   describe "event type validation" do
     let(:user) { create(:user) }
     let(:category) { create(:category, :expense, user_group: user.user_group) }
@@ -9,7 +11,7 @@ RSpec.describe Forms::Budget::Events::CreateItemForm do
     context "when a valid event" do
       it "is a valid form object" do
         params = params_for(category:, interval:)
-        form = described_class.new(user, params)
+        form = described_class.new(user, change_set, params)
         expect(form).to be_valid
       end
     end
@@ -18,7 +20,7 @@ RSpec.describe Forms::Budget::Events::CreateItemForm do
       it "is an invalid form object" do
         params = params_for(category:, interval:,
           event_type: "nonsense_event")
-        form = described_class.new(user, params)
+        form = described_class.new(user, change_set, params)
         expect(form).not_to be_valid
         expect(form.errors[:event_type])
           .to include "is not included in the list"
@@ -38,7 +40,7 @@ RSpec.describe Forms::Budget::Events::CreateItemForm do
     context "when a valid event" do
       it "is a valid form object" do
         params = params_for(category:, interval:)
-        form = described_class.new(user, params)
+        form = described_class.new(user, change_set, params)
         expect(form.save).to be false
         expect(form.errors[:budget_category_id])
           .to include "has already been taken"
@@ -54,7 +56,7 @@ RSpec.describe Forms::Budget::Events::CreateItemForm do
     context "when a integer" do
       it "is a valid form object" do
         params = params_for(category:, interval:, amount: 0)
-        form = described_class.new(user, params)
+        form = described_class.new(user, change_set, params)
         expect(form).to be_valid
       end
     end
@@ -63,7 +65,7 @@ RSpec.describe Forms::Budget::Events::CreateItemForm do
       it "is an invalid form object" do
         params = params_for(category:, interval:,
           amount: -0.4)
-        form = described_class.new(user, params)
+        form = described_class.new(user, change_set, params)
         expect(form).not_to be_valid
         expect(form.errors["amount"]).to include "must be an integer"
       end
@@ -72,7 +74,7 @@ RSpec.describe Forms::Budget::Events::CreateItemForm do
     context "when passing a postive amount for an expense" do
       it "is an invalid for object" do
         params = params_for(category:, interval:, amount: 40)
-        form = described_class.new(user, params)
+        form = described_class.new(user, change_set, params)
         expect(form).not_to be_valid
         expect(form.errors["amount"])
           .to include "expense items must be less than or equal to 0"
@@ -87,7 +89,7 @@ RSpec.describe Forms::Budget::Events::CreateItemForm do
       it "returns false" do
         params = params_for(amount: -22_50, category:,
           interval:)
-        form = described_class.new(user, params)
+        form = described_class.new(user, change_set, params)
         expect(form.save).to be false
         expect(form.errors["amount"])
           .to include "revenue items must be greater than or equal to 0"
@@ -106,34 +108,33 @@ RSpec.describe Forms::Budget::Events::CreateItemForm do
     context "when the happy path" do
       it "returns true" do
         params = params_for(interval:, category:)
-        expect(described_class.new(user, params).save).to be true
+        expect(described_class.new(user, change_set, params).save).to be true
       end
 
       it "creates an interval if needed" do
         params = params_for(interval:, category:, month: 1,
           year: 2019)
-        expect { described_class.new(user, params).save }
+        expect { described_class.new(user, change_set, params).save }
           .to change { Budget::Interval.count }
           .by(+1)
       end
 
       it "does not create an interval - not needed" do
         params = params_for(interval:, category:)
-        expect { described_class.new(user, params).save }.not_to(change do
-          Budget::Interval.count
-        end)
+        expect { described_class.new(user, change_set, params).save }
+          .not_to(change { Budget::Interval.count })
       end
 
       it "creates an event" do
         params = params_for(category:, interval:)
-        expect { described_class.new(user, params).save }
+        expect { described_class.new(user, change_set, params).save }
           .to change { Budget::ItemEvent.create_events.count }
           .by(+1)
       end
 
       it "creates an item" do
         params = params_for(category:, interval:)
-        expect { described_class.new(user, params).save }
+        expect { described_class.new(user, change_set, params).save }
           .to change { Budget::Item.count }
           .by(+1)
       end
@@ -142,7 +143,7 @@ RSpec.describe Forms::Budget::Events::CreateItemForm do
         it "creates an event" do
           params = params_for(category:, interval:,
             event_type: described_class::SETUP_ITEM_CREATE)
-          expect { described_class.new(user, params).save }
+          expect { described_class.new(user, change_set, params).save }
             .to change { Budget::ItemEvent.setup_item_create.count }
             .by(+1)
         end
@@ -152,7 +153,7 @@ RSpec.describe Forms::Budget::Events::CreateItemForm do
         it "creates a pre-set-up item create event" do
           params = params_for(interval:, category:,
             event_type: described_class::ITEM_CREATE)
-          expect { described_class.new(user, params).save }
+          expect { described_class.new(user, change_set, params).save }
             .to change { Budget::ItemEvent.pre_setup_item_create.count }
             .by(+1)
         end
@@ -166,7 +167,7 @@ RSpec.describe Forms::Budget::Events::CreateItemForm do
         it "creates a regular item create event" do
           params = params_for(interval:, category:,
             event_type: described_class::ITEM_CREATE)
-          expect { described_class.new(user, params).save }
+          expect { described_class.new(user, change_set, params).save }
             .to change { Budget::ItemEvent.item_create.count }
             .by(+1)
         end
@@ -177,7 +178,7 @@ RSpec.describe Forms::Budget::Events::CreateItemForm do
       it "returns false" do
         params = params_for(category:, interval:,
           budget_category_key: "nil")
-        form = described_class.new(user, params)
+        form = described_class.new(user, change_set, params)
         expect(form.save).to be false
         expect(form.errors["category"]).to include "can't be blank"
       end
@@ -192,7 +193,7 @@ RSpec.describe Forms::Budget::Events::CreateItemForm do
       it "returns false" do
         create(:budget_item, category:, interval:)
         params = params_for(category:, interval:)
-        form = described_class.new(user, params)
+        form = described_class.new(user, change_set, params)
         expect(form.save).to be false
         expect(form.errors["budget_category_id"])
           .to include "has already been taken"
@@ -202,16 +203,15 @@ RSpec.describe Forms::Budget::Events::CreateItemForm do
     context "when errors on the interval" do
       it "returns false" do
         params = params_for(interval:, category:, month: 0)
-        form = described_class.new(user, params)
+        form = described_class.new(user, change_set, params)
         expect(form.save).to be false
         expect(form.errors["month"]).to include "is not included in the list"
       end
 
       it "does not create an interval object" do
         params = params_for(interval:, category:, month: 0)
-        expect { described_class.new(user, params).save }.not_to(change do
-          Budget::Interval.count
-        end)
+        expect { described_class.new(user, change_set, params).save }
+          .not_to(change { Budget::Interval.count })
       end
     end
   end

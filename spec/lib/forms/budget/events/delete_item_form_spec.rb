@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.describe Forms::Budget::Events::DeleteItemForm do
+  let(:change_set) { create(:budget_change_set, :adjust) }
+
   # inherited from the base class but needs to be tested here
   describe ".applies?" do
     context "when an applicable event" do
@@ -33,7 +35,7 @@ RSpec.describe Forms::Budget::Events::DeleteItemForm do
             budget_item_key: budget_item.key,
             event_type: Budget::EventTypes::DELETE_EVENTS.sample,
           }
-          expect(described_class.new(user, params)).to be_valid
+          expect(described_class.new(user, change_set, params)).to be_valid
         end
       end
 
@@ -43,7 +45,7 @@ RSpec.describe Forms::Budget::Events::DeleteItemForm do
             event_type: "nonsense_event",
             budget_item_key: budget_item.key,
           }
-          form = described_class.new(user, params)
+          form = described_class.new(user, change_set, params)
           expect(form).not_to be_valid
           expect(form.errors["event_type"])
             .to include "is not included in the list"
@@ -61,7 +63,7 @@ RSpec.describe Forms::Budget::Events::DeleteItemForm do
             budget_item_key: budget_item.key,
             event_type: Budget::EventTypes::DELETE_EVENTS.sample,
           }
-          expect(described_class.new(user, params)).to be_valid
+          expect(described_class.new(user, change_set, params)).to be_valid
         end
       end
 
@@ -71,7 +73,7 @@ RSpec.describe Forms::Budget::Events::DeleteItemForm do
             budget_item_key: KeyGenerator.call,
             event_type: Budget::EventTypes::DELETE_EVENTS.sample,
           }
-          form = described_class.new(user, params)
+          form = described_class.new(user, change_set, params)
           expect(form).not_to be_valid
           expect(form.errors["budget_item"]).to include "can't be blank"
         end
@@ -90,7 +92,7 @@ RSpec.describe Forms::Budget::Events::DeleteItemForm do
             budget_item_key: budget_item.key,
             event_type: Budget::EventTypes::DELETE_EVENTS.sample,
           }
-          form = described_class.new(user, params)
+          form = described_class.new(user, change_set, params)
           expect(form).not_to be_valid
           expect(form.errors["budget_item"])
             .to include "cannot delete an item with transaction details"
@@ -105,7 +107,7 @@ RSpec.describe Forms::Budget::Events::DeleteItemForm do
           budget_item_key: budget_item.key,
           event_type: Budget::EventTypes::DELETE_EVENTS.sample,
         }
-        expect(described_class.new(user, params)).not_to be_valid
+        expect(described_class.new(user, change_set, params)).not_to be_valid
       end
     end
   end
@@ -123,7 +125,7 @@ RSpec.describe Forms::Budget::Events::DeleteItemForm do
           budget_item_key: budget_item.key,
           event_type: Budget::EventTypes::DELETE_EVENTS.sample,
         }
-        form = described_class.new(user, params)
+        form = described_class.new(user, change_set, params)
         expect(form.save).to be true
       end
 
@@ -132,7 +134,7 @@ RSpec.describe Forms::Budget::Events::DeleteItemForm do
           budget_item_key: budget_item.key,
           event_type: Budget::EventTypes::DELETE_EVENTS.sample,
         }
-        form = described_class.new(user, params)
+        form = described_class.new(user, change_set, params)
         expect { form.save }
           .to(change { budget_item.reload.deleted_at }
           .from(nil)
@@ -144,7 +146,7 @@ RSpec.describe Forms::Budget::Events::DeleteItemForm do
           budget_item_key: budget_item.key,
           event_type: Budget::EventTypes::DELETE_EVENTS.sample,
         }
-        form = described_class.new(user, params)
+        form = described_class.new(user, change_set, params)
         expect { form.save }.to(change { Budget::ItemEvent.delete_events.count }
           .from(0).to(+1))
       end

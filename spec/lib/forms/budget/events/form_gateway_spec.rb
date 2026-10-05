@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.describe Forms::Budget::Events::FormGateway do
+  let(:change_set) { create(:budget_change_set, :adjust) }
+
   describe ".handler_registered?" do
     context "when providing one that is registered" do
       it "returns true" do
@@ -28,10 +30,10 @@ RSpec.describe Forms::Budget::Events::FormGateway do
           amount: rand(1000),
         }
         expect(Forms::Budget::Events::CreateItemForm).to receive(:new).with(
-          user, event
+          user, change_set, event
         )
 
-        described_class.form_for(user, event)
+        described_class.form_for(user, change_set, event)
       end
     end
 
@@ -40,7 +42,7 @@ RSpec.describe Forms::Budget::Events::FormGateway do
         event = { event_type: "unregistered_event", budget_item_id: rand(100),
                   amount: rand(1000), }
 
-        expect { described_class.form_for(user, event) }
+        expect { described_class.form_for(user, change_set, event) }
           .to raise_error(described_class::MissingFormClassError)
       end
     end

@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :user_group, class: "User::Group" do
     sequence(:name) { |n| "user_group_#{n}" }
-    sequence(:primary_email) { |n| "user_group_#{n}@example.com" }
+    sequence(:primary_email) { |n| "user_group_#{n}_#{SecureRandom.hex(4)}@example.com" }
     key { KeyGenerator.call }
 
     trait :with_user do

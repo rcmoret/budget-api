@@ -8,6 +8,45 @@ module Budget
       self.table_name = :budget_details
       self.primary_key = :id
 
+      # monetize :budgeted_cents,
+      #   :currently_budgeted_cents,
+      #   :difference_cents,
+      #   :previously_budgeted_cents,
+      #   :transaction_detail_total_cents
+
+      scope :fixed, -> { where(type: "Budget::Details::Fixed") } do
+        def reviewable
+          where(
+            arel_table[:transaction_detail_count]
+            .eq(0)
+            .and(arel_table[:budgeted].not_eq(0))
+          )
+        end
+      end
+
+      scope :variable_expense, lambda {
+        where(type: "Budget::Details::VariableExpense")
+      } do
+        def reviewable
+          where(difference: ...0)
+        end
+      end
+
+      scope :variable_revenue, lambda {
+        where(type: "Budget::Details::VariableRevenue")
+      } do
+        def reviewable
+          where(difference: 1..)
+        end
+      end
+
+      scope :reviewable, lambda {
+        fixed
+          .reviewable
+          .or(variable_expense.reviewable)
+          .or(variable_revenue.reviewable)
+      }
+
       def object_prefix
         super("Budget::Item")
       end
@@ -46,7 +85,7 @@ module Budget
       end
 
       def currently_budgeted_percentage
-        return 0 if currently_budgeted.zero?
+        return 0 if currently_budgeted.zero? || amount.zero?
         return 100 if previously_budgeted.zero?
 
         ((100 * currently_budgeted) / amount).clamp(1, 99)

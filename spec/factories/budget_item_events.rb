@@ -3,6 +3,9 @@ FactoryBot.define do
     association :type, factory: :budget_item_event_type
     association :item, factory: :budget_item
     association :user
+    change_set do
+      association :budget_change_set, :adjust, interval: item.interval
+    end
     key { KeyGenerator.call }
     amount { (-1000..1000).to_a.sample }
 

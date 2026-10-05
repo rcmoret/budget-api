@@ -5,8 +5,12 @@ module Forms
 
       validate :interval_needs_close_out!
 
-      def initialize(user:, interval:, **options)
-        @events_form = EventsForm.new(user, events: options.delete(:events))
+      def initialize(user:, interval:, change_set:, **options)
+        @events_form = EventsForm.new(
+          user,
+          change_set,
+          events: options.delete(:events)
+        )
         @interval = interval
         @options = default_options.merge(options)
       end

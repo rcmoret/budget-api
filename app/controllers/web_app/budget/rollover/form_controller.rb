@@ -8,18 +8,21 @@ module WebApp
         include Mixins::UserChangesScope
         include Mixins::HasSlugParams
         include Mixins::HasBudgetCategoryRecord
+        include WebApp::Mixins::PageController
 
         before_action lambda {
           @change_set = change_set_scope.first || change_set_scope.start!
         }
-        before_action -> { presenter.flash = flash }
 
-        def call
-          render(
-            inertia: "budget/planning/rollover/index",
-            props: serializer.to_h
+        define_route_segments :budget
+        serialize_with Serializers::IndexSerializer
+        subject do
+          Presenters::IndexPresenter.new(
+            data_model.with(slug: category_slug),
+            interval
           )
         end
+        use_template "budget/planning/rollover/index"
 
         private
 
@@ -31,29 +34,10 @@ module WebApp
           super && category_slug.present?
         end
 
-        def serializer
-          @serializer ||=
-            WebApp::Budget::Planning::Rollover::IndexSerializer.new(
-              presenter,
-              params: { month:, year: }
-            )
-        end
+        def serializer_context = { month:, year: }
 
-        def presenter
-          @presenter ||=
-            ::Budget::Changes::Rollover::Presenters::IndexPresenter.new(
-              data_model.with(slug: category_slug || data_model.slugs.first),
-              interval,
-              metadata
-            )
-        end
-
-        def metadata
-          Presenters::ControllerMetadata.new(
-            namespace: "budget",
-            page_name: "budget_planning_rollover",
-            prev_selected_account_path: ""
-          )
+        def route_segments
+          super(month, year, "roll-over", category_slug)
         end
       end
     end

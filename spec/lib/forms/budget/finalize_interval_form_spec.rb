@@ -1,9 +1,11 @@
 require "rails_helper"
 
 RSpec.describe Forms::Budget::FinalizeIntervalForm do
+  let(:change_set) { create(:budget_change_set, :adjust) }
+
   describe "#save" do
     subject do
-      described_class.new(user:, interval:, events:,
+      described_class.new(user:, interval:, change_set:, events:,
 **optional_args)
     end
 

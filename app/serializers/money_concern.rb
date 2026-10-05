@@ -17,7 +17,7 @@ module Serializers
         define_method named_attribute do |*|
           case object
           when Hash
-            cast(object.fetch(named_attribute))
+            cast(object.fetch(named_attribute, 0))
           else
             cast(object.send(named_attribute))
           end
@@ -28,7 +28,7 @@ module Serializers
     def null_money = Serializers::NullMoney.new
 
     def cast(*args)
-      case args.compact_blank
+      case MoneyConcern.normalize_args(args).compact_blank
       in [ Money => money ]
         money
       in [ Integer => number ]
@@ -39,6 +39,16 @@ module Serializers
         Monetize.parse(display)
       else
         Serializers::NullMoney.new
+      end
+    end
+
+    # Hash keys may be strings (e.g. stored JSON). A blank display is how
+    # NullMoney serializes, so it's dropped and falls through to NullMoney.
+    def self.normalize_args(args)
+      args.filter_map do |arg|
+        next arg unless arg.is_a?(Hash)
+
+        arg.symbolize_keys.then { |hash| hash unless hash[:display] == "" }
       end
     end
   end

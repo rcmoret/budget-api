@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.describe Forms::Budget::Events::AdjustItemForm do
+  let(:change_set) { create(:budget_change_set, :adjust) }
+
   describe ".applies?" do
     context "when an applicable event" do
       it "returns true" do
@@ -281,7 +283,7 @@ RSpec.describe Forms::Budget::Events::AdjustItemForm do
   end
 
   def build_form(user, **options)
-    described_class.new(user, default_form_params.merge(options))
+    described_class.new(user, change_set, default_form_params.merge(options))
   end
 
   def event_double(**options)

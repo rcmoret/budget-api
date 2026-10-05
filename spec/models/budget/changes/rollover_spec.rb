@@ -1,36 +1,10 @@
 require "rails_helper"
 
 RSpec.describe Budget::Changes::Rollover do
-  describe "#assign_categories" do
-    # Rollover rolls the *base* interval (the interval the change set is for)
-    # forward into the *target* interval (base.next, the upcoming budget).
-    #
-    # Only "reviewable" base items roll over:
-    #   - variable: remaining != 0   (i.e. not fully spent)
-    #   - fixed:    transaction_detail_count == 0   (untouched)
-    #
-    # Among the reviewable items the same rules as setup apply:
-    #   - variable        -> a single event, create OR adjust
-    #   - fixed accrual   -> a single event, create OR adjust
-    #   - fixed non-accrual -> a create event for every reviewable base item,
-    #                          plus an adjust event for every existing upcoming
-    #                          (target interval) item
-    let(:base_interval) { create(:budget_interval) }
-    let(:target_interval) { base_interval.next }
-    let(:user_group) { base_interval.user_group }
-
-    let(:base_change_set) do
-      Budget::Changes::Setup.create(interval: base_interval)
-    end
-    let(:target_change_set) do
-      Budget::Changes::Adjust.create(interval: target_interval)
-    end
-
-    # A base item rolls over only when reviewable. `transactions: 1` adds a
-    # transaction for the item's full amount, which makes a fixed item
-    # non-reviewable (count > 0) and a variable item non-reviewable (fully
-    # spent, remaining == 0).
+  describe ".assign_categories" do
     def base_item(category:, amount: -100_00, transactions: 0)
+      # binding.pry
+
       create(:budget_item, category:, interval: base_interval).tap do |item|
         create(:budget_item_event, :create_event,
           item:, amount:, change_set: base_change_set)
@@ -47,12 +21,7 @@ RSpec.describe Budget::Changes::Rollover do
       end
     end
 
-    # Runs assign_categories for the base interval and returns the event types
-    # produced for the given category. Returns [] when the category is absent
-    # (e.g. it had no reviewable base items).
-    def assigned_event_types(category)
-      change_set =
-        described_class.new(interval: base_interval).assign_categories
+    def events_data_for(change_set, category)
       assigned = change_set
                  .reload
                  .events_data
@@ -61,242 +30,454 @@ RSpec.describe Budget::Changes::Rollover do
 
       return [] if assigned.nil?
 
-      assigned.fetch("events").pluck("event_type")
+      if block_given?
+        yield(assigned.fetch("events"))
+      else
+        assigned.fetch("events")
+      end
+    end
+
+    def assigned_event_types(change_set, category)
+      events_data_for(change_set, category) do |events|
+        events.pluck("event_type")
+      end
+    end
+
+    let(:base_interval) { create(:budget_interval, user_group:) }
+    let(:user_group) { create(:user_group) }
+    let(:target_interval) { base_interval.next }
+
+    let(:base_change_set) do
+      Budget::Changes::Setup.create(interval: base_interval)
+    end
+    let(:target_change_set) do
+      Budget::Changes::Adjust.create(interval: target_interval)
     end
 
     context "with a variable (day-to-day) category" do
       let(:category) { create(:category, :weekly, :expense, user_group:) }
 
       context "with a reviewable base item and no upcoming item" do
-        before { base_item(category:) }
+        let(:change_set) do
+          described_class.new(interval: base_interval)
+        end
+
+        before do
+          # base_item(category:)
+          # change_set.assign_categories
+        end
 
         it "rolls it into the upcoming budget as a single create event" do
-          expect(assigned_event_types(category))
-            .to contain_exactly("rollover_item_create")
         end
-      end
-
-      context "with a reviewable base item and an existing upcoming item" do
-        before do
-          base_item(category:)
-          target_item(category:)
-        end
-
-        it "produces a single adjust event (not a create)" do
-          expect(assigned_event_types(category))
-            .to contain_exactly("rollover_item_adjust")
-        end
-      end
-
-      context "when the base item is fully spent (not reviewable)" do
-        before { base_item(category:, transactions: 1) }
-
-        it "does not roll the category over" do
-          expect(assigned_event_types(category)).to be_empty
-        end
-      end
-    end
-
-    context "with a fixed accrual category" do
-      let(:category) do
-        create(:category, :monthly, :expense, :accrual, user_group:)
-      end
-
-      context "with a reviewable base item and no upcoming item" do
-        before { base_item(category:) }
-
-        it "rolls it over as a single create event" do
-          expect(assigned_event_types(category))
-            .to contain_exactly("rollover_item_create")
-        end
-      end
-
-      context "with a reviewable base item and an existing upcoming item" do
-        before do
-          base_item(category:)
-          target_item(category:)
-        end
-
-        it "produces a single adjust event (not a create)" do
-          expect(assigned_event_types(category))
-            .to contain_exactly("rollover_item_adjust")
-        end
-      end
-
-      context "when the base item has a transaction (not reviewable)" do
-        before { base_item(category:, transactions: 1) }
-
-        it "does not roll the category over" do
-          expect(assigned_event_types(category)).to be_empty
-        end
-      end
-    end
-
-    context "with a fixed (non-accrual) category" do
-      let(:category) { create(:category, :monthly, :expense, user_group:) }
-
-      context "with several reviewable base items" do
-        before do
-          base_item(category:)
-          base_item(category:)
-        end
-
-        it "rolls each one over as its own create event" do
-          expect(assigned_event_types(category))
-            .to contain_exactly("rollover_item_create", "rollover_item_create")
-        end
-      end
-
-      context "with a reviewable base item and an existing upcoming item" do
-        before do
-          base_item(category:)
-          target_item(category:)
-        end
-
-        it "creates the base item and adjusts the upcoming item" do
-          expect(assigned_event_types(category))
-            .to contain_exactly("rollover_item_create", "rollover_item_adjust")
-        end
-      end
-
-      context "when one base item has a transaction (not reviewable)" do
-        before do
-          base_item(category:)                  # reviewable (no transactions)
-          base_item(category:, transactions: 1) # not reviewable
-        end
-
-        it "only rolls over the reviewable item" do
-          expect(assigned_event_types(category))
-            .to contain_exactly("rollover_item_create")
-        end
-      end
-    end
-
-    context "when every base item in a category is non-reviewable" do
-      let(:category) { create(:category, :weekly, :expense, user_group:) }
-
-      before { base_item(category:, transactions: 1) }
-
-      it "excludes the category entirely" do
-        expect(assigned_event_types(category)).to be_empty
       end
     end
   end
 
-  describe "#update_data" do
+  describe "#update_review_item" do
     subject(:change_set) do
-      described_class.new(interval: base_interval).assign_categories
+      described_class.new(interval: base_interval, key: KeyGenerator.call)
     end
 
-    let(:base_interval) { create(:budget_interval) }
-    let(:user_group) { base_interval.user_group }
+    let(:user_group) { create(:user_group) }
+    let(:base_interval) { create(:budget_interval, user_group:) }
     let(:base_change_set) do
       Budget::Changes::Setup.create(interval: base_interval)
     end
     let(:category) { create(:category, :monthly, :expense, user_group:) }
-
-    # A reviewable base item budgeted to -100.00 (remaining -100.00).
-    let!(:item) do
-      create(:budget_item, category:, interval: base_interval).tap do |record|
-        create(:budget_item_event, :create_event,
-          item: record, amount: -100_00, change_set: base_change_set)
+    let!(:review_items) do
+      Array.new(2) do
+        create(:budget_item, category:, interval: base_interval).tap do |item|
+          create(:budget_item_event, :item_create,
+            item:, amount: -100_00, change_set: base_change_set)
+        end
       end
     end
+    let(:review_item) { review_items.first }
 
-    def first_event
+    before { change_set.assign_categories }
+
+    def category_data
       change_set
         .reload
         .events_data
         .fetch("categories")
-        .first
-        .fetch("events")
-        .first
+        .find { |cat| cat["slug"] == category.slug }
     end
 
-    it "starts unreviewed with nothing rolled over" do
-      expect(first_event).to include(
-        "updated_amount" => 0,
-        "flags" => include("unreviewed" => true, "rollover_all" => false)
+    def item_data(key = review_item.key)
+      category_data.fetch("items").find { |item| item["key"] == key }
+    end
+
+    def create_event_key
+      category_data.fetch("target_events").first.fetch("key")
+    end
+
+    it "recalculates the item from a new adjustment and event key" do
+      event_key = create_event_key
+
+      change_set.update_review_item(
+        slug: category.slug,
+        item_key: review_item.key,
+        adjustment: -40_00,
+        event_key:
+      )
+
+      expect(item_data).to include(
+        "event_key" => event_key,
+        "event_type" => Budget::EventTypes::ITEM_CREATE,
+        "adjustment" => { "cents" => -40_00, "display" => "-40.00" },
+        "unapplied_amount" => { "cents" => -60_00, "display" => "-60.00" },
+        "is_reviewed" => true
       )
     end
 
-    it "applies the adjustment and recomputes the event" do
-      change_set.update_data(
-        events: { item.key => { display: "-100.00", cents: -100_00 } }
+    it "recalculates the category totals" do
+      change_set.update_review_item(
+        slug: category.slug,
+        item_key: review_item.key,
+        adjustment: -40_00,
+        event_key: create_event_key
       )
 
-      expect(first_event).to include(
-        "updated_amount" => -100_00,
-        "flags" => include(
-          "rollover_all" => true,
-          "rollover_none" => false,
-          "unreviewed" => false
+      expect(category_data).to include(
+        "unapplied_amount" => { "cents" => -60_00, "display" => "-60.00" },
+        "unreviewed" => true
+      )
+    end
+
+    it "updates only the adjustment" do
+      change_set.update_review_item(
+        slug: category.slug,
+        item_key: review_item.key,
+        adjustment: -40_00
+      )
+
+      expect(item_data).to include(
+        "event_key" => nil,
+        "adjustment" => { "cents" => -40_00, "display" => "-40.00" },
+        "is_reviewed" => false
+      )
+    end
+
+    it "updates only the event key, leaving the item unreviewed" do
+      event_key = create_event_key
+
+      change_set.update_review_item(
+        slug: category.slug,
+        item_key: review_item.key,
+        event_key:
+      )
+
+      expect(item_data).to include(
+        "event_key" => event_key,
+        "adjustment" => { "cents" => 0, "display" => "" },
+        "is_reviewed" => false
+      )
+    end
+
+    it "keeps the other items and target events" do
+      before_data = category_data
+
+      change_set.update_review_item(
+        slug: category.slug,
+        item_key: review_item.key,
+        adjustment: -40_00
+      )
+
+      expect(item_data(review_items.last.key))
+        .to eq(before_data.fetch("items")
+          .find { |item| item["key"] == review_items.last.key })
+      expect(category_data.fetch("target_events"))
+        .to eq(before_data.fetch("target_events"))
+    end
+
+    it "rejects attributes other than adjustment and event key" do
+      expect do
+        change_set.update_review_item(
+          slug: category.slug,
+          item_key: review_item.key,
+          remaining: 0
+        )
+      end.to raise_error(ArgumentError)
+    end
+  end
+
+  describe "unapplied target" do
+    subject(:change_set) do
+      described_class.new(interval: base_interval, key: KeyGenerator.call)
+    end
+
+    let(:user_group) { create(:user_group) }
+    let(:base_interval) { create(:budget_interval, user_group:) }
+    let(:base_change_set) do
+      Budget::Changes::Setup.create(interval: base_interval)
+    end
+    let(:groceries) { create(:category, :weekly, :expense, user_group:) }
+    let(:dining) { create(:category, :weekly, :expense, user_group:) }
+    let(:salary) { create(:category, :monthly, :revenue, user_group:) }
+    let!(:review_item) do
+      create(:budget_item, category: groceries,
+        interval: base_interval).tap do |item|
+        create(:budget_item_event, :item_create,
+          item:, amount: -100_00, change_set: base_change_set)
+      end
+    end
+
+    # Groceries is a Simple category, so its target is assigned up front and
+    # a zero adjustment reviews it with the whole -100.00 unapplied.
+    before do
+      change_set.assign_categories
+      change_set.update_review_item(
+        slug: groceries.slug,
+        item_key: review_item.key,
+        adjustment: 0
+      )
+    end
+
+    def target_for(category)
+      {
+        key: KeyGenerator.call,
+        event_type: Budget::EventTypes::ITEM_CREATE,
+        budget_category_key: category.key,
+        budget_item_key: KeyGenerator.call,
+        name: category.name,
+        slug: category.slug,
+      }
+    end
+
+    def stored_target = change_set.reload.data_model.unapplied_target_event
+
+    it "sums the unapplied amounts" do
+      expect(change_set.data_model.unapplied_total)
+        .to eq Money.from_cents(-100_00)
+    end
+
+    it "stores the target with its kind and the upcoming month" do
+      target = target_for(dining)
+
+      expect(change_set.update_unapplied_target_event(target)).to be true
+      expect(stored_target).to eq(
+        target.stringify_keys.merge(
+          "is_expense" => true,
+          "month" => base_interval.next.month,
+          "year" => base_interval.next.year
         )
       )
     end
 
-    it "preserves adjustments for items not in the update" do
-      change_set.update_data(
-        events: { item.key => { display: "-40.00", cents: -40_00 } }
-      )
-      # A second update for no items should leave the first adjustment intact.
-      change_set.update_data(events: {})
+    it "clears the target" do
+      change_set.update_unapplied_target_event(target_for(dining))
 
-      expect(first_event).to include("updated_amount" => -40_00)
+      change_set.update_unapplied_target_event(nil)
+
+      expect(stored_target).to be_nil
+    end
+
+    it "rejects a revenue category when the total is negative" do
+      expect(change_set.update_unapplied_target_event(target_for(salary)))
+        .to be false
+      expect(change_set.errors[:unapplied_target_event])
+        .to include "must be an expense category"
+      expect(stored_target).to be_nil
+    end
+
+    it "rejects another budget's category" do
+      other = create(:category, :weekly, :expense)
+
+      expect(change_set.update_unapplied_target_event(target_for(other)))
+        .to be false
+      expect(change_set.errors[:unapplied_target_event])
+        .to include "category not found"
+    end
+
+    it "rejects an archived category" do
+      dining.update!(archived_at: Time.current)
+
+      expect(change_set.update_unapplied_target_event(target_for(dining)))
+        .to be false
+    end
+
+    it "rejects a target when nothing is left to apply" do
+      change_set.update_review_item(
+        slug: groceries.slug,
+        item_key: review_item.key,
+        adjustment: -100_00
+      )
+
+      expect(change_set.update_unapplied_target_event(target_for(dining)))
+        .to be false
+      expect(change_set.errors[:unapplied_target_event])
+        .to include "nothing left to apply"
+    end
+
+    it "is cleared by a reset" do
+      change_set.update_unapplied_target_event(target_for(dining))
+
+      change_set.reset_data!
+
+      expect(stored_target).to be_nil
+    end
+
+    it "keeps a single, string keyed categories entry through a reset" do
+      change_set.reload.reset_data!
+
+      expect(change_set.reload.events_data.keys).to eq [ "categories" ]
+    end
+
+    describe "DataModel#unapplied_target_valid?" do
+      def valid? = change_set.reload.data_model.unapplied_target_valid?
+
+      it "is false without a target" do
+        expect(valid?).to be false
+      end
+
+      it "is true with a target of the right kind" do
+        change_set.update_unapplied_target_event(target_for(dining))
+
+        expect(valid?).to be true
+      end
+
+      it "is true when nothing is left to apply" do
+        change_set.update_review_item(
+          slug: groceries.slug,
+          item_key: review_item.key,
+          adjustment: -100_00
+        )
+
+        expect(valid?).to be true
+      end
+
+      it "is false once the total's sign no longer matches the target" do
+        change_set.update_unapplied_target_event(target_for(dining))
+        data = change_set.events_data.deep_dup
+        data["unapplied_target_event"]["is_expense"] = false
+        change_set.update!(events_data: data)
+
+        expect(valid?).to be false
+      end
     end
   end
 
-  describe Budget::Changes::Rollover::Presenters::Items do
-    # A reviewable fixed-expense detail record budgeted to -100.00 (so its
-    # remaining is -100.00).
-    def detail_item(amount: -100_00)
-      interval = create(:budget_interval)
-      category = create(:category, :monthly, :expense,
-        user_group: interval.user_group)
-      item = create(:budget_item, category:, interval:)
-      create(:budget_item_event, :create_event,
-        item:, amount:, change_set: Budget::Changes::Setup.create(interval:))
-      Budget::Details::Base.find(item.id)
+  describe "#finalize!" do
+    subject(:change_set) do
+      described_class.new(interval: base_interval, key: KeyGenerator.call)
     end
 
-    def create_presenter(display:, cents:)
-      described_class::CreatePresenter.new(
-        detail_item, adjustment: { display:, cents: }
+    let(:user) { create(:user) }
+    let(:user_group) { user.group }
+    let(:base_interval) { create(:budget_interval, user_group:) }
+    let(:upcoming) { base_interval.next }
+    let(:base_change_set) do
+      Budget::Changes::Setup.create(interval: base_interval)
+    end
+    let(:groceries) { create(:category, :weekly, :expense, user_group:) }
+    let(:dining) { create(:category, :weekly, :expense, user_group:) }
+    let!(:review_item) do
+      create(:budget_item, category: groceries,
+        interval: base_interval).tap do |item|
+        create(:budget_item_event, :item_create,
+          item:, amount: -100_00, change_set: base_change_set)
+      end
+    end
+
+    def review(adjustment)
+      change_set.update_review_item(
+        slug: groceries.slug,
+        item_key: review_item.key,
+        adjustment:
       )
     end
 
-    describe "#rollover_all?" do
-      it "is true when the adjustment equals the item's remaining" do
-        presenter = create_presenter(display: "-100.00", cents: -100_00)
+    def pick(category)
+      change_set.update_unapplied_target_event(
+        key: KeyGenerator.call,
+        event_type: Budget::EventTypes::ITEM_CREATE,
+        budget_category_key: category.key,
+        budget_item_key: KeyGenerator.call,
+        name: category.name,
+        slug: category.slug
+      )
+    end
 
-        expect(presenter.rollover_all?).to be(true)
+    def upcoming_detail(category)
+      Budget::Details::Base.find_by(
+        interval: upcoming,
+        budget_category_key: category.key
+      )
+    end
+
+    before { change_set.assign_categories }
+
+    context "when everything is reviewed" do
+      before do
+        review(-40_00)
+        pick(dining)
       end
 
-      it "is false when the adjustment is less than the remaining" do
-        presenter = create_presenter(display: "-25.00", cents: -25_00)
+      it "creates the rollover events in the upcoming month" do
+        expect { change_set.finalize!(user) }
+          .to change { Budget::ItemEvent.where(change_set:).count }.by(2)
 
-        expect(presenter.rollover_all?).to be(false)
+        expect(upcoming_detail(groceries).previously_budgeted).to eq(-40_00)
+        expect(upcoming_detail(dining).previously_budgeted).to eq(-60_00)
+      end
+
+      it "closes out the month and stamps the change set" do
+        freeze_time do
+          expect(change_set.finalize!(user)).to be true
+
+          expect(base_interval.reload.close_out_completed_at)
+            .to eq Time.current
+          expect(change_set.reload.effective_at).to eq Time.current
+        end
+      end
+
+      it "keeps the review data" do
+        data = change_set.reload.events_data
+
+        change_set.finalize!(user)
+
+        expect(change_set.reload.events_data).to eq data
+      end
+
+      it "can't be finalized twice" do
+        change_set.finalize!(user)
+
+        expect(change_set.reload.finalize!(user)).to be false
+        expect(change_set.errors[:base])
+          .to include "this month has already been rolled over"
       end
     end
 
-    describe "#none?" do
-      it "is true when reviewed with a zero adjustment" do
-        presenter = create_presenter(display: "0", cents: 0)
+    it "saves nothing when one event fails" do
+      # Dining already has a (weekly) item next month, so creating another
+      # one for the unapplied amount fails.
+      create(:budget_item, category: dining, interval: upcoming)
+      review(-40_00)
+      pick(dining)
 
-        expect(presenter.none?).to be(true)
-      end
+      expect(change_set.finalize!(user)).to be false
+      expect(Budget::ItemEvent.where(change_set:)).to be_empty
+      expect(base_interval.reload.close_out_completed_at).to be_nil
+      expect(change_set.errors[:base]).not_to be_empty
+    end
 
-      it "is false when the zero adjustment is unreviewed (blank display)" do
-        presenter = create_presenter(display: "", cents: 0)
+    it "refuses until everything is reviewed" do
+      expect(change_set.finalize!(user)).to be false
+      expect(change_set.errors[:base]).to include(
+        "review every category and choose where the remainder goes"
+      )
+    end
 
-        expect(presenter.none?).to be(false)
-      end
+    it "refuses data stored before targets knew their item" do
+      review(-100_00)
+      data = change_set.reload.events_data.deep_dup
+      data["categories"].first["target_events"].first.delete("budget_item_key")
+      change_set.update!(events_data: data)
 
-      it "is false when an amount is rolled over" do
-        presenter = create_presenter(display: "-100.00", cents: -100_00)
-
-        expect(presenter.none?).to be(false)
-      end
+      expect(change_set.finalize!(user)).to be false
+      expect(change_set.errors[:base])
+        .to include "the review data is out of date; reset the rollover"
     end
   end
 end
