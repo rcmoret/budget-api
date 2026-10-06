@@ -29,6 +29,7 @@ const ClearDetailButton = (props: { objectKey: string }) => {
   return (
     <button
       type="button"
+      tabIndex={-1}
       aria-label="clear line item"
       className="round-cta bg-accent text-accent-content text-base"
       onClick={onClick}
@@ -45,6 +46,7 @@ const AddDetailButton = () => {
     <button
       type="button"
       aria-label="add line item"
+      tabIndex={-1}
       className="round-cta bg-success text-success-content text-xl"
       onClick={() => addDetail()}
     >
@@ -83,7 +85,7 @@ const formatBudgetItemOption = (
       <div className="truncate">{option.label}</div>
       <div>
         {option.remaining === null ? null : (
-          <AmountSpan amount={option.remaining} showCents={false} />
+          <AmountSpan amount={option.remaining} />
         )}
       </div>
     </div>
@@ -224,10 +226,10 @@ const LineItems = () => {
       <div className="line-items">
         <div className="fields">
           <div>
-            <label htmlFor="category-col-label">Budget Category</label>
+            <label htmlFor="category-col-label">Amount</label>
           </div>
           <div>
-            <label htmlFor="amount-col-label">Amount</label>
+            <label htmlFor="amount-col-label">Budget Category</label>
           </div>
         </div>
       </div>
