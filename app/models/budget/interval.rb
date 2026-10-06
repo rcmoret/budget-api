@@ -69,7 +69,7 @@ module Budget
     def first_date
       return start_date if start_date.present?
 
-      DateTime.new(year, month, 1).then do |first|
+      Date.new(year, month, 1).then do |first|
         first -= 1.day while weekend_or_holiday?(first)
         first
       end
