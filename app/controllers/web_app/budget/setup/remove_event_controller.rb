@@ -33,7 +33,7 @@ module WebApp
         end
 
         def presenter
-          Presenters::IndexPresenter.new(
+          CategoryFormPresenter.new(
             data_model.with(slug: category_slug || data_model.slugs.first),
             interval,
           )

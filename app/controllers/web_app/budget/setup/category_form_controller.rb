@@ -21,9 +21,9 @@ module WebApp
         }
 
         define_route_segments :budget
-        serialize_with Serializers::IndexSerializer
+        serialize_with CategoryFormSerializer
         subject do
-          Presenters::IndexPresenter.new(
+          CategoryFormPresenter.new(
             data_model.with(slug: category_slug || data_model.slugs.first),
             interval,
           )
