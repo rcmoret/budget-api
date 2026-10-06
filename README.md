@@ -153,10 +153,13 @@ yarn prettier --write .
 ```
 .
 ├── app/
-│   ├── controllers/        # Rails controllers (API and web endpoints)
+│   ├── controllers/
+│   │   └── web_app/        # Inertia controllers (WebApp::)
 │   ├── models/             # ActiveRecord models
-│   ├── serializers/        # JSON serialization logic
-│   ├── lib/                # Business logic, forms, presenters
+│   ├── presenters/         # Generic presenters (Presenters::)
+│   ├── serializers/        # Generic Alba bases + money (Serializers::)
+│   ├── web_app/            # Inertia-specific presenters/serializers (WebApp::)
+│   ├── lib/                # Forms and other business logic
 │   └── frontend/           # React application
 │       ├── components/     # Reusable React components
 │       ├── pages/          # Inertia.js page components
@@ -167,6 +170,31 @@ yarn prettier --write .
 ├── spec/                   # RSpec tests
 └── public/                 # Static assets
 ```
+
+### Where presenters and serializers go
+
+`WebApp::` is everything specific to the Inertia app. A JSON `API::`
+namespace will sit alongside it later, following the same layout.
+
+- **Inertia-specific** (shapes a page, builds routes with `url_helpers`, or
+  knows a page's layout): `app/web_app/`, mirroring `app/controllers/web_app/`.
+  A page's subject serializer/presenter is named after its controller
+  (`accounts/index_controller.rb` uses `app/web_app/accounts/index_serializer.rb`).
+  Supporting pieces are named after what they serialize and live in the
+  nearest directory shared by their users.
+- **Generic** (reusable unchanged by a JSON API): `app/serializers/`
+  (`Serializers::`) or `app/presenters/` (`Presenters::`).
+- **Persisted data shapes** (e.g. change set `events_data`): stay with the
+  model in `app/models/`.
+
+Gotchas:
+
+- Inside `WebApp::`, prefix top-level constants with `::` (`::Budget::Item`,
+  `::Serializers::MoneyConcern`). A bare `Budget::` resolves to `WebApp::Budget`.
+- Give Alba associations an explicit `resource:`. Inferred resources depend on
+  the serializer's namespace and break silently when files move.
+- Don't create `app/web_app/concerns/`. Rails treats every `app/*/concerns`
+  directory as an autoload root. Use `app/web_app/mixins/` instead.
 
 ## Key Features
 
