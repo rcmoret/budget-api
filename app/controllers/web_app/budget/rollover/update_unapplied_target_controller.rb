@@ -5,7 +5,7 @@ module WebApp
     module Rollover
       class UpdateUnappliedTargetController < BaseController
         include WebApp::Mixins::HasBudgetInterval
-        include Mixins::UserChangesScope
+        include Mixins::RequiresChangeSet
 
         TARGET_ATTRIBUTES = %i[
           key
@@ -15,8 +15,6 @@ module WebApp
           name
           slug
         ].freeze
-
-        before_action :redirect_to_form!, if: -> { change_set.nil? }
 
         # Stores, or clears with a null target, where the unapplied total
         # will go. Nothing is applied until the rollover is finalized.
@@ -29,10 +27,6 @@ module WebApp
         end
 
         private
-
-        def change_set
-          @change_set ||= change_set_scope.first
-        end
 
         # The top-level key is a single word because JSONParamsTransformer
         # only underscores nested keys.

@@ -69,6 +69,8 @@ module Budget
         return false unless finalizable?
 
         finalized_at = Time.current
+        next_interval = interval.next
+
         transaction do
           # EventsForm rolls back its own (nested) transaction on errors, but
           # a nested rollback is swallowed, so this one has to raise too.
@@ -76,6 +78,11 @@ module Budget
 
           interval.update!(close_out_completed_at: finalized_at)
           update!(effective_at: finalized_at)
+
+          unless next_interval.started?
+            next_interval.effective_start = finalized_at
+            next_interval.save!
+          end
         end
 
         errors.none?

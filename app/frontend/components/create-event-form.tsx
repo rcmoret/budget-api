@@ -108,6 +108,9 @@ const CreateEventSelectComponent = (props: { "aria-label": string }) => {
       onFocus={onFocus}
       options={options}
       value={selectedValue}
+      // Portal the menu so overflow-hidden page columns don't clip it.
+      menuPortalTarget={document.body}
+      styles={{ menuPortal: (base) => ({ ...base, zIndex: 50 }) }}
     />
   );
 };

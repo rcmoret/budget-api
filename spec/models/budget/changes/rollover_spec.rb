@@ -447,6 +447,12 @@ RSpec.describe Budget::Changes::Rollover do
         expect(change_set.errors[:base])
           .to include "this month has already been rolled over"
       end
+
+      it "sets the effective_start of the next budget interval" do
+        expect { change_set.finalize!(user) }
+          .to change { upcoming.reload.effective_start }
+          .from(nil)
+      end
     end
 
     it "saves nothing when one event fails" do

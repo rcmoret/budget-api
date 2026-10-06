@@ -10,10 +10,6 @@ module WebApp
         include Mixins::HasBudgetCategoryRecord
         include WebApp::Mixins::PageController
 
-        before_action lambda {
-          @change_set = change_set_scope.first || change_set_scope.start!
-        }
-
         define_route_segments :budget
         serialize_with Serializers::IndexSerializer
         subject do
@@ -26,7 +22,9 @@ module WebApp
 
         private
 
-        attr_reader :change_set
+        def change_set
+          @change_set ||= change_set_scope.first || change_set_scope.start!
+        end
 
         delegate :data_model, to: :change_set
 

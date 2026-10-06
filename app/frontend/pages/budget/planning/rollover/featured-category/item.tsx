@@ -17,7 +17,7 @@ const targetLabel = (event: RolloverTargetEvent, index: number) => {
 
   return event.eventType === "item_adjust"
     ? `Adjust existing item (${amount})`
-    : `New item #${index + 1}`;
+    : `New item #${index}`;
 };
 
 // Simple categories have one target, assigned up front. Complex categories

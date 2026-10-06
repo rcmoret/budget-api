@@ -5,11 +5,10 @@ module WebApp
     module Rollover
       class UpdateItemController < BaseController
         include WebApp::Mixins::HasBudgetInterval
-        include Mixins::UserChangesScope
+        include Mixins::RequiresChangeSet
         include Mixins::HasSlugParams
         include Mixins::HasBudgetCategoryRecord
 
-        before_action :redirect_to_form!, if: -> { change_set.nil? }
         before_action :handle_review_item_not_found!,
           unless: :review_item_exists?
 
@@ -28,10 +27,6 @@ module WebApp
         end
 
         private
-
-        def change_set
-          @change_set ||= change_set_scope.first
-        end
 
         def review_item_exists?
           category = change_set.data_model.find do |cat|
@@ -62,10 +57,6 @@ module WebApp
 
         def next_category_slug
           params.permit("next-category")["next-category"].presence
-        end
-
-        def redirect_to_form!
-          redirect_to budget_rollover_form_path(month, year)
         end
 
         def handle_review_item_not_found!

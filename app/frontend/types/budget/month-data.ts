@@ -8,6 +8,7 @@ type BudgetMonthData = {
   lastDate: string;
   isCurrent: boolean;
   isSetUp: boolean;
+  rolloverRoute: string;
   setupRoute: string;
   nextMonth: {
     month: number;

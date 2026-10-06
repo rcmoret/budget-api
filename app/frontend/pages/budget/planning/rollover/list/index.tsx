@@ -135,6 +135,7 @@ const Group = (props: { group: CategoryGroup }) => {
         "bg-base-200",
         "outline-2",
         "outline-secondary",
+        "-outline-offset-2",
         "mb-2",
       ].join(" ")}
     >

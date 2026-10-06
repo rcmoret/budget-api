@@ -19,6 +19,7 @@ module WebApp
         end
         attribute(:is_current, &:current?)
         attribute(:is_set_up, &:set_up?)
+        attributes(:rollover_route)
         attribute(:setup_route) do |budget_month|
           month, year = params.values_at(:month, :year)
           budget_month.setup_route(month:, year:)

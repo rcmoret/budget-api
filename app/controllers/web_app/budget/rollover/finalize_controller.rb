@@ -8,7 +8,7 @@ module WebApp
         include Mixins::UserChangesScope
 
         def call
-          if change_set&.finalize!(current_user_profile)
+          if change_set.finalize!(current_user_profile)
             redirect_to_upcoming_dashboard
           else
             flash[:warning] = failure_message
@@ -17,10 +17,6 @@ module WebApp
         end
 
         private
-
-        def change_set
-          @change_set ||= change_set_scope.first
-        end
 
         def redirect_to_upcoming_dashboard
           upcoming = interval.next

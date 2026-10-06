@@ -70,6 +70,7 @@ RSpec.describe "WebApp::Budget::Rollover::ResetController", :inertia do
   it "redirects to the form when there's no change set yet" do
     delete path
 
-    expect(response).to redirect_to(path)
+    expect(response)
+      .to redirect_to("/budget/#{interval.month}/#{interval.year}")
   end
 end

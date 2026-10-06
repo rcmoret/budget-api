@@ -5,10 +5,10 @@ module WebApp
     module Presenters
       class BudgetMonthPresenter < SimpleDelegator
         def days_remaining
-          if current?
-            [ (last_date.to_date - Time.current.to_date + 1).to_i.abs, 1 ].max
-          elsif past?
+          if past? || last_date.to_date < Time.current.to_date
             0
+          elsif current?
+            [ (last_date.to_date - Time.current.to_date + 1).to_i.abs, 1 ].max
           else
             total_days
           end
@@ -25,6 +25,18 @@ module WebApp
 
         def previous_month
           @previous_month ||= self.class.new(__getobj__.prev)
+        end
+
+        def rollover_route
+          return "" unless current? && days_remaining < 3
+
+          Rails
+            .application
+            .routes.url_helpers
+            .budget_rollover_form_path(
+              month:,
+              year:,
+            )
         end
 
         def setup_route(month:, year:)

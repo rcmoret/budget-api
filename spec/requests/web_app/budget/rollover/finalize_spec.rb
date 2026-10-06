@@ -54,6 +54,7 @@ RSpec.describe "WebApp::Budget::Rollover::FinalizeController", :inertia do
     post path
 
     expect { post path }.not_to(change { Budget::ItemEvent.count })
-    expect(flash[:warning]).to match(/already been rolled over/)
+    expect(response).to redirect_to("/budget/6/2026")
+    expect(flash[:warning]).to eq("Budget month is closed out")
   end
 end
