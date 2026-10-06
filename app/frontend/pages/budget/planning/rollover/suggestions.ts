@@ -16,7 +16,8 @@ const NONE_EVENT_KEY = "none";
 // different from an explicit zero ("0.00").
 const hasAdjustment = (item: ItemAmounts) => item.adjustment.display !== "";
 
-// Mirrors ItemToItemSerializer#reviewed?
+// Mirrors ItemToItemSerializer#reviewed? (app/web_app/budget/changes/
+// rollover/query/result/item_to_item_serializer.rb)
 const isReviewed = (item: ItemAmounts) =>
   !!item.eventKey && hasAdjustment(item);
 

@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Budget::Changes::Rollover::Query::Result::Complex do
+RSpec.describe WebApp::Budget::Changes::Rollover::Query::Result::Complex do
   subject(:complex) do
     described_class.build(
       category:,
@@ -201,7 +201,7 @@ RSpec.describe Budget::Changes::Rollover::Query::Result::Complex do
 
     let(:data) { simple_serializer.to_h }
     let(:simple_serializer) do
-      Budget::Changes::Rollover::Query::Result::Simple
+      WebApp::Budget::Changes::Rollover::Query::Result::Simple
         .with_create_event(
           category:,
           review_item:

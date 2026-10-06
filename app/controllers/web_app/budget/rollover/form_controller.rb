@@ -11,9 +11,9 @@ module WebApp
         include WebApp::Mixins::PageController
 
         define_route_segments :budget
-        serialize_with Serializers::IndexSerializer
+        serialize_with FormSerializer
         subject do
-          Presenters::IndexPresenter.new(
+          FormPresenter.new(
             data_model.with(slug: category_slug),
             interval
           )

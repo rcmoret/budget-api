@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Budget::Changes::Rollover::Query::Collection do
+RSpec.describe WebApp::Budget::Changes::Rollover::Query::Collection do
   subject(:query) { described_class.new(base_interval) }
 
   let(:user_group) { create(:user_group) }

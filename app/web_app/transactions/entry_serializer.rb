@@ -18,9 +18,7 @@ module WebApp
         source: proc { details.to_a.sort },
         resource: DetailSerializer
       attribute :iso_clearance_date do |entry|
-        if entry.clearance_date.present?
-          entry.clearance_date.strftime("%FT%T")
-        end
+        entry.clearance_date.strftime("%FT%T") if entry.clearance_date.present?
       end
       attribute :clearance_date do |entry|
         if entry.clearance_date.blank?

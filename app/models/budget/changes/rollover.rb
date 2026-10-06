@@ -42,7 +42,10 @@ module Budget
       # Rebuilds the review data from the current budget items. Anything
       # picked so far, including the unapplied target, is dropped.
       def assign_categories
-        query = Query::Collection.new(interval)
+        # TODO(api): the model shouldn't depend on WebApp; abstract Query
+        # before an API rollover endpoint needs it.
+        query = ::WebApp::Budget::Changes::Rollover::Query::Collection
+                .new(interval)
         self.events_data = {
           "categories" => query.all_details.map(&:to_h),
         }
@@ -190,7 +193,8 @@ module Budget
           item["key"] == item_key ? item.merge(changes) : item
         end
 
-        Query::Result::Complex
+        # TODO(api): see #assign_categories.
+        ::WebApp::Budget::Changes::Rollover::Query::Result::Complex
           .from_data(category_data.merge("items" => items))
           .to_h
       end

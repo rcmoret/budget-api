@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Budget::Changes::Rollover::Query::Result::Simple do
+RSpec.describe WebApp::Budget::Changes::Rollover::Query::Result::Simple do
   context "when no item exists for the upcoming month" do
     subject(:serializer) do
       described_class.with_create_event(

@@ -30,7 +30,8 @@ module WebApp
       end
 
       def discretionary
-        @discretionary ||= Dashboard::DiscretionaryPresenter.new(interval:, items:)
+        @discretionary ||=
+          Dashboard::DiscretionaryPresenter.new(interval:, items:)
       end
 
       delegate :initial_amount,
