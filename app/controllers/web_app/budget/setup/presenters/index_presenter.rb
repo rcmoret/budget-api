@@ -12,7 +12,7 @@ module WebApp
           def initialize(data_model, budget_month)
             @data_model = data_model
             @budget_month =
-              ::WebApp::Budget::Presenters::BudgetMonthPresenter
+              ::WebApp::Budget::BudgetMonthPresenter
               .new(budget_month)
           end
 

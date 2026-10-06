@@ -70,7 +70,7 @@ module WebApp
               .deep_transform_keys { |key| key.to_s.camelize(:lower) }
           end
           one :budget_month,
-            resource: ::WebApp::Budget::Serializers::BudgetMonthSerializer
+            resource: ::WebApp::Budget::BudgetMonthSerializer
 
           nested_attribute :neighbor_links do
             attributes :current_category_href,

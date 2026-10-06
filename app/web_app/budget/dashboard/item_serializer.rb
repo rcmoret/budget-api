@@ -2,7 +2,7 @@
 
 module WebApp
   module Budget
-    module Serializers
+    module Dashboard
       class ItemSerializer < ::Serializers::GenericSerializer
         attributes :key,
           :budget_category_key,

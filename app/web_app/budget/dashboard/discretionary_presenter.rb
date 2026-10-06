@@ -2,7 +2,7 @@
 
 module WebApp
   module Budget
-    module Presenters
+    module Dashboard
       class DiscretionaryPresenter
         def initialize(interval:, items:)
           @interval = interval

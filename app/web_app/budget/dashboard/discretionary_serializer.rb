@@ -2,7 +2,7 @@
 
 module WebApp
   module Budget
-    module Serializers
+    module Dashboard
       class DiscretionarySerializer < ::Serializers::GenericSerializer
         attributes initial_amount: :money,
           over_under_budget: :money,

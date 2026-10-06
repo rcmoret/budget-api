@@ -55,7 +55,7 @@ module WebApp
           attribute :is_submittable, &:submittable?
           attributes :finish_setup_route
           one :budget_month,
-            resource: ::WebApp::Budget::Serializers::BudgetMonthSerializer
+            resource: ::WebApp::Budget::BudgetMonthSerializer
 
           nested_attribute :neighbor_links do
             attributes :next_unreviewed_category_href,

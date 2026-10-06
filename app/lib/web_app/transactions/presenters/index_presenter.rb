@@ -8,7 +8,7 @@ module WebApp
 
         def initialize(featured_account, budget_month)
           @featured_account = featured_account
-          @budget_month = Budget::Presenters::BudgetMonthPresenter
+          @budget_month = ::WebApp::Budget::BudgetMonthPresenter
                           .new(budget_month)
         end
 

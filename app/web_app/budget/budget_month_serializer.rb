@@ -1,0 +1,32 @@
+module WebApp
+  module Budget
+    class BudgetMonthSerializer < ::Serializers::GenericSerializer
+      attributes :month,
+        :year,
+        :days_remaining,
+        :total_days
+      attribute(:month_name) do |budget_month|
+        Time
+          .new(budget_month.year, budget_month.month, 15)
+          .strftime("%B")
+      end
+      attribute(:first_date) do |budget_month|
+        budget_month.first_date.strftime("%B %-d, %Y")
+      end
+      attribute(:last_date) do |budget_month|
+        budget_month.last_date.strftime("%B %-d, %Y")
+      end
+      attribute(:is_current, &:current?)
+      attribute(:is_set_up, &:set_up?)
+      attribute(:setup_route) do |budget_month|
+        month, year = params.values_at(:month, :year)
+        budget_month.setup_route(month:, year:)
+      end
+
+      one :next_month,
+        resource: NeighborSerializer
+      one :previous_month,
+        resource: NeighborSerializer
+    end
+  end
+end
