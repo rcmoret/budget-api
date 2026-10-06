@@ -10,11 +10,11 @@ module WebApp
       before_action :store_selected_account_path
 
       define_route_segments :account
-      serialize_with Serializers::IndexSerializer
+      serialize_with IndexSerializer
       use_template "transactions"
 
       subject do
-        Presenters::IndexPresenter.new(
+        IndexPresenter.new(
           account,
           interval,
         )
