@@ -4,7 +4,7 @@ module WebApp
   module Serializers
     module Budget
       class NeighborSerializer < ::Serializers::GenericSerializer
-        include Mixins::NeighborsConcern
+        include ::WebApp::Mixins::NeighborsConcern
 
         def href(budget_month)
           budget_dashboard_path(

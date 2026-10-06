@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module WebApp
-  module Serializers
-    module Mixins
+  module Pages
+    module Concerns
       module PageMetadata
         extend ActiveSupport::Concern
 

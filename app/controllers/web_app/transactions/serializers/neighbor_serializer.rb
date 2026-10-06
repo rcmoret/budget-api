@@ -4,7 +4,7 @@ module WebApp
   module Transactions
     module Serializers
       class NeighborSerializer < ::Serializers::GenericSerializer
-        include WebApp::Serializers::Mixins::NeighborsConcern
+        include ::WebApp::Mixins::NeighborsConcern
 
         def href(budget_month)
           transactions_path(

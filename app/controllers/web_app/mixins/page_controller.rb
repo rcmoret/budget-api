@@ -132,11 +132,11 @@ module WebApp
 
       # additional data to be passed to all pages
       def page_serializer
-        Serializers::PageSerializer.new(page_data, params: serializer_context)
+        Pages::PageSerializer.new(page_data, params: serializer_context)
       end
 
       def page_data
-        Pages::Presenters::ApplicationPresenter.with(
+        Pages::ApplicationPresenter.with(
           current_path: request.path,
           flash:,
           page_name:,

@@ -7,7 +7,7 @@
 module PublicPageHelper
   def public_page_data_json
     notifications =
-      WebApp::Pages::Presenters::ApplicationPresenter.with(flash:).flash
+      WebApp::Pages::ApplicationPresenter.with(flash:).flash
 
     { notifications: }.to_json
   end
