@@ -11,6 +11,17 @@ Rails.autoloaders.main.push_dir(
   namespace: Serializers
 )
 
+module Presenters; end
+
+ActiveSupport::Dependencies
+  .autoload_paths
+  .delete(Rails.root.join("app/presenters").to_s)
+
+Rails.autoloaders.main.push_dir(
+  Rails.root.join("app/presenters"),
+  namespace: Presenters
+)
+
 module WebApp; end
 
 ActiveSupport::Dependencies
