@@ -7,7 +7,7 @@ module WebApp
         include Mixins::PageController
 
         define_route_segments :budget, :categories
-        serialize_with Serializers::CategorySerializer
+        serialize_with IndexSerializer
         use_template "budget/categories"
 
         subject(:categories) do

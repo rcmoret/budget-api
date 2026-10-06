@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe WebApp::Budget::Changes::Serializers::NotificationsSerializer do
+RSpec.describe WebApp::Budget::Changes::NotificationsSerializer do
   let(:user_group) { create(:user_group) }
   let(:budget_month) do
     create(:budget_interval, user_group:)

@@ -32,7 +32,7 @@ module WebApp
         end
 
         def success_notifications
-          Serializers::NotificationsSerializer
+          NotificationsSerializer
             .new(events: change_set.events)
             .to_h["notifications"]
         end

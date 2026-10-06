@@ -6,7 +6,7 @@ module WebApp
       include Mixins::PageController
 
       define_route_segment :user_profiles
-      serialize_with Serializers::UserProfileSerializer
+      serialize_with ShowSerializer
       use_template "user_profiles"
 
       subject(:user_profile) { current_user_profile }
