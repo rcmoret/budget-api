@@ -67,24 +67,6 @@ const CheckNumber = () => {
   );
 };
 
-const BudgetExclusion = () => {
-  const { budgetExclusion, toggleBudgetExclusion } =
-    useTransactionFormContent();
-
-  return (
-    <div className="flex justify-between items-center">
-      <label htmlFor="budget-exclusion">Budget Exclusion?</label>
-      <input
-        id="budget-exclusion"
-        type="checkbox"
-        checked={budgetExclusion}
-        onChange={toggleBudgetExclusion}
-        className="checkbox checkbox-xs checkbox-secondary justify-self-start"
-      />
-    </div>
-  );
-};
-
 const Notes = () => {
   const { notes, setNotes } = useTransactionFormContent();
 
@@ -281,7 +263,7 @@ const SupplementalFormDetails = () => {
         </div>
         <div className="grid grid-cols-1 gap-2 col-span-full md:col-span-2 md:grid-rows-subgrid md:grid-cols-subgrid md:gap-0 items-start">
           <ReceiptUpload />
-          {isCashFlow ? <CheckNumber /> : <BudgetExclusion />}
+          {isCashFlow ? <CheckNumber /> : null}
         </div>
       </Collapse>
     </>

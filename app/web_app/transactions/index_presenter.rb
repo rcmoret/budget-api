@@ -37,6 +37,8 @@ module WebApp
                           .detailed_items
                           .active
                           .order(name: :asc)
+                          .to_a
+                          .reject(&:cleared?)
       end
 
       def edit_route

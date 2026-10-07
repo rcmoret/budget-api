@@ -204,6 +204,7 @@ const LineItem = (props: { detail: DetailAttribute; isLast: boolean }) => {
             options={budgetItemOptions}
             value={findOption(budgetItemOptions, detail.budgetItemKey)}
             onChange={onChange}
+            isClearable
             formatOptionLabel={formatBudgetItemOption}
           />
         </div>

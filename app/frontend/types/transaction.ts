@@ -39,7 +39,13 @@ type AccountTransaction = {
 
 type TransactionDetailBudgetItem = Pick<
   BudgetItem,
-  "name" | "remaining" | "key" | "isAccrual" | "isMature" | "isFixed"
+  | "name"
+  | "remaining"
+  | "key"
+  | "isAccrual"
+  | "isMature"
+  | "isFixed"
+  | "isCleared"
 >;
 
 export {

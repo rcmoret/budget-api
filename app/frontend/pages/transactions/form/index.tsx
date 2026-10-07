@@ -7,6 +7,7 @@ import { LineItems } from "./line-items";
 import { useAdjustmentsTotals } from "@/lib/adjustment-amount-store";
 import { useTransactionContext } from "../context-provider";
 import { SupplementalFormDetails } from "./supplemental-details";
+import { getFeaturedAccount } from "../store";
 
 const SubmitButtonRow = () => {
   const { processing } = useTransactionFormContent();
@@ -31,6 +32,29 @@ const SubmitButtonRow = () => {
       >
         <div className="shadow-lg">&#x2718;</div>
       </button>
+    </div>
+  );
+};
+
+// Cash flow accounts always count toward the budget, so the exclusion only
+// applies to non-cash-flow accounts.
+const BudgetExclusion = () => {
+  const { isCashFlow } = getFeaturedAccount();
+  const { budgetExclusion, toggleBudgetExclusion } =
+    useTransactionFormContent();
+
+  if (isCashFlow) return null;
+
+  return (
+    <div className="col-span-full grid form-field-row items-center">
+      <label htmlFor="budget-exclusion">Budget Exclusion?</label>
+      <input
+        id="budget-exclusion"
+        type="checkbox"
+        checked={budgetExclusion}
+        onChange={toggleBudgetExclusion}
+        className="checkbox checkbox-xs checkbox-secondary justify-self-start"
+      />
     </div>
   );
 };
@@ -81,6 +105,7 @@ const FormComponent = () => {
           className="input input-xs input-secondary w-full"
         />
       </div>
+      <BudgetExclusion />
       <SupplementalFormDetails />
       <SubmitButtonRow />
     </form>
