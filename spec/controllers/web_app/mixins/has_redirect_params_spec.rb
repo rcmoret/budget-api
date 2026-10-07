@@ -105,6 +105,22 @@ RSpec.describe WebApp::Mixins::HasRedirectParams do
     end
   end
 
+  context "when the redirect params include 'budget', month, year, " \
+          "'items' and a category slug" do
+    subject do
+      klass.new.tap do |controller|
+        controller.redirect_params = %W[budget #{month} #{year} items rent]
+      end
+    end
+
+    let(:month) { rand(1..12).to_s }
+    let(:year) { Time.current.year.to_s }
+
+    it "returns the budget items path" do
+      expect(subject.redirect_path).to eq "/budget/#{month}/#{year}/items/rent"
+    end
+  end
+
   context "when the redirect params include 'budget' and 'categories'" do
     subject do
       klass.new.tap do |controller|

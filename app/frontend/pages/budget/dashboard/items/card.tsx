@@ -12,13 +12,23 @@ import {
   AdjustmentInputsProvider,
 } from "@/components/adjustment-input/context-provider";
 import { TotalInput } from "@/components/adjustment-input";
+import { Link } from "@inertiajs/react";
 
-const LabelMain = () => {
+const itemsPath = (item: BudgetItem) =>
+  `/budget/${item.month}/${item.year}/items/${item.budgetCategorySlug}`;
+
+const LabelMain = (props: { linkToItems: boolean }) => {
   const { item } = useBudgetItemContext();
 
   return (
     <div className="flex flex-row gap-2 items-center">
-      <div>{item.name}</div>
+      {props.linkToItems ? (
+        <Link href={itemsPath(item)} className="hover:underline">
+          {item.name}
+        </Link>
+      ) : (
+        <div>{item.name}</div>
+      )}
       <div>
         <Icon name={item.iconClassName} />
       </div>
@@ -26,11 +36,11 @@ const LabelMain = () => {
   );
 };
 
-const BudgetItemCardLabel = () => {
+const BudgetItemCardLabel = (props: { linkToItems: boolean }) => {
   const { item } = useBudgetItemContext();
 
   return (
-    <CardLabel label={<LabelMain />}>
+    <CardLabel label={<LabelMain linkToItems={props.linkToItems} />}>
       <AmountSpan
         amount={item.remaining.cents}
         colorize="none"
@@ -65,8 +75,14 @@ const InnerCard = () => {
   }
 };
 
-const BudgetItemCard = (props: { item: BudgetItem }) => {
-  const { item } = props;
+// `children` renders below the item's details, above the bottom row.
+// `linkToItems` links the item's name to its category's items page.
+const BudgetItemCard = (props: {
+  item: BudgetItem;
+  children?: React.ReactNode;
+  linkToItems?: boolean;
+}) => {
+  const { item, children, linkToItems = false } = props;
 
   return (
     <AdjustmentInputsProvider objectKey={item.objectKey}>
@@ -74,12 +90,13 @@ const BudgetItemCard = (props: { item: BudgetItem }) => {
         <ActiveItemCard
           key={item.objectKey}
           id={item.objectKey}
-          label={<BudgetItemCardLabel />}
+          label={<BudgetItemCardLabel linkToItems={linkToItems} />}
         >
           <InnerCard />
           <ClearedItemPill />
           <AccrualPill />
           <ItemCompositionDetails />
+          {children}
           <BottomRow />
         </ActiveItemCard>
       </ItemContextProvider>

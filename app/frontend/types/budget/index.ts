@@ -47,6 +47,27 @@ type BudgetMonthIndex = PageProps & {
   createItemEvents: Array<BudgetItemEvent<BudgetItemCreateEventType>>;
 };
 
+type BudgetItemTransactionDetail = {
+  key: string;
+  amount: MonetaryAmount;
+  transactionKey: string;
+  description: string | null;
+  clearanceDate: string | null;
+  isPending: boolean;
+  accountName: string;
+  accountSlug: string;
+};
+
+type CategoryBudgetItem = BudgetItem & {
+  transactionDetails: Array<BudgetItemTransactionDetail>;
+};
+
+type BudgetCategoryItemsIndex = PageProps & {
+  budgetMonth: BudgetMonthData;
+  discretionary: DiscretionaryDetails;
+  items: Array<CategoryBudgetItem>;
+};
+
 type BudgetCategoryType = {
   key: string;
   objectKey: string;
@@ -81,6 +102,9 @@ export {
   type BudgetItem,
   type BudgetItemCollections,
   type BudgetMonthIndex,
+  type BudgetCategoryItemsIndex,
+  type BudgetItemTransactionDetail,
+  type CategoryBudgetItem,
   type BudgetCategoryType,
   type NewBudgetCategoryType,
 };

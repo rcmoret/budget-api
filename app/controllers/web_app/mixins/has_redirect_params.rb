@@ -34,6 +34,8 @@ module WebApp
             budget_setup_form_path(month, year, slug)
           in ["set-up"]
             budget_setup_form_path(month, year)
+          in ["items", category_slug]
+            budget_items_path(month:, year:, category_slug:)
           in []
             budget_dashboard_path(month, year)
           end

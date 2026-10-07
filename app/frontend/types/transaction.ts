@@ -9,8 +9,13 @@ type AccountTransactionDetail = {
   amount: MonetaryAmount;
   iconClassName: null | IconName;
 } & (
-  | { budgetItemKey: null; budgetCategoryName: null }
-  | { budgetItemKey: string; budgetCategoryName: string }
+  | { budgetItemKey: null; budgetCategoryName: null; budgetItemHref?: null }
+  | {
+      budgetItemKey: string;
+      budgetCategoryName: string;
+      // Absent on details added in the form before they're saved
+      budgetItemHref?: string;
+    }
 );
 
 type AccountTransaction = {

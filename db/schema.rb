@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2026_10_05_120000) do
+ActiveRecord::Schema[7.0].define(version: 2026_10_07_173837) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -357,6 +357,7 @@ ActiveRecord::Schema[7.0].define(version: 2026_10_05_120000) do
       c.accrual,
       c.default_amount,
       c.user_group_id,
+      c.is_per_diem_enabled,
       COALESCE(icons.class_name, ''::character varying) AS icon_class_name,
       COALESCE(tt.transaction_detail_count, (0)::bigint) AS transaction_detail_count,
       COALESCE(tt.transaction_detail_total, (0)::bigint) AS transaction_detail_total,

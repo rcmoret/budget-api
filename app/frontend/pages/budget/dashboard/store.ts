@@ -169,6 +169,13 @@ const useBudgetItemGroups = (props: FilterKeys): ItemGroup => {
   }
 };
 
+const itemGroupLabels = (
+  item: Pick<BudgetItem, "isFixed" | "isExpense">,
+): ItemGroupLabels => [
+  item.isFixed ? "Fixed" : "Variable",
+  item.isExpense ? "Expenses" : "Revenues",
+];
+
 const useInitBudgetDashboardStore = (props: {
   items: BudgetItemCollections;
   budgetMonth: BudgetMonthData;
@@ -196,6 +203,7 @@ const useClearedItemsVisibilityToggle = () => {
 };
 
 export {
+  itemGroupLabels,
   useBudgetDashboardStore,
   useBudgetItemGroups,
   useInitBudgetDashboardStore,

@@ -1,8 +1,11 @@
 import { useBudgetDashboardStore } from "../store";
 import { BudgetSummaryComponent } from "@/components/budget-summary";
+import { DiscretionaryDetails } from "@/types/budget/discretionary";
 
-const Discretionary = () => {
-  const discretionary = useBudgetDashboardStore((s) => s.discretionary);
+const DiscretionarySummary = (props: {
+  discretionary: DiscretionaryDetails;
+}) => {
+  const { discretionary } = props;
 
   const valueMap = [
     {
@@ -30,4 +33,10 @@ const Discretionary = () => {
   return <BudgetSummaryComponent label="Discretionary" values={valueMap} />;
 };
 
-export { Discretionary };
+const Discretionary = () => {
+  const discretionary = useBudgetDashboardStore((s) => s.discretionary);
+
+  return <DiscretionarySummary discretionary={discretionary} />;
+};
+
+export { Discretionary, DiscretionarySummary };

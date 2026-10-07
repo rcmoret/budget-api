@@ -71,7 +71,7 @@ module WebApp
             :credit_transfer,
             :debit_transfer,
             receipt_attachment: :blob,
-            details: { budget_item: { category: :icon } },
+            details: { budget_item: [ :interval, { category: :icon } ] },
           )
           .between(date_range, include_pending: current?)
       end

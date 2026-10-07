@@ -102,7 +102,7 @@ const ItemGroupComponent = (props: { group: ItemGroup }) => {
       <FilteredItemsDetail label="accrual" items={nonVisibleAccrualItems} />
       <FilteredItemsDetail label="cleared" items={nonVisibleClearedItems} />
       {items.map((item) => (
-        <BudgetItemCard key={item.objectKey} item={item} />
+        <BudgetItemCard key={item.objectKey} item={item} linkToItems />
       ))}
     </div>
   );

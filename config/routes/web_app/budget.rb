@@ -28,6 +28,10 @@ namespace :budget do
     # post "/", to: "edit#call"
     # get "/edit", to: "edit#call"
 
+    get "/items/:category_slug",
+      to: WebApp::Budget::Items::IndexController.action(:call),
+      as: :items
+
 
     scope "/set-up" do
       get "(/:slug)",
