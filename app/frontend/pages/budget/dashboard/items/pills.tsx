@@ -6,7 +6,8 @@ import { MatureAccrualPill, NonMatureAccrualPill } from "@/components/accrual-pi
 const ClearedItemPill = () => {
   const { item } = useBudgetItemContext();
 
-  if (!item.isCleared) {
+  // A cleared fixed item shows its pill in the card's label row instead.
+  if (!item.isCleared || !item.isVariable) {
     return null;
   }
 

@@ -109,7 +109,6 @@ const BottomRow = () => {
   const { item } = useBudgetItemContext();
   const { hasAdjustment } = useAdjustmentInputsContext();
   const showEdit = () => {
-    debugger;
     item.toggleForm();
   };
 
@@ -124,10 +123,17 @@ const BottomRow = () => {
       : ["pt-4"]),
   ].join(" ");
 
+  // Below md the key identifier sits in the card's top row instead.
+  const keyIdentifier = (
+    <div className="hidden md:block">
+      <KeyIdentifier identifier={item.key} className="text-base-content/66" />
+    </div>
+  );
+
   return (
     <div className={className}>
       <CardRow>
-        <KeyIdentifier identifier={item.key} className="text-base-content/66" />
+        {keyIdentifier}
         <div className="flex gap-2 items-center text-xl">
           {hasAdjustment ? (
             <LocalCheckMarkButton />

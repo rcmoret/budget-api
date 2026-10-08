@@ -71,6 +71,7 @@ const PageComponent = (props: LayoutProps) => {
   } = props;
   const mainComponentClassName = [
     "grid",
+    "grid-cols-[minmax(0,1fr)]",
     "gap-2",
     "pt-4",
     "overflow-y-scroll",

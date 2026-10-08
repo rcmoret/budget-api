@@ -21,7 +21,7 @@ const CategoryItemsGroup = (props: { items: Array<CategoryBudgetItem> }) => {
         <div>{expenseOrRevenue}</div>
       </GroupLabel>
       {items.map((item) => (
-        <BudgetItemCard key={item.objectKey} item={item}>
+        <BudgetItemCard key={item.objectKey} item={item} showDetails>
           <PerDiemDetails item={item} />
           <ItemTransactionDetails details={item.transactionDetails} />
         </BudgetItemCard>

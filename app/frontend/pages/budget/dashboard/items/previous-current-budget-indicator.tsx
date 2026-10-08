@@ -64,8 +64,10 @@ const ItemCompositionDetails = () => {
 
   const className = [
     "grid",
-    "grid-cols-[1fr_1fr]",
-    "gap-8",
+    "grid-cols-1",
+    "sm:grid-cols-2",
+    "gap-x-8",
+    "gap-y-1",
     "text-xs",
     "px-1",
     "items-center",

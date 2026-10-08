@@ -84,6 +84,7 @@ const CardLabel = (props: {
     "flex",
     "justify-between",
     "items-center",
+    "gap-2",
     "font-medium",
     "pb-1",
     "border-b",
@@ -92,16 +93,16 @@ const CardLabel = (props: {
 
   return (
     <div className={className}>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between min-w-0">
         {dragAttributes && dragListeners && (
           <DragHandle
             dragAttributes={dragAttributes}
             dragListeners={dragListeners}
           />
         )}
-        <span className="text-lg">{props.label}</span>
+        <span className="text-lg min-w-0">{props.label}</span>
       </div>
-      <div>{props.children}</div>
+      <div className="shrink-0">{props.children}</div>
     </div>
   );
 };
