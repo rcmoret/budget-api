@@ -17,6 +17,7 @@ gem "monetize"
 gem "money-rails"
 gem "pg", "~> 1.1"
 gem "puma", "~> 5.0"
+gem "rack-cors"
 gem "rails", "~> 7.0.1"
 gem "rubocop", require: false
 gem "rubocop-rails", require: false
@@ -27,7 +28,6 @@ gem "vite_rails", "~> 3.0"
 
 group :development, :test do
   gem "pry"
-  gem "rack-cors"
 end
 
 group :test do

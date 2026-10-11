@@ -12,7 +12,9 @@ module Auth
 
       ISSUER = ENV.fetch("APP_URL", nil)
       SIGNATURE_ALGORITHM = "RS256".freeze
-      SIGNATURE_PRIVATE_KEY = OpenSSL::PKey::RSA.new(2048)
+      SIGNATURE_PRIVATE_KEY =
+        Rails.application.credentials.dig(:jwt, :private_key)
+          .then { |pem| pem ? OpenSSL::PKey::RSA.new(pem) : OpenSSL::PKey::RSA.new(2048) }
       SIGNATURE_PUBLIC_KEY = SIGNATURE_PRIVATE_KEY.public_key
 
       def encode(payload: {}, exp: 4.days.from_now)

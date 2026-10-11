@@ -3,6 +3,12 @@ Rails.application.routes.draw do
 
   devise_for :user_profiles, class_name: "User::Profile"
 
+  namespace :api do
+    namespace :v1 do
+      draw("api/v1/tokens")
+    end
+  end
+
   scope "/", module: :web_app do
     get "/dashboard",
       to: WebApp::Budget::DashboardController.action(:call),
