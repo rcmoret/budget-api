@@ -28,6 +28,12 @@ gem "vite_rails", "~> 3.0"
 
 group :development, :test do
   gem "pry"
+  gem "rswag-specs"
+end
+
+group :development do
+  gem "rswag-api"
+  gem "rswag-ui"
 end
 
 group :test do

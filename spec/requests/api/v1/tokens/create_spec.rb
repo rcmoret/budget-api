@@ -1,54 +1,75 @@
-require "rails_helper"
+require "swagger_helper"
 
 RSpec.describe "API::V1::Tokens::CreateController" do
-  subject(:create_token) do
-    post "/api/v1/tokens", params: { user: { email:, password: } }, as: :json
-  end
-
   let(:user) { create(:user, password: "correct-horse-battery") }
   let(:email) { user.email }
   let(:password) { "correct-horse-battery" }
+  let(:credentials) { { user: { email:, password: } } }
 
-  context "with valid credentials" do
-    it "returns a token for the user" do
-      create_token
+  path "/api/v1/tokens" do
+    post "Creates an auth token" do
+      tags "Tokens"
+      security []
+      consumes "application/json"
+      produces "application/json"
+      parameter name: :credentials, in: :body, schema: {
+        type: :object,
+        required: %w[user],
+        properties: {
+          user: {
+            type: :object,
+            required: %w[email password],
+            properties: {
+              email: { type: :string, format: :email },
+              password: { type: :string, format: :password },
+            },
+          },
+        },
+      }
 
-      expect(response).to have_http_status(:created)
-      _, decoded = Auth::Token::JWT.decode(response.parsed_body["token"])
-      expect(decoded[:user_key]).to eq(user.key)
-    end
+      response "201", "token created" do
+        schema type: :object,
+          additionalProperties: false,
+          required: %w[token],
+          properties: { token: { type: :string } }
 
-    it "creates an auth token context" do
-      expect { create_token }
-        .to change { Auth::Token::Context.belonging_to(user).count }.by(1)
-    end
-  end
+        run_test! do |response|
+          _, decoded = Auth::Token::JWT.decode(response.parsed_body["token"])
 
-  context "with an incorrect password" do
-    let(:password) { "wrong" }
+          expect(decoded[:user_key]).to eq(user.key)
+          expect(Auth::Token::Context.belonging_to(user)).to exist
+        end
+      end
 
-    it "returns unauthorized" do
-      create_token
+      response "401", "invalid credentials" do
+        schema type: :object,
+          required: %w[password],
+          properties: {
+            password: { type: :array, items: { type: :string } },
+          }
 
-      expect(response).to have_http_status(:unauthorized)
-    end
-  end
+        context "with an incorrect password" do
+          let(:password) { "wrong" }
 
-  context "with an unknown email" do
-    let(:email) { "nobody@example.com" }
+          run_test!
+        end
 
-    it "returns unauthorized" do
-      create_token
+        context "with an unknown email" do
+          let(:email) { "nobody@example.com" }
 
-      expect(response).to have_http_status(:unauthorized)
-    end
-  end
+          run_test!
+        end
+      end
 
-  context "without user params" do
-    it "returns bad request" do
-      post "/api/v1/tokens", params: {}, as: :json
+      response "400", "missing parameters" do
+        schema type: :object,
+          required: %w[error],
+          properties: { error: { type: :string } }
 
-      expect(response).to have_http_status(:bad_request)
+        let(:credentials) { {} }
+
+        run_test!
+      end
     end
   end
 end
