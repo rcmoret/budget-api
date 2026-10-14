@@ -32,3 +32,14 @@ Rails.autoloaders.main.push_dir(
   Rails.root.join("app/web_app"),
   namespace: WebApp
 )
+
+module API; end
+
+ActiveSupport::Dependencies
+  .autoload_paths
+  .delete(Rails.root.join("app/api").to_s)
+
+Rails.autoloaders.main.push_dir(
+  Rails.root.join("app/api"),
+  namespace: API
+)

@@ -10,6 +10,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
+      draw("api/v1/accounts")
       draw("api/v1/budget")
       draw("api/v1/tokens")
     end
